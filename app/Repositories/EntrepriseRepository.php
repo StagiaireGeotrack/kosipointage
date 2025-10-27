@@ -4,7 +4,6 @@
 namespace App\Repositories;
 
 use App\Models\Entreprise;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class EntrepriseRepository extends BaseRepository

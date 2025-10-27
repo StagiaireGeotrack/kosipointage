@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class SiegeScope implements Scope
 {
@@ -21,7 +22,16 @@ class SiegeScope implements Scope
         
         // Si l'administrateur n'est pas SuperAdmin, limiter aux données de son siège
         if (!$admin->IsSuperAdmin) {
-             $builder->where('SiegeID', Auth::user()->SiegeID);
+            $table = $model->getTable();
+            
+            // Vérifier si la table a une colonne SiegeID avant d'appliquer le scope
+            if (Schema::hasColumn($table, 'SiegeID')) {
+                $builder->where($table . '.SiegeID', $admin->SiegeID);
+            }
+            // Si c'est la table Entreprises_sieges, filtrer par ID
+            elseif ($table === 'Entreprises_sieges') {
+                $builder->where($table . '.ID', $admin->SiegeID);
+            }
         }
     }
 }

@@ -135,7 +135,7 @@
         function loadEmployeesBySiege(siegeId) {
             if (!siegeId) return;
             
-            fetch('{{ route("pointages.getEmployesBySiege") }}?siege_id=' + siegeId)
+            fetch('{{ route("pointages.employees-by-siege") }}?siege_id=' + siegeId)
                 .then(response => response.json())
                 .then(data => {
                     const employeeSelect = document.getElementById('employee_id');

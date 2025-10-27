@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
         Route::get('/pointages-export/excel', [PointageController::class, 'exportExcel'])->name('pointages.export.excel');
         Route::get('/pointages-export/pdf', [PointageController::class, 'exportPdf'])->name('pointages.export.pdf');
+        Route::get('/pointages/get-employes-by-siege', [PointageController::class, 'getEmployesBySiege'])->name('pointages.employees-by-siege');
         
         // Rapports
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
