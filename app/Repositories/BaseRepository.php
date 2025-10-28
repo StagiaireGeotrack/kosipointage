@@ -14,7 +14,7 @@ abstract class BaseRepository
         $this->model = $model;
     }
     
-    public function getAll($perPage = 10)
+    public function getAll($perPage = 5)
     {
         return $this->model->paginate($perPage);
     }
@@ -42,7 +42,7 @@ abstract class BaseRepository
         return $model->delete();
     }
     
-    public function getFiltered($filters = [], $perPage = 10)
+    public function getFiltered($filters = [], $perPage = 5)
     {
         $query = $this->model->newQuery();
         

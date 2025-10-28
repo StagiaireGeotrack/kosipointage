@@ -13,7 +13,7 @@ class PointageRepository extends BaseRepository
         parent::__construct($pointage);
     }
     
-    public function getFiltered($filters = [], $perPage = 10)
+    public function getFiltered($filters = [], $perPage = 5)
     {
         $query = $this->model->newQuery();
         

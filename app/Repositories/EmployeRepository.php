@@ -12,7 +12,7 @@ class EmployeRepository extends BaseRepository
         parent::__construct($employe);
     }
     
-    public function getFiltered($filters = [], $perPage = 10)
+    public function getFiltered($filters = [], $perPage = 5)
     {
         $query = $this->model->newQuery();
         

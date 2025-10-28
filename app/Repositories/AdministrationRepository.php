@@ -13,7 +13,7 @@ class AdministrationRepository extends BaseRepository
         parent::__construct($administration);
     }
     
-    public function getFiltered($filters = [], $perPage = 10)
+    public function getFiltered($filters = [], $perPage = 5)
     {
         $query = $this->model->newQuery();
         

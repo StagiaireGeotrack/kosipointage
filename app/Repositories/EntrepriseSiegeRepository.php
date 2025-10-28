@@ -12,7 +12,7 @@ class EntrepriseSiegeRepository extends BaseRepository
         parent::__construct($siege);
     }
     
-    public function getFiltered($filters = [], $perPage = 10)
+    public function getFiltered($filters = [], $perPage = 5)
     {
         $query = $this->model->newQuery();
         
