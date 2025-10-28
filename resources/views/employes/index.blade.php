@@ -3,10 +3,10 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('app.employees') }}
+                {{ __('Employés') }}
             </h2>
             <a href="{{ route('employes.create') }}" class="btn btn-primary">
-                {{ __('app.create_new') }}
+                {{ __('Nouveau mployé') }}
             </a>
         </div>
     </x-slot>
@@ -19,14 +19,14 @@
                     <form action="{{ route('employes.index') }}" method="GET" class="mb-4">
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                <x-input-label for="search" :value="__('app.search')" />
-                                <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('app.name_or_badge') }}" />
+                                <x-input-label for="search" :value="__('Recherche')" />
+                                <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID') }}" />
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                <x-input-label for="SiegeID" :value="__('app.office')" />
+                                <x-input-label for="SiegeID" :value="__('Siège')" />
                                 <select id="SiegeID" name="SiegeID" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
                                     @foreach($sieges as $siege)
                                         <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                             {{ $siege->Nom }}
@@ -36,39 +36,39 @@
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                <x-input-label for="Actived" :value="__('app.status')" />
+                                <x-input-label for="Actived" :value="__('Statut')" />
                                 <select id="Actived" name="Actived" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
-                                    <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('app.active') }}</option>
-                                    <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('app.inactive') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
+                                    <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('Activé') }}</option>
+                                    <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('Désactivé') }}</option>
                                 </select>
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                <x-input-label for="HasBiometricSetup" :value="__('app.biometric_setup')" />
+                                <x-input-label for="HasBiometricSetup" :value="__('Empreinte')" />
                                 <select id="HasBiometricSetup" name="HasBiometricSetup" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
-                                    <option value="1" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '1' ? 'selected' : '' }}>{{ __('app.yes') }}</option>
-                                    <option value="0" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '0' ? 'selected' : '' }}>{{ __('app.no') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
+                                    <option value="1" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '1' ? 'selected' : '' }}>{{ __('Oui') }}</option>
+                                    <option value="0" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '0' ? 'selected' : '' }}>{{ __('Non') }}</option>
                                 </select>
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                <x-input-label for="HasFaceSetup" :value="__('app.face_setup')" />
+                                <x-input-label for="HasFaceSetup" :value="__('Face image')" />
                                 <select id="HasFaceSetup" name="HasFaceSetup" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
-                                    <option value="1" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '1' ? 'selected' : '' }}>{{ __('app.yes') }}</option>
-                                    <option value="0" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '0' ? 'selected' : '' }}>{{ __('app.no') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
+                                    <option value="1" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '1' ? 'selected' : '' }}>{{ __('Oui') }}</option>
+                                    <option value="0" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '0' ? 'selected' : '' }}>{{ __('Non') }}</option>
                                 </select>
                             </div>
                         </div>
                         
                         <div class="d-flex justify-content-end gap-2">
                             <button type="submit" class="btn btn-primary">
-                                {{ __('app.filter') }}
+                                {{ __('Rechercher') }}
                             </button>
                             <a href="{{ route('employes.index') }}" class="btn btn-secondary">
-                                {{ __('app.reset') }}
+                                {{ __('Réinitialiser') }}
                             </a>
                         </div>
                     </form>
@@ -76,10 +76,10 @@
                     <!-- Exports -->
                     <div class="d-flex justify-content-end mb-3 gap-2">
                         <a href="{{ route('employes.export.excel', request()->query()) }}" class="btn btn-success">
-                            {{ __('app.export_excel') }}
+                            {{ __('Export en EXCEL') }}
                         </a>
                         <a href="{{ route('employes.export.pdf', request()->query()) }}" class="btn btn-danger">
-                            {{ __('app.export_pdf') }}
+                            {{ __('Export en PDF') }}
                         </a>
                     </div>
 
@@ -89,22 +89,22 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.name') }}
+                                        {{ __('Nom') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.badge_id') }}
+                                        {{ __('Badge ID') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.office') }}
+                                        {{ __('Siège') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.bio_face') }}
+                                        {{ __('Face image') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.status') }}
+                                        {{ __('Statut') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.actions') }}
+                                        {{ __('Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -133,12 +133,12 @@
                                             <div class="d-flex gap-2">
                                                 @if ($employe->HasBiometricSetup)
                                                     <span class="badge bg-info">
-                                                        {{ __('app.bio') }}
+                                                        {{ __('Empreinte') }}
                                                     </span>
                                                 @endif
                                                 @if ($employe->HasFaceSetup)
                                                     <span class="badge bg-primary">
-                                                        {{ __('app.face') }}
+                                                        {{ __('Face image') }}
                                                     </span>
                                                 @endif
                                             </div>
@@ -146,11 +146,11 @@
                                         <td class="align-middle">
                                             @if ($employe->Actived)
                                                 <span class="badge bg-success">
-                                                    {{ __('app.active') }}
+                                                    {{ __('Activé') }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger">
-                                                    {{ __('app.inactive') }}
+                                                    {{ __('Désactivé') }}
                                                 </span>
                                             @endif
                                         </td>
@@ -170,7 +170,7 @@
                                                 <form action="{{ route('employes.destroy', $employe->ID) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('{{ __('app.confirm_delete') }}')" title="Supprimer">
+                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('{{ __('Voulez-vous vraiment supprimer cet employé ?') }}')" title="Supprimer">
                                                         <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                         </svg>
@@ -182,7 +182,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="text-center py-4">
-                                            {{ __('app.no_employees') }}
+                                            {{ __('Aucun employé pour le moment') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -192,7 +192,7 @@
                     
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{ $employes->links() }}
+                        {{ $employes->links("pagination.custom") }}
                     </div>
                 </div>
             </div>

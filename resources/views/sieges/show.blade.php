@@ -8,11 +8,11 @@
             <div class="d-flex gap-2">
                 @can('superadmin')
                     <a href="{{ route('sieges.edit', $siege->ID) }}" class="btn btn-primary">
-                        {{ __('app.edit') }}
+                        {{ __('Modifier') }}
                     </a>
                 @endcan
                 <a href="{{ route('sieges.index') }}" class="btn btn-secondary">
-                    {{ __('app.back') }}
+                    {{ __('Retour') }}
                 </a>
             </div>
         </div>
@@ -23,33 +23,33 @@
             <!-- Informations du siège -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <h3 class="fs-5 fw-semibold mb-3">{{ __('app.office_details') }}</h3>
+                    <h3 class="fs-5 fw-semibold mb-3">{{ __('Détails') }}</h3>
                     
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
-                            <p class="small text-muted mb-1">{{ __('app.name') }}</p>
+                            <p class="small text-muted mb-1">{{ __('Nom') }}</p>
                             <p class="fw-medium mb-0">{{ $siege->Nom }}</p>
                         </div>
                         <div class="col-12 col-md-6">
-                            <p class="small text-muted mb-1">{{ __('app.location') }}</p>
-                            <p class="fw-medium mb-0">{{ $siege->Nom_Lieu_Ville ?: __('app.not_specified') }}</p>
+                            <p class="small text-muted mb-1">{{ __('Adresse ou ville') }}</p>
+                            <p class="fw-medium mb-0">{{ $siege->Nom_Lieu_Ville ?: __('Non spécifié') }}</p>
                         </div>
                         <div class="col-12 col-md-6">
-                            <p class="small text-muted mb-1">{{ __('app.status') }}</p>
+                            <p class="small text-muted mb-1">{{ __('Statut') }}</p>
                             <p class="fw-medium mb-0">
                                 @if ($siege->Actived)
                                     <span class="badge bg-success">
-                                        {{ __('app.active') }}
+                                        {{ __('Activé') }}
                                     </span>
                                 @else
                                     <span class="badge bg-danger">
-                                        {{ __('app.inactive') }}
+                                        {{ __('Désactivé') }}
                                     </span>
                                 @endif
                             </p>
                         </div>
                         <div class="col-12 col-md-6">
-                            <p class="small text-muted mb-1">{{ __('app.id') }}</p>
+                            <p class="small text-muted mb-1">{{ __('ID') }}</p>
                             <p class="fw-medium mb-0">{{ $siege->ID }}</p>
                         </div>
                     </div>
@@ -60,9 +60,9 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="fs-5 fw-semibold mb-0">{{ __('app.companies') }}</h3>
+                        <h3 class="fs-5 fw-semibold mb-0">{{ __('Site ou établissement') }}</h3>
                         <a href="{{ route('entreprises.create', ['SiegeID' => $siege->ID]) }}" class="btn btn-primary btn-sm">
-                            {{ __('app.add_company') }}
+                            {{ __('Nouveau site ou établissement') }}
                         </a>
                     </div>
                     
@@ -71,16 +71,16 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.name') }}
+                                        {{ __('Nom') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.location') }}
+                                        {{ __('Adresse ou ville') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.status') }}
+                                        {{ __('Statut') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.actions') }}
+                                        {{ __('Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -96,11 +96,11 @@
                                         <td class="align-middle">
                                             @if ($entreprise->Actived)
                                                 <span class="badge bg-success">
-                                                    {{ __('app.active') }}
+                                                    {{ __('Activé') }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger">
-                                                    {{ __('app.inactive') }}
+                                                    {{ __('Désactivé') }}
                                                 </span>
                                             @endif
                                         </td>
@@ -118,7 +118,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="4" class="text-center py-4">
-                                            {{ __('app.no_companies') }}
+                                            {{ __('Aucun site ou établissement pour le moment') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -128,13 +128,13 @@
                     
                     @if($entreprises->hasPages())
                         <div class="mt-3">
-                            {{ $entreprises->links() }}
+                            {{ $entreprises->links("pagination.custom") }}
                         </div>
                     @endif
                     
                     <div class="mt-3">
                         <a href="{{ route('entreprises.index', ['SiegeID' => $siege->ID]) }}" class="text-primary text-decoration-none">
-                            {{ __('app.view_all_companies') }}
+                            {{ __('Voir ses sites ou établissements') }}
                         </a>
                     </div>
                 </div>
@@ -144,9 +144,9 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="fs-5 fw-semibold mb-0">{{ __('app.employees') }}</h3>
+                        <h3 class="fs-5 fw-semibold mb-0">{{ __('Employés') }}</h3>
                         <a href="{{ route('employes.create', ['SiegeID' => $siege->ID]) }}" class="btn btn-primary btn-sm">
-                            {{ __('app.add_employee') }}
+                            {{ __('Nouveau employé') }}
                         </a>
                     </div>
                     
@@ -155,16 +155,16 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.name') }}
+                                        {{ __('Nom') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.badge_id') }}
+                                        {{ __('Badge ID') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.status') }}
+                                        {{ __('Statut') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.actions') }}
+                                        {{ __('Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -180,11 +180,11 @@
                                         <td class="align-middle">
                                             @if ($employe->Actived)
                                                 <span class="badge bg-success">
-                                                    {{ __('app.active') }}
+                                                    {{ __('Activé') }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger">
-                                                    {{ __('app.inactive') }}
+                                                    {{ __('Désactivé') }}
                                                 </span>
                                             @endif
                                         </td>
@@ -202,7 +202,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="4" class="text-center py-4">
-                                            {{ __('app.no_employees') }}
+                                            {{ __('Aucun employé pour le moment') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -212,13 +212,13 @@
                     
                     @if($employes->hasPages())
                         <div class="mt-3">
-                            {{ $employes->links() }}
+                            {{ $employes->links("pagination.custom") }}
                         </div>
                     @endif
                     
                     <div class="mt-3">
                         <a href="{{ route('employes.index', ['SiegeID' => $siege->ID]) }}" class="text-primary text-decoration-none">
-                            {{ __('app.view_all_employees') }}
+                            {{ __('Voir ses employés') }}
                         </a>
                     </div>
                 </div>

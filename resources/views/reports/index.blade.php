@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('app.reports') }}
+            {{ __('Statistique rapport') }}
         </h2>
     </x-slot>
 
@@ -10,17 +10,17 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('app.available_reports') }}</h3>
+                    <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Rapports disponibles') }}</h3>
                     
                     <div class="row g-4 mb-5">
                         <!-- Rapport quotidien -->
                         <div class="col-12 col-md-6">
                             <div class="card h-100 shadow-sm border">
                                 <div class="card-body p-4">
-                                    <h4 class="fs-5 fw-semibold mb-2">{{ __('app.daily_reports') }}</h4>
-                                    <p class="text-muted mb-3">{{ __('app.daily_reports_description') }}</p>
+                                    <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (JOUR)') }}</h4>
+                                    <p class="text-muted mb-3">{{ __('Description') }}</p>
                                     <a href="{{ route('reports.daily') }}" class="btn btn-primary text-uppercase small fw-semibold">
-                                        {{ __('app.view_report') }}
+                                        {{ __('Voir') }}
                                     </a>
                                 </div>
                             </div>
@@ -30,10 +30,10 @@
                         <div class="col-12 col-md-6">
                             <div class="card h-100 shadow-sm border">
                                 <div class="card-body p-4">
-                                    <h4 class="fs-5 fw-semibold mb-2">{{ __('app.day_night_reports') }}</h4>
-                                    <p class="text-muted mb-3">{{ __('app.day_night_reports_description') }}</p>
+                                    <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (NUIT)') }}</h4>
+                                    <p class="text-muted mb-3">{{ __('Description') }}</p>
                                     <a href="{{ route('reports.day-night') }}" class="btn btn-primary text-uppercase small fw-semibold">
-                                        {{ __('app.view_report') }}
+                                        {{ __('Voir') }}
                                     </a>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                     
                     <!-- Statistiques globales -->
                     <div class="mt-5">
-                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('app.global_statistics') }}</h3>
+                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Statistiques') }}</h3>
                         
                         <div class="row g-3">
                             <!-- Nombre total d'employés -->
@@ -54,7 +54,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                             </svg>
                                         </div>
-                                        <p class="small text-muted mb-1">{{ __('app.total_employees') }}</p>
+                                        <p class="small text-muted mb-1">{{ __('Nombre d\'employés') }}</p>
                                         <h4 class="fs-3 fw-bold text-dark mb-0">{{ $stats['employees_count'] ?? 0 }}</h4>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                             </svg>
                                         </div>
-                                        <p class="small text-muted mb-1">{{ __('app.total_clock_ins') }}</p>
+                                        <p class="small text-muted mb-1">{{ __('Nombre de pointages') }}</p>
                                         <h4 class="fs-3 fw-bold text-dark mb-0">{{ $stats['pointages_count'] ?? 0 }}</h4>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                         </div>
-                                        <p class="small text-muted mb-1">{{ __('app.today_clock_ins') }}</p>
+                                        <p class="small text-muted mb-1">{{ __('Nombre de pointages ce jour') }}</p>
                                         <h4 class="fs-3 fw-bold text-dark mb-0">{{ $stats['today_pointages'] ?? 0 }}</h4>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                             </svg>
                                         </div>
-                                        <p class="small text-muted mb-1">{{ __('app.active_employees') }}</p>
+                                        <p class="small text-muted mb-1">{{ __('Nombre de pointages activés') }}</p>
                                         <h4 class="fs-3 fw-bold text-dark mb-0">{{ $stats['active_employees'] ?? 0 }}</h4>
                                     </div>
                                 </div>

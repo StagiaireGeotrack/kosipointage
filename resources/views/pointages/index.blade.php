@@ -3,10 +3,10 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('app.clock_ins') }}
+                {{ __('Pointages') }}
             </h2>
             <a href="{{ route('pointages.create') }}" class="btn btn-primary">
-                {{ __('app.create_new') }}
+                {{ __('Nouveau pointage') }}
             </a>
         </div>
     </x-slot>
@@ -19,14 +19,14 @@
                     <form action="{{ route('pointages.index') }}" method="GET" class="mb-4">
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="search" :value="__('app.search')" />
-                                <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('app.employee_name_or_badge') }}" />
+                                <x-input-label for="search" :value="__('Recherche')" />
+                                <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID') }}" />
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="SiegeID" :value="__('app.office')" />
+                                <x-input-label for="SiegeID" :value="__('Siège')" />
                                 <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="updateEmployeesList()">
-                                    <option value="">{{ __('app.all') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
                                     @foreach($sieges as $siege)
                                         <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                             {{ $siege->Nom }}
@@ -36,9 +36,9 @@
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="employee_id" :value="__('app.employee')" />
+                                <x-input-label for="employee_id" :value="__('Employé')" />
                                 <select id="employee_id" name="employee_id" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
                                     @foreach($employes as $employe)
                                         <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
                                             {{ $employe->Nom }} ({{ $employe->BadgeID }})
@@ -48,42 +48,42 @@
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="type_" :value="__('app.type')" />
+                                <x-input-label for="type_" :value="__('Type')" />
                                 <select id="type_" name="type_" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
-                                    <option value="entry" {{ isset($filters['type_']) && $filters['type_'] == 'entry' ? 'selected' : '' }}>{{ __('app.entry') }}</option>
-                                    <option value="exit" {{ isset($filters['type_']) && $filters['type_'] == 'exit' ? 'selected' : '' }}>{{ __('app.exit') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
+                                    <option value="entry" {{ isset($filters['type_']) && $filters['type_'] == 'entry' ? 'selected' : '' }}>{{ __('Entrée') }}</option>
+                                    <option value="exit" {{ isset($filters['type_']) && $filters['type_'] == 'exit' ? 'selected' : '' }}>{{ __('Sortie') }}</option>
                                 </select>
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="auth_method" :value="__('app.auth_method')" />
+                                <x-input-label for="auth_method" :value="__('Méthode')" />
                                 <select id="auth_method" name="auth_method" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
-                                    <option value="badge" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'badge' ? 'selected' : '' }}>{{ __('app.badge') }}</option>
-                                    <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('app.face_recognition') }}</option>
-                                    <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('app.pin_code') }}</option>
-                                    <option value="admin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'admin' ? 'selected' : '' }}>{{ __('app.admin_manual') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
+                                    <option value="badge" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'badge' ? 'selected' : '' }}>{{ __('Badge') }}</option>
+                                    <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
+                                    <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>
+                                    <option value="admin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'admin' ? 'selected' : '' }}>{{ __('Administrateur') }}</option>
                                 </select>
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="date_from" :value="__('app.date_from')" />
+                                <x-input-label for="date_from" :value="__('Date début')" />
                                 <x-text-input id="date_from" type="date" name="date_from" class="form-control mt-1" :value="$filters['date_from'] ?? ''" />
                             </div>
                             
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="date_to" :value="__('app.date_to')" />
+                                <x-input-label for="date_to" :value="__('Date fin')" />
                                 <x-text-input id="date_to" type="date" name="date_to" class="form-control mt-1" :value="$filters['date_to'] ?? ''" />
                             </div>
                         </div>
                         
                         <div class="d-flex justify-content-end gap-2">
                             <button type="submit" class="btn btn-primary">
-                                {{ __('app.filter') }}
+                                {{ __('Rechercher') }}
                             </button>
                             <a href="{{ route('pointages.index') }}" class="btn btn-secondary">
-                                {{ __('app.reset') }}
+                                {{ __('Réinitialiser') }}
                             </a>
                         </div>
                     </form>
@@ -91,10 +91,10 @@
                     <!-- Exports -->
                     <div class="d-flex justify-content-end mb-3 gap-2">
                         <a href="{{ route('pointages.export.excel', request()->query()) }}" class="btn btn-success">
-                            {{ __('app.export_excel') }}
+                            {{ __('Exporter en EXCEL') }}
                         </a>
                         <a href="{{ route('pointages.export.pdf', request()->query()) }}" class="btn btn-danger">
-                            {{ __('app.export_pdf') }}
+                            {{ __('Exporter en PDF') }}
                         </a>
                     </div>
 
@@ -104,25 +104,25 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.employee') }}
+                                        {{ __('Employé') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.date_time') }}
+                                        {{ __('Date et Heure') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.type') }}
+                                        {{ __('Type') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.auth_method') }}
+                                        {{ __('Méthode') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.office') }}
+                                        {{ __('Siège') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.photo') }}
+                                        {{ __('Face image') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.actions') }}
+                                        {{ __('Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -146,11 +146,11 @@
                                         <td class="align-middle">
                                             @if ($pointage->type_ == 'entry')
                                                 <span class="badge bg-success">
-                                                    {{ __('app.entry') }}
+                                                    {{ __('Entrée') }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger">
-                                                    {{ __('app.exit') }}
+                                                    {{ __('Sortie') }}
                                                 </span>
                                             @endif
                                         </td>
@@ -158,22 +158,22 @@
                                             @switch($pointage->auth_method)
                                                 @case('badge')
                                                     <span class="badge bg-info">
-                                                        {{ __('app.badge') }}
+                                                        {{ __('Badge') }}
                                                     </span>
                                                     @break
                                                 @case('face')
                                                     <span class="badge bg-primary">
-                                                        {{ __('app.face') }}
+                                                        {{ __('Face image') }}
                                                     </span>
                                                     @break
                                                 @case('pin')
                                                     <span class="badge bg-warning text-dark">
-                                                        {{ __('app.pin') }}
+                                                        {{ __('PIN') }}
                                                     </span>
                                                     @break
                                                 @case('admin')
                                                     <span class="badge bg-secondary">
-                                                        {{ __('app.admin') }}
+                                                        {{ __('Administrateur') }}
                                                     </span>
                                                     @break
                                                 @default
@@ -186,10 +186,10 @@
                                         <td class="align-middle">
                                             @if ($pointage->photo_path)
                                                 <a href="{{ route('pointages.photo', $pointage->ID) }}" target="_blank">
-                                                    <img src="{{ route('pointages.photo.thumbnail', $pointage->ID) }}" alt="{{ __('app.clock_in_photo') }}" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
+                                                    <img src="{{ route('pointages.photo.thumbnail', $pointage->ID) }}" alt="{{ __('Face image') }}" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
                                                 </a>
                                             @else
-                                                <span class="text-muted">{{ __('app.no_photo') }}</span>
+                                                <span class="text-muted">{{ __('Aucune image') }}</span>
                                             @endif
                                         </td>
                                         <td class="align-middle">
@@ -208,7 +208,7 @@
                                                 <form action="{{ route('pointages.destroy', $pointage->ID) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('{{ __('app.confirm_delete') }}')" title="Supprimer">
+                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('{{ __('Voulez-vous vraiment supprimer ce pointage ?') }}')" title="Supprimer">
                                                         <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                         </svg>
@@ -220,7 +220,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="text-center py-4">
-                                            {{ __('app.no_clock_ins') }}
+                                            {{ __('Aucun pointage pour le moment') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -230,7 +230,7 @@
                     
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{ $pointages->links() }}
+                        {{ $pointages->links("pagination.custom") }}
                     </div>
                 </div>
             </div>

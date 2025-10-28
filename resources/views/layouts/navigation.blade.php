@@ -26,13 +26,6 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('language.change', 'fr')">
-                            {{ __('app.french') }}
-                        </x-dropdown-link>
-                        
-                        <x-dropdown-link :href="route('language.change', 'en')">
-                            {{ __('app.english') }}
-                        </x-dropdown-link>
                         
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}

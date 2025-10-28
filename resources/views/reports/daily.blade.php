@@ -3,14 +3,14 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('app.daily_reports') }}
+                {{ __('Rapport (JOUR)') }}
             </h2>
             <div class="d-flex gap-2">
                 <a href="{{ route('reports.export.excel', ['type' => 'daily'] + request()->query()) }}" class="btn btn-success">
-                    {{ __('app.export_excel') }}
+                    {{ __('Exporter en EXCEL') }}
                 </a>
                 <a href="{{ route('reports.export.pdf', ['type' => 'daily'] + request()->query()) }}" class="btn btn-danger">
-                    {{ __('app.export_pdf') }}
+                    {{ __('Exporter en PDF') }}
                 </a>
             </div>
         </div>
@@ -24,9 +24,9 @@
                     <form action="{{ route('reports.daily') }}" method="GET" class="mb-4">
                         <div class="row g-3">
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="SiegeID" :value="__('app.office')" />
+                                <x-input-label for="SiegeID" :value="__('Siège')" />
                                 <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="this.form.submit()">
-                                    <option value="">{{ __('app.all') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
                                     @foreach($sieges as $siege)
                                         <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                             {{ $siege->Nom }}
@@ -35,9 +35,9 @@
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="employee_id" :value="__('app.employee')" />
+                                <x-input-label for="employee_id" :value="__('Employé')" />
                                 <select id="employee_id" name="employee_id" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
                                     @foreach($employes as $employe)
                                         <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
                                             {{ $employe->Nom }}
@@ -46,19 +46,19 @@
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="date_from" :value="__('app.date_from')" />
+                                <x-input-label for="date_from" :value="__('Date début')" />
                                 <x-text-input id="date_from" type="date" name="date_from" class="form-control mt-1" :value="$filters['date_from'] ?? ''" />
                             </div>
                             <div class="col-12 col-sm-6 col-md-4">
-                                <x-input-label for="date_to" :value="__('app.date_to')" />
+                                <x-input-label for="date_to" :value="__('Date fin')" />
                                 <x-text-input id="date_to" type="date" name="date_to" class="form-control mt-1" :value="$filters['date_to'] ?? ''" />
                             </div>
                             <div class="col-12 col-sm-6 col-md-4 d-flex align-items-end gap-2">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('app.filter') }}
+                                    {{ __('Rechercher') }}
                                 </button>
                                 <a href="{{ route('reports.daily') }}" class="btn btn-secondary">
-                                    {{ __('app.reset') }}
+                                    {{ __('Réinitialiser') }}
                                 </a>
                             </div>
                         </div>
@@ -70,25 +70,25 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.date') }}
+                                        {{ __('Date') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.siege') }}
+                                        {{ __('Siège') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.employee') }}
+                                        {{ __('Employé') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.entry_time') }}
+                                        {{ __('Heure d\'entrée') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.lunch_break') }}
+                                        {{ __('Déjeuner') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.exit_time') }}
+                                        {{ __('Heure de sortie') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.total_hours') }}
+                                        {{ __('Heure totale') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -120,7 +120,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="text-center py-4">
-                                            {{ __('app.no_records') }}
+                                            {{ __('Aucun rapport pour le moment') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -130,7 +130,7 @@
                     
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{ $rapports->links() }}
+                        {{ $rapports->links("pagination.custom") }}
                     </div>
                 </div>
             </div>

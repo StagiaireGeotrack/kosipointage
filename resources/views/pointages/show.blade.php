@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('app.clock_in_details') }}
+            {{ __('Détails pointages') }}
         </h2>
     </x-slot>
 
@@ -14,23 +14,23 @@
                             <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
-                            {{ __('app.back') }}
+                            {{ __('Retour') }}
                         </a>
                         <div class="d-flex gap-2">
                             <a href="{{ route('pointages.edit', $pointage->ID) }}" class="btn btn-primary d-inline-flex align-items-center">
                                 <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
-                                {{ __('app.edit') }}
+                                {{ __('Modifier') }}
                             </a>
                             <form action="{{ route('pointages.destroy', $pointage->ID) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger d-inline-flex align-items-center" onclick="return confirm('{{ __('app.confirm_delete') }}')">
+                                <button type="submit" class="btn btn-danger d-inline-flex align-items-center" onclick="return confirm('{{ __('Voulez-vous vraiment supprimer ce pointage ?') }}')">
                                     <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                     </svg>
-                                    {{ __('app.delete') }}
+                                    {{ __('Supprimer') }}
                                 </button>
                             </form>
                         </div>
@@ -39,7 +39,7 @@
                     <div class="row g-4">
                         <div class="col-12 col-md-4">
                             <div class="bg-light p-4 rounded shadow-sm">
-                                <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('app.general_information') }}</h3>
+                                <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Information générale') }}</h3>
                                 
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="me-3">
@@ -60,9 +60,9 @@
                                     <div>
                                         <h4 class="fs-5 fw-semibold mb-1">
                                             @if ($pointage->type_ == 'entry')
-                                                {{ __('app.entry') }}
+                                                {{ __('Entrée') }}
                                             @else
-                                                {{ __('app.exit') }}
+                                                {{ __('Sortie') }}
                                             @endif
                                         </h4>
                                         <p class="small text-muted mb-0">{{ $pointage->timestamp_->format('d/m/Y H:i:s') }}</p>
@@ -71,12 +71,12 @@
                                 
                                 <div class="d-flex flex-column gap-2">
                                     <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('app.id') }}</div>
+                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('ID') }}</div>
                                         <div class="small text-dark" style="width: 66.67%;">{{ $pointage->ID }}</div>
                                     </div>
                                     
                                     <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('app.employee') }}</div>
+                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Employé') }}</div>
                                         <div class="small text-dark" style="width: 66.67%;">
                                             <a href="{{ route('employes.show', $pointage->employee_id) }}" class="text-primary text-decoration-none">
                                                 {{ $pointage->employe->Nom }}
@@ -85,37 +85,37 @@
                                     </div>
                                     
                                     <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('app.badge_id') }}</div>
+                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Badge ID') }}</div>
                                         <div class="small text-dark" style="width: 66.67%;">{{ $pointage->employe->BadgeID }}</div>
                                     </div>
                                     
                                     <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('app.office') }}</div>
+                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Siège') }}</div>
                                         <div class="small text-dark" style="width: 66.67%;">{{ $pointage->siege->Nom }}</div>
                                     </div>
                                     
                                     <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('app.auth_method') }}</div>
+                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Méthode') }}</div>
                                         <div style="width: 66.67%;">
                                             @switch($pointage->auth_method)
                                                 @case('badge')
                                                     <span class="badge bg-info">
-                                                        {{ __('app.badge') }}
+                                                        {{ __('Badge') }}
                                                     </span>
                                                     @break
                                                 @case('face')
                                                     <span class="badge bg-primary">
-                                                        {{ __('app.face') }}
+                                                        {{ __('Face image') }}
                                                     </span>
                                                     @break
                                                 @case('pin')
                                                     <span class="badge bg-warning text-dark">
-                                                        {{ __('app.pin') }}
+                                                        {{ __('PIN') }}
                                                     </span>
                                                     @break
                                                 @case('admin')
                                                     <span class="badge bg-secondary">
-                                                        {{ __('app.admin') }}
+                                                        {{ __('Administrateur') }}
                                                     </span>
                                                     @break
                                             @endswitch
@@ -123,15 +123,15 @@
                                     </div>
                                     
                                     <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('app.synced') }}</div>
+                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Synchronisé') }}</div>
                                         <div style="width: 66.67%;">
                                             @if ($pointage->synced)
                                                 <span class="badge bg-success">
-                                                    {{ __('app.yes') }}
+                                                    {{ __('Oui') }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger">
-                                                    {{ __('app.no') }}
+                                                    {{ __('Non') }}
                                                 </span>
                                             @endif
                                         </div>
@@ -144,33 +144,29 @@
                             <div class="bg-light p-4 rounded shadow-sm">
                                 <div class="row g-4">
                                     <div class="col-12 col-md-6">
-                                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('app.location') }}</h3>
+                                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Localisation') }}</h3>
                                         <div class="bg-white p-3 rounded shadow-sm mb-3">
                                             <div class="mb-2">
-                                                <span class="small fw-medium text-secondary">{{ __('app.latitude') }}:</span>
+                                                <span class="small fw-medium text-secondary">{{ __('Latitude') }}:</span>
                                                 <span class="small text-dark ms-1">{{ $pointage->latitude }}</span>
                                             </div>
                                             <div>
-                                                <span class="small fw-medium text-secondary">{{ __('app.longitude') }}:</span>
+                                                <span class="small fw-medium text-secondary">{{ __('Longitude') }}:</span>
                                                 <span class="small text-dark ms-1">{{ $pointage->longitude }}</span>
                                             </div>
-                                        </div>
-                                        <div class="bg-secondary bg-opacity-10 rounded shadow-sm d-flex align-items-center justify-content-center" style="aspect-ratio: 16/9;">
-                                            <!-- Ici vous pouvez afficher une carte avec l'emplacement du pointage si vous avez intégré une bibliothèque de cartographie -->
-                                            <p class="text-muted small mb-0">{{ __('app.location_map_placeholder') }}</p>
                                         </div>
                                     </div>
                                     
                                     <div class="col-12 col-md-6">
-                                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('app.photo') }}</h3>
+                                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Face image') }}</h3>
                                         @if ($pointage->photo_path)
                                             <div class="bg-white p-3 rounded shadow-sm text-center">
-                                                <img src="{{ route('pointages.photo', $pointage->ID) }}" alt="{{ __('app.clock_in_photo') }}" class="img-fluid rounded">
+                                                <img src="{{ route('pointages.photo', $pointage->ID) }}" alt="{{ __('Face image') }}" class="img-fluid rounded">
                                             </div>
                                         @else
                                             <div class="bg-white p-3 rounded shadow-sm text-center">
                                                 <div class="bg-light p-5 rounded d-flex align-items-center justify-content-center">
-                                                    <p class="text-muted mb-0">{{ __('app.no_photo_available') }}</p>
+                                                    <p class="text-muted mb-0">{{ __('Aucune image') }}</p>
                                                 </div>
                                             </div>
                                         @endif

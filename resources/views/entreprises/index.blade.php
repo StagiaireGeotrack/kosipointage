@@ -157,7 +157,7 @@
                     
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{ $entreprises->links() }}
+                        {{ $entreprises->links("pagination.custom") }}
                     </div>
                 </div>
             </div>

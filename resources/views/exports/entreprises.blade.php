@@ -49,14 +49,14 @@
 <body>
     <div class="header">
         <h1>{{ $title }}</h1>
-        <p>{{ __('app.exported_on') }}: {{ $date }} {{ __('app.by') }} {{ $user }}</p>
+        <p>{{ __('Exporté le') }}: {{ $date }} {{ __('par') }} {{ $user }}</p>
     </div>
     
     <table>
         <thead>
             <tr>
                 @foreach($data->first() as $key => $value)
-                    <th>{{ __('app.' . strtolower(str_replace('_', '', $key))) }}</th>
+                    <th>{{ __( strtolower(str_replace('_', '', $key) ) ) }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -72,7 +72,8 @@
     </table>
     
     <div class="footer">
-        {{ __('app.exported_from') }} KOSI Pointage - {{ __('app.page') }} <span class="pagenum"></span>
+        <p>KOSI Pointage</p>
+        <span class="pagenum"></span>
     </div>
 </body>
 </html>
