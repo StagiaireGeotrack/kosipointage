@@ -19,16 +19,9 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        // Si une langue est stockée en session, l'utiliser
         if (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
         } 
-        // Sinon, si l'utilisateur est connecté et a une préférence de langue stockée
-        // elseif (auth()->check() && auth()->user()->locale) {
-        //     App::setLocale(auth()->user()->locale);
-        //     Session::put('locale', auth()->user()->locale);
-        // }
-        
         return $next($request);
     }
 }

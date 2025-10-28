@@ -23,6 +23,20 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Langue
     Route::get('/language/{locale}', [LanguageController::class, 'changeLanguage'])->name('language.change');
+    // routes/web.php
+    Route::get('/test-lang', function () {
+        dd([
+            'current_locale' => app()->getLocale(),
+            'session_locale' => session('locale'),
+            'app_locale' => config('app.locale'),
+            'translation_period' => __('app.period'),
+            'translation_exists' => trans()->has('app.period'),
+            'all_translations' => trans()->get('app'),
+            'lang_path' => base_path('lang'),
+            'files_in_lang' => scandir(base_path('lang')),
+            'files_in_lang_fr' => file_exists(base_path('lang/fr')) ? scandir(base_path('lang/fr')) : 'not found'
+        ]);
+    });
     
     // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
