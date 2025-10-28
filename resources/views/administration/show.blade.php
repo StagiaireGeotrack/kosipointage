@@ -60,7 +60,9 @@
                                 <dl class="mb-0">
                                     <div class="bg-white p-3 rounded mb-2">
                                         <dt class="small fw-medium text-secondary">{{ __('Siège') }}</dt>
-                                        <dd class="mb-0 small text-dark">{{ $administrateur->siege ? $administrateur->siege->Nom : 'N/A' }}</dd>
+                                        @if ($administrateur->siege)                                            
+                                        <dd class="mb-0 small text-dark">{{ $administrateur->siege->Nom }}</dd>
+                                        @endif
                                     </div>
                                     @if ($administrateur->created_at)
                                         <div class="bg-white p-3 rounded mb-2">
