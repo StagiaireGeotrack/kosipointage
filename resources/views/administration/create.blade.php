@@ -54,7 +54,6 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <small class="form-text text-muted">{{ __('app.standard_admin_siege_help') }}</small>
                             <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                         </div>
 

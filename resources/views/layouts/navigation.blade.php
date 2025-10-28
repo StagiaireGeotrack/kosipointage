@@ -1,91 +1,91 @@
-<nav x-data="{ open: false }" class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
+{{-- resources/views/layouts/navigation.blade.php --}}
+<nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
     <div class="container-fluid">
+        <!-- Logo et titre -->
+        <a href="{{ route('dashboard') }}" class="navbar-brand d-flex align-items-center">
+            <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="60" class="me-2">
+            <h1 class="fs-4 mb-0">{{ __('KOSI-TIME') }}</h1>
+        </a>
+        
+        <!-- Hamburger Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
         <!-- Navigation Links -->
         <div class="collapse navbar-collapse" id="navbarNav">
+            
             <ul class="navbar-nav me-auto">
+                
+                @can('superadmin')
                 <li class="nav-item">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="nav-link d-flex align-items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="60" class="me-2">
-                        <h1>{{ __('KOSI-TIME') }}</h1>
-                    </x-nav-link>
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        Tableau de bord
+                    </a>
                 </li>
+                @endcan
+                
+                <li class="nav-item">
+                    <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'active' : '' }}">
+                        Entreprises
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{{ route('employes.index') }}" class="nav-link {{ request()->routeIs('employes.*') ? 'active' : '' }}">
+                        Employés
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{{ route('pointages.index') }}" class="nav-link {{ request()->routeIs('pointages.*') ? 'active' : '' }}">
+                        Pointages
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                        Rapports
+                    </a>
+                </li>
+                
+                @can('superadmin')
+                <li class="nav-item">
+                    <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'active' : '' }}">
+                        Administrateurs
+                    </a>
+                </li>
+                @endcan
             </ul>
 
-            <!-- Settings Dropdown -->
-            <div class="d-none d-sm-flex align-items-center">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="btn btn-link text-decoration-none d-inline-flex align-items-center px-3 py-2 border-0 text-secondary">
-                            <div>{{ Auth::user()->Identifiant_email }}</div>
-
-                            <div class="ms-1">
-                                <svg class="bi" width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link class="text-danger" :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Déconnexion') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <button @click="open = ! open" class="navbar-toggler d-sm-none ms-auto" type="button">
-                <svg class="bi" width="24" height="24" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{'d-none': open, 'd-inline-flex': ! open }" class="d-inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{'d-none': ! open, 'd-inline-flex': open }" class="d-none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'d-block': open, 'd-none': ! open}" class="d-none d-sm-none">
-        <div class="py-2">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-3 pb-2 border-top">
-            <div class="px-4">
-                <div class="fw-medium text-dark">{{ Auth::user()->name }}</div>
-                <div class="fw-medium small text-muted">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
+            <!-- User Menu Dropdown -->
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-link text-decoration-none dropdown-toggle d-flex align-items-center text-dark" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div>{{ Auth::user()->Identifiant_email }}</div>
+                        @if(Auth::user()->IsSuperAdmin)
+                            <span class="badge bg-primary m-1">Super Administrateur</span>
+                        @else
+                            <span class="badge bg-primary m-1">Simple Administrateur</span>
+                        @endif
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <!-- <li><hr class="dropdown-divider"></li> -->
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person"></i> Profil
+                            </a>
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

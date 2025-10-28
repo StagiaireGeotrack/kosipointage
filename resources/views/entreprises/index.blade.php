@@ -3,10 +3,10 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('app.companies') }}
+                {{ __('Sites ou établissements') }}
             </h2>
             <a href="{{ route('entreprises.create') }}" class="btn btn-primary">
-                {{ __('app.create_new') }}
+                {{ __('Nouveau site ou établissement') }}
             </a>
         </div>
     </x-slot>
@@ -19,13 +19,13 @@
                     <form action="{{ route('entreprises.index') }}" method="GET" class="mb-4">
                         <div class="row g-3">
                             <div class="col-12 col-sm-6 col-md-3">
-                                <x-input-label for="search" :value="__('app.search')" />
+                                <x-input-label for="search" :value="__('Recherche')" />
                                 <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" />
                             </div>
                             <div class="col-12 col-sm-6 col-md-3">
-                                <x-input-label for="SiegeID" :value="__('app.office')" />
+                                <x-input-label for="SiegeID" :value="__('Siège')" />
                                 <select id="SiegeID" name="SiegeID" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
                                     @foreach($sieges as $siege)
                                         <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                             {{ $siege->Nom }}
@@ -34,19 +34,19 @@
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-md-3">
-                                <x-input-label for="Actived" :value="__('app.status')" />
+                                <x-input-label for="Actived" :value="__('Statut')" />
                                 <select id="Actived" name="Actived" class="form-select mt-1">
-                                    <option value="">{{ __('app.all') }}</option>
-                                    <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('app.active') }}</option>
-                                    <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('app.inactive') }}</option>
+                                    <option value="">{{ __('Touts') }}</option>
+                                    <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('Activé') }}</option>
+                                    <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('Désactivé') }}</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-md-3 d-flex align-items-end gap-2">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('app.filter') }}
+                                    {{ __('Rechercher') }}
                                 </button>
                                 <a href="{{ route('entreprises.index') }}" class="btn btn-secondary">
-                                    {{ __('app.reset') }}
+                                    {{ __('Réinitialiser') }}
                                 </a>
                             </div>
                         </div>
@@ -55,10 +55,10 @@
                     <!-- Exports -->
                     <div class="d-flex justify-content-end mb-3 gap-2">
                         <a href="{{ route('entreprises.export.excel', request()->query()) }}" class="btn btn-success">
-                            {{ __('app.export_excel') }}
+                            {{ __('Exporter en EXCEL') }}
                         </a>
                         <a href="{{ route('entreprises.export.pdf', request()->query()) }}" class="btn btn-danger">
-                            {{ __('app.export_pdf') }}
+                            {{ __('Exporter en PDF') }}
                         </a>
                     </div>
 
@@ -68,22 +68,22 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.logo') }}
+                                        {{ __('Logo') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.name') }}
+                                        {{ __('Nom') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.location') }}
+                                        {{ __('Adresse ou ville') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.office') }}
+                                        {{ __('Siège') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.status') }}
+                                        {{ __('Statut') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
-                                        {{ __('app.actions') }}
+                                        {{ __('Action') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -111,11 +111,11 @@
                                         <td class="align-middle">
                                             @if ($entreprise->Actived)
                                                 <span class="badge bg-success">
-                                                    {{ __('app.active') }}
+                                                    {{ __('Activé') }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger">
-                                                    {{ __('app.inactive') }}
+                                                    {{ __('Désactivé') }}
                                                 </span>
                                             @endif
                                         </td>
@@ -135,7 +135,7 @@
                                                 <form action="{{ route('entreprises.destroy', $entreprise->ID) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('{{ __('app.confirm_delete') }}')" title="Supprimer">
+                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('{{ __('Voulez-vous vraiment supprimer ce site ou établissement ?') }}')" title="Supprimer">
                                                         <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                         </svg>
@@ -147,7 +147,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="text-center py-4">
-                                            {{ __('app.no_records') }}
+                                            {{ __('Aucun site ou établissement pour le moment') }}
                                         </td>
                                     </tr>
                                 @endforelse

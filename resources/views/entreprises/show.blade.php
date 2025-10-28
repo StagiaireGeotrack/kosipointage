@@ -46,23 +46,26 @@
                                         <h6 class="card-subtitle mb-2 text-muted">Informations générales</h6>
                                         
                                         <dl class="row mb-0">
+
                                             <dt class="col-sm-3">Siège</dt>
                                             <dd class="col-sm-9">{{ $entreprise->siege->Nom }}</dd>
+
+                                            @if ($entreprise->Nom_Lieu_Ville)
+                                            <dt class="col-sm-3">Adresse ou ville</dt>
+                                            <dd class="col-sm-9">{{ $entreprise->Nom_Lieu_Ville }}</dd>
+                                            @endif
+
+                                            <dt class="col-sm-3">Latitdude</dt>
+                                            <dd class="col-sm-9">{{ $entreprise->Latitude }}</dd>
                                             
-                                            <dt class="col-sm-3">Email</dt>
-                                            <dd class="col-sm-9">{{ $entreprise->Email ?: 'N/A' }}</dd>
+                                            <dt class="col-sm-3">Longitude</dt>
+                                            <dd class="col-sm-9">{{ $entreprise->Longitude}}</dd>
                                             
-                                            <dt class="col-sm-3">Téléphone</dt>
-                                            <dd class="col-sm-9">{{ $entreprise->Telephone ?: 'N/A' }}</dd>
+                                            @if ($entreprise->CreatedAt)
+                                                <dt class="col-sm-3">Créé le</dt>
+                                                <dd class="col-sm-9">{{ $entreprise->CreatedAt->format('d/m/Y H:i') }}</dd>
+                                            @endif                                           
                                             
-                                            <dt class="col-sm-3">Adresse</dt>
-                                            <dd class="col-sm-9">{{ $entreprise->Adresse ?: 'N/A' }}</dd>
-                                            
-                                            <dt class="col-sm-3">Créé le</dt>
-                                            <dd class="col-sm-9">{{ $entreprise->created_at ? $entreprise->created_at->format('d/m/Y H:i') : 'N/A' }}</dd>
-                                            
-                                            <dt class="col-sm-3">Modifié le</dt>
-                                            <dd class="col-sm-9">{{ $entreprise->updated_at ? $entreprise->updated_at->format('d/m/Y H:i') : 'N/A' }}</dd>
                                         </dl>
                                     </div>
                                 </div>

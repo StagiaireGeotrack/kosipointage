@@ -114,7 +114,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const employeeSelect = document.getElementById('employee_id');
-                    employeeSelect.innerHTML = '<option value="">{{ __('app.select_employee') }}</option>';
+                    employeeSelect.innerHTML = '<option value="">{{ __('Sélectionner un employé') }}</option>';
                     
                     data.forEach(employee => {
                         const option = document.createElement('option');
