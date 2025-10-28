@@ -4,8 +4,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="nav-link">
-                        <h1>{{ __('KOSI-TIME') }} </h1>
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="nav-link d-flex align-items-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="60" class="me-2">
+                        <h1>{{ __('KOSI-TIME') }}</h1>
                     </x-nav-link>
                 </li>
             </ul>
@@ -35,10 +36,10 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link class="text-danger" :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Déconnexion') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>

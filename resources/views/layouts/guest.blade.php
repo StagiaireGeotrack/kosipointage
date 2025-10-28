@@ -19,7 +19,7 @@
         <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
             <div class="mb-4">
                 <a href="/">
-                    <x-application-logo class="text-secondary" style="width: 80px; height: 80px;" />
+                    <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="100" class="me-2">
                 </a>
             </div>
 
