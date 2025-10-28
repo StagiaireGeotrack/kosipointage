@@ -114,8 +114,8 @@ class ReportController extends Controller
         
         // Déterminer le titre du rapport
         $title = ($type === 'day-night') 
-            ? __('app.day_night_report') 
-            : __('app.daily_report');
+            ? __('Rapport jour/nuit') 
+            : __('Rapport quotidien');
             
         // Exporter vers Excel
         return $this->exportService->exportToExcel($data, $title);

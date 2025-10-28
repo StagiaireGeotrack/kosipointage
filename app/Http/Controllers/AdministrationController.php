@@ -53,7 +53,7 @@ class AdministrationController extends Controller
         $admin = $this->repository->create($data);
         
         return redirect()->route('administrateurs.index')
-            ->with('success', __('app.admin_created_successfully'));
+            ->with('success', __('Administrateur simple créé'));
     }
     
     public function show($id)
@@ -70,7 +70,7 @@ class AdministrationController extends Controller
         // Empêcher la modification du compte courant
         if ($administrateur->ID === auth()->user()->ID) {
             return redirect()->route('profile.edit')
-                ->with('error', __('app.edit_own_account_in_profile'));
+                ->with('error', __('Ce compte ne peut pas être modifié'));
         }
         
         return view('administration.edit', compact('administrateur', 'sieges'));
@@ -92,7 +92,7 @@ class AdministrationController extends Controller
         $admin = $this->repository->update($id, $data);
         
         return redirect()->route('administrateurs.index')
-            ->with('success', __('app.admin_updated_successfully'));
+            ->with('success', __('Compte modifié avec succès'));
     }
     
     public function destroy($id)
@@ -100,13 +100,13 @@ class AdministrationController extends Controller
         // Empêcher la suppression du compte courant
         if ((int)$id === auth()->user()->ID) {
             return redirect()->route('administrateurs.index')
-                ->with('error', __('app.cannot_delete_own_account'));
+                ->with('error', __('Ce compte ne peut pas être supprimé'));
         }
         
         $this->repository->delete($id);
         
         return redirect()->route('administrateurs.index')
-            ->with('success', __('app.admin_deleted_successfully'));
+            ->with('success', __('Compte supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)
@@ -114,7 +114,7 @@ class AdministrationController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
         $administrateurs = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToExcel($administrateurs, __('app.administrators'));
+        return $this->exportService->exportToExcel($administrateurs, __('Administrateurs'));
     }
     
     public function exportPdf(Request $request)
@@ -122,6 +122,6 @@ class AdministrationController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
         $administrateurs = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($administrateurs, __('app.administrators'), 'exports.administrateurs');
+        return $this->exportService->exportToPdf($administrateurs, __('Administrateurs'), 'exports.administrateurs');
     }
 }

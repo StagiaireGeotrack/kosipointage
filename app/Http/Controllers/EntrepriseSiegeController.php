@@ -41,7 +41,7 @@ class EntrepriseSiegeController extends Controller
         // Seul un SuperAdmin peut créer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('app.permission_denied'));
+                ->with('error', __('Vous n\'avez pas accès à ce page'));
         }
         
         return view('sieges.create');
@@ -52,13 +52,13 @@ class EntrepriseSiegeController extends Controller
         // Seul un SuperAdmin peut créer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('app.permission_denied'));
+                ->with('error', __('Vous n\'avez pas accès à ce page'));
         }
         
         $siege = $this->repository->create($request->validated());
         
         return redirect()->route('sieges.index')
-            ->with('success', __('app.siege_created_successfully'));
+            ->with('success', __('Siège créé avec succès'));
     }
     
     public function show($id)
@@ -67,7 +67,7 @@ class EntrepriseSiegeController extends Controller
         
         // Vérifier si l'utilisateur peut accéder à ce siège
         if (!Gate::allows('access-siege', $siege->ID)) {
-            abort(403, __('app.permission_denied'));
+            abort(403, __('Vous n\'avez pas accès à ce page'));
         }
         
         // Récupérer les entreprises et employés associés
@@ -82,7 +82,7 @@ class EntrepriseSiegeController extends Controller
         // Seul un SuperAdmin peut éditer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('app.permission_denied'));
+                ->with('error', __('Vous n\'avez pas accès à ce page'));
         }
         
         $siege = $this->repository->findById($id);
@@ -95,13 +95,13 @@ class EntrepriseSiegeController extends Controller
         // Seul un SuperAdmin peut mettre à jour des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('app.permission_denied'));
+                ->with('error', __('Vous n\'avez pas accès à ce page'));
         }
         
         $siege = $this->repository->update($id, $request->validated());
         
         return redirect()->route('sieges.index')
-            ->with('success', __('app.siege_updated_successfully'));
+            ->with('success', __('Siège modifié avec succès'));
     }
     
     public function destroy($id)
@@ -109,13 +109,13 @@ class EntrepriseSiegeController extends Controller
         // Seul un SuperAdmin peut supprimer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('app.permission_denied'));
+                ->with('error', __('Vous n\'avez pas accès à ce page'));
         }
         
         $this->repository->delete($id);
         
         return redirect()->route('sieges.index')
-            ->with('success', __('app.siege_deleted_successfully'));
+            ->with('success', __('Siège supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)

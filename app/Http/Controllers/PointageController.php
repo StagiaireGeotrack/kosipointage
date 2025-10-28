@@ -85,7 +85,7 @@ class PointageController extends Controller
         }
         
         return redirect()->route('pointages.index')
-            ->with('success', __('app.clock_in_created_successfully'));
+            ->with('success', __('Pointage créé avec succès'));
     }
     
     public function show($id)
@@ -121,7 +121,7 @@ class PointageController extends Controller
         }
         
         return redirect()->route('pointages.index')
-            ->with('success', __('app.clock_in_updated_successfully'));
+            ->with('success', __('Pointage modifié avec succès'));
     }
     
     public function destroy($id)
@@ -129,7 +129,7 @@ class PointageController extends Controller
         $this->repository->delete($id);
         
         return redirect()->route('pointages.index')
-            ->with('success', __('app.clock_in_deleted_successfully'));
+            ->with('success', __('Pointage supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)
@@ -141,7 +141,7 @@ class PointageController extends Controller
         
         $pointages = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToExcel($pointages, __('app.clock_ins'));
+        return $this->exportService->exportToExcel($pointages, __('Pointages'));
     }
     
     public function exportPdf(Request $request)
@@ -153,7 +153,7 @@ class PointageController extends Controller
         
         $pointages = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($pointages, __('app.clock_ins'), 'exports.pointages');
+        return $this->exportService->exportToPdf($pointages, __('Pointages'), 'exports.pointages');
     }
     
     public function getPhoto($id)
@@ -161,7 +161,7 @@ class PointageController extends Controller
         $pointage = Pointage::findOrFail($id);
         
         if (!$pointage->photo_path) {
-            abort(404, __('app.photo_not_found'));
+            abort(404, __('Face non trouvée'));
         }
         
         $imageData = $this->fileService->retrieveFromDatabase($pointage, 'photo_path');
@@ -175,7 +175,7 @@ class PointageController extends Controller
         $pointage = Pointage::findOrFail($id);
         
         if (!$pointage->photo_path) {
-            abort(404, __('app.photo_not_found'));
+            abort(404, __('Face non trouvée'));
         }
         
         $imageData = $this->fileService->retrieveFromDatabase($pointage, 'photo_path');

@@ -49,14 +49,14 @@ class AdministrationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Identifiant_email.required' => __('validation.required', ['attribute' => __('app.email')]),
-            'Identifiant_email.email' => __('validation.email', ['attribute' => __('app.email')]),
-            'Identifiant_email.max' => __('validation.max.string', ['attribute' => __('app.email'), 'max' => 255]),
-            'Identifiant_email.unique' => __('validation.unique', ['attribute' => __('app.email')]),
-            'password.required' => __('validation.required', ['attribute' => __('app.password')]),
-            'password.confirmed' => __('validation.confirmed', ['attribute' => __('app.password')]),
-            'SiegeID.required_if' => __('validation.required_if', ['attribute' => __('app.office'), 'other' => __('app.super_admin'), 'value' => __('app.no')]),
-            'SiegeID.exists' => __('validation.exists', ['attribute' => __('app.office')]),
+            'Identifiant_email.required' => __('validation.required', ['attribute' => __('Identifiant ou E-mail')]),
+            'Identifiant_email.email' => __('validation.email', ['attribute' => __('Identifiant ou E-mail')]),
+            'Identifiant_email.max' => __('validation.max.string', ['attribute' => __('Identifiant ou E-mail'), 'max' => 255]),
+            'Identifiant_email.unique' => __('validation.unique', ['attribute' => __('Identifiant ou E-mail')]),
+            'password.required' => __('validation.required', ['attribute' => __('Mot de passe')]),
+            'password.confirmed' => __('validation.confirmed', ['attribute' => __('Mot de passe')]),
+            'SiegeID.required_if' => __('validation.required_if', ['attribute' => __('Siège'), 'other' => __('Super Administrateur'), 'value' => __('Non')]),
+            'SiegeID.exists' => __('validation.exists', ['attribute' => __('Siège')]),
         ];
     }
 }

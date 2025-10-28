@@ -59,7 +59,7 @@ class EmployeController extends Controller
         }
         
         return redirect()->route('employes.index')
-            ->with('success', __('app.employee_created_successfully'));
+            ->with('success', __('Employé créé avec succès'));
     }
     
     public function show($id)
@@ -91,7 +91,7 @@ class EmployeController extends Controller
         }
         
         return redirect()->route('employes.index')
-            ->with('success', __('app.employee_updated_successfully'));
+            ->with('success', __('Employé modifié avec succès'));
     }
     
     public function destroy($id)
@@ -99,7 +99,7 @@ class EmployeController extends Controller
         $this->repository->delete($id);
         
         return redirect()->route('employes.index')
-            ->with('success', __('app.employee_deleted_successfully'));
+            ->with('success', __('Employé supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)
@@ -110,7 +110,7 @@ class EmployeController extends Controller
         
         $employes = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToExcel($employes, __('app.employees'));
+        return $this->exportService->exportToExcel($employes, __('Employés'));
     }
     
     public function exportPdf(Request $request)
@@ -121,7 +121,7 @@ class EmployeController extends Controller
         
         $employes = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($employes, __('app.employees'), 'exports.employes');
+        return $this->exportService->exportToPdf($employes, __('Employés'), 'exports.employes');
     }
     
     public function getFaceEncoding($id)
@@ -129,7 +129,7 @@ class EmployeController extends Controller
         $employe = Employe::findOrFail($id);
         
         if (!$employe->FaceEncodingPath) {
-            abort(404, __('app.face_encoding_not_found'));
+            abort(404, __('Face non trouvée'));
         }
         
         $imageData = $this->fileService->retrieveFromDatabase($employe, 'FaceEncodingPath');
@@ -143,7 +143,7 @@ class EmployeController extends Controller
         $employe = Employe::findOrFail($id);
         
         if (!$employe->FaceEncodingPath) {
-            abort(404, __('app.face_encoding_not_found'));
+            abort(404, __('Face non trouvée'));
         }
         
         $imageData = $this->fileService->retrieveFromDatabase($employe, 'FaceEncodingPath');

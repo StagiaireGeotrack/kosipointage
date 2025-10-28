@@ -3,7 +3,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('Rapport (JOUR)') }}
+                {{ __('Rapport (Quotidien)') }}
             </h2>
             <div class="d-flex gap-2">
                 <a href="{{ route('reports.export.excel', ['type' => 'daily'] + request()->query()) }}" class="btn btn-success">
