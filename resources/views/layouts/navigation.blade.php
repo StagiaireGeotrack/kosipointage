@@ -16,7 +16,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="btn btn-link text-decoration-none d-inline-flex align-items-center px-3 py-2 border-0 text-secondary">
-                            <div>{{ Auth::user()->name }}</div>
+                            <div>{{ Auth::user()->Identifiant_email }}</div>
 
                             <div class="ms-1">
                                 <svg class="bi" width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
