@@ -24,7 +24,7 @@
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white shadow-sm">
-                <div class="container py-4">
+                <div class="container py-3">
                     {{ $header }}
                 </div>
             </header>
@@ -32,7 +32,7 @@
 
         <!-- Flash Messages -->
         @if (session('success'))
-            <div class="container mt-3">
+            <div class="container mt-2">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -41,7 +41,7 @@
         @endif
 
         @if (session('error'))
-            <div class="container mt-3">
+            <div class="container mt-2">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

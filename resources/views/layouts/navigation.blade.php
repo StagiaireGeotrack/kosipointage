@@ -5,7 +5,7 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="nav-link">
-                        {{ __('Dashboard') }}
+                        <h1>{{ __('KOSI-TIME') }} </h1>
                     </x-nav-link>
                 </li>
             </ul>
