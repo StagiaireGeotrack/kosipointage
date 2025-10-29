@@ -27,7 +27,7 @@
                 
                 <li class="nav-item">
                     <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'active' : '' }}">
-                        Entreprises
+                        Sites ou établissements
                     </a>
                 </li>
                 

@@ -42,36 +42,54 @@
                             </div>
                             
                             <div class="form-group mb-3">
-                                <label for="Email">Email</label>
-                                <input type="email" class="form-control @error('Email') is-invalid @enderror" id="Email" name="Email" value="{{ old('Email') }}">
-                                @error('Email')
+                                <label for="Nom_Lieu_Ville">Nom du lieu / Ville</label>
+                                <input type="text" class="form-control @error('Nom_Lieu_Ville') is-invalid @enderror" id="Nom_Lieu_Ville" name="Nom_Lieu_Ville" value="{{ old('Nom_Lieu_Ville') }}">
+                                @error('Nom_Lieu_Ville')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             
-                            <div class="form-group mb-3">
-                                <label for="Telephone">Téléphone</label>
-                                <input type="text" class="form-control @error('Telephone') is-invalid @enderror" id="Telephone" name="Telephone" value="{{ old('Telephone') }}">
-                                @error('Telephone')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="Latitude">Latitude <span class="text-danger">*</span></label>
+                                        <input type="number" step="0.00000001" class="form-control @error('Latitude') is-invalid @enderror" id="Latitude" name="Latitude" value="{{ old('Latitude') }}" required>
+                                        <small class="form-text text-muted">Valeur entre -90 et 90</small>
+                                        @error('Latitude')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="Longitude">Longitude <span class="text-danger">*</span></label>
+                                        <input type="number" step="0.00000001" class="form-control @error('Longitude') is-invalid @enderror" id="Longitude" name="Longitude" value="{{ old('Longitude') }}" required>
+                                        <small class="form-text text-muted">Valeur entre -180 et 180</small>
+                                        @error('Longitude')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="form-group mb-3">
-                                <label for="Adresse">Adresse</label>
-                                <textarea class="form-control @error('Adresse') is-invalid @enderror" id="Adresse" name="Adresse" rows="3">{{ old('Adresse') }}</textarea>
-                                @error('Adresse')
+                                <label for="RadiusInMeters">Rayon (en mètres)</label>
+                                <input type="number" step="0.01" class="form-control @error('RadiusInMeters') is-invalid @enderror" id="RadiusInMeters" name="RadiusInMeters">
+                                <small class="form-text text-muted">Rayon de géolocalisation pour l'entreprise</small>
+                                @error('RadiusInMeters')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label for="Logo">Logo</label>
-                                <input type="file" class="form-control @error('Logo') is-invalid @enderror" id="Logo" name="Logo">
-                                <small class="form-text text-muted">Formats acceptés : JPG, PNG. Max : 2Mo</small>
+                                <input type="file" class="form-control @error('Logo') is-invalid @enderror" id="Logo" name="Logo" accept="image/*">
+                                <small class="form-text text-muted">Formats acceptés : JPG, PNG, GIF. Max : 2Mo.</small>
                                 @error('Logo')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                                <div id="logoPreview" class="mt-2"></div>
                             </div>
                             
                             <div class="form-group mb-3">
@@ -95,4 +113,23 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('Logo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('logoPreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Aperçu du logo" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '';
+            }
+        });
+    </script>
+    @endpush
 </x-app-layout>
