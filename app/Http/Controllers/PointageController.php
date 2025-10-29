@@ -153,7 +153,7 @@ class PointageController extends Controller
         
         $pointages = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($pointages, __('Pointages'), 'exports.pointages');
+        return $this->exportService->exportToPdf($pointages, 'Pointages', 'exports.generic');
     }
     
     public function getPhoto($id)

@@ -49,14 +49,20 @@ class ExportService
     protected function prepareExportData(Collection $data)
     {
         // Traiter les données pour l'export
-        // Par exemple, transformer les booléens en texte Oui/Non, formater les dates, etc.
         return $data->map(function ($item) {
-            $array = $item instanceof \stdClass ? (array)$item : $item->toArray();
+            // Convertir en array selon le type
+            if ($item instanceof \stdClass) {
+                $array = (array)$item;
+            } elseif (is_array($item)) {
+                $array = $item;  // ✅ Déjà un array
+            } else {
+                $array = $item->toArray();  // Model Eloquent
+            }
             
             // Transformer les booléens en Oui/Non
             foreach ($array as $key => $value) {
                 if (is_bool($value)) {
-                    $array[$key] = $value ? __('app.yes') : __('app.no');
+                    $array[$key] = $value ? 'Oui' :'Non';
                 }
             }
             

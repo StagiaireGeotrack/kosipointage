@@ -8,9 +8,10 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Illuminate\Support\Collection;
 
-class GenericExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
+class GenericExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize, WithTitle
 {
     protected $data;
     protected $title;
@@ -43,46 +44,66 @@ class GenericExport implements FromCollection, WithHeadings, WithStyles, ShouldA
         
         // Sinon, utiliser les clés du premier élément comme en-têtes
         if ($this->data->isNotEmpty()) {
-            return array_keys($this->data->first() instanceof \stdClass 
-                ? (array)$this->data->first() 
-                : $this->data->first()->toArray());
+            $firstItem = $this->data->first();
+            
+            // Convertir en array de manière sécurisée
+            if (is_array($firstItem)) {
+                $array = $firstItem;
+            } elseif ($firstItem instanceof \stdClass) {
+                $array = (array)$firstItem;
+            } elseif (is_object($firstItem) && method_exists($firstItem, 'toArray')) {
+                $array = $firstItem->toArray();
+            } else {
+                $array = (array)$firstItem;
+            }
+            
+            return array_keys($array);
         }
         
         return [];
     }
 
+    public function title(): string
+    {
+        return $this->title;
+    }
+
     public function styles(Worksheet $sheet)
     {
-        // Ajouter un titre
-        $sheet->mergeCells('A1:' . $this->getLastColumn($sheet) . '1');
-        $sheet->setCellValue('A1', $this->title);
+        // Style pour les en-têtes (ligne 1)
+        $lastColumn = $sheet->getHighestColumn();
         
-        // Styles pour le titre
-        $sheet->getStyle('A1')->getFont()->setBold(true);
-        $sheet->getStyle('A1')->getFont()->setSize(14);
-        $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        
-        // Styles pour les en-têtes
-        $sheet->getStyle('A2:' . $this->getLastColumn($sheet) . '2')->getFont()->setBold(true);
-        $sheet->getStyle('A2:' . $this->getLastColumn($sheet) . '2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A2:' . $this->getLastColumn($sheet) . '2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-        $sheet->getStyle('A2:' . $this->getLastColumn($sheet) . '2')->getFill()->getStartColor()->setARGB('FFD3D3D3');
-        
-        // Bordures pour le tableau
-        $styleArray = [
+        $sheet->getStyle('A1:' . $lastColumn . '1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FFD3D3D3',
+                ],
+            ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ],
-        ];
-        $sheet->getStyle('A2:' . $this->getLastColumn($sheet) . ($this->data->count() + 2))->applyFromArray($styleArray);
+        ]);
+        
+        // Bordures pour tout le tableau de données
+        $lastRow = $sheet->getHighestRow();
+        $sheet->getStyle('A1:' . $lastColumn . $lastRow)->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ]);
         
         return [];
-    }
-
-    private function getLastColumn(Worksheet $sheet)
-    {
-        return $sheet->getHighestColumn();
     }
 }

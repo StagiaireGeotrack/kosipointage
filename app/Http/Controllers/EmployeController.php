@@ -131,7 +131,7 @@ class EmployeController extends Controller
         
         $employes = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($employes, __('Employés'), 'exports.employes');
+        return $this->exportService->exportToPdf($employes, "Liste des employés", 'exports.generic');
     }
     
     /**

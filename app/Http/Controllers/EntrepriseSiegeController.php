@@ -131,6 +131,6 @@ class EntrepriseSiegeController extends Controller
         $filters = $request->only(['search', 'Actived']);
         $sieges = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($sieges, 'Sièges', 'exports.sieges');
+        return $this->exportService->exportToPdf($sieges, 'Liste des sièges', 'exports.generic');
     }
 }

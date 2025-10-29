@@ -109,7 +109,7 @@ class EntrepriseController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'Actived']);
         $entreprises = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($entreprises, 'Entreprises', 'exports.entreprises');
+        return $this->exportService->exportToPdf($entreprises, 'Liste des entreprises', 'exports.generic');
     }
     
     /**

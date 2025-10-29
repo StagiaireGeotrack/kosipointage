@@ -54,6 +54,16 @@
                             <x-input-error :messages="$errors->get('type_')" class="mt-2" />
                         </div>
                         
+                        <div class="mb-3">
+                            <x-input-label for="auth_method" :value="__('Méthode')" />
+                            <select id="auth_method" name="auth_method" class="form-select mt-1">
+                                <option value="">{{ __('Séléctionnez une méthode') }}</option>
+                                <option value="rfid" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'badge' ? 'selected' : '' }}>{{ __('Badge') }}</option>
+                                <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
+                                <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>
+                            </select>
+                        </div>
+
                         <!-- Timestamp -->
                         <div class="mb-3">
                             <x-input-label for="timestamp_" :value="__('Date et heure')" />
@@ -74,14 +84,7 @@
                             <x-text-input id="longitude" name="longitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('longitude', 0)" required />
                             <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
                         </div>
-                        
-                        <!-- Photo -->
-                        <div class="mb-3">
-                            <x-input-label for="photo" :value="__('Image')" />
-                            <input id="photo" name="photo" type="file" accept="image/*" class="form-control mt-1" />
-                            <x-input-error :messages="$errors->get('photo')" class="mt-2" />
-                        </div>
-                        
+                    
                         <!-- Boutons de soumission -->
                         <div class="d-flex align-items-center justify-content-end mt-4">
                             <a href="{{ route('pointages.index') }}" class="btn btn-secondary me-2">

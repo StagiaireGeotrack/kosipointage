@@ -122,6 +122,6 @@ class AdministrationController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
         $administrateurs = $this->repository->getAllForExport($filters);
         
-        return $this->exportService->exportToPdf($administrateurs, __('Administrateurs'), 'exports.administrateurs');
+        return $this->exportService->exportToPdf($administrateurs, "Liste des administrateurs" , 'exports.generic' );
     }
 }

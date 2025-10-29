@@ -145,15 +145,12 @@ class ReportController extends Controller
         
         // Déterminer le titre et la vue du rapport
         $title = ($type === 'day-night') 
-            ? __('app.day_night_report') 
-            : __('app.daily_report');
-            
-        $viewPath = ($type === 'day-night') 
-            ? 'exports.reports_day_night'
-            : 'exports.reports_daily';
+            ? 'Rapport jour/nuit' 
+            : 'Rapport quotidien';
+
             
         // Exporter vers PDF
-        return $this->exportService->exportToPdf($data, $title, $viewPath, [
+        return $this->exportService->exportToPdf($data, $title, 'exports.generic', [
             'filters' => $filters,
         ]);
     }

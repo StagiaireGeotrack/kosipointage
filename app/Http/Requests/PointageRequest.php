@@ -18,13 +18,13 @@ class PointageRequest extends FormRequest
         return [
             'employee_id' => 'required|exists:Employes,ID',
             'type_' => 'required|in:entry,exit',
-            'auth_method' => 'required|in:badge,face,pin,admin',
+            'auth_method' => 'required|in:rfid,face,pin',
             'timestamp_' => 'required|date',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'synced' => 'boolean',
             'SiegeID' => 'required|exists:Entreprises_sieges,ID',
-            'photo' => 'nullable|image|max:5120', // Pour l'upload de photo
+            'photo' => 'nullable|image|max:5120', 
         ];
     }
 
