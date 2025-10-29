@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Modifier l'entreprise : {{ $entreprise->Nom }}
+                Modification site ou établissement
             </h2>
             <a href="{{ route('entreprises.index') }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Retour
@@ -89,7 +89,7 @@
                                 @if($entreprise->Logo)
                                     <div class="mb-2">
                                         <label class="d-block text-muted">Logo actuel :</label>
-                                        <img src="data:image/png;base64,{{ $entreprise->Logo }}" alt="Logo {{ $entreprise->Nom }}" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
+                                        <img src="{{ route('entreprises.logo.thumbnail', $entreprise->ID) }}" alt="Logo {{ $entreprise->Nom }}" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
                                     </div>
                                 @endif
                                 

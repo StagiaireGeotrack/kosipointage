@@ -18,17 +18,18 @@ class EmployeRequest extends FormRequest
         $rules = [
             'Nom' => 'required|string|max:255',
             'BadgeID' => 'required|string|max:25|unique:Employes,BadgeID',
-            'HasBiometricSetup' => 'boolean',
-            'HasFaceSetup' => 'boolean',
-            'Pin' => 'nullable|string',
-            'Actived' => 'boolean',
+            'HasBiometricSetup' => 'nullable|boolean',
+            'HasFaceSetup' => 'nullable|boolean',
+            'Pin' => 'nullable|string|size:6|regex:/^[0-9]{6}$/',
+            'Actived' => 'nullable|boolean',
             'SiegeID' => 'required|exists:Entreprises_sieges,ID',
-            'FaceEncodingFile' => 'nullable|image|max:5120', // Pour l'upload de photo
+            'FaceEncodingFile' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5120',
         ];
 
         // En cas de mise à jour, permettre de conserver le même BadgeID
         if ($this->method() === 'PUT' || $this->method() === 'PATCH') {
-            $rules['BadgeID'] = 'required|string|max:25|unique:Employes,BadgeID,'.$this->route('employe').',ID';
+            $employeId = $this->route('employe');
+            $rules['BadgeID'] = 'required|string|max:25|unique:Employes,BadgeID,' . $employeId . ',ID';
         }
 
         return $rules;
@@ -37,15 +38,45 @@ class EmployeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Nom.required' => __('validation.required', ['attribute' => __('Nom')]),
-            'Nom.max' => __('validation.max.string', ['attribute' => __('Nom'), 'max' => 255]),
-            'BadgeID.required' => __('validation.required', ['attribute' => __('Badge ID')]),
-            'BadgeID.max' => __('validation.max.string', ['attribute' => __('Badge ID'), 'max' => 25]),
-            'BadgeID.unique' => __('validation.unique', ['attribute' => __('Badge ID')]),
-            'SiegeID.required' => __('validation.required', ['attribute' => __('Siège')]),
-            'SiegeID.exists' => __('validation.exists', ['attribute' => __('Siège')]),
-            'FaceEncodingFile.image' => __('validation.image', ['attribute' => __('Face image')]),
-            'FaceEncodingFile.max' => __('validation.max.file', ['attribute' => __('Face image'), 'max' => 5120]),
+            'Nom.required' => 'Le nom est obligatoire.',
+            'Nom.max' => 'Le nom ne peut pas dépasser :max caractères.',
+            
+            'BadgeID.required' => 'Le Badge ID est obligatoire.',
+            'BadgeID.max' => 'Le Badge ID ne peut pas dépasser :max caractères.',
+            'BadgeID.unique' => 'Ce Badge ID est déjà utilisé.',
+            
+            'Pin.size' => 'Le code PIN doit contenir exactement :size chiffres.',
+            'Pin.regex' => 'Le code PIN doit contenir uniquement des chiffres.',
+            
+            'SiegeID.required' => 'Le siège est obligatoire.',
+            'SiegeID.exists' => 'Le siège sélectionné n\'existe pas.',
+            
+            'FaceEncodingFile.image' => 'Le fichier doit être une image.',
+            'FaceEncodingFile.mimes' => 'L\'image doit être au format : :values.',
+            'FaceEncodingFile.max' => 'L\'image ne peut pas dépasser :max Ko (5 Mo).',
         ];
+    }
+
+    /**
+     * Prépare les données pour la validation
+     */
+    protected function prepareForValidation()
+    {
+        // Convertir les checkboxes en booléens
+        $data = [];
+        
+        if ($this->has('HasBiometricSetup')) {
+            $data['HasBiometricSetup'] = $this->input('HasBiometricSetup') ? true : false;
+        } else {
+            $data['HasBiometricSetup'] = false;
+        }
+        
+        if ($this->has('Actived')) {
+            $data['Actived'] = $this->input('Actived') ? true : false;
+        } else {
+            $data['Actived'] = false;
+        }
+        
+        $this->merge($data);
     }
 }

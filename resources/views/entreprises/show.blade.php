@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Détails de l'entreprise
+                Détails du site ou établissement
             </h2>
             <a href="{{ route('entreprises.index') }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Retour
@@ -69,51 +69,6 @@
                                         </dl>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-12">
-                                <h6>Employés associés</h6>
-                                
-                                @if($entreprise->employes && $entreprise->employes->count() > 0)
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Nom</th>
-                                                    <th>Badge</th>
-                                                    <th>Statut</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($entreprise->employes as $employe)
-                                                    <tr>
-                                                        <td>{{ $employe->ID }}</td>
-                                                        <td>{{ $employe->Nom }}</td>
-                                                        <td>{{ $employe->BadgeID }}</td>
-                                                        <td>
-                                                            <span class="badge bg-{{ $employe->Actived ? 'success' : 'danger' }}">
-                                                                {{ $employe->Actived ? 'Actif' : 'Inactif' }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ route('employes.show', $employe->ID) }}" class="btn btn-info btn-sm">
-                                                                <i class="bi bi-eye"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @else
-                                    <div class="alert alert-info">
-                                        Aucun employé associé à cette entreprise.
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>

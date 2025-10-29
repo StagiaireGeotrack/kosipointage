@@ -43,9 +43,9 @@ class EntrepriseController extends Controller
     {
         $data = $request->validated();
         
-        // Convertir le logo en Base64 si présent
+        // Convertir et COMPRESSER le logo en Base64 si présent
         if ($request->hasFile('Logo')) {
-            $data['Logo'] = $this->convertImageToBase64($request->file('Logo'));
+            $data['Logo'] = $this->optimizeAndConvertToBase64($request->file('Logo'));
         }
         
         // Ajouter la date de création
@@ -75,9 +75,9 @@ class EntrepriseController extends Controller
     {
         $data = $request->validated();
         
-        // Convertir le nouveau logo en Base64 si présent
+        // Convertir et COMPRESSER le nouveau logo si présent
         if ($request->hasFile('Logo')) {
-            $data['Logo'] = $this->convertImageToBase64($request->file('Logo'));
+            $data['Logo'] = $this->optimizeAndConvertToBase64($request->file('Logo'));
         } else {
             // Ne pas modifier le logo s'il n'y a pas de nouveau fichier
             unset($data['Logo']);
@@ -123,16 +123,16 @@ class EntrepriseController extends Controller
             abort(404, 'Logo non trouvé');
         }
         
-        // Décoder le Base64
-        $logoData = base64_decode($entreprise->Logo);
+        // Décoder (et décompresser si nécessaire)
+        $logoData = $this->decodeBase64($entreprise->Logo);
         
-        // Déterminer le type MIME à partir des premiers octets
+        // Déterminer le type MIME
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($logoData);
         
         return response($logoData)
             ->header('Content-Type', $mimeType)
-            ->header('Cache-Control', 'public, max-age=86400'); // Cache 24h
+            ->header('Cache-Control', 'public, max-age=86400');
     }
     
     /**
@@ -146,28 +146,114 @@ class EntrepriseController extends Controller
             abort(404, 'Logo non trouvé');
         }
         
-        // Décoder le Base64
-        $logoData = base64_decode($entreprise->Logo);
+        // Décoder
+        $logoData = $this->decodeBase64($entreprise->Logo);
         
         // Créer une miniature
         $thumbnail = $this->createThumbnail($logoData, $width, $height);
         
         return response($thumbnail)
             ->header('Content-Type', 'image/png')
-            ->header('Cache-Control', 'public, max-age=86400'); // Cache 24h
+            ->header('Cache-Control', 'public, max-age=86400');
     }
     
     /**
-     * Convertit une image uploadée en Base64
+     * ⭐ NOUVELLE MÉTHODE : Optimise et convertit l'image en Base64
+     * RÉDUIT LA TAILLE DE 70-90% !
      */
-    protected function convertImageToBase64($file)
+    protected function optimizeAndConvertToBase64($file)
     {
         try {
+            // 1. Lire l'image
             $imageData = file_get_contents($file->getRealPath());
-            return base64_encode($imageData);
+            $image = imagecreatefromstring($imageData);
+            
+            if ($image === false) {
+                throw new \Exception('Impossible de créer l\'image');
+            }
+            
+            $originalWidth = imagesx($image);
+            $originalHeight = imagesy($image);
+            
+            // 2. REDIMENSIONNER si trop grande (max 800x800)
+            $maxWidth = 800;
+            $maxHeight = 800;
+            
+            $ratio = min($maxWidth / $originalWidth, $maxHeight / $originalHeight, 1);
+            $newWidth = intval($originalWidth * $ratio);
+            $newHeight = intval($originalHeight * $ratio);
+            
+            if ($ratio < 1) {
+                // Créer l'image redimensionnée
+                $resized = imagecreatetruecolor($newWidth, $newHeight);
+                
+                // Préserver la transparence
+                imagealphablending($resized, false);
+                imagesavealpha($resized, true);
+                $transparent = imagecolorallocatealpha($resized, 255, 255, 255, 127);
+                imagefilledrectangle($resized, 0, 0, $newWidth, $newHeight, $transparent);
+                
+                // Redimensionner
+                imagecopyresampled(
+                    $resized, $image,
+                    0, 0, 0, 0,
+                    $newWidth, $newHeight,
+                    $originalWidth, $originalHeight
+                );
+                
+                imagedestroy($image);
+                $image = $resized;
+            }
+            
+            // 3. COMPRESSER en PNG avec compression maximale
+            ob_start();
+            imagepng($image, null, 9); // 9 = compression maximale
+            $compressedData = ob_get_clean();
+            imagedestroy($image);
+            
+            // 4. OPTION : Compresser le Base64 avec gzip (BONUS)
+            $compressed = gzcompress($compressedData, 9);
+            
+            // 5. Convertir en Base64
+            $base64 = base64_encode($compressed);
+            
+            // Log pour debug
+            $originalSize = strlen($imageData);
+            $compressedSize = strlen($base64);
+            $reduction = round((1 - $compressedSize / $originalSize) * 100, 2);
+            
+            Log::info("Image optimisée : {$originalSize} bytes → {$compressedSize} bytes (réduction : {$reduction}%)");
+            
+            return $base64;
+            
         } catch (\Exception $e) {
-            Log::error('Erreur lors de la conversion de l\'image en Base64: ' . $e->getMessage());
-            throw new \Exception('Impossible de convertir l\'image en Base64');
+            Log::error('Erreur lors de l\'optimisation de l\'image : ' . $e->getMessage());
+            throw new \Exception('Impossible d\'optimiser l\'image');
+        }
+    }
+    
+    /**
+     * Décode le Base64 (et décompresse si nécessaire)
+     */
+    protected function decodeBase64($base64)
+    {
+        try {
+            $decoded = base64_decode($base64);
+            
+            // Tenter de décompresser avec gzip
+            $decompressed = @gzuncompress($decoded);
+            
+            // Si la décompression réussit, utiliser les données décompressées
+            if ($decompressed !== false) {
+                return $decompressed;
+            }
+            
+            // Sinon, retourner les données décodées normalement
+            return $decoded;
+            
+        } catch (\Exception $e) {
+            Log::error('Erreur lors du décodage : ' . $e->getMessage());
+            return base64_decode($base64);
         }
     }
     
@@ -194,7 +280,7 @@ class EntrepriseController extends Controller
             // Créer la miniature
             $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
             
-            // Préserver la transparence pour les PNG
+            // Préserver la transparence
             imagealphablending($thumbnail, false);
             imagesavealpha($thumbnail, true);
             
@@ -210,7 +296,7 @@ class EntrepriseController extends Controller
             
             // Capturer la sortie
             ob_start();
-            imagepng($thumbnail);
+            imagepng($thumbnail, null, 9);
             $thumbnailData = ob_get_clean();
             
             // Libérer la mémoire

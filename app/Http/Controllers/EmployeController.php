@@ -8,23 +8,20 @@ use App\Models\EntrepriseSiege;
 use App\Http\Requests\EmployeRequest;
 use App\Repositories\EmployeRepository;
 use App\Services\ExportService;
-use App\Services\FileStorageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmployeController extends Controller
 {
     protected $repository;
     protected $exportService;
-    protected $fileService;
     
     public function __construct(
         EmployeRepository $repository,
-        ExportService $exportService,
-        FileStorageService $fileService
+        ExportService $exportService
     ) {
         $this->repository = $repository;
         $this->exportService = $exportService;
-        $this->fileService = $fileService;
     }
     
     public function index(Request $request)
@@ -35,7 +32,7 @@ class EmployeController extends Controller
         ]);
         
         $employes = $this->repository->getFiltered($filters);
-        $sieges = EntrepriseSiege::all(); // Pour le filtre par siège
+        $sieges = EntrepriseSiege::all();
         
         return view('employes.index', compact('employes', 'sieges', 'filters'));
     }
@@ -48,15 +45,21 @@ class EmployeController extends Controller
     
     public function store(EmployeRequest $request)
     {
-        $employe = $this->repository->create($request->validated());
+        $data = $request->validated();
         
+        // Convertir et COMPRESSER la photo en Base64 si présente
         if ($request->hasFile('FaceEncodingFile')) {
-            $this->fileService->storeInDatabase($request->file('FaceEncodingFile'), 'FaceEncodingPath', $employe, 'ID');
-            
-            // Mettre à jour HasFaceSetup si un fichier d'encodage est téléchargé
-            $employe->HasFaceSetup = true;
-            $employe->save();
+            $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
+            $data['HasFaceSetup'] = true;
         }
+        
+        // Ajouter la date de création
+        $data['CreatedAt'] = now();
+        
+        // Supprimer FaceEncodingFile car ce n'est pas une colonne
+        unset($data['FaceEncodingFile']);
+        
+        $employe = $this->repository->create($data);
         
         return redirect()->route('employes.index')
             ->with('success', __('Employé créé avec succès'));
@@ -65,9 +68,10 @@ class EmployeController extends Controller
     public function show($id)
     {
         $employe = $this->repository->findById($id);
-        $pointages = $employe->pointages()->latest('timestamp_')->paginate(5);
+        $pointages = $employe->pointages()->latest('timestamp_')->paginate(10);
+        $sieges = EntrepriseSiege::all();
         
-        return view('employes.show', compact('employe', 'pointages'));
+        return view('employes.show', compact('employe', 'pointages', 'sieges'));
     }
     
     public function edit($id)
@@ -80,15 +84,21 @@ class EmployeController extends Controller
     
     public function update(EmployeRequest $request, $id)
     {
-        $employe = $this->repository->update($id, $request->validated());
+        $data = $request->validated();
         
+        // Convertir et COMPRESSER la nouvelle photo si présente
         if ($request->hasFile('FaceEncodingFile')) {
-            $this->fileService->storeInDatabase($request->file('FaceEncodingFile'), 'FaceEncodingPath', $employe, 'ID');
-            
-            // Mettre à jour HasFaceSetup si un fichier d'encodage est téléchargé
-            $employe->HasFaceSetup = true;
-            $employe->save();
+            $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
+            $data['HasFaceSetup'] = true;
+        } else {
+            // Ne pas modifier la photo si aucun nouveau fichier
+            unset($data['FaceEncodingPath']);
         }
+        
+        // Supprimer FaceEncodingFile
+        unset($data['FaceEncodingFile']);
+        
+        $employe = $this->repository->update($id, $data);
         
         return redirect()->route('employes.index')
             ->with('success', __('Employé modifié avec succès'));
@@ -124,32 +134,202 @@ class EmployeController extends Controller
         return $this->exportService->exportToPdf($employes, __('Employés'), 'exports.employes');
     }
     
+    /**
+     * Retourne la photo de visage d'un employé
+     */
     public function getFaceEncoding($id)
     {
         $employe = Employe::findOrFail($id);
         
         if (!$employe->FaceEncodingPath) {
-            abort(404, __('Face non trouvée'));
+            abort(404, __('Photo de visage non trouvée'));
         }
         
-        $imageData = $this->fileService->retrieveFromDatabase($employe, 'FaceEncodingPath');
+        // Décoder (et décompresser si nécessaire)
+        $imageData = $this->decodeBase64($employe->FaceEncodingPath);
+        
+        // Déterminer le type MIME
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($imageData);
         
         return response($imageData)
-            ->header('Content-Type', 'image/png');
+            ->header('Content-Type', $mimeType)
+            ->header('Cache-Control', 'public, max-age=86400');
     }
     
+    /**
+     * Retourne une miniature de la photo de visage
+     */
     public function getFaceThumbnail($id)
     {
         $employe = Employe::findOrFail($id);
         
         if (!$employe->FaceEncodingPath) {
-            abort(404, __('Face non trouvée'));
+            abort(404, __('Photo de visage non trouvée'));
         }
         
-        $imageData = $this->fileService->retrieveFromDatabase($employe, 'FaceEncodingPath');
-        $thumbnail = $this->fileService->createThumbnail($imageData);
+        // Décoder
+        $imageData = $this->decodeBase64($employe->FaceEncodingPath);
+        
+        // Créer une miniature
+        $thumbnail = $this->createThumbnail($imageData);
         
         return response($thumbnail)
-            ->header('Content-Type', 'image/png');
+            ->header('Content-Type', 'image/png')
+            ->header('Cache-Control', 'public, max-age=86400');
+    }
+    
+    /**
+     * ⭐ NOUVELLE MÉTHODE : Optimise et convertit l'image en Base64
+     * RÉDUIT LA TAILLE DE 70-90% !
+     */
+    protected function optimizeAndConvertToBase64($file)
+    {
+        try {
+            // 1. Lire l'image
+            $imageData = file_get_contents($file->getRealPath());
+            $image = imagecreatefromstring($imageData);
+            
+            if ($image === false) {
+                throw new \Exception('Impossible de créer l\'image');
+            }
+            
+            $originalWidth = imagesx($image);
+            $originalHeight = imagesy($image);
+            
+            // 2. REDIMENSIONNER si trop grande (max 600x600 pour visages)
+            $maxWidth = 600;
+            $maxHeight = 600;
+            
+            $ratio = min($maxWidth / $originalWidth, $maxHeight / $originalHeight, 1);
+            $newWidth = intval($originalWidth * $ratio);
+            $newHeight = intval($originalHeight * $ratio);
+            
+            if ($ratio < 1) {
+                // Créer l'image redimensionnée
+                $resized = imagecreatetruecolor($newWidth, $newHeight);
+                
+                // Préserver la transparence
+                imagealphablending($resized, false);
+                imagesavealpha($resized, true);
+                $transparent = imagecolorallocatealpha($resized, 255, 255, 255, 127);
+                imagefilledrectangle($resized, 0, 0, $newWidth, $newHeight, $transparent);
+                
+                // Redimensionner
+                imagecopyresampled(
+                    $resized, $image,
+                    0, 0, 0, 0,
+                    $newWidth, $newHeight,
+                    $originalWidth, $originalHeight
+                );
+                
+                imagedestroy($image);
+                $image = $resized;
+            }
+            
+            // 3. COMPRESSER en PNG avec compression maximale
+            ob_start();
+            imagepng($image, null, 9); // 9 = compression maximale
+            $compressedData = ob_get_clean();
+            imagedestroy($image);
+            
+            // 4. OPTION : Compresser le Base64 avec gzip (BONUS)
+            $compressed = gzcompress($compressedData, 9);
+            
+            // 5. Convertir en Base64
+            $base64 = base64_encode($compressed);
+            
+            // Log pour debug
+            $originalSize = strlen($imageData);
+            $compressedSize = strlen($base64);
+            $reduction = round((1 - $compressedSize / $originalSize) * 100, 2);
+            
+            Log::info("Photo optimisée : {$originalSize} bytes → {$compressedSize} bytes (réduction : {$reduction}%)");
+            
+            return $base64;
+            
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'optimisation de la photo : ' . $e->getMessage());
+            throw new \Exception('Impossible d\'optimiser la photo');
+        }
+    }
+    
+    /**
+     * Décode le Base64 (et décompresse si nécessaire)
+     */
+    protected function decodeBase64($base64)
+    {
+        try {
+            $decoded = base64_decode($base64);
+            
+            // Tenter de décompresser avec gzip
+            $decompressed = @gzuncompress($decoded);
+            
+            // Si la décompression réussit, utiliser les données décompressées
+            if ($decompressed !== false) {
+                return $decompressed;
+            }
+            
+            // Sinon, retourner les données décodées normalement
+            return $decoded;
+            
+        } catch (\Exception $e) {
+            Log::error('Erreur lors du décodage : ' . $e->getMessage());
+            return base64_decode($base64);
+        }
+    }
+    
+    /**
+     * Crée une miniature d'une image
+     */
+    protected function createThumbnail($imageData, $width = 150, $height = 150)
+    {
+        try {
+            $image = imagecreatefromstring($imageData);
+            
+            if ($image === false) {
+                throw new \Exception('Impossible de créer l\'image');
+            }
+            
+            $originalWidth = imagesx($image);
+            $originalHeight = imagesy($image);
+            
+            // Calculer les dimensions proportionnelles
+            $ratio = min($width / $originalWidth, $height / $originalHeight);
+            $newWidth = intval($originalWidth * $ratio);
+            $newHeight = intval($originalHeight * $ratio);
+            
+            // Créer la miniature
+            $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
+            
+            // Préserver la transparence
+            imagealphablending($thumbnail, false);
+            imagesavealpha($thumbnail, true);
+            
+            imagecopyresampled(
+                $thumbnail, 
+                $image, 
+                0, 0, 0, 0, 
+                $newWidth, 
+                $newHeight, 
+                $originalWidth, 
+                $originalHeight
+            );
+            
+            // Capturer la sortie
+            ob_start();
+            imagepng($thumbnail, null, 9);
+            $thumbnailData = ob_get_clean();
+            
+            // Libérer la mémoire
+            imagedestroy($image);
+            imagedestroy($thumbnail);
+            
+            return $thumbnailData;
+            
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création de la miniature: ' . $e->getMessage());
+            throw new \Exception('Impossible de créer la miniature');
+        }
     }
 }

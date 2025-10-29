@@ -1,187 +1,215 @@
+{{-- resources/views/employes/edit.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('Détails employé') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark mb-0">
+                Modifier l'employé : {{ $employe->Nom }}
+            </h2>
+            <a href="{{ route('employes.index') }}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-5">
-        <div class="container">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-4">
-                        <a href="{{ route('employes.index') }}" class="btn btn-secondary d-inline-flex align-items-center">
-                            <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                            </svg>
-                            {{ __('Retour') }}
-                        </a>
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('employes.edit', $employe->ID) }}" class="btn btn-primary d-inline-flex align-items-center">
-                                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                                {{ __('Modifier') }}
-                            </a>
-                        </div>
-                    </div>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('employes.update', $employe->ID) }}" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
 
-                    <div class="row g-4">
-                        <div class="col-12 col-md-4">
-                            <div class="bg-light p-4 rounded shadow-sm text-center">
-                                @if ($employe->HasFaceSetup)
-                                    <img src="{{ route('employes.face', $employe->ID) }}" alt="{{ $employe->Nom }}" class="rounded-circle mx-auto d-block" style="width: 192px; height: 192px; object-fit: cover;">
-                                @else
-                                    <div class="rounded-circle mx-auto bg-secondary d-flex align-items-center justify-content-center" style="width: 192px; height: 192px;">
-                                        <span class="display-1 text-white">{{ substr($employe->Nom, 0, 1) }}</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Nom -->
+                                    <div class="form-group mb-3">
+                                        <label for="Nom">Nom <span class="text-danger">*</span></label>
+                                        <input type="text" 
+                                               class="form-control @error('Nom') is-invalid @enderror" 
+                                               id="Nom" 
+                                               name="Nom" 
+                                               value="{{ old('Nom', $employe->Nom) }}" 
+                                               required>
+                                        @error('Nom')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                @endif
-                                <h3 class="fs-4 fw-semibold mt-3">{{ $employe->Nom }}</h3>
-                                <p class="text-muted">{{ $employe->BadgeID }}</p>
 
-                                <div class="mt-3 d-flex flex-wrap justify-content-center gap-2">
-                                    @if ($employe->HasBiometricSetup)
-                                        <span class="badge bg-info">
-                                            {{ __('Empreinte') }}
-                                        </span>
-                                    @endif
-                                    
-                                    @if ($employe->HasFaceSetup)
-                                        <span class="badge bg-primary">
-                                            {{ __('Face image') }}
-                                        </span>
-                                    @endif
-                                    
-                                    @if ($employe->Pin)
-                                        <span class="badge bg-warning text-dark">
-                                            {{ __('Code PIN') }}
-                                        </span>
+                                    <!-- BadgeID -->
+                                    <div class="form-group mb-3">
+                                        <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
+                                        <input type="text" 
+                                               class="form-control @error('BadgeID') is-invalid @enderror" 
+                                               id="BadgeID" 
+                                               name="BadgeID" 
+                                               value="{{ old('BadgeID', $employe->BadgeID) }}" 
+                                               maxlength="25"
+                                               required>
+                                        <small class="form-text text-muted">Identifiant unique de l'employé</small>
+                                        @error('BadgeID')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- SiegeID -->
+                                    <div class="form-group mb-3">
+                                        <label for="SiegeID">Siège <span class="text-danger">*</span></label>
+                                        <select class="form-control @error('SiegeID') is-invalid @enderror" 
+                                                id="SiegeID" 
+                                                name="SiegeID" 
+                                                required>
+                                            <option value="">Sélectionnez un siège</option>
+                                            @foreach($sieges as $siege)
+                                                <option value="{{ $siege->ID }}" 
+                                                        {{ old('SiegeID', $employe->SiegeID) == $siege->ID ? 'selected' : '' }}>
+                                                    {{ $siege->Nom }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('SiegeID')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Pin -->
+                                    <div class="form-group mb-3">
+                                        <label for="Pin">Code PIN</label>
+                                        <input type="text" 
+                                               class="form-control @error('Pin') is-invalid @enderror" 
+                                               id="Pin" 
+                                               name="Pin" 
+                                               value="{{ old('Pin', $employe->Pin) }}" 
+                                               maxlength="6"
+                                               pattern="[0-9]{6}"
+                                               placeholder="000000">
+                                        <small class="form-text text-muted">Code PIN à 6 chiffres</small>
+                                        @error('Pin')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Photo de visage actuelle -->
+                                    @if($employe->FaceEncodingPath)
+                                        <div class="form-group mb-3">
+                                            <label class="d-block text-muted">Photo de visage actuelle :</label>
+                                            {{-- ✅ Utiliser la ROUTE au lieu du Base64 direct --}}
+                                            <img src="{{ route('employes.face.thumbnail', $employe->ID) }}" 
+                                                 alt="Photo {{ $employe->Nom }}" 
+                                                 style="max-width: 200px; max-height: 200px;" 
+                                                 class="img-thumbnail"
+                                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext fill=%22%23999%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EErreur%3C/text%3E%3C/svg%3E';">
+                                        </div>
                                     @endif
 
-                                    @if ($employe->Actived)
-                                        <span class="badge bg-success">
-                                            {{ __('Activé') }}
-                                        </span>
-                                    @else
-                                        <span class="badge bg-danger">
-                                            {{ __('Désactivé') }}
-                                        </span>
+                                    <!-- FaceEncodingFile -->
+                                    <div class="form-group mb-3">
+                                        <label for="FaceEncodingFile">Nouvelle photo de visage</label>
+                                        <input type="file" 
+                                               class="form-control @error('FaceEncodingFile') is-invalid @enderror" 
+                                               id="FaceEncodingFile" 
+                                               name="FaceEncodingFile" 
+                                               accept="image/*">
+                                        <small class="form-text text-muted">
+                                            Formats acceptés : JPG, PNG, GIF. Max : 5Mo. 
+                                            {{ $employe->FaceEncodingPath ? 'Laisser vide pour conserver la photo actuelle.' : '' }}
+                                        </small>
+                                        @error('FaceEncodingFile')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div id="facePreview" class="mt-2"></div>
+                                    </div>
+
+                                    <!-- HasBiometricSetup -->
+                                    <div class="form-group mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
+                                                   type="checkbox" 
+                                                   value="1" 
+                                                   id="HasBiometricSetup" 
+                                                   name="HasBiometricSetup" 
+                                                   {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="HasBiometricSetup">
+                                                <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
+                                            </label>
+                                            @error('HasBiometricSetup')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- HasFaceSetup (lecture seule, automatique) -->
+                                    @if($employe->HasFaceSetup)
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-check-circle"></i> Reconnaissance faciale configurée
+                                        </div>
                                     @endif
+
+                                    <!-- Actived -->
+                                    <div class="form-group mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input @error('Actived') is-invalid @enderror" 
+                                                   type="checkbox" 
+                                                   value="1" 
+                                                   id="Actived" 
+                                                   name="Actived" 
+                                                   {{ old('Actived', $employe->Actived) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="Actived">
+                                                Activer l'employé
+                                            </label>
+                                            @error('Actived')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-12 col-md-8">
-                            <div class="bg-light p-4 rounded shadow-sm">
-                                <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Information') }}</h3>
-                                
-                                <dl class="row g-3">
-                                    <div class="col-12 col-md-6">
-                                        <div class="bg-white p-3 rounded">
-                                            <dt class="small fw-medium text-secondary">{{ __('ID') }}</dt>
-                                            <dd class="mb-0 small text-dark">{{ $employe->ID }}</dd>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-12 col-md-6">
-                                        <div class="bg-white p-3 rounded">
-                                            <dt class="small fw-medium text-secondary">{{ __('Siège') }}</dt>
-                                            <dd class="mb-0 small text-dark">{{ $employe->siege->Nom }}</dd>
-                                        </div>
-                                    </div>
-                                    
-                                    @if ($employe->CreatedAt)
-                                    <div class="col-12 col-md-6">
-                                        <div class="bg-white p-3 rounded">
-                                            <dt class="small fw-medium text-secondary">{{ __('Date de création') }}</dt>
-                                            <dd class="mb-0 small text-dark">{{ $employe->CreatedAt->format('d/m/Y H:i') }}</dd>
-                                        </div>
-                                    </div>   
-                                    @endif
-                                </dl>
-                                
-                                <h3 class="fs-5 fw-medium text-dark mt-4 mb-3">{{ __('Pointages récents') }}</h3>
-                                
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th class="text-uppercase small fw-semibold text-secondary">
-                                                    {{ __('Date') }}
-                                                </th>
-                                                <th class="text-uppercase small fw-semibold text-secondary">
-                                                    {{ __('Type') }}
-                                                </th>
-                                                <th class="text-uppercase small fw-semibold text-secondary">
-                                                    {{ __('Méthode') }}
-                                                </th>
-                                                <th class="text-uppercase small fw-semibold text-secondary">
-                                                    {{ __('Actions') }}
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($pointages as $pointage)
-                                                <tr>
-                                                    <td class="align-middle small">
-                                                        {{ $pointage->timestamp_->format('d/m/Y H:i:s') }}
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        @if ($pointage->type_ == 'entry')
-                                                            <span class="badge bg-success">
-                                                                {{ __('Entrée) }}
-                                                            </span>
-                                                        @else
-                                                            <span class="badge bg-danger">
-                                                                {{ __('Sortie') }}
-                                                            </span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        @switch($pointage->auth_method)
-                                                            @case('badge')
-                                                                <span class="badge bg-info">
-                                                                    {{ __('Badge') }}
-                                                                </span>
-                                                                @break
-                                                            @case('face')
-                                                                <span class="badge bg-primary">
-                                                                    {{ __('Face image') }}
-                                                                </span>
-                                                                @break
-                                                            @case('pin')
-                                                                <span class="badge bg-warning text-dark">
-                                                                    {{ __('PIN') }}
-                                                                </span>
-                                                                @break
-                                                            @case('admin')
-                                                                <span class="badge bg-secondary">
-                                                                    {{ __('Administrateur') }}
-                                                                </span>
-                                                                @break
-                                                        @endswitch
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <a href="{{ route('pointages.show', $pointage->ID) }}" class="text-primary text-decoration-none">
-                                                            {{ __('Détails') }}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="4" class="text-center py-4">
-                                                        {{ __('Aucun pointage pour le moment') }}
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
+
+                            <div class="text-end mt-4">
+                                <a href="{{ route('employes.index') }}" class="btn btn-secondary me-2">
+                                    <i class="bi bi-x-circle"></i> Annuler
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Enregistrer les modifications
+                                </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        // Aperçu de la nouvelle photo
+        document.getElementById('FaceEncodingFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('facePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `
+                        <label class="d-block text-muted mb-1">Nouvelle photo :</label>
+                        <img src="${e.target.result}" 
+                             alt="Aperçu de la nouvelle photo" 
+                             style="max-width: 200px; max-height: 200px;" 
+                             class="img-thumbnail">
+                    `;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '';
+            }
+        });
+
+        // Validation du PIN
+        document.getElementById('Pin').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
+        });
+    </script>
+    @endpush
 </x-app-layout>
