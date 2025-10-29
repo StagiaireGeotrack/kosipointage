@@ -31,22 +31,22 @@ class PointageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'employee_id.required' => __('validation.required', ['attribute' => __('app.employee')]),
-            'employee_id.exists' => __('validation.exists', ['attribute' => __('app.employee')]),
-            'type_.required' => __('validation.required', ['attribute' => __('app.type')]),
-            'type_.in' => __('validation.in', ['attribute' => __('app.type')]),
-            'auth_method.required' => __('validation.required', ['attribute' => __('app.auth_method')]),
-            'auth_method.in' => __('validation.in', ['attribute' => __('app.auth_method')]),
-            'timestamp_.required' => __('validation.required', ['attribute' => __('app.timestamp')]),
-            'timestamp_.date' => __('validation.date', ['attribute' => __('app.timestamp')]),
-            'latitude.required' => __('validation.required', ['attribute' => __('app.latitude')]),
-            'latitude.between' => __('validation.between.numeric', ['attribute' => __('app.latitude'), 'min' => -90, 'max' => 90]),
-            'longitude.required' => __('validation.required', ['attribute' => __('app.longitude')]),
-            'longitude.between' => __('validation.between.numeric', ['attribute' => __('app.longitude'), 'min' => -180, 'max' => 180]),
-            'SiegeID.required' => __('validation.required', ['attribute' => __('app.office')]),
-            'SiegeID.exists' => __('validation.exists', ['attribute' => __('app.office')]),
-            'photo.image' => __('validation.image', ['attribute' => __('app.photo')]),
-            'photo.max' => __('validation.max.file', ['attribute' => __('app.photo'), 'max' => 5120]),
+            'employee_id.required' => __('validation.required', ['attribute' => __('Employé')]),
+            'employee_id.exists' => __('validation.exists', ['attribute' => __('Employé')]),
+            'type_.required' => __('validation.required', ['attribute' => __('Type')]),
+            'type_.in' => __('validation.in', ['attribute' => __('Type')]),
+            'auth_method.required' => __('validation.required', ['attribute' => __('Méthode')]),
+            'auth_method.in' => __('validation.in', ['attribute' => __('Méthode')]),
+            'timestamp_.required' => __('validation.required', ['attribute' => __('Date et heure')]),
+            'timestamp_.date' => __('validation.date', ['attribute' => __('Date et heure')]),
+            'latitude.required' => __('validation.required', ['attribute' => __('Latitude')]),
+            'latitude.between' => __('validation.between.numeric', ['attribute' => __('Latitude'), 'min' => -90, 'max' => 90]),
+            'longitude.required' => __('validation.required', ['attribute' => __('Longitude')]),
+            'longitude.between' => __('validation.between.numeric', ['attribute' => __('Longitude'), 'min' => -180, 'max' => 180]),
+            'SiegeID.required' => __('validation.required', ['attribute' => __('Siège')]),
+            'SiegeID.exists' => __('validation.exists', ['attribute' => __('Siège')]),
+            'photo.image' => __('validation.image', ['attribute' => __('Face image')]),
+            'photo.max' => __('validation.max.file', ['attribute' => __('Face image'), 'max' => 5120]),
         ];
     }
 }

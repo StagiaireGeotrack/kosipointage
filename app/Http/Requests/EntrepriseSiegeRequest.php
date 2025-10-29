@@ -25,9 +25,9 @@ class EntrepriseSiegeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Nom.required' => __('validation.required', ['attribute' => __('app.office_name')]),
-            'Nom.max' => __('validation.max.string', ['attribute' => __('app.office_name'), 'max' => 255]),
-            'Nom_Lieu_Ville.max' => __('validation.max.string', ['attribute' => __('app.location'), 'max' => 255]),
+            'Nom.required' => __('validation.required', ['attribute' => __('Siège')]),
+            'Nom.max' => __('validation.max.string', ['attribute' => __('Siège'), 'max' => 255]),
+            'Nom_Lieu_Ville.max' => __('validation.max.string', ['attribute' => __('Adresse ou ville'), 'max' => 255]),
         ];
     }
 }

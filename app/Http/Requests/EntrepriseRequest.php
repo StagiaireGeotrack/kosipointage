@@ -31,17 +31,17 @@ class EntrepriseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Nom.required' => __('validation.required', ['attribute' => __('app.company_name')]),
-            'Nom.max' => __('validation.max.string', ['attribute' => __('app.company_name'), 'max' => 255]),
-            'Latitude.required' => __('validation.required', ['attribute' => __('app.latitude')]),
-            'Latitude.between' => __('validation.between.numeric', ['attribute' => __('app.latitude'), 'min' => -90, 'max' => 90]),
-            'Longitude.required' => __('validation.required', ['attribute' => __('app.longitude')]),
-            'Longitude.between' => __('validation.between.numeric', ['attribute' => __('app.longitude'), 'min' => -180, 'max' => 180]),
-            'RadiusInMeters.min' => __('validation.min.numeric', ['attribute' => __('app.radius'), 'min' => 1]),
-            'SiegeID.required' => __('validation.required', ['attribute' => __('app.office')]),
-            'SiegeID.exists' => __('validation.exists', ['attribute' => __('app.office')]),
-            'Logo.image' => __('validation.image', ['attribute' => __('app.logo')]),
-            'Logo.max' => __('validation.max.file', ['attribute' => __('app.logo'), 'max' => 2048]),
+            'Nom.required' => __('validation.required', ['attribute' => __('Nom')]),
+            'Nom.max' => __('validation.max.string', ['attribute' => __('Nom'), 'max' => 255]),
+            'Latitude.required' => __('validation.required', ['attribute' => __('Latitude')]),
+            'Latitude.between' => __('validation.between.numeric', ['attribute' => __('Latitude'), 'min' => -90, 'max' => 90]),
+            'Longitude.required' => __('validation.required', ['attribute' => __('Longitude')]),
+            'Longitude.between' => __('validation.between.numeric', ['attribute' => __('Longitude'), 'min' => -180, 'max' => 180]),
+            'RadiusInMeters.min' => __('validation.min.numeric', ['attribute' => __('Rayon'), 'min' => 1]),
+            'SiegeID.required' => __('validation.required', ['attribute' => __('Siège')]),
+            'SiegeID.exists' => __('validation.exists', ['attribute' => __('Siège')]),
+            'Logo.image' => __('validation.image', ['attribute' => __('Logo')]),
+            'Logo.max' => __('validation.max.file', ['attribute' => __('Logo'), 'max' => 2048]),
         ];
     }
 }

@@ -37,15 +37,15 @@ class EmployeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Nom.required' => __('validation.required', ['attribute' => __('app.employee_name')]),
-            'Nom.max' => __('validation.max.string', ['attribute' => __('app.employee_name'), 'max' => 255]),
-            'BadgeID.required' => __('validation.required', ['attribute' => __('app.badge_id')]),
-            'BadgeID.max' => __('validation.max.string', ['attribute' => __('app.badge_id'), 'max' => 25]),
-            'BadgeID.unique' => __('validation.unique', ['attribute' => __('app.badge_id')]),
-            'SiegeID.required' => __('validation.required', ['attribute' => __('app.office')]),
-            'SiegeID.exists' => __('validation.exists', ['attribute' => __('app.office')]),
-            'FaceEncodingFile.image' => __('validation.image', ['attribute' => __('app.face_encoding')]),
-            'FaceEncodingFile.max' => __('validation.max.file', ['attribute' => __('app.face_encoding'), 'max' => 5120]),
+            'Nom.required' => __('validation.required', ['attribute' => __('Nom')]),
+            'Nom.max' => __('validation.max.string', ['attribute' => __('Nom'), 'max' => 255]),
+            'BadgeID.required' => __('validation.required', ['attribute' => __('Badge ID')]),
+            'BadgeID.max' => __('validation.max.string', ['attribute' => __('Badge ID'), 'max' => 25]),
+            'BadgeID.unique' => __('validation.unique', ['attribute' => __('Badge ID')]),
+            'SiegeID.required' => __('validation.required', ['attribute' => __('Siège')]),
+            'SiegeID.exists' => __('validation.exists', ['attribute' => __('Siège')]),
+            'FaceEncodingFile.image' => __('validation.image', ['attribute' => __('Face image')]),
+            'FaceEncodingFile.max' => __('validation.max.file', ['attribute' => __('Face image'), 'max' => 5120]),
         ];
     }
 }
