@@ -97,43 +97,9 @@
                                     <div class="d-flex">
                                         <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Méthode') }}</div>
                                         <div style="width: 66.67%;">
-                                            @switch($pointage->auth_method)
-                                                @case('badge')
-                                                    <span class="badge bg-info">
-                                                        {{ __('Badge') }}
-                                                    </span>
-                                                    @break
-                                                @case('face')
-                                                    <span class="badge bg-primary">
-                                                        {{ __('Face image') }}
-                                                    </span>
-                                                    @break
-                                                @case('pin')
-                                                    <span class="badge bg-warning text-dark">
-                                                        {{ __('PIN') }}
-                                                    </span>
-                                                    @break
-                                                @case('admin')
-                                                    <span class="badge bg-secondary">
-                                                        {{ __('Administrateur') }}
-                                                    </span>
-                                                    @break
-                                            @endswitch
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="d-flex">
-                                        <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Synchronisé') }}</div>
-                                        <div style="width: 66.67%;">
-                                            @if ($pointage->synced)
-                                                <span class="badge bg-success">
-                                                    {{ __('Oui') }}
-                                                </span>
-                                            @else
-                                                <span class="badge bg-danger">
-                                                    {{ __('Non') }}
-                                                </span>
-                                            @endif
+                                            <span class="badge bg-info">
+                                                {{ $pointage->auth_method }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -155,21 +121,6 @@
                                                 <span class="small text-dark ms-1">{{ $pointage->longitude }}</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="col-12 col-md-6">
-                                        <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Face image') }}</h3>
-                                        @if ($pointage->photo_path)
-                                            <div class="bg-white p-3 rounded shadow-sm text-center">
-                                                <img src="{{ route('pointages.photo', $pointage->ID) }}" alt="{{ __('Face image') }}" class="img-fluid rounded">
-                                            </div>
-                                        @else
-                                            <div class="bg-white p-3 rounded shadow-sm text-center">
-                                                <div class="bg-light p-5 rounded d-flex align-items-center justify-content-center">
-                                                    <p class="text-muted mb-0">{{ __('Aucune image') }}</p>
-                                                </div>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
                             </div>

@@ -103,14 +103,6 @@
                             <x-input-error :messages="$errors->get('photo')" class="mt-2" />
                         </div>
                         
-                        <!-- Synced -->
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input id="synced" name="synced" type="checkbox" value="1" {{ old('synced', $pointage->synced) ? 'checked' : '' }} class="form-check-input">
-                                <label for="synced" class="form-check-label fw-medium">{{ __('synchronisée') }}</label>
-                            </div>
-                        </div>
-                        
                         <!-- Boutons de soumission -->
                         <div class="d-flex align-items-center justify-content-end mt-4">
                             <a href="{{ route('pointages.index') }}" class="btn btn-secondary me-2">

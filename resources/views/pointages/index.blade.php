@@ -133,6 +133,10 @@
                                             <div class="d-flex align-items-center">
                                                 @if ($pointage->employe->HasFaceSetup)
                                                     <img src="{{ route('employes.face.thumbnail', $pointage->employe->ID) }}" alt="{{ $pointage->employe->Nom }}" class="rounded-circle me-2" style="height: 32px; width: 32px; object-fit: cover;">
+                                                @else
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="height: 32px; width: 32px;">
+                                                    <span class="small fw-semibold text-white">{{ substr($pointage->employe->Nom, 0, 1) }}</span>
+                                                </div>
                                                 @endif
                                                 <div>
                                                     <div class="fw-medium">{{ $pointage->employe->Nom }}</div>
