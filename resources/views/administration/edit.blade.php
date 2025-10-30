@@ -42,7 +42,8 @@
                                 <input id="IsSuperAdmin" type="checkbox" name="IsSuperAdmin" value="1" 
                                     {{ old('IsSuperAdmin', $administrateur->IsSuperAdmin) ? 'checked' : '' }} 
                                     class="form-check-input" 
-                                    onchange="toggleAdminFields()">
+                                    onchange="toggleAdminFields()" 
+                                    disabled>
                                 <label for="IsSuperAdmin" class="form-check-label">{{ __('Super Administrateur') }}</label>
                             </div>
                             <x-input-error :messages="$errors->get('IsSuperAdmin')" class="mt-2" />
@@ -51,7 +52,7 @@
                         <!-- SiegeID -->
                         <div class="mb-3" id="siege-field" style="display: {{ old('IsSuperAdmin', $administrateur->IsSuperAdmin) ? 'none' : 'block' }};">
                             <x-input-label for="SiegeID" :value="__('Siège')" />
-                            <select id="SiegeID" name="SiegeID" class="form-select mt-1">
+                            <select id="SiegeID" name="SiegeID_display" class="form-select mt-1" disabled>
                                 <option value="">{{ __('Sélectionner un siège') }}</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" {{ old('SiegeID', $administrateur->SiegeID) == $siege->ID ? 'selected' : '' }}>
@@ -59,6 +60,10 @@
                                     </option>
                                 @endforeach
                             </select>
+                            
+                            <!-- Champ caché pour envoyer la vraie valeur -->
+                            <input type="hidden" name="SiegeID" value="{{ old('SiegeID', $administrateur->SiegeID) }}">
+                            
                             <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                         </div>
 
