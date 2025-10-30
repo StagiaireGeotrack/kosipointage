@@ -55,7 +55,7 @@ class EntrepriseSiegeController extends Controller
                 ->with('error', __('Vous n\'avez pas accès à ce page'));
         }
         
-        $siege = $this->repository->create($request->validated());
+        $this->repository->create($request->validated());
         
         return redirect()->route('sieges.index')
             ->with('success', __('Siège créé avec succès'));
@@ -93,16 +93,20 @@ class EntrepriseSiegeController extends Controller
     public function update(EntrepriseSiegeRequest $request, $id)
     {
         // Seul un SuperAdmin peut mettre à jour des sièges
-        // if (!Gate::allows('superadmin')) {
-        //     return redirect()->route('sieges.index')
-        //         ->with('error', __('Vous n\'avez pas accès à ce page'));
-        // }
+        if (!Gate::allows('superadmin')) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à ce page'));
+        }
         
-        // $this->repository->update($id, $request->validated());
+        $validated = $request->validated();
+    
+        // Forcer Actived à 0 si absent
+        $validated['Actived'] = $request->has('Actived') ? 1 : 0;
+
+        $this->repository->update($id, $validated );
         
-        // return redirect()->route('sieges.index')
-        //     ->with('success', __('Siège modifié avec succès'));
-        dd($request) ;
+        return redirect()->route('sieges.index')
+            ->with('success', __('Siège modifié avec succès'));
     }
     
     public function destroy($id)
