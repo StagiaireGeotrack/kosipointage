@@ -53,7 +53,7 @@ class ReportController extends Controller
         $query = $this->applyFilters($query, $filters);
         
         // Pagination
-        $rapports = $query->paginate(10)
+        $rapports = $query->paginate(5)
             ->appends($request->except('page'));
             
         return view('reports.daily', compact('rapports', 'sieges', 'employes', 'filters'));
@@ -80,7 +80,7 @@ class ReportController extends Controller
             $query->where('type_travail', $filters['type_travail']);
         }
         
-        $rapports = $query->paginate(10)
+        $rapports = $query->paginate(5)
             ->appends($request->except('page'));
             
         // dd($query->toSql(), $query->getBindings());

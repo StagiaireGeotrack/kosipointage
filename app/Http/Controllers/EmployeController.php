@@ -68,7 +68,7 @@ class EmployeController extends Controller
     public function show($id)
     {
         $employe = $this->repository->findById($id);
-        $pointages = $employe->pointages()->latest('timestamp_')->paginate(10);
+        $pointages = $employe->pointages()->latest('timestamp_')->paginate(5);
         $sieges = EntrepriseSiege::all();
         
         return view('employes.show', compact('employe', 'pointages', 'sieges'));
