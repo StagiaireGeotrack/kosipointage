@@ -89,7 +89,7 @@ class EntrepriseRepository extends BaseRepository
                 'Longitude' => $entreprise->Longitude,
                 'RadiusInMeters' => $entreprise->RadiusInMeters,
                 'CreatedAt' => $entreprise->CreatedAt->format('d/m/Y H:i'),
-                'Actived' => $entreprise->Actived ? __('app.yes') : __('app.no'),
+                'Actived' => $entreprise->Actived ? __('Oui') : __('Non'),
                 'Siege' => $entreprise->siege->Nom,
             ];
         });

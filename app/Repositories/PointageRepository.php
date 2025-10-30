@@ -110,14 +110,14 @@ class PointageRepository extends BaseRepository
                 'ID' => $pointage->ID,
                 'Employe' => $pointage->employe->Nom,
                 'BadgeID' => $pointage->employe->BadgeID,
-                'Type' => $pointage->type_ === 'entry' ? __('app.entry') : __('app.exit'),
+                'Type' => $pointage->type_ === 'entry' ? __('Entrée') : __('Sortie'),
                 'Methode' => $this->formatAuthMethod($pointage->auth_method),
                 'Date' => $pointage->timestamp_->format('d/m/Y'),
                 'Heure' => $pointage->timestamp_->format('H:i'),
                 'Siege' => $pointage->siege->Nom,
                 'Latitude' => $pointage->latitude,
                 'Longitude' => $pointage->longitude,
-                'Synced' => $pointage->synced ? __('app.yes') : __('app.no'),
+                'Synced' => $pointage->synced ? __('Oui') : __('Non'),
             ];
         });
     }
@@ -125,10 +125,9 @@ class PointageRepository extends BaseRepository
     protected function formatAuthMethod($method)
     {
         switch ($method) {
-            case 'badge': return __('app.badge');
-            case 'face': return __('app.face_recognition');
-            case 'pin': return __('app.pin_code');
-            case 'admin': return __('app.admin_manual');
+            case 'rfid': return __('Badge rfid');
+            case 'face': return __('Face');
+            case 'pin': return __('Code PIN');
             default: return $method;
         }
     }

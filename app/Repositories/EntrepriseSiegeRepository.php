@@ -62,7 +62,7 @@ class EntrepriseSiegeRepository extends BaseRepository
                 'ID' => $siege->ID,
                 'Nom' => $siege->Nom,
                 'Nom_Lieu_Ville' => $siege->Nom_Lieu_Ville,
-                'Actived' => $siege->Actived ? __('app.yes') : __('app.no'),
+                'Actived' => $siege->Actived ? __('Oui') : __('Non'),
                 'Entreprises' => $entreprisesCount,
                 'Employes' => $employesCount,
             ];

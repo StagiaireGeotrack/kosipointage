@@ -68,8 +68,8 @@ class AdministrationRepository extends BaseRepository
             return [
                 'ID' => $admin->ID,
                 'Email' => $admin->Identifiant_email,
-                'Type' => $admin->IsSuperAdmin ? __('app.super_admin') : __('app.standard_admin'),
-                'Siege' => $admin->SiegeID ? $admin->siege->Nom : __('app.not_applicable'),
+                'Type' => $admin->IsSuperAdmin ? __('Super Administrateur') : __('Simpe Administrateur'),
+                'Siege' => $admin->SiegeID ? $admin->siege->Nom : __(''),
                 'Créé le' => $admin->created_at ? $admin->created_at->format('d/m/Y H:i') : '',
                 'Dernière mise à jour' => $admin->updated_at ? $admin->updated_at->format('d/m/Y H:i') : '',
             ];
