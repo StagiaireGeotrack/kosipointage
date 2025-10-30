@@ -61,37 +61,35 @@ class ReportController extends Controller
     
     public function dayNight(Request $request)
     {
-        // Filtres
+        // Désactiver temporairement ONLY_FULL_GROUP_BY
+        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+        
+        // Votre code original
         $filters = $this->getFilters($request);
         $filters['type_travail'] = $request->input('type_travail');
         
-        // Sièges pour le filtre
         $sieges = $this->getSieges();
-        
-        // Employés pour le filtre
         $employes = $this->getEmployes($filters['SiegeID'] ?? null);
         
-        // Requête principale des rapports jour/nuit
         $query = DB::table('rapports_details_jour_nuit')
             ->select('*');
             
-        // Application des filtres
         $query = $this->applyFilters($query, $filters);
         
-        // Filtrer par type de travail (JOUR/NUIT) si spécifié
         if (!empty($filters['type_travail'])) {
             $query->where('type_travail', $filters['type_travail']);
         }
         
-        // Pagination
         $rapports = $query->paginate(10)
             ->appends($request->except('page'));
             
+        // dd($query->toSql(), $query->getBindings());
         return view('reports.day_night', compact('rapports', 'sieges', 'employes', 'filters'));
     }
     
     public function exportExcel(Request $request, string $type)
     {
+        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
         // Filtres
         $filters = $this->getFilters($request);
         
@@ -104,7 +102,7 @@ class ReportController extends Controller
         // Application des filtres
         $query = $this->applyFilters($query, $filters);
         
-        // Si c'est un rapport jour/nuit et qu'un filtre de type est spécifié
+        // Si c'est un rapport jour et nuit et qu'un filtre de type est spécifié
         if ($type === 'day-night' && !empty($request->input('type_travail'))) {
             $query->where('type_travail', $request->input('type_travail'));
         }
@@ -114,7 +112,7 @@ class ReportController extends Controller
         
         // Déterminer le titre du rapport
         $title = ($type === 'day-night') 
-            ? __('Rapport jour/nuit') 
+            ? __('Rapport jour et nuit') 
             : __('Rapport quotidien');
             
         // Exporter vers Excel
@@ -123,6 +121,8 @@ class ReportController extends Controller
     
     public function exportPdf(Request $request, string $type)
     {
+        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+
         // Filtres
         $filters = $this->getFilters($request);
         
@@ -135,7 +135,7 @@ class ReportController extends Controller
         // Application des filtres
         $query = $this->applyFilters($query, $filters);
         
-        // Si c'est un rapport jour/nuit et qu'un filtre de type est spécifié
+        // Si c'est un rapport jour et nuit et qu'un filtre de type est spécifié
         if ($type === 'day-night' && !empty($request->input('type_travail'))) {
             $query->where('type_travail', $request->input('type_travail'));
         }
@@ -145,7 +145,7 @@ class ReportController extends Controller
         
         // Déterminer le titre et la vue du rapport
         $title = ($type === 'day-night') 
-            ? 'Rapport jour/nuit' 
+            ? 'Rapport jour et nuit' 
             : 'Rapport quotidien';
 
             
