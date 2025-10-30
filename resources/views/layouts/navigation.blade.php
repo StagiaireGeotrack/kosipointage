@@ -23,6 +23,20 @@
                         Tableau de bord
                     </a>
                 </li>
+                @endcan                
+                
+                <li class="nav-item">
+                    <a href="{{ route('sieges.index') }}" class="nav-link {{ request()->routeIs('sieges.*') ? 'active' : '' }}">
+                        Sièges
+                    </a>
+                </li>
+
+                @can('superadmin')
+                <li class="nav-item">
+                    <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'active' : '' }}">
+                        Administrateurs
+                    </a>
+                </li>
                 @endcan
                 
                 <li class="nav-item">
@@ -48,14 +62,7 @@
                         Rapports
                     </a>
                 </li>
-                
-                @can('superadmin')
-                <li class="nav-item">
-                    <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'active' : '' }}">
-                        Administrateurs
-                    </a>
-                </li>
-                @endcan
+
             </ul>
 
             <!-- User Menu Dropdown -->
