@@ -27,7 +27,7 @@
                                 <select id="Actived" name="Actived" class="form-select mt-1">
                                     <option value="">{{ __('Touts') }}</option>
                                     <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('Activé') }}</option>
-                                    <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __(Désactivé') }}</option>
+                                    <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('Désactivé') }}</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-md-4 d-flex align-items-end gap-2">

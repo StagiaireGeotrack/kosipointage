@@ -24,20 +24,10 @@ class AdministrationRequest extends FormRequest
         
         // Pour la création, le mot de passe est obligatoire
         if ($this->isMethod('post')) {
-            $rules['password'] = ['required', 'confirmed', Password::min(8)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-            ];
+            $rules['password'] = ['required', 'confirmed', Password::min(8)];
         } else {
             // Pour la mise à jour, le mot de passe est optionnel
-            $rules['password'] = ['nullable', 'confirmed', Password::min(8)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-            ];
+            $rules['password'] = ['nullable', 'confirmed', Password::min(8)];
             
             // Permettre de conserver le même email pour l'administrateur actuel
             $rules['Identifiant_email'] = 'required|email|max:255|unique:administration,Identifiant_email,'.$this->route('administrateur').',ID';

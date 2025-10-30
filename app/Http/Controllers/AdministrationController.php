@@ -8,7 +8,6 @@ use App\Http\Requests\AdministrationRequest;
 use App\Repositories\AdministrationRepository;
 use App\Services\ExportService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AdministrationController extends Controller
 {
