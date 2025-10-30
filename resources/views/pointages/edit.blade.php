@@ -57,10 +57,9 @@
                         <div class="mb-3">
                             <x-input-label for="auth_method" :value="__('Méthode')" />
                             <select id="auth_method" name="auth_method" class="form-select mt-1" required>
-                                <option value="badge" {{ old('auth_method', $pointage->auth_method) == 'badge' ? 'selected' : '' }}>{{ __('Badge') }}</option>
+                                <option value="rfid" {{ old('auth_method', $pointage->auth_method) == 'rfid' ? 'selected' : '' }}>{{ __('Badge') }}</option>
                                 <option value="face" {{ old('auth_method', $pointage->auth_method) == 'face' ? 'selected' : '' }}>{{ __('Face image') }}</option>
                                 <option value="pin" {{ old('auth_method', $pointage->auth_method) == 'pin' ? 'selected' : '' }}>{{ __('Code PIN') }}</option>
-                                <option value="admin" {{ old('auth_method', $pointage->auth_method) == 'admin' ? 'selected' : '' }}>{{ __('Administrateur') }}</option>
                             </select>
                             <x-input-error :messages="$errors->get('auth_method')" class="mt-2" />
                         </div>

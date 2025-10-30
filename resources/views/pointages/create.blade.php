@@ -58,7 +58,7 @@
                             <x-input-label for="auth_method" :value="__('Méthode')" />
                             <select id="auth_method" name="auth_method" class="form-select mt-1">
                                 <option value="">{{ __('Séléctionnez une méthode') }}</option>
-                                <option value="rfid" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'badge' ? 'selected' : '' }}>{{ __('Badge') }}</option>
+                                <option value="rfid" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'rfid' ? 'selected' : '' }}>{{ __('Badge') }}</option>
                                 <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
                                 <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>
                             </select>
