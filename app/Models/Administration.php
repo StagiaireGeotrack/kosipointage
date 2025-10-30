@@ -40,12 +40,6 @@ class Administration extends Authenticatable
         'Actived' => 'boolean',
     ];
     
-    // Mutateur pour le mot de passe
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['Password_'] = sha1($value);
-    }
-    
     // Méthode nécessaire pour l'authentification Laravel
     public function getAuthPassword()
     {

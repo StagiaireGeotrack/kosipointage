@@ -16,7 +16,7 @@
                             </svg>
                             {{ __('Retour') }}
                         </a>
-                        @if ( !$administrateur->IsSuperAdmin)
+                        @if ( auth()->id() !== $administrateur->ID )
                             <div class="d-flex gap-2">
                                 <a href="{{ route('administrateurs.edit', $administrateur->ID) }}" class="btn btn-primary d-inline-flex align-items-center">
                                     <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

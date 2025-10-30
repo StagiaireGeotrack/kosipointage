@@ -18,7 +18,7 @@ class AdministrationRequest extends FormRequest
     {
         $rules = [
             'Identifiant_email' => 'required|email|max:255|unique:administration,Identifiant_email',
-            'IsSuperAdmin' => 'nullable|boolean', // nullable car checkbox non cochée n'envoie rien
+            'IsSuperAdmin' => 'nullable|boolean',
             'SiegeID' => 'required_unless:IsSuperAdmin,1|nullable|exists:Entreprises_sieges,ID', 
             'Actived' => 'nullable|boolean',
         ];
@@ -42,12 +42,12 @@ class AdministrationRequest extends FormRequest
         return [
             'Identifiant_email.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Identifiant ou E-mail')]),
             'Identifiant_email.email' => __('Le champ :attribute doit être un e-mail', ['attribute' => __('Identifiant ou E-mail')]),
-            'Identifiant_email.max' => __('Le champ :attribute est obligatoire', ['attribute' => __('Identifiant ou E-mail'), 'max' => 255]),
+            'Identifiant_email.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Identifiant ou E-mail'), 'max' => 255]),
             'Identifiant_email.unique' => __('La valeur de :attribute est déjà utilisée', ['attribute' => __('Identifiant ou E-mail')]),
             'password.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Mot de passe')]),
-            'password.confirmed' => __('Veuillez bien confirmer le champ :attribute', ['attribute' => __('Confirmation mot de pas')]),
+            'password.confirmed' => __('Veuillez bien confirmer le champ :attribute', ['attribute' => __('Mot de passe')]),
             'SiegeID.required_unless' => __('Le champ :attribute est obligatoire pour les administrateurs simples.', ['attribute' => __('Siège')]),
-            'SiegeID.exists' => __('Le siège n\'existe pas', ['attribute' => __('Siège')]),
+            'SiegeID.exists' => __('Le siège sélectionné n\'existe pas', ['attribute' => __('Siège')]),
         ];
     }
 
@@ -56,10 +56,16 @@ class AdministrationRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convertir les checkboxes en booléens
+        // Convertir les checkboxes en 1/0 au lieu de true/false
+        // Car required_unless attend une valeur numérique
         $this->merge([
-            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? true : false,
-            'Actived' => $this->has('Actived') ? true : false,
+            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? 1 : 0,
+            'Actived' => $this->has('Actived') ? 1 : 0,
         ]);
+        
+        // Convertir SiegeID vide en null pour éviter les problèmes de validation
+        if ($this->input('SiegeID') === '' || $this->input('SiegeID') === null) {
+            $this->merge(['SiegeID' => null]);
+        }
     }
 }
