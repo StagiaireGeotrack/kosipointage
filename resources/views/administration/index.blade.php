@@ -83,6 +83,9 @@
                                         {{ __('Date de création') }}
                                     </th>
                                     <th class="text-uppercase small fw-semibold text-secondary">
+                                        {{ __('Statut') }}
+                                    </th>
+                                    <th class="text-uppercase small fw-semibold text-secondary">
                                         {{ __('ACTIONS') }}
                                     </th>
                                 </tr>
@@ -112,6 +115,17 @@
                                         <td class="align-middle">
                                             @if( $admin->created_at  )
                                                 {{ $admin->created_at->format('d/m/Y H:i') }}
+                                            @endif
+                                        </td>                                        
+                                        <td class="align-middle">
+                                            @if ($admin->Actived)
+                                                <span class="badge bg-success">
+                                                    {{ __('Activé') }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger">
+                                                    {{ __('Désactivé') }}
+                                                </span>
                                             @endif
                                         </td>
                                         <td class="align-middle">
