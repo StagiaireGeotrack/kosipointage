@@ -16,7 +16,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="bg-light">
-        <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
+        <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center py-3">
             <div class="mb-4">
                 <a href="/">
                     <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="100" class="me-2">

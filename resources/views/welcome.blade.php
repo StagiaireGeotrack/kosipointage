@@ -107,8 +107,8 @@
         </section>
 
         <!-- Features Section -->
-        <section class="py-5 bg-light">
-            <div class="container py-5">
+        <section class="py-3 bg-light">
+            <div class="container py-3">
                 <div class="text-center mb-5">
                     <h2 class="display-5 fw-bold mb-3">Fonctionnalités Principales</h2>
                     <p class="lead text-muted">Tout ce dont vous avez besoin pour gérer vos pointages efficacement</p>
@@ -179,7 +179,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-dark text-white py-4">
+        <footer class="bg-dark text-white py-3">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 mb-3 mb-md-0">

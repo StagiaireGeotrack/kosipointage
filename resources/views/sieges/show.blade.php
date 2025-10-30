@@ -18,7 +18,7 @@
         </div>
     </x-slot>
 
-    <div class="py-5">
+    <div class="py-3">
         <div class="container">
             <!-- Informations du siège -->
             <div class="card shadow-sm mb-4">

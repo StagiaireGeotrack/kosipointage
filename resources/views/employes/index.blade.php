@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-5">
+    <div class="py-3">
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -176,7 +176,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-4">
+                                        <td colspan="6" class="text-center py-3">
                                             {{ __('Aucun employé pour le moment') }}
                                         </td>
                                     </tr>
