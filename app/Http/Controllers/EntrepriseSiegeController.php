@@ -93,15 +93,16 @@ class EntrepriseSiegeController extends Controller
     public function update(EntrepriseSiegeRequest $request, $id)
     {
         // Seul un SuperAdmin peut mettre à jour des sièges
-        if (!Gate::allows('superadmin')) {
-            return redirect()->route('sieges.index')
-                ->with('error', __('Vous n\'avez pas accès à ce page'));
-        }
+        // if (!Gate::allows('superadmin')) {
+        //     return redirect()->route('sieges.index')
+        //         ->with('error', __('Vous n\'avez pas accès à ce page'));
+        // }
         
-        $siege = $this->repository->update($id, $request->validated());
+        // $this->repository->update($id, $request->validated());
         
-        return redirect()->route('sieges.index')
-            ->with('success', __('Siège modifié avec succès'));
+        // return redirect()->route('sieges.index')
+        //     ->with('success', __('Siège modifié avec succès'));
+        dd($request) ;
     }
     
     public function destroy($id)

@@ -37,7 +37,7 @@
                                 
                                 <div class="mb-2">
                                     <span class="badge bg-{{ $entreprise->Actived ? 'success' : 'danger' }}">
-                                        {{ $entreprise->Actived ? 'Actif' : 'Inactif' }}
+                                        {{ $entreprise->Actived ? 'Activée' : 'Désactivée' }}
                                     </span>
                                 </div>
                                 

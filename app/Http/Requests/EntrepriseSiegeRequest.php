@@ -18,7 +18,7 @@ class EntrepriseSiegeRequest extends FormRequest
         return [
             'Nom' => 'required|string|max:255',
             'Nom_Lieu_Ville' => 'nullable|string|max:255',
-            'Actived' => 'boolean',
+            'Actived' => 'nullable|boolean',
         ];
     }
 
