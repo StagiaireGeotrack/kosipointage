@@ -20,128 +20,112 @@
                             @csrf
 
                             <div class="row">
-                                <div class="col-md-6">
-                                    <!-- Nom -->
-                                    <div class="form-group mb-3">
-                                        <label for="Nom">Nom <span class="text-danger">*</span></label>
-                                        <input type="text" 
-                                               class="form-control @error('Nom') is-invalid @enderror" 
-                                               id="Nom" 
-                                               name="Nom" 
-                                               value="{{ old('Nom') }}" 
-                                               required 
-                                               autofocus>
-                                        @error('Nom')
+                                
+                                <!-- Nom -->
+                                <div class="form-group mb-3">
+                                    <label for="Nom">Nom <span class="text-danger">*</span></label>
+                                    <input type="text" 
+                                            class="form-control @error('Nom') is-invalid @enderror" 
+                                            id="Nom" 
+                                            name="Nom" 
+                                            value="{{ old('Nom') }}" 
+                                            required 
+                                            autofocus>
+                                    @error('Nom')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- BadgeID -->
+                                <div class="form-group mb-3">
+                                    <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
+                                    <input type="text" 
+                                            class="form-control @error('BadgeID') is-invalid @enderror" 
+                                            id="BadgeID" 
+                                            name="BadgeID" 
+                                            value="{{ old('BadgeID') }}" 
+                                            maxlength="25"
+                                            required>
+                                    <small class="form-text text-muted">Identifiant unique de l'employé (max 25 caractères)</small>
+                                    @error('BadgeID')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- SiegeID -->
+                                <div class="form-group mb-3">
+                                    <label for="SiegeID">Siège <span class="text-danger">*</span></label>
+                                    <select class="form-control @error('SiegeID') is-invalid @enderror" 
+                                            id="SiegeID" 
+                                            name="SiegeID" 
+                                            required>
+                                        <option value="">{{ __('Sélectionnez un siège') }}</option>
+                                        @foreach($sieges as $siege)
+                                            <option value="{{ $siege->ID }}" 
+                                                    {{ old('SiegeID') == $siege->ID || (request()->has('SiegeID') && request()->SiegeID == $siege->ID) ? 'selected' : '' }}>
+                                                {{ $siege->Nom }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('SiegeID')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Pin -->
+                                <div class="form-group mb-3">
+                                    <label for="Pin">Code PIN</label>
+                                    <input type="text" 
+                                            class="form-control @error('Pin') is-invalid @enderror" 
+                                            id="Pin" 
+                                            name="Pin" 
+                                            value="{{ old('Pin') }}" 
+                                            maxlength="6"
+                                            pattern="[0-9]{6}"
+                                            placeholder="000000">
+                                    <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
+                                    @error('Pin')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- HasBiometricSetup -->
+                                <div class="form-group mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
+                                                type="checkbox" 
+                                                value="1" 
+                                                id="HasBiometricSetup" 
+                                                name="HasBiometricSetup" 
+                                                {{ old('HasBiometricSetup') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="HasBiometricSetup">
+                                            <i class="bi bi-fingerprint"></i> Empreinte digitale
+                                        </label>
+                                        @error('HasBiometricSetup')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-
-                                    <!-- BadgeID -->
-                                    <div class="form-group mb-3">
-                                        <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
-                                        <input type="text" 
-                                               class="form-control @error('BadgeID') is-invalid @enderror" 
-                                               id="BadgeID" 
-                                               name="BadgeID" 
-                                               value="{{ old('BadgeID') }}" 
-                                               maxlength="25"
-                                               required>
-                                        <small class="form-text text-muted">Identifiant unique de l'employé (max 25 caractères)</small>
-                                        @error('BadgeID')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- SiegeID -->
-                                    <div class="form-group mb-3">
-                                        <label for="SiegeID">Siège <span class="text-danger">*</span></label>
-                                        <select class="form-control @error('SiegeID') is-invalid @enderror" 
-                                                id="SiegeID" 
-                                                name="SiegeID" 
-                                                required>
-                                            <option value="">{{ __('Sélectionnez un siège') }}</option>
-                                            @foreach($sieges as $siege)
-                                                <option value="{{ $siege->ID }}" 
-                                                        {{ old('SiegeID') == $siege->ID || (request()->has('SiegeID') && request()->SiegeID == $siege->ID) ? 'selected' : '' }}>
-                                                    {{ $siege->Nom }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('SiegeID')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Pin -->
-                                    <div class="form-group mb-3">
-                                        <label for="Pin">Code PIN</label>
-                                        <input type="text" 
-                                               class="form-control @error('Pin') is-invalid @enderror" 
-                                               id="Pin" 
-                                               name="Pin" 
-                                               value="{{ old('Pin') }}" 
-                                               maxlength="6"
-                                               pattern="[0-9]{6}"
-                                               placeholder="000000">
-                                        <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
-                                        @error('Pin')
+                                </div>                              
+                                                                
+                                <!-- Actived -->
+                                <div class="form-group mb-3">
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input @error('Actived') is-invalid @enderror" 
+                                                type="checkbox" 
+                                                value="1" 
+                                                id="Actived" 
+                                                name="Actived" 
+                                                {{ old('Actived', '1') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Actived">
+                                            Activer l'employé
+                                        </label>
+                                        @error('Actived')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <!-- FaceEncodingFile -->
-                                    <div class="form-group mb-3">
-                                        <label for="FaceEncodingFile">Photo de visage</label>
-                                        <input type="file" 
-                                               class="form-control @error('FaceEncodingFile') is-invalid @enderror" 
-                                               id="FaceEncodingFile" 
-                                               name="FaceEncodingFile" 
-                                               accept="image/*">
-                                        <small class="form-text text-muted">Formats acceptés : JPG, PNG, GIF. Max : 5Mo. Sera stockée en Base64.</small>
-                                        @error('FaceEncodingFile')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <div id="facePreview" class="mt-2"></div>
-                                    </div>
-
-                                    <!-- HasBiometricSetup -->
-                                    <div class="form-group mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
-                                                   type="checkbox" 
-                                                   value="1" 
-                                                   id="HasBiometricSetup" 
-                                                   name="HasBiometricSetup" 
-                                                   {{ old('HasBiometricSetup') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="HasBiometricSetup">
-                                                <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
-                                            </label>
-                                            @error('HasBiometricSetup')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <!-- Actived -->
-                                    <div class="form-group mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('Actived') is-invalid @enderror" 
-                                                   type="checkbox" 
-                                                   value="1" 
-                                                   id="Actived" 
-                                                   name="Actived" 
-                                                   {{ old('Actived', '1') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="Actived">
-                                                Activer l'employé
-                                            </label>
-                                            @error('Actived')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
 
                             <div class="text-end mt-4">
