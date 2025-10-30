@@ -29,11 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Dashboard (SuperAdmin uniquement)
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware('can:superadmin')
-        ->name('dashboard');
-    
     // Routes protégées par le middleware siege.access
     Route::middleware('siege.access')->group(function () {
         // CRUD des entreprises
@@ -73,9 +68,14 @@ Route::middleware('auth')->group(function () {
     
     // Routes accessibles uniquement aux SuperAdmin
     Route::middleware('can:superadmin')->group(function () {
+
         // CRUD des administrateurs
         Route::resource('administrateurs', AdministrationController::class);
         Route::get('/administrateurs-export/excel', [AdministrationController::class, 'exportExcel'])->name('administrateurs.export.excel');
         Route::get('/administrateurs-export/pdf', [AdministrationController::class, 'exportPdf'])->name('administrateurs.export.pdf');
+
+        // Dashboard (SuperAdmin uniquement)
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
     });
 });
