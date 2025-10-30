@@ -49,7 +49,7 @@ class AdministrationController extends Controller
         
         unset($data['password_confirmation']);
         
-        $admin = $this->repository->create($data);
+        $this->repository->create($data);
         
         return redirect()->route('administrateurs.index')
             ->with('success', __('Administrateur simple créé'));

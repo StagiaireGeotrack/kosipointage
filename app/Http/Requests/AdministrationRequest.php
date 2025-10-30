@@ -18,8 +18,9 @@ class AdministrationRequest extends FormRequest
     {
         $rules = [
             'Identifiant_email' => 'required|email|max:255|unique:administration,Identifiant_email',
-            'IsSuperAdmin' => 'boolean',
-            'SiegeID' => 'required_if:IsSuperAdmin,0|exists:Entreprises_sieges,ID',
+            'IsSuperAdmin' => 'nullable|boolean', // nullable car checkbox non cochée n'envoie rien
+            'SiegeID' => 'required_unless:IsSuperAdmin,1|nullable|exists:Entreprises_sieges,ID', 
+            'Actived' => 'nullable|boolean',
         ];
         
         // Pour la création, le mot de passe est obligatoire
@@ -39,14 +40,26 @@ class AdministrationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Identifiant_email.required' => __('validation.required', ['attribute' => __('Identifiant ou E-mail')]),
-            'Identifiant_email.email' => __('validation.email', ['attribute' => __('Identifiant ou E-mail')]),
-            'Identifiant_email.max' => __('validation.max.string', ['attribute' => __('Identifiant ou E-mail'), 'max' => 255]),
-            'Identifiant_email.unique' => __('validation.unique', ['attribute' => __('Identifiant ou E-mail')]),
-            'password.required' => __('validation.required', ['attribute' => __('Mot de passe')]),
-            'password.confirmed' => __('validation.confirmed', ['attribute' => __('Mot de passe')]),
-            'SiegeID.required_if' => __('validation.required_if', ['attribute' => __('Siège'), 'other' => __('Super Administrateur'), 'value' => __('Non')]),
-            'SiegeID.exists' => __('validation.exists', ['attribute' => __('Siège')]),
+            'Identifiant_email.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Identifiant ou E-mail')]),
+            'Identifiant_email.email' => __('Le champ :attribute doit être un e-mail', ['attribute' => __('Identifiant ou E-mail')]),
+            'Identifiant_email.max' => __('Le champ :attribute est obligatoire', ['attribute' => __('Identifiant ou E-mail'), 'max' => 255]),
+            'Identifiant_email.unique' => __('La valeur de :attribute est déjà utilisée', ['attribute' => __('Identifiant ou E-mail')]),
+            'password.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Mot de passe')]),
+            'password.confirmed' => __('Veuillez bien confirmer le champ :attribute', ['attribute' => __('Confirmation mot de pas')]),
+            'SiegeID.required_unless' => __('Le champ :attribute est obligatoire pour les administrateurs simples.', ['attribute' => __('Siège')]),
+            'SiegeID.exists' => __('Le siège n\'existe pas', ['attribute' => __('Siège')]),
         ];
+    }
+
+    /**
+     * Préparer les données pour la validation
+     */
+    protected function prepareForValidation(): void
+    {
+        // Convertir les checkboxes en booléens
+        $this->merge([
+            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? true : false,
+            'Actived' => $this->has('Actived') ? true : false,
+        ]);
     }
 }
