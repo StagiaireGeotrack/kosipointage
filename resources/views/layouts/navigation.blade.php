@@ -80,7 +80,7 @@
                         <!-- <li><hr class="dropdown-divider"></li> -->
                         <li>
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                <i class="bi bi-person"></i> Profil
+                                <i class="bi bi-person"></i> Identifiant
                             </a>
                         </li>
                         <li>
