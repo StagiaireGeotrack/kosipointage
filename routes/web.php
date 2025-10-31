@@ -81,3 +81,7 @@ Route::middleware('auth')->group(function () {
         
     });
 });
+
+Route::fallback(function () {
+    return redirect()->route('sieges.index');
+});
