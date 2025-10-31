@@ -1,11 +1,11 @@
 <section>
     <header class="mb-3">
         <h2 class="fs-5 fw-medium text-dark">
-            {{ __('Profile Information') }}
+            {{ __('Modification Identifiant ou E-mail') }}
         </h2>
 
         <p class="mt-1 small text-muted">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Veuillez changer par votre vrai adresse E-mail si possible.") }}
         </p>
     </header>
 
@@ -13,52 +13,18 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-3">
+    <form method="post" action="{{ route('profile.update_Identifiant_email') }}" class="mt-3">
         @csrf
         @method('patch')
 
         <div class="mb-3">
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="form-control mt-1" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-        </div>
-
-        <div class="mb-3">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="form-control mt-1" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div class="mt-2">
-                    <p class="small text-dark">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="btn btn-link p-0 text-decoration-underline small text-muted">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 fw-medium small text-success">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
+            <x-input-label for="Identifiant_email" :value="__('Identifiantou E-mail')" />
+            <x-text-input id="Identifiant_email" name="Identifiant_email" type="text" class="form-control mt-1" value="{{ $Identifiant_email }}" required autofocus autocomplete="Identifiant_email" />
+            <x-input-error class="mt-2" :messages="$errors->get('Identifiant_email')" />
         </div>
 
         <div class="d-flex align-items-center gap-3">
-            <x-primary-button class="btn btn-primary">{{ __('Save') }}</x-primary-button>
-
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="small text-muted mb-0"
-                >{{ __('Saved.') }}</p>
-            @endif
+            <x-primary-button class="btn btn-primary">{{ __('Enregistrer') }}</x-primary-button>
         </div>
     </form>
 </section>

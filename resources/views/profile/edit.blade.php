@@ -15,7 +15,7 @@
                         </div>
                     </div>
 
-                    <div class="card shadow-sm mb-2">
+                    <div class="card shadow-sm mt-3 mb-2">
                         <div class="card-body p-2 p-sm-3">
                             @include('profile.partials.update-password-form')
                         </div>
