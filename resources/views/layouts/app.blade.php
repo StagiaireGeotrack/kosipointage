@@ -59,7 +59,7 @@
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white shadow-sm">
-                <div class="container py-3">
+                <div class="p-3">
                     {{ $header }}
                 </div>
             </header>
