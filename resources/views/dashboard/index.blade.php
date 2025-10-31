@@ -173,7 +173,6 @@
                 data: {
                     labels: employeesByCompany.map(item => item.Nom),
                     datasets: [{
-                        label: '{{ __("Nombre d\'employés") }}',
                         data: employeesByCompany.map(item => item.total),
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',

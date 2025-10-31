@@ -12,7 +12,7 @@
     </x-slot>
 
     <div class="py-3">
-        <div class="container">
+        <div class="mx-2">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <!-- Filtres -->
