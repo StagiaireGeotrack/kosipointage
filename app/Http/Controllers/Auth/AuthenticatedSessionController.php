@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
             } else {
                 // Rediriger les admin standards vers une autre page
                 // Par exemple la liste des entreprises de leur siège
-                return redirect()->intended(route('entreprises.index'));
+                return redirect()->intended(route('sieges.index'));
             }
         }
         
