@@ -6,139 +6,128 @@
         </h2>
     </x-slot>
 
-    <div class="py-3">
-        <div class="container">
-            <!-- Sélecteur de période -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <form action="{{ route('dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-3">
+    <div class="p-2">
+        <!-- Sélecteur de période -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form action="{{ route('dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-3">
+                    <div>
+                        <label for="period" class="form-label small fw-medium mb-1">{{ __('Période') }}</label>
+                        <select id="period" name="period" class="form-select" onchange="toggleCustomDates()">
+                            <option value="day" {{ $period == 'day' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
+                            <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
+                            <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
+                            <option value="custom" {{ $period == 'custom' ? 'selected' : '' }}>{{ __('Entre deux dates') }}</option>
+                        </select>
+                    </div>
+                    
+                    <div id="customDates" class="d-flex gap-3 {{ $period !== 'custom' ? 'd-none' : '' }}">
                         <div>
-                            <label for="period" class="form-label small fw-medium mb-1">{{ __('Période') }}</label>
-                            <select id="period" name="period" class="form-select" onchange="toggleCustomDates()">
-                                <option value="day" {{ $period == 'day' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
-                                <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
-                                <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
-                                <option value="custom" {{ $period == 'custom' ? 'selected' : '' }}>{{ __('Entre deux dates') }}</option>
-                            </select>
+                            <label for="start_date" class="form-label small fw-medium mb-1">{{ __('Date de début') }}</label>
+                            <input type="date" id="start_date" name="start_date" value="{{ $startDate ? $startDate->format('Y-m-d') : '' }}" class="form-control">
                         </div>
                         
-                        <div id="customDates" class="d-flex gap-3 {{ $period !== 'custom' ? 'd-none' : '' }}">
-                            <div>
-                                <label for="start_date" class="form-label small fw-medium mb-1">{{ __('Date de début') }}</label>
-                                <input type="date" id="start_date" name="start_date" value="{{ $startDate ? $startDate->format('Y-m-d') : '' }}" class="form-control">
-                            </div>
-                            
-                            <div>
-                                <label for="end_date" class="form-label small fw-medium mb-1">{{ __('Date de fin') }}</label>
-                                <input type="date" id="end_date" name="end_date" value="{{ $endDate ? $endDate->format('Y-m-d') : '' }}" class="form-control">
-                            </div>
+                        <div>
+                            <label for="end_date" class="form-label small fw-medium mb-1">{{ __('Date de fin') }}</label>
+                            <input type="date" id="end_date" name="end_date" value="{{ $endDate ? $endDate->format('Y-m-d') : '' }}" class="form-control">
                         </div>
-                        
-                        <div class="align-self-end pb-1">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Rechercher') }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    
+                    <div class="align-self-end pb-1">
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Rechercher') }}
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <!-- KPI Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-12 col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark">{{ __('Nombre d\' employés') }}</h3>
-                            <p class="mt-1 display-6 fw-semibold text-primary mb-0">{{ $kpis['total_employees'] }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-12 col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark">{{ __('Nombre de sites ou établissements') }}</h3>
-                            <p class="mt-1 display-6 fw-semibold text-primary mb-0">{{ $kpis['total_companies'] }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-12 col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark">{{ __('Nombre de sites') }}</h3>
-                            <p class="mt-1 display-6 fw-semibold text-primary mb-0">{{ $kpis['total_sieges'] }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-12 col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark">{{ __('Nombre de pointages') }}</h3>
-                            <p class="mt-1 display-6 fw-semibold text-primary mb-0">{{ $kpis['pointages_period'] }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-12 col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark">{{ __('Nombre de pointages (Entrée)') }}</h3>
-                            <p class="mt-1 display-6 fw-semibold text-primary mb-0">{{ $kpis['entries_period'] }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-12 col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark">{{ __('Nombre de pointages (Sortie)') }}</h3>
-                            <p class="mt-1 display-6 fw-semibold text-primary mb-0">{{ $kpis['exits_period'] }}</p>
-                        </div>
+        <!-- KPI Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-5 fw-medium text-dark">{{ __('Employés') }}</h6>
+                        <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['total_employees'] }}</p>
                     </div>
                 </div>
             </div>
+            
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-5 fw-medium text-dark">{{ __('Sites ou établissements') }}</h6>
+                        <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['total_companies'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-5 fw-medium text-dark">{{ __('Siège') }}</h6>
+                        <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['total_sieges'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-5 fw-medium text-dark">{{ __('Pointages') }}</h6>
+                        <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['pointages_period'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-5 fw-medium text-dark">{{ __('Pointages (Entrée)') }}</h6>
+                        <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['entries_period'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-5 fw-medium text-dark">{{ __('Pointages (Sortie)') }}</h6>
+                        <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['exits_period'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <!-- Graphiques -->
-            <div class="row g-3">
-                <!-- Employés par entreprise -->
-                <div class="col-12 col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Nombre d\'employés par site ou établissement') }}</h3>
-                            <canvas id="employeesByCompanyChart" height="300"></canvas>
-                        </div>
+        <!-- Graphiques -->
+        <div class="row g-3">
+            
+            <!-- Employés par siège -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="fs-15 fw-medium text-dark">{{ __('Employés par siège') }}</h3>
+                        <canvas id="employeesBySiegeChart" height="300"></canvas>
                     </div>
                 </div>
-                
-                <!-- Employés par siège -->
-                <div class="col-12 col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Nombre d\'employés par siège') }}</h3>
-                            <canvas id="employeesBySiegeChart" height="300"></canvas>
-                        </div>
+            </div>
+            
+            <!-- Entreprises par statut -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="fs-15 fw-medium text-dark">{{ __('Sites ou établissements') }}</h3>
+                        <canvas id="companiesByStatusChart" height="300"></canvas>
                     </div>
                 </div>
-                
-                <!-- Entreprises par statut -->
-                <div class="col-12 col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Statut des sites ou établissements') }}</h3>
-                            <canvas id="companiesByStatusChart" height="300"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pointages par jour -->
-                <div class="col-12 col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Pointages par journée') }}</h3>
-                            <canvas id="pointagesByDayChart" height="300"></canvas>
-                        </div>
+            </div>
+            
+            <!-- Pointages par jour -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="fs-15 fw-medium text-dark">{{ __('Pointages par journée') }}</h3>
+                        <canvas id="pointagesByDayChart" height="300"></canvas>
                     </div>
                 </div>
             </div>
@@ -165,28 +154,6 @@
             const employeesBySiege = @json($employeesBySiege);
             const companiesByStatus = @json($companiesByStatus);
             const pointagesByDay = @json($pointagesByDay);
-            
-            // Graphique des employés par entreprise
-            const employeesByCompanyCtx = document.getElementById('employeesByCompanyChart').getContext('2d');
-            new Chart(employeesByCompanyCtx, {
-                type: 'bar',
-                data: {
-                    labels: employeesByCompany.map(item => item.Nom),
-                    datasets: [{
-                        data: employeesByCompany.map(item => item.total),
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
             
             // Graphique des employés par siège
             const employeesBySiegeCtx = document.getElementById('employeesBySiegeChart').getContext('2d');

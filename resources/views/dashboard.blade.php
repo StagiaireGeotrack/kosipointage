@@ -5,14 +5,12 @@
         </h2>
     </x-slot>
 
-    <div class="py-3">
-        <div class="container">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <p class="text-dark mb-0">
-                        {{ __("You're logged in!") }}
-                    </p>
-                </div>
+    <div class="p-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="text-dark mb-0">
+                    {{ __("You're logged in!") }}
+                </p>
             </div>
         </div>
     </div>

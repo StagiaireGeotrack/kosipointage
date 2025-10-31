@@ -5,97 +5,95 @@
         </h2>
     </x-slot>
 
-    <div class="py-3">
-        <div class="container">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form action="{{ route('pointages.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        
-                        <!-- Siège -->
-                        @can('superadmin')
-                        <div class="mb-3">
-                            <x-input-label for="SiegeID" :value="__('Siège')" />
-                            <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="loadEmployeesBySiege(this.value)" required>
-                                <option value="">{{ __('Sélectionnez un siège') }}</option>
-                                @foreach($sieges as $siege)
-                                    <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
-                                        {{ $siege->Nom }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
-                        </div>
-                        @else
-                            <input type="hidden" name="SiegeID" value="{{ auth()->user()->SiegeID }}" />
-                        @endcan
-                        
-                        <!-- Employé -->
-                        <div class="mb-3">
-                            <x-input-label for="employee_id" :value="__('Employé')" />
-                            <select id="employee_id" name="employee_id" class="form-select mt-1" required>
-                                <option value="">{{ __('Sélectionnez un employé') }}</option>
-                                @foreach($employes as $employe)
-                                    <option value="{{ $employe->ID }}" {{ old('employee_id') == $employe->ID ? 'selected' : '' }}>
-                                        {{ $employe->Nom }} ({{ $employe->BadgeID }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('employee_id')" class="mt-2" />
-                        </div>
-                        
-                        <!-- Type de pointage -->
-                        <div class="mb-3">
-                            <x-input-label for="type_" :value="__('Type')" />
-                            <select id="type_" name="type_" class="form-select mt-1" required>
-                                <option value="entry" {{ old('type_') == 'entry' ? 'selected' : '' }}>{{ __('Entrée') }}</option>
-                                <option value="exit" {{ old('type_') == 'exit' ? 'selected' : '' }}>{{ __('Sortie') }}</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('type_')" class="mt-2" />
-                        </div>
-                        
-                        <div class="mb-3">
-                            <x-input-label for="auth_method" :value="__('Méthode')" />
-                            <select id="auth_method" name="auth_method" class="form-select mt-1">
-                                <option value="">{{ __('Séléctionnez une méthode') }}</option>
-                                <option value="rfid" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'rfid' ? 'selected' : '' }}>{{ __('Badge') }}</option>
-                                <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
-                                <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>
-                            </select>
-                        </div>
-
-                        <!-- Timestamp -->
-                        <div class="mb-3">
-                            <x-input-label for="timestamp_" :value="__('Date et heure')" />
-                            <x-text-input id="timestamp_" name="timestamp_" type="datetime-local" class="form-control mt-1" :value="old('timestamp_', now()->format('Y-m-d\TH:i'))" required />
-                            <x-input-error :messages="$errors->get('timestamp_')" class="mt-2" />
-                        </div>
-                        
-                        <!-- Latitude -->
-                        <div class="mb-3">
-                            <x-input-label for="latitude" :value="__('Latitude')" />
-                            <x-text-input id="latitude" name="latitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('latitude', 0)" required />
-                            <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
-                        </div>
-                        
-                        <!-- Longitude -->
-                        <div class="mb-3">
-                            <x-input-label for="longitude" :value="__('Longitude')" />
-                            <x-text-input id="longitude" name="longitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('longitude', 0)" required />
-                            <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-                        </div>
+    <div class="p-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form action="{{ route('pointages.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
                     
-                        <!-- Boutons de soumission -->
-                        <div class="d-flex align-items-center justify-content-end mt-4">
-                            <a href="{{ route('pointages.index') }}" class="btn btn-secondary me-2">
-                                {{ __('Annuler') }}
-                            </a>
-                            <x-primary-button class="btn btn-primary">
-                                {{ __('Ajouter') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
-                </div>
+                    <!-- Siège -->
+                    @can('superadmin')
+                    <div class="mb-3">
+                        <x-input-label for="SiegeID" :value="__('Siège')" />
+                        <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="loadEmployeesBySiege(this.value)" required>
+                            <option value="">{{ __('Sélectionnez un siège') }}</option>
+                            @foreach($sieges as $siege)
+                                <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
+                                    {{ $siege->Nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
+                    </div>
+                    @else
+                        <input type="hidden" name="SiegeID" value="{{ auth()->user()->SiegeID }}" />
+                    @endcan
+                    
+                    <!-- Employé -->
+                    <div class="mb-3">
+                        <x-input-label for="employee_id" :value="__('Employé')" />
+                        <select id="employee_id" name="employee_id" class="form-select mt-1" required>
+                            <option value="">{{ __('Sélectionnez un employé') }}</option>
+                            @foreach($employes as $employe)
+                                <option value="{{ $employe->ID }}" {{ old('employee_id') == $employe->ID ? 'selected' : '' }}>
+                                    {{ $employe->Nom }} ({{ $employe->BadgeID }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('employee_id')" class="mt-2" />
+                    </div>
+                    
+                    <!-- Type de pointage -->
+                    <div class="mb-3">
+                        <x-input-label for="type_" :value="__('Type')" />
+                        <select id="type_" name="type_" class="form-select mt-1" required>
+                            <option value="entry" {{ old('type_') == 'entry' ? 'selected' : '' }}>{{ __('Entrée') }}</option>
+                            <option value="exit" {{ old('type_') == 'exit' ? 'selected' : '' }}>{{ __('Sortie') }}</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('type_')" class="mt-2" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <x-input-label for="auth_method" :value="__('Méthode')" />
+                        <select id="auth_method" name="auth_method" class="form-select mt-1">
+                            <option value="">{{ __('Séléctionnez une méthode') }}</option>
+                            <option value="rfid" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'rfid' ? 'selected' : '' }}>{{ __('Badge') }}</option>
+                            <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
+                            <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Timestamp -->
+                    <div class="mb-3">
+                        <x-input-label for="timestamp_" :value="__('Date et heure')" />
+                        <x-text-input id="timestamp_" name="timestamp_" type="datetime-local" class="form-control mt-1" :value="old('timestamp_', now()->format('Y-m-d\TH:i'))" required />
+                        <x-input-error :messages="$errors->get('timestamp_')" class="mt-2" />
+                    </div>
+                    
+                    <!-- Latitude -->
+                    <div class="mb-3">
+                        <x-input-label for="latitude" :value="__('Latitude')" />
+                        <x-text-input id="latitude" name="latitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('latitude', 0)" required />
+                        <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
+                    </div>
+                    
+                    <!-- Longitude -->
+                    <div class="mb-3">
+                        <x-input-label for="longitude" :value="__('Longitude')" />
+                        <x-text-input id="longitude" name="longitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('longitude', 0)" required />
+                        <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
+                    </div>
+                
+                    <!-- Boutons de soumission -->
+                    <div class="d-flex align-items-center justify-content-end mt-4">
+                        <a href="{{ route('pointages.index') }}" class="btn btn-secondary me-2">
+                            {{ __('Annuler') }}
+                        </a>
+                        <x-primary-button class="btn btn-primary">
+                            {{ __('Ajouter') }}
+                        </x-primary-button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -11,134 +11,130 @@
         </div>
     </x-slot>
 
-    <div class="container py-3">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('employes.store') }}" enctype="multipart/form-data">
-                            @csrf
+    <div class="p-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ route('employes.store') }}" enctype="multipart/form-data">
+                    @csrf
 
-                            <div class="row">
-                                
-                                <!-- Nom -->
-                                <div class="form-group mb-3">
-                                    <label for="Nom">Nom <span class="text-danger">*</span></label>
-                                    <input type="text" 
-                                            class="form-control @error('Nom') is-invalid @enderror" 
-                                            id="Nom" 
-                                            name="Nom" 
-                                            value="{{ old('Nom') }}" 
-                                            required 
-                                            autofocus>
-                                    @error('Nom')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                    <div class="row">
+                        
+                        <!-- Nom -->
+                        <div class="form-group mb-3">
+                            <label for="Nom">Nom <span class="text-danger">*</span></label>
+                            <input type="text" 
+                                    class="form-control @error('Nom') is-invalid @enderror" 
+                                    id="Nom" 
+                                    name="Nom" 
+                                    value="{{ old('Nom') }}" 
+                                    required 
+                                    autofocus>
+                            @error('Nom')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                                <!-- BadgeID -->
-                                <div class="form-group mb-3">
-                                    <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
-                                    <input type="text" 
-                                            class="form-control @error('BadgeID') is-invalid @enderror" 
-                                            id="BadgeID" 
-                                            name="BadgeID" 
-                                            value="{{ old('BadgeID') }}" 
-                                            maxlength="25"
-                                            required>
-                                    <small class="form-text text-muted">Identifiant unique de l'employé (max 25 caractères)</small>
-                                    @error('BadgeID')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                        <!-- BadgeID -->
+                        <div class="form-group mb-3">
+                            <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
+                            <input type="text" 
+                                    class="form-control @error('BadgeID') is-invalid @enderror" 
+                                    id="BadgeID" 
+                                    name="BadgeID" 
+                                    value="{{ old('BadgeID') }}" 
+                                    maxlength="25"
+                                    required>
+                            <small class="form-text text-muted">Identifiant unique de l'employé (max 25 caractères)</small>
+                            @error('BadgeID')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                                <!-- SiegeID -->
-                                <div class="form-group mb-3">
-                                    <label for="SiegeID">Siège <span class="text-danger">*</span></label>
-                                    <select class="form-control @error('SiegeID') is-invalid @enderror" 
-                                            id="SiegeID" 
-                                            name="SiegeID" 
-                                            required>
-                                        <option value="">{{ __('Sélectionnez un siège') }}</option>
-                                        @foreach($sieges as $siege)
-                                            <option value="{{ $siege->ID }}" 
-                                                    {{ old('SiegeID') == $siege->ID || (request()->has('SiegeID') && request()->SiegeID == $siege->ID) ? 'selected' : '' }}>
-                                                {{ $siege->Nom }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('SiegeID')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                        <!-- SiegeID -->
+                        <div class="form-group mb-3">
+                            <label for="SiegeID">Siège <span class="text-danger">*</span></label>
+                            <select class="form-control @error('SiegeID') is-invalid @enderror" 
+                                    id="SiegeID" 
+                                    name="SiegeID" 
+                                    required>
+                                <option value="">{{ __('Sélectionnez un siège') }}</option>
+                                @foreach($sieges as $siege)
+                                    <option value="{{ $siege->ID }}" 
+                                            {{ old('SiegeID') == $siege->ID || (request()->has('SiegeID') && request()->SiegeID == $siege->ID) ? 'selected' : '' }}>
+                                        {{ $siege->Nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('SiegeID')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                                <!-- Pin -->
-                                <div class="form-group mb-3">
-                                    <label for="Pin">Code PIN</label>
-                                    <input type="text" 
-                                            class="form-control @error('Pin') is-invalid @enderror" 
-                                            id="Pin" 
-                                            name="Pin" 
-                                            value="{{ old('Pin') }}" 
-                                            maxlength="6"
-                                            pattern="[0-9]{6}"
-                                            placeholder="000000">
-                                    <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
-                                    @error('Pin')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                        <!-- Pin -->
+                        <div class="form-group mb-3">
+                            <label for="Pin">Code PIN</label>
+                            <input type="text" 
+                                    class="form-control @error('Pin') is-invalid @enderror" 
+                                    id="Pin" 
+                                    name="Pin" 
+                                    value="{{ old('Pin') }}" 
+                                    maxlength="6"
+                                    pattern="[0-9]{6}"
+                                    placeholder="000000">
+                            <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
+                            @error('Pin')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                                <!-- HasBiometricSetup -->
-                                <div class="form-group mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
-                                                type="checkbox" 
-                                                value="1" 
-                                                id="HasBiometricSetup" 
-                                                name="HasBiometricSetup" 
-                                                {{ old('HasBiometricSetup') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="HasBiometricSetup">
-                                            <i class="bi bi-fingerprint"></i> Empreinte digitale
-                                        </label>
-                                        @error('HasBiometricSetup')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>                              
-                                                                
-                                <!-- Actived -->
-                                <div class="form-group mb-3">
-                                    <hr>
-                                    <div class="form-check">
-                                        <input class="form-check-input @error('Actived') is-invalid @enderror" 
-                                                type="checkbox" 
-                                                value="1" 
-                                                id="Actived" 
-                                                name="Actived" 
-                                                {{ old('Actived', '1') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="Actived">
-                                            Activer l'employé
-                                        </label>
-                                        @error('Actived')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                
+                        <!-- HasBiometricSetup -->
+                        <div class="form-group mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
+                                        type="checkbox" 
+                                        value="1" 
+                                        id="HasBiometricSetup" 
+                                        name="HasBiometricSetup" 
+                                        {{ old('HasBiometricSetup') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="HasBiometricSetup">
+                                    <i class="bi bi-fingerprint"></i> Empreinte digitale
+                                </label>
+                                @error('HasBiometricSetup')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-
-                            <div class="text-end mt-4">
-                                <a href="{{ route('employes.index') }}" class="btn btn-secondary me-2">
-                                    <i class="bi bi-x-circle"></i> Annuler
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Enregistrer
-                                </button>
+                        </div>                              
+                                                        
+                        <!-- Actived -->
+                        <div class="form-group mb-3">
+                            <hr>
+                            <div class="form-check">
+                                <input class="form-check-input @error('Actived') is-invalid @enderror" 
+                                        type="checkbox" 
+                                        value="1" 
+                                        id="Actived" 
+                                        name="Actived" 
+                                        {{ old('Actived', '1') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="Actived">
+                                    Activer l'employé
+                                </label>
+                                @error('Actived')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                        </form>
+                        </div>
+                        
                     </div>
-                </div>
+
+                    <div class="text-end mt-4">
+                        <a href="{{ route('employes.index') }}" class="btn btn-secondary me-2">
+                            <i class="bi bi-x-circle"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
