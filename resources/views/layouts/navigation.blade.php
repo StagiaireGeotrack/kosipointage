@@ -19,46 +19,46 @@
                 
                 @can('superadmin')
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Tableau de bord
                     </a>
                 </li>
                 @endcan                
                 
                 <li class="nav-item">
-                    <a href="{{ route('sieges.index') }}" class="nav-link {{ request()->routeIs('sieges.*') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('sieges.index') }}" class="nav-link {{ request()->routeIs('sieges.*') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Siège
                     </a>
                 </li>
 
                 @can('superadmin')
                 <li class="nav-item">
-                    <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Administrateur
                     </a>
                 </li>
                 @endcan
                 
                 <li class="nav-item">
-                    <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Site ou établissement
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a href="{{ route('employes.index') }}" class="nav-link {{ request()->routeIs('employes.*') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('employes.index') }}" class="nav-link {{ request()->routeIs('employes.*') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Employé
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a href="{{ route('pointages.index') }}" class="nav-link {{ request()->routeIs('pointages.*') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('pointages.index') }}" class="nav-link {{ request()->routeIs('pointages.*') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Pointage
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'rounded bg-secondary text-white' : '' }}">
+                    <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'rounded bg-secondary text-white px-2' : '' }}">
                         Rapport
                     </a>
                 </li>
