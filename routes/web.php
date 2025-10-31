@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
         
         // CRUD des sièges
         Route::resource('sieges', EntrepriseSiegeController::class);
+        Route::patch("/update-siege" , [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
         Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
         Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
         

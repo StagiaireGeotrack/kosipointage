@@ -3,8 +3,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EntrepriseSiege;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\EntrepriseSiegeRequest;
+use App\Models\EntrepriseSiege;
 use App\Repositories\EntrepriseSiegeRepository;
 use App\Services\ExportService;
 use Illuminate\Http\Request;
@@ -87,10 +88,10 @@ class EntrepriseSiegeController extends Controller
         
         $siege = $this->repository->findById($id);
         
-        return view('sieges.edit', compact('siege'));
+        return view('sieges.edit', compact('siege' , 'id'));
     }
     
-    public function update(EntrepriseSiegeRequest $request, $id)
+    public function update(Request $request , $id)
     {
         // Seul un SuperAdmin peut mettre à jour des sièges
         if (!Gate::allows('superadmin')) {
@@ -104,6 +105,37 @@ class EntrepriseSiegeController extends Controller
         $validated['Actived'] = $request->has('Actived') ? 1 : 0;
 
         $this->repository->update($id, $validated );
+        
+        return redirect()->route('sieges.index')
+            ->with('success', __('Siège modifié avec succès'));
+    }
+
+    public function update_siege(Request $request)
+    {
+        if (!Gate::allows('superadmin')) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
+        }
+        
+        $id = $request->ID;
+        
+        $validated = $request->validate([
+            'ID' => 'required|integer',
+            'Nom' => [
+                'required',
+                Rule::unique('entreprises_sieges', 'Nom')->ignore($id), 
+            ],
+            "Nom_Lieu_Ville" => "required"
+        ], [
+            'Nom.required' => 'Le champ nom est obligatoire.',
+            'Nom.unique' => 'Ce nom de siège existe déjà.',
+            'Nom_Lieu_Ville.required' => 'Le champ Adresse ou ville est obligatoire.',
+        ]);
+
+        $validated['Actived'] = $request->has('Actived') ? 1 : 0;
+        
+        $siege = EntrepriseSiege::findOrFail($id); 
+        $siege->update($validated);
         
         return redirect()->route('sieges.index')
             ->with('success', __('Siège modifié avec succès'));
