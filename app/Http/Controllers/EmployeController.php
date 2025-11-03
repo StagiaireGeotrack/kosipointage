@@ -51,9 +51,15 @@ class EmployeController extends Controller
         if ($request->hasFile('FaceEncodingFile')) {
             $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
             $data['HasFaceSetup'] = true;
+        } else {
+            $data['HasFaceSetup'] = false; // Explicitement false si pas de photo
         }
         
-        // Ajouter la date de création
+        if (!auth()->user()->IsSuperAdmin) {
+            $data['Actived'] = "0";
+        }
+
+        // Ajouter la date de création (si pas géré automatiquement par Laravel)
         $data['CreatedAt'] = now();
         
         // Supprimer FaceEncodingFile car ce n'est pas une colonne
@@ -86,6 +92,9 @@ class EmployeController extends Controller
     {
         $data = $request->validated();
         
+        // Vérifier que l'employé existe
+        $employe = Employe::findOrFail($id);
+        
         // Convertir et COMPRESSER la nouvelle photo si présente
         if ($request->hasFile('FaceEncodingFile')) {
             $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
@@ -93,12 +102,18 @@ class EmployeController extends Controller
         } else {
             // Ne pas modifier la photo si aucun nouveau fichier
             unset($data['FaceEncodingPath']);
+            unset($data['HasFaceSetup']); // Ne pas modifier HasFaceSetup
         }
         
+        if (!auth()->user()->IsSuperAdmin) {
+            // Conserver l'état actuel d'activation
+            $data['Actived'] = $employe->Actived;
+        }
+
         // Supprimer FaceEncodingFile
         unset($data['FaceEncodingFile']);
         
-        $employe = $this->repository->update($id, $data);
+        $this->repository->update($id, $data);
         
         return redirect()->route('employes.index')
             ->with('success', __('Employé modifié avec succès'));
