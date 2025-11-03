@@ -92,7 +92,13 @@
                     
                     <div class="form-group mb-3">
                         <div class="form-check">
-                            <input class="form-check-input @error('Actived') is-invalid @enderror" type="checkbox" value="1" id="Actived" name="Actived" {{ old('Actived', '1') ? 'checked' : '' }}>
+                            <input class="form-check-input @error('Actived') is-invalid @enderror" 
+                                type="checkbox" 
+                                value="1" 
+                                id="Actived" 
+                                name="Actived" 
+                                {{ old('Actived', '0') ? 'checked' : '' }}
+                                {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
                             <label class="form-check-label" for="Actived">Activer</label>
                             @error('Actived')
                                 <div class="invalid-feedback">{{ $message }}</div>

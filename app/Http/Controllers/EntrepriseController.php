@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Entreprise;
 use App\Models\EntrepriseSiege;
 use App\Http\Requests\EntrepriseRequest;
+use App\Models\Administration;
 use App\Repositories\EntrepriseRepository;
 use App\Services\ExportService;
 use Illuminate\Http\Request;
@@ -48,6 +49,10 @@ class EntrepriseController extends Controller
             $data['Logo'] = $this->optimizeAndConvertToBase64($request->file('Logo'));
         }
         
+        if (!auth()->user()->IsSuperAdmin) {
+            $data['Actived'] = "0";
+        }
+
         // Ajouter la date de création
         $data['CreatedAt'] = now();
         
@@ -74,6 +79,8 @@ class EntrepriseController extends Controller
     public function update(EntrepriseRequest $request, $id)
     {
         $data = $request->validated();
+
+        $site = Entreprise::findOrFail($id);
         
         // Convertir et COMPRESSER le nouveau logo si présent
         if ($request->hasFile('Logo')) {
@@ -83,7 +90,11 @@ class EntrepriseController extends Controller
             unset($data['Logo']);
         }
         
-        $entreprise = $this->repository->update($id, $data);
+        if (!auth()->user()->IsSuperAdmin) {
+            $data['Actived'] = $site->Actived;
+        }
+
+        $this->repository->update($id, $data);
         
         return redirect()->route('entreprises.index')
             ->with('success', __('Site ou établissement modifié avec succès.'));
