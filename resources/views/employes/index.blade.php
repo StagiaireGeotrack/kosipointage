@@ -6,7 +6,7 @@
                 {{ __('Employés') }}
             </h2>
             <a href="{{ route('employes.create') }}" class="btn btn-primary">
-                {{ __('Nouveau mployé') }}
+                {{ __('Nouveau employé') }}
             </a>
         </div>
     </x-slot>
