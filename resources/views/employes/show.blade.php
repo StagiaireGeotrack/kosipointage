@@ -138,9 +138,13 @@
                                         value="1" 
                                         id="Actived" 
                                         name="Actived" 
-                                        {{ old('Actived', $employe->Actived) ? 'checked' : '' }}>
+                                        {{ old('Actived', $employe->Actived) ? 'checked' : '' }}
+                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
                                 <label class="form-check-label" for="Actived">
                                     Activer
+                                    @if(!Auth::user()->IsSuperAdmin)
+                                        <small class="text-muted">(réservé aux super administrateurs)</small>
+                                    @endif
                                 </label>
                                 @error('Actived')
                                     <div class="invalid-feedback">{{ $message }}</div>
