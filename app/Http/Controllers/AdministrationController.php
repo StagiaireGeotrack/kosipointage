@@ -88,7 +88,7 @@ class AdministrationController extends Controller
         unset($data['password']);
         unset($data['password_confirmation']);
         
-        $admin = $this->repository->update($id, $data);
+        $this->repository->update($id, $data);
         
         return redirect()->route('administrateurs.index')
             ->with('success', __('Compte modifié avec succès'));
