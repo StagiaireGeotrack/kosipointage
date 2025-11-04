@@ -3,8 +3,7 @@
     /* Navbar principale - FIXE */
     .navbar-custom {
         background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        box-shadow: 0 2px 8px rgba(63, 82, 164, 0.1);
-        border-bottom: 2px solid #3F52A4 !important;
+        box-shadow: 0 1px 5px #3F52A4;
         position: fixed;
         top: 0;
         left: 0;
