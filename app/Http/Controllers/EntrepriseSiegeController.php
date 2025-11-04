@@ -9,6 +9,7 @@ use App\Models\EntrepriseSiege;
 use App\Repositories\EntrepriseSiegeRepository;
 use App\Services\ExportService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class EntrepriseSiegeController extends Controller
@@ -125,7 +126,7 @@ class EntrepriseSiegeController extends Controller
                 'required',
                 Rule::unique('entreprises_sieges', 'Nom')->ignore($id), 
             ],
-            "Nom_Lieu_Ville" => "required"
+            'Nom_Lieu_Ville' => 'required'
         ], [
             'Nom.required' => 'Le champ nom est obligatoire.',
             'Nom.unique' => 'Ce nom de siège existe déjà.',
@@ -133,6 +134,9 @@ class EntrepriseSiegeController extends Controller
         ]);
 
         $validated['Actived'] = $request->has('Actived') ? 1 : 0;
+
+        DB::table('Entreprises')->where('SiegeID', $id)->update(['Actived' => $validated['Actived']]);
+        DB::table('Employes')->where('SiegeID', $id)->update(['Actived' => $validated['Actived']]);
         
         $siege = EntrepriseSiege::findOrFail($id); 
         $siege->update($validated);

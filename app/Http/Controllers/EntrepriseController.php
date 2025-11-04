@@ -4,13 +4,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entreprise;
-use App\Models\EntrepriseSiege;
-use App\Http\Requests\EntrepriseRequest;
-use App\Models\Administration;
-use App\Repositories\EntrepriseRepository;
-use App\Services\ExportService;
 use Illuminate\Http\Request;
+use App\Models\EntrepriseSiege;
+use App\Services\ExportService;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\EntrepriseRequest;
+use App\Repositories\EntrepriseRepository;
 
 class EntrepriseController extends Controller
 {
