@@ -1,6 +1,8 @@
 {{-- resources/views/dashboard/index.blade.php --}}
 <x-app-layout>
 
+    
+
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark">
             {{ __('Tableau de bord') }}
@@ -100,8 +102,36 @@
             </div>
         </div>
 
+        <hr>
+
+        <div class="row g-3">
+
+            <!-- Pointages par jour -->
+            <div class="col-lg-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-15 fw-medium text-dark">{{ __('Pointages par journée') }}</h6>
+                        <canvas id="pointagesByDayChart" height="50"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <hr>
+
         <!-- Graphiques -->
         <div class="row g-3">
+
+            <!-- Employés par date de création -->
+            <div class="col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-15 fw-medium text-dark">{{ __('Date d\'ajout des employés') }}</h6>
+                        <canvas id="employeeCreatedAtChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
 
             <!-- Employés par siège -->
             <div class="col-lg-3">
@@ -133,15 +163,6 @@
                 </div>
             </div>
             
-            <!-- Pointages par jour -->
-            <div class="col-lg-3">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h6 class="fs-15 fw-medium text-dark">{{ __('Pointages par journée') }}</h6>
-                        <canvas id="pointagesByDayChart" height="300"></canvas>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -165,24 +186,93 @@
             const employeesBySiege = @json($employeesBySiege);
             const companiesByStatus = @json($companiesByStatus);
             const pointagesByDay = @json($pointagesByDay);
-            const sieges = @json($sieges);
-            
+            const sieges = @json($sieges);            
             const employeesByDate = @json($employeesByDate);
+
+
+            // Graphique des employés par date de création
+            const employeesGroupedByDate = employeesByDate.reduce((acc, item) => {
+                const date = new Date(item.CreatedAt).toLocaleDateString('fr-FR');
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Trier les dates
+            const sortedEmployeeDates = Object.keys(employeesGroupedByDate).sort((a, b) => {
+                return new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-'));
+            });
+
+            const employeeCreatedAt = document.getElementById('employeeCreatedAtChart').getContext('2d');
+            new Chart(employeeCreatedAt, {
+                type: 'line',
+                data: {
+                    labels: sortedEmployeeDates,
+                    datasets: [
+                        {
+                            label: '{{ __("Total employés créés") }}',
+                            data: sortedEmployeeDates.map(date => employeesGroupedByDate[date]),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '{{ __("Date de création") }}'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
             
             // Graphique des employés par siège
             const employeesBySiegeCtx = document.getElementById('employeesBySiegeChart').getContext('2d');
+            // Fonction pour extraire les initiales
+            function getInitials(name) {
+                return name
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase())
+                    .join('');
+            }
+
+            // Préparer les données
+            const siegeNames = employeesBySiege.map(item => item.Nom);
+            const siegeInitials = siegeNames.map(name => getInitials(name));
+            const siegeTotals = employeesBySiege.map(item => item.total);
+
             new Chart(employeesBySiegeCtx, {
                 type: 'line',
                 data: {
-                    labels: employeesBySiege.map(item => item.Nom),
+                    labels: siegeInitials, // Afficher les initiales sur l'axe X
                     datasets: [{
                         label: '{{ __("Total employés") }}',
-                        data: employeesBySiege.map(item => item.total),
+                        data: siegeTotals,
                         borderColor: 'rgba(54, 162, 235, 1)',
                         backgroundColor: 'rgba(54, 162, 235, 0.1)',
                         borderWidth: 2,
                         fill: true,
-                        tension: 0.4, // Courbe lisse
+                        tension: 0.4,
                         pointBackgroundColor: 'rgba(54, 162, 235, 1)',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
@@ -197,10 +287,6 @@
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1
-                            },
-                            title: {
-                                display: true,
-                                text: '{{ __("Nombre d\'employés") }}'
                             }
                         },
                         x: {
@@ -214,6 +300,20 @@
                             }
                         }
                     },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                // Afficher le nom complet dans le tooltip
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    return siegeNames[index];
+                                },
+                                label: function(context) {
+                                    return '{{ __("Employés") }}: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    }
                 }
             });
             
@@ -265,6 +365,16 @@
                     scales: {
                         y: {
                             beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '{{ __("Date de pointage") }}'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
                         }
                     }
                 }
@@ -308,6 +418,10 @@
                             }
                         },
                         x: {
+                            title: {
+                                display: true,
+                                text: '{{ __("Date de création") }}'
+                            },
                             ticks: {
                                 maxRotation: 45,
                                 minRotation: 45

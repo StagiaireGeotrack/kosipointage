@@ -13,10 +13,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
+    @stack('styles')
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>
+        hr {
+            border: none;
+            height: 3px;
+            background: #3F52A4;
+            border-radius: 5px;
+            margin: 2rem 0;
+            opacity: 1;
+        }
+
+        /* Bordure pour toutes les cards */
+        .card {
+            border: 2px solid #3F52A4 !important;
+        }
+
+        /* Optionnel : effet hover sur les cards */
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(63, 82, 164, 0.2);
+            transition: all 0.3s ease;
+        }
+
         #scrollToTop {
             position: fixed;
             bottom: 30px;
