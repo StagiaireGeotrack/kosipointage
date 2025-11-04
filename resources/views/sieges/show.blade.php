@@ -126,7 +126,7 @@
                 </div>
                 
                 @if($entreprises->hasPages())
-                    <div class="mt-3">
+                    <div class="mt-1">
                         {{ $entreprises->links("pagination.custom") }}
                     </div>
                 @endif
@@ -210,7 +210,7 @@
                 </div>
                 
                 @if($employes->hasPages())
-                    <div class="mt-3">
+                    <div class="mt-1">
                         {{ $employes->links("pagination.custom") }}
                     </div>
                 @endif

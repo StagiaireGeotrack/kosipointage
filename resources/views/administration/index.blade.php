@@ -178,7 +178,7 @@
                 </div>
                 
                 <!-- Pagination -->
-                <div class="mt-3">
+                <div class="mt-1">
                     {{ $administrateurs->links("pagination.custom") }}
                 </div>
             </div>

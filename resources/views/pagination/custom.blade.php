@@ -2,7 +2,7 @@
     <div class="pagination-simple">
         
         <!-- Navigation -->
-        <nav aria-label="Pagination" class="mt-3">
+        <nav aria-label="Pagination" class="mt-1">
             <ul class="pagination justify-content-center">
                 {{-- Précédent --}}
                 @if ($paginator->onFirstPage())
@@ -74,7 +74,7 @@
         </nav>
 
         <!-- Page actuelle (toujours visible) -->
-        <div class="text-center mt-3">
+        <div class="text-center mt-1">
             <small class="pagination-mobile-info">
                 <i class="bi bi-file-earmark-text"></i>
                 Page {{ $paginator->currentPage() }} sur {{ $paginator->lastPage() }}

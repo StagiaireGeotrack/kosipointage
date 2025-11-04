@@ -231,7 +231,7 @@
                 </div>
                 
                 <!-- Pagination -->
-                <div class="mt-3">
+                <div class="mt-1">
                     {{ $pointages->links("pagination.custom") }}
                 </div>
             </div>
