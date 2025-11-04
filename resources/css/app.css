@@ -1,2 +1,361 @@
 /* resources/css/app.css */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+hr {
+    border: none;
+    height: 2px;
+    background: #3F52A4;
+    border-radius: 5px;
+    margin: 2rem 0;
+    opacity: 1;
+}
+
+/* Bordure pour toutes les cards */
+.card {
+    border: 2px solid #3F52A4 !important;
+}
+
+/* Optionnel : effet hover sur les cards */
+.card:hover {
+    box-shadow: 0 4px 8px rgba(63, 82, 164, 0.2);
+    transition: all 0.3s ease;
+}
+
+#scrollToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+#scrollToTop:hover {
+    background: #0b5ed7;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+#scrollToTop.show {
+    display: flex;
+}
+
+#scrollToTop svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Bouton Primary (principal) */
+.btn-primary {
+    background: linear-gradient(135deg, #3F52A4 0%, #5a6fb8 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px rgba(63, 82, 164, 0.3) !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2d3d7a 0%, #3F52A4 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(63, 82, 164, 0.4) !important;
+}
+
+.btn-primary:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px rgba(63, 82, 164, 0.3) !important;
+}
+
+/* Effet de brillance au hover */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+/* Bouton Secondary */
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #848d96 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px rgba(108, 117, 125, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #545b62 0%, #6c757d 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(108, 117, 125, 0.4) !important;
+}
+
+/* Bouton Success */
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Bouton Danger */
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Bouton Warning */
+.btn-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Bouton Info */
+.btn-info {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(14, 165, 233, 0.4) !important;
+}
+
+/* Bouton Dark */
+.btn-dark {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px rgba(31, 41, 55, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-dark:hover {
+    background: linear-gradient(135deg, #111827 0%, #030712 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(31, 41, 55, 0.4) !important;
+}
+
+/* Bouton Light */
+.btn-light {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%) !important;
+    border: 2px solid #3F52A4 !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    color: #3F52A4 !important;
+    box-shadow: 0 2px 4px rgba(63, 82, 164, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-light:hover {
+    background: linear-gradient(135deg, #3F52A4 0%, #5a6fb8 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(63, 82, 164, 0.3) !important;
+}
+
+/* Boutons Outline */
+.btn-outline-primary {
+    border: 2px solid #3F52A4 !important;
+    border-radius: 8px !important;
+    color: #3F52A4 !important;
+    background: transparent !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #3F52A4 0%, #5a6fb8 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(63, 82, 164, 0.3) !important;
+}
+
+.btn-outline-danger {
+    border: 2px solid #ef4444 !important;
+    border-radius: 8px !important;
+    color: #ef4444 !important;
+    background: transparent !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-danger:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3) !important;
+}
+
+.btn-outline-success {
+    border: 2px solid #10b981 !important;
+    border-radius: 8px !important;
+    color: #10b981 !important;
+    background: transparent !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-success:hover {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Boutons petits */
+.btn-sm {
+    padding: 0.4rem 1rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 6px !important;
+}
+
+/* Boutons larges */
+.btn-lg {
+    padding: 0.8rem 2rem !important;
+    font-size: 1.125rem !important;
+    border-radius: 10px !important;
+}
+
+/* Boutons avec icônes */
+.btn i {
+    margin-right: 0.5rem;
+}
+
+.btn-icon-only {
+    padding: 0.6rem !important;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon-only i {
+    margin: 0;
+}
+
+/* Boutons désactivés */
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Boutons de formulaire en groupe */
+.btn-group .btn {
+    border-radius: 0 !important;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+/* Animation de chargement pour les boutons */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+    }
+}

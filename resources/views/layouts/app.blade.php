@@ -17,62 +17,6 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <style>
-        hr {
-            border: none;
-            height: 3px;
-            background: #3F52A4;
-            border-radius: 5px;
-            margin: 2rem 0;
-            opacity: 1;
-        }
-
-        /* Bordure pour toutes les cards */
-        .card {
-            border: 2px solid #3F52A4 !important;
-        }
-
-        /* Optionnel : effet hover sur les cards */
-        .card:hover {
-            box-shadow: 0 4px 8px rgba(63, 82, 164, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        #scrollToTop {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #0d6efd;
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        #scrollToTop:hover {
-            background: #0b5ed7;
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
-        
-        #scrollToTop.show {
-            display: flex;
-        }
-        
-        #scrollToTop svg {
-            width: 24px;
-            height: 24px;
-        }
-    </style>
 </head>
 <body>
     <div class="min-vh-100 bg-light">

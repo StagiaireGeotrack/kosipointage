@@ -1,7 +1,5 @@
 {{-- resources/views/dashboard/index.blade.php --}}
-<x-app-layout>
-
-    
+<x-app-layout>    
 
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark">
