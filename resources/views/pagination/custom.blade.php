@@ -2,19 +2,21 @@
     <div class="pagination-simple">
         
         <!-- Navigation -->
-        <nav aria-label="Pagination" class="mt-1">
+        <nav aria-label="Pagination" class="mt-3">
             <ul class="pagination justify-content-center">
                 {{-- Précédent --}}
                 @if ($paginator->onFirstPage())
                     <li class="page-item disabled">
                         <span class="page-link">
-                            <i class="bi bi-chevron-left"></i> Précédent
+                            <i class="bi bi-chevron-left"></i>
+                            <span class="d-none d-sm-inline"> Précédent</span>
                         </span>
                     </li>
                 @else
                     <li class="page-item">
                         <a class="page-link" href="{{ $paginator->previousPageUrl() }}">
-                            <i class="bi bi-chevron-left"></i> Précédent
+                            <i class="bi bi-chevron-left"></i>
+                            <span class="d-none d-sm-inline"> Précédent</span>
                         </a>
                     </li>
                 @endif
@@ -23,7 +25,7 @@
                 @foreach ($elements as $element)
                     {{-- "..." Séparateur --}}
                     @if (is_string($element))
-                        <li class="page-item disabled">
+                        <li class="page-item disabled d-none d-md-inline-block">
                             <span class="page-link">{{ $element }}</span>
                         </li>
                     @endif
@@ -31,12 +33,20 @@
                     {{-- Liens de pages --}}
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
-                            @if ($page == $paginator->currentPage())
+                            @php
+                                $currentPage = $paginator->currentPage();
+                                // Sur mobile, afficher seulement: page courante ± 1
+                                $showOnMobile = abs($page - $currentPage) <= 1;
+                                // Sur tablette, afficher: page courante ± 2
+                                $showOnTablet = abs($page - $currentPage) <= 2;
+                            @endphp
+                            
+                            @if ($page == $currentPage)
                                 <li class="page-item active">
                                     <span class="page-link">{{ $page }}</span>
                                 </li>
                             @else
-                                <li class="page-item">
+                                <li class="page-item {{ $showOnMobile ? '' : 'd-none' }} {{ $showOnTablet ? 'd-md-inline-block' : 'd-none d-lg-inline-block' }}">
                                     <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                                 </li>
                             @endif
@@ -48,21 +58,23 @@
                 @if ($paginator->hasMorePages())
                     <li class="page-item">
                         <a class="page-link" href="{{ $paginator->nextPageUrl() }}">
-                            Suivant <i class="bi bi-chevron-right"></i>
+                            <span class="d-none d-sm-inline">Suivant </span>
+                            <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
                 @else
                     <li class="page-item disabled">
                         <span class="page-link">
-                            Suivant <i class="bi bi-chevron-right"></i>
+                            <span class="d-none d-sm-inline">Suivant </span>
+                            <i class="bi bi-chevron-right"></i>
                         </span>
                     </li>
                 @endif
             </ul>
         </nav>
 
-        <!-- Page actuelle (mobile) -->
-        <div class="d-md-none text-center mt-1">
+        <!-- Page actuelle (toujours visible) -->
+        <div class="text-center mt-3">
             <small class="pagination-mobile-info">
                 <i class="bi bi-file-earmark-text"></i>
                 Page {{ $paginator->currentPage() }} sur {{ $paginator->lastPage() }}
@@ -77,6 +89,7 @@
 
         .pagination {
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .pagination .page-link {
@@ -138,7 +151,7 @@
         /* Responsive */
         @media (max-width: 768px) {
             .pagination {
-                gap: 0.25rem;
+                gap: 0.35rem;
             }
 
             .pagination .page-link {
@@ -148,12 +161,18 @@
         }
 
         @media (max-width: 576px) {
-            .pagination .page-link {
-                padding: 0.4rem 0.6rem;
-                font-size: 0.85rem;
+            .pagination {
+                gap: 0.25rem;
             }
 
-            /* Cacher les textes sur petit écran, garder les icônes */
+            .pagination .page-link {
+                padding: 0.45rem 0.65rem;
+                font-size: 0.85rem;
+                min-width: 38px;
+                text-align: center;
+            }
+
+            /* Boutons Précédent/Suivant plus compacts sur mobile */
             .pagination .page-link i {
                 margin: 0;
             }
@@ -173,6 +192,17 @@
 
         .pagination-simple {
             animation: fadeInUp 0.5s ease-out;
+        }
+
+        /* S'assurer que les éléments ne débordent pas */
+        .pagination-simple {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .pagination {
+            display: inline-flex;
+            min-width: 100%;
         }
     </style>
 @endif
