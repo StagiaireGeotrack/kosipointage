@@ -9,7 +9,7 @@
 
     <div class="p-2">
         <!-- Sélecteur de période -->
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-2">
             <div class="card-body">
                 <form action="{{ route('dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-3">
                     <div>
@@ -44,11 +44,11 @@
         </div>
 
         <!-- KPI Cards -->
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-2">
             <div class="col-md-2">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h6 class="fs-5 fw-medium text-dark">{{ __('Employés') }}</h6>
+                        <h6 class="fs-6 fw-medium text-dark">{{ __('Employés') }}</h6>
                         <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['total_employees'] }}</p>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
             <div class="col-md-2">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h6 class="fs-5 fw-medium text-dark">{{ __('Sites ou établissements') }}</h6>
+                        <h6 class="fs-6 fw-medium text-dark">{{ __('Sites ou établissements') }}</h6>
                         <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['total_companies'] }}</p>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
             <div class="col-md-2">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h6 class="fs-5 fw-medium text-dark">{{ __('Siège') }}</h6>
+                        <h6 class="fs-6 fw-medium text-dark">{{ __('Siège') }}</h6>
                         <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['total_sieges'] }}</p>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
             <div class="col-md-2">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h6 class="fs-5 fw-medium text-dark">{{ __('Pointages') }}</h6>
+                        <h6 class="fs-6 fw-medium text-dark">{{ __('Pointages') }}</h6>
                         <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['pointages_period'] }}</p>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
             <div class="col-md-2">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h6 class="fs-5 fw-medium text-dark">{{ __('Pointages (Entrée)') }}</h6>
+                        <h6 class="fs-6 fw-medium text-dark">{{ __('Pointages (Entrée)') }}</h6>
                         <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['entries_period'] }}</p>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
             <div class="col-md-2">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h6 class="fs-5 fw-medium text-dark">{{ __('Pointages (Sortie)') }}</h6>
+                        <h6 class="fs-6 fw-medium text-dark">{{ __('Pointages (Sortie)') }}</h6>
                         <p class="mt-1 display-10 fw-semibold text-primary mb-0">{{ $kpis['exits_period'] }}</p>
                     </div>
                 </div>
@@ -102,9 +102,19 @@
 
         <!-- Graphiques -->
         <div class="row g-3">
-            
+
             <!-- Employés par siège -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fs-15 fw-medium text-dark">{{ __('Date d\'ajout sites ou établissements') }}</h6>
+                        <canvas id="siegeCreatedAtChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employés par siège -->
+            <div class="col-lg-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="fs-15 fw-medium text-dark">{{ __('Employés par siège') }}</h6>
@@ -114,7 +124,7 @@
             </div>
             
             <!-- Entreprises par statut -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="fs-15 fw-medium text-dark">{{ __('Sites ou établissements') }}</h6>
@@ -124,7 +134,7 @@
             </div>
             
             <!-- Pointages par jour -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="fs-15 fw-medium text-dark">{{ __('Pointages par journée') }}</h6>
@@ -155,31 +165,55 @@
             const employeesBySiege = @json($employeesBySiege);
             const companiesByStatus = @json($companiesByStatus);
             const pointagesByDay = @json($pointagesByDay);
+            const sieges = @json($sieges);
+            
+            const employeesByDate = @json($employeesByDate);
             
             // Graphique des employés par siège
             const employeesBySiegeCtx = document.getElementById('employeesBySiegeChart').getContext('2d');
             new Chart(employeesBySiegeCtx, {
-                type: 'pie',
+                type: 'line',
                 data: {
                     labels: employeesBySiege.map(item => item.Nom),
                     datasets: [{
+                        label: '{{ __("Total employés") }}',
                         data: employeesBySiege.map(item => item.total),
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                        ],
-                        borderWidth: 1,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4, // Courbe lisse
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            title: {
+                                display: true,
+                                text: '{{ __("Nombre d\'employés") }}'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '{{ __("Sièges") }}'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
                 }
             });
             
@@ -231,6 +265,53 @@
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Graphique des sièges par date de création
+            const siegesByDate = sieges.reduce((acc, item) => {
+            const date = new Date(item.CreatedAt).toLocaleDateString('fr-FR');
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Trier les dates
+            const sortedDates = Object.keys(siegesByDate).sort((a, b) => {
+                return new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-'));
+            });
+
+            const siegeCreatedAt = document.getElementById('siegeCreatedAtChart').getContext('2d');
+            new Chart(siegeCreatedAt, {
+                type: 'line',
+                data: {
+                    labels: sortedDates,
+                    datasets: [
+                        {
+                            label: '{{ __("Nombre de sièges créés") }}',
+                            data: sortedDates.map(date => siegesByDate[date]),
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            fill: true,
+                            tension: 0.4 // Courbe lisse
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
                         }
                     }
                 }

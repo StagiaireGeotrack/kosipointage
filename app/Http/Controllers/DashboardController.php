@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EntrepriseSiege;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -48,6 +49,8 @@ class DashboardController extends Controller
         $employeesBySiege = $this->getEmployeesBySiege();
         $companiesByStatus = $this->getCompaniesByStatus();
         $pointagesByDay = $this->getPointagesByPeriod($startDate, $endDate, 'day');
+        $sieges =  $this->getSieges($startDate, $endDate);
+        $employeesByDate =  $this->getEmployeesByDate($startDate, $endDate);
         
         // KPIs
         $kpis = $this->getKPIs($startDate, $endDate);
@@ -60,8 +63,20 @@ class DashboardController extends Controller
             'kpis',
             'period',
             'startDate',
-            'endDate'
+            'endDate',
+            'sieges',
+            'employeesByDate'
         ));
+    }
+
+    private function getEmployeesByDate( $startDate, $endDate )
+    {
+        return DB::table("Employes")->whereBetween('CreatedAt', [$startDate, $endDate])->get() ;
+    }
+
+    private function getSieges( $startDate, $endDate )
+    {
+        return DB::table("Entreprises_sieges")->whereBetween('CreatedAt', [$startDate, $endDate])->get() ;
     }
     
     private function getEmployeesByCompany()
