@@ -1,5 +1,6 @@
 {{-- resources/views/dashboard/index.blade.php --}}
 <x-app-layout>
+
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark">
             {{ __('Tableau de bord') }}
@@ -106,7 +107,7 @@
             <div class="col-lg-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h3 class="fs-15 fw-medium text-dark">{{ __('Employés par siège') }}</h3>
+                        <h6 class="fs-15 fw-medium text-dark">{{ __('Employés par siège') }}</h6>
                         <canvas id="employeesBySiegeChart" height="300"></canvas>
                     </div>
                 </div>
@@ -116,7 +117,7 @@
             <div class="col-lg-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h3 class="fs-15 fw-medium text-dark">{{ __('Sites ou établissements') }}</h3>
+                        <h6 class="fs-15 fw-medium text-dark">{{ __('Sites ou établissements') }}</h6>
                         <canvas id="companiesByStatusChart" height="300"></canvas>
                     </div>
                 </div>
@@ -126,7 +127,7 @@
             <div class="col-lg-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h3 class="fs-15 fw-medium text-dark">{{ __('Pointages par journée') }}</h3>
+                        <h6 class="fs-15 fw-medium text-dark">{{ __('Pointages par journée') }}</h6>
                         <canvas id="pointagesByDayChart" height="300"></canvas>
                     </div>
                 </div>
@@ -177,7 +178,7 @@
                             'rgba(75, 192, 192, 1)',
                             'rgba(153, 102, 255, 1)',
                         ],
-                        borderWidth: 1
+                        borderWidth: 1,
                     }]
                 }
             });
