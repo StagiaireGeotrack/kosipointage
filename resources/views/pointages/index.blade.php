@@ -158,7 +158,7 @@
                                     </td>
                                     <td class="align-middle">
                                         @switch($pointage->auth_method)
-                                            @case('badge')
+                                            @case('rfid')
                                                 <span class="badge bg-info">
                                                     {{ __('Badge') }}
                                                 </span>
