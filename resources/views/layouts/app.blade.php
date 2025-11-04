@@ -16,6 +16,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
+    <style>
+        /* Compensation pour la navbar fixe */
+        body {
+            padding-top: 90px; /* Ajustez cette valeur selon la hauteur de votre navbar */
+        }
+
+        /* Ajustement responsive */
+        @media (max-width: 576px) {
+            body {
+                padding-top: 80px; /* Légèrement moins sur mobile */
+            }
+        }
+    </style>
+    
     @stack('styles')
 
     <!-- Scripts -->

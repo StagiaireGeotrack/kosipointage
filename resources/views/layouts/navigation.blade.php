@@ -1,10 +1,21 @@
 {{-- resources/views/layouts/navigation.blade.php --}}
 <style>
-    /* Navbar principale */
+    /* Navbar principale - FIXE */
     .navbar-custom {
         background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         box-shadow: 0 2px 8px rgba(63, 82, 164, 0.1);
         border-bottom: 2px solid #3F52A4 !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        transition: box-shadow 0.3s ease;
+    }
+
+    /* Effet d'ombre au scroll */
+    .navbar-custom.scrolled {
+        box-shadow: 0 4px 12px rgba(63, 82, 164, 0.15);
     }
 
     /* Logo et titre */
@@ -105,6 +116,7 @@
         border-radius: 10px;
         box-shadow: 0 8px 16px rgba(63, 82, 164, 0.2);
         margin-top: 0.5rem;
+        position: absolute !important;
     }
 
     .dropdown-item {
@@ -154,6 +166,24 @@
         
         .nav-link {
             padding: 0.5rem 1rem;
+        }
+
+        /* Menu mobile avec scroll si nécessaire */
+        .navbar-collapse {
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+    }
+
+    /* Backdrop pour mobile quand le menu est ouvert */
+    @media (max-width: 575px) {
+        .navbar-collapse.show,
+        .navbar-collapse.collapsing {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 0 8px 16px rgba(63, 82, 164, 0.2);
+            border-radius: 0 0 10px 10px;
+            padding: 1rem;
+            margin-top: 0.5rem;
         }
     }
 </style>
@@ -257,3 +287,15 @@
         </div>
     </div>
 </nav>
+
+<script>
+    // Effet d'ombre au scroll pour la navbar fixe
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar-custom');
+        if (window.scrollY > 10) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
