@@ -388,11 +388,6 @@ hr {
     position: relative;
 }
 
-/* Effet de tri sur les colonnes */
-.table thead th:hover {
-    background: rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-}
 
 /* Corps de table */
 .table tbody tr {
