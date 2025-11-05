@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/day-night', [ReportController::class, 'dayNight'])->name('reports.day-night');
         Route::get('/reports/export/excel/{type}', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
         Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
+        Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
     });
     
     // Routes accessibles uniquement aux SuperAdmin

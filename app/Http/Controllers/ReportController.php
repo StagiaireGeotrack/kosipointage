@@ -3,13 +3,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Services\ExportService;
-use Illuminate\Support\Facades\Gate;
-use App\Models\EntrepriseSiege;
-use App\Models\Employe;
 use Carbon\Carbon;
+use App\Models\Employe;
+use Illuminate\Http\Request;
+use App\Models\EntrepriseSiege;
+use App\Services\ExportService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 
 class ReportController extends Controller
 {
@@ -38,6 +40,89 @@ class ReportController extends Controller
         ];
         
         return view('reports.index', compact('stats' , 'sieges' , 'mois' , 'annees'));
+    }
+
+    public function getRapportAuto(Request $request)
+    {
+        $request->validate([
+            'SiegeID' => 'required|exists:Entreprises_sieges,ID',
+            'email' => 'nullable|email',
+            'mois'  => 'required|integer|min:1|max:12',
+            'annee' => 'required|integer|min:2000|max:' . now()->year,
+        ],[
+            // Messages pour SiegeID
+            'SiegeID.required' => 'Le siège est obligatoire.',
+            'SiegeID.exists' => 'Veuillez bien sélectionner un siège.',
+            
+            // Messages pour email
+            'email.email' => 'L\'adresse e-mail doit être valide.',
+            
+            // Messages pour mois
+            'mois.required' => 'Le mois est obligatoire.',
+            'mois.integer' => 'Veuillez bien sélectionner un mois.',
+            'mois.min' => 'Veuillez bien sélectionner un mois.',
+            'mois.max' => 'Veuillez bien sélectionner un mois.',
+            
+            // Messages pour annee
+            'annee.required' => 'L\'année est obligatoire.',
+            'annee.integer' => 'Veuillez bien sélectionner une année.',
+            'annee.min' => 'Veuillez bien sélectionner une année.',
+            'annee.max' => 'Veuillez bien sélectionner une année.'
+        ]);
+
+        $email = $request->email ?? auth()->user()->Identifiant_email;
+
+        $siege = \App\Models\EntrepriseSiege::find($request->SiegeID);
+        
+        $nomMois = \Carbon\Carbon::createFromDate($request->annee, $request->mois, 1)
+            ->locale('fr')
+            ->translatedFormat('F');
+
+        try {
+            $response = Http::timeout(30)->withHeaders([
+                'key' => 'eight_sharp_key_v1',
+            ])->post('https://n8n.zul-annuaire.com/webhook/rapport-pointage-mensuel', [
+                'entreprise_siege' => $request->SiegeID,
+                'mois' => $request->mois,
+                'annee' => $request->annee,
+                'to_email' => $email,
+            ]);
+
+            $nomMoisFormate = ucfirst($nomMois);
+
+            if ($response->successful()) {
+                return redirect()->back()->with('success', 
+                    "Rapport généré et envoyé avec succès !<br>" .
+                    "<strong>Siège :  </strong> {$siege->Nom}<br>" .
+                    "<strong>Période :  </strong> {$nomMoisFormate} {$request->annee}<br>" .
+                    "<strong>Envoyé à :  </strong> {$email}"
+                );
+            } else {
+                Log::error('Erreur API rapport', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                
+                return redirect()->back()->with('error', 
+                    'Erreur lors de la génération du rapport (Code: ' . $response->status() . '). Veuillez réessayer.'
+                );
+            }
+
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return redirect()->back()->with('error', 
+                'Impossible de contacter le serveur. Vérifiez votre connexion internet.'
+            );
+        } catch (\Exception $e) {
+            Log::error('Exception rapport auto', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->back()->with('error', 
+                'Une erreur technique s\'est produite. Veuillez contacter l\'administrateur.'
+            );
+        }
+
     }
     
     public function daily(Request $request)

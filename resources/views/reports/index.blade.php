@@ -2,22 +2,24 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('Statistique rapport') }}
+            {{ __('Rapports') }}
         </h2>
     </x-slot>
 
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Rapports disponibles') }}</h3>
+                <p class="fs-5 fw-medium text-dark mb-3">{{ __('Rapports disponibles') }}</p>
 
                 <div class="row g-4 mb-3">
                     <!-- Rapport quotidien -->
                     <div class="col-12 col-md-12">
                         <div class="card h-100 shadow-sm border">
                             <div class="card-body p-4">
-                                <form action="">
-                                    <div class="row g-3 mb-2">
+                                <form method="POST" action="{{ route('reports.rapport-auto') }}">
+                                    @csrf
+
+                                    <div class="row g-3 mb-4">
                                         <div class="col-lg-6">
                                             <x-input-label for="SiegeID" :value="__('Siège')" /><span class="text-danger">*</span>
                                             <select id="SiegeID" name="SiegeID" class="form-select mt-1" required>
@@ -28,16 +30,18 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                                         </div>
                                         <div class="col-lg-6">
                                             <x-input-label for="email" :value="__('Envoyer à l\'E-mail')" />
                                             <x-text-input id="email" name="email" type="email" class="form-control mt-1"/>
+                                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                             <small class="form-text text-muted">
                                                 Si non renseigné, le rapport sera envoyé à "{{ Auth::user()->Identifiant_email }}"
                                             </small>
                                         </div>
                                     </div>
-                                    <div class="row g-3 mt-2">
+                                    <div class="row g-3 mb-4">
                                         <div class="col-lg-6">
                                             <x-input-label for="mois" :value="__('Mois')" /><span class="text-danger">*</span>
                                             <select id="mois" name="mois" class="form-select mt-1" required>
@@ -48,6 +52,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <x-input-error :messages="$errors->get('mois')" class="mt-2" />
                                         </div>
                                         <div class="col-lg-6">
                                             <x-input-label for="annee" :value="__('Année')" /><span class="text-danger">*</span>
@@ -59,7 +64,14 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <x-input-error :messages="$errors->get('annee')" class="mt-2" />
                                         </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <x-primary-button class="btn btn-primary">
+                                            {{ __('Envoyer') }}
+                                        </x-primary-button>
                                     </div>
                                 </form>
                             </div>
