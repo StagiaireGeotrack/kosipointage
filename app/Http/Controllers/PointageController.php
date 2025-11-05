@@ -53,6 +53,11 @@ class PointageController extends Controller
         
         return view('pointages.index', compact('pointages', 'sieges', 'employes', 'filters'));
     }
+
+    public function showDetails(Request $request)
+    {
+        dd($request);
+    }
     
     public function create()
     {
