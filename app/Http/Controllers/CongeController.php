@@ -49,7 +49,27 @@ class CongeController extends Controller
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
             'type_conge' => 'required|in:CP,RTT,Maladie,Autres',
-            'commentaire' => 'nullable|string|max:500',
+            'commentaire' => 'nullable|string',
+        ], [
+            // Messages pour employee_id
+            'employee_id.required' => 'Veuillez sélectionner un employé.',
+            'employee_id.exists' => 'L\'employé sélectionné n\'existe pas.',
+            
+            // Messages pour date_debut
+            'date_debut.required' => 'La date de début est obligatoire.',
+            'date_debut.date' => 'La date de début doit être une date valide.',
+            
+            // Messages pour date_fin
+            'date_fin.required' => 'La date de fin est obligatoire.',
+            'date_fin.date' => 'La date de fin doit être une date valide.',
+            'date_fin.after_or_equal' => 'La date de fin doit être postérieure ou égale à la date de début.',
+            
+            // Messages pour type_conge
+            'type_conge.required' => 'Veuillez sélectionner un type de congé.',
+            'type_conge.in' => 'Le type de congé sélectionné n\'est pas valide.',
+            
+            // Messages pour commentaire
+            'commentaire.string' => 'Le commentaire doit être du texte.'
         ]);
 
         Conge::create($validated);
@@ -79,7 +99,27 @@ class CongeController extends Controller
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
             'type_conge' => 'required|in:CP,RTT,Maladie,Autres',
-            'commentaire' => 'nullable|string|max:500',
+            'commentaire' => 'nullable|string',
+        ], [
+            // Messages pour employee_id
+            'employee_id.required' => 'Veuillez sélectionner un employé.',
+            'employee_id.exists' => 'L\'employé sélectionné n\'existe pas.',
+            
+            // Messages pour date_debut
+            'date_debut.required' => 'La date de début est obligatoire.',
+            'date_debut.date' => 'La date de début doit être une date valide.',
+            
+            // Messages pour date_fin
+            'date_fin.required' => 'La date de fin est obligatoire.',
+            'date_fin.date' => 'La date de fin doit être une date valide.',
+            'date_fin.after_or_equal' => 'La date de fin doit être postérieure ou égale à la date de début.',
+            
+            // Messages pour type_conge
+            'type_conge.required' => 'Veuillez sélectionner un type de congé.',
+            'type_conge.in' => 'Le type de congé sélectionné n\'est pas valide.',
+            
+            // Messages pour commentaire
+            'commentaire.string' => 'Le commentaire doit être du texte.'
         ]);
 
         $conge->update($validated);

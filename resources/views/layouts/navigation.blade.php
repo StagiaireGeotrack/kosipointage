@@ -251,6 +251,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('conges.index') }}" class="nav-link {{ request()->routeIs('conges.*') ? 'active-link' : '' }}">
+                        <i class="bi bi-file-earmark-text"></i> Congé
+                    </a>
+                </li>
+
             </ul>
 
             <!-- User Menu Dropdown -->
