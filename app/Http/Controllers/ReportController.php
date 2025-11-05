@@ -282,7 +282,7 @@ class ReportController extends Controller
             $query->where('SiegeID', auth()->user()->SiegeID);
         }
         
-        return $query->where('Actived', 1)->get();
+        return $query->get();
     }
     
     private function applyFilters($query, array $filters)
