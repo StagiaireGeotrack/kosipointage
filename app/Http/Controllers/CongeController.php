@@ -14,19 +14,16 @@ class CongeController extends Controller
         
         $query = Conge::with('employe');
         
-        // Filtre par recherche (nom employé)
         if (!empty($filters['search'])) {
             $query->whereHas('employe', function($q) use ($filters) {
                 $q->where('Nom', 'like', '%' . $filters['search'] . '%');
             });
         }
         
-        // Filtre par type de congé
         if (!empty($filters['type_conge'])) {
             $query->where('type_conge', $filters['type_conge']);
         }
         
-        // Filtre par employé
         if (!empty($filters['employee_id'])) {
             $query->where('employee_id', $filters['employee_id']);
         }
