@@ -49,16 +49,16 @@
 
                     <div class="row g-3 mb-4">
                         <div class="col-lg-6">
-                            <x-input-label for="date_debut" :value="__('Date de début')" />
+                            <x-input-label for="date_debut" :value="__('Date et heure de début')" />
                             <span class="text-danger">*</span>
-                            <x-text-input id="date_debut" name="date_debut" type="date" class="form-control mt-1" :value="old('date_debut')" required />
+                            <x-text-input id="date_debut" name="date_debut" type="datetime-local" class="form-control mt-1" :value="old('date_debut')" required />
                             <x-input-error :messages="$errors->get('date_debut')" class="mt-2" />
                         </div>
 
                         <div class="col-lg-6">
-                            <x-input-label for="date_fin" :value="__('Date de fin')" />
+                            <x-input-label for="date_fin" :value="__('Date et heure de fin')" />
                             <span class="text-danger">*</span>
-                            <x-text-input id="date_fin" name="date_fin" type="date" class="form-control mt-1" :value="old('date_fin')" required />
+                            <x-text-input id="date_fin" name="date_fin" type="datetime-local" class="form-control mt-1" :value="old('date_fin')" required />
                             <x-input-error :messages="$errors->get('date_fin')" class="mt-2" />
                         </div>
                     </div>
