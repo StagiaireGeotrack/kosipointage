@@ -100,6 +100,9 @@
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Heure totale') }}
                                 </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Action') }}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,6 +139,16 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $rapport->total_heure_journee }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('pointages.show.details', [ $rapport->employee_id , $rapport->date_reel ]) }}" class="text-primary" title="Voir">
+                                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

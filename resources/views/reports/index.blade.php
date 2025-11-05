@@ -17,7 +17,7 @@
                         <div class="card h-100 shadow-sm border">
                             <div class="card-body p-4">
                                 <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (JOUR)') }}</h4>
-                                <p class="text-muted mb-3">{{ __('Description') }}</p>
+                                <p class="text-muted mb-3">{{ __('Rapport incluant le jour seulement') }}</p>
                                 <a href="{{ route('reports.daily') }}" class="btn btn-primary text-uppercase small fw-semibold">
                                     {{ __('Voir') }}
                                 </a>
@@ -30,7 +30,7 @@
                         <div class="card h-100 shadow-sm border">
                             <div class="card-body p-4">
                                 <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (NUIT)') }}</h4>
-                                <p class="text-muted mb-3">{{ __('Description') }}</p>
+                                <p class="text-muted mb-3">{{ __('Rapport incluant le jour et nuit') }}</p>
                                 <a href="{{ route('reports.day-night') }}" class="btn btn-primary text-uppercase small fw-semibold">
                                     {{ __('Voir') }}
                                 </a>

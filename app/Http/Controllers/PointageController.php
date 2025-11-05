@@ -54,11 +54,20 @@ class PointageController extends Controller
         return view('pointages.index', compact('pointages', 'sieges', 'employes', 'filters'));
     }
 
-    public function showDetails()
+    public function showDetails($employe, $date)
     {
-        echo "test";
+        $employe = Employe::findOrFail($employe);
+        
+        $date = Carbon::parse($date);
+        
+        $pointages = Pointage::where('employee_id', $employe->ID)
+            ->whereDate('timestamp_', $date)
+            ->orderBy('timestamp_')
+            ->get();
+        
+        return view('pointages.details', compact('employe', 'date', 'pointages'));
     }
-    
+
     public function create()
     {
         // Récupérer les sièges auxquels l'utilisateur a accès
