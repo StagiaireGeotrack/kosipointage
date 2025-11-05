@@ -1,16 +1,17 @@
 <?php
 // routes/web.php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CongeController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\PointageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntrepriseController;
-use App\Http\Controllers\EntrepriseSiegeController;
-use App\Http\Controllers\EmployeController;
-use App\Http\Controllers\PointageController;
 use App\Http\Controllers\AdministrationController;
-use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\EntrepriseSiegeController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -68,6 +69,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/export/excel/{type}', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
         Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
         Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
+
+        // Congés
+        Route::resource('conges', CongeController::class);
     });
     
     // Routes accessibles uniquement aux SuperAdmin

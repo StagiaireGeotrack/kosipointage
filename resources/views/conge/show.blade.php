@@ -45,25 +45,38 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">{{ __('Date de début') }}</label>
-                            <p class="fs-5">{{ $conge->date_debut->format('d/m/Y') }}</p>
+                            <label class="form-label fw-semibold text-secondary">{{ __('Date et heure de début') }}</label>
+                            <p class="fs-5">{{ $conge->date_debut->format('d/m/Y à H:i') }}</p>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">{{ __('Date de fin') }}</label>
-                            <p class="fs-5">{{ $conge->date_fin->format('d/m/Y') }}</p>
+                            <label class="form-label fw-semibold text-secondary">{{ __('Date et heure de fin') }}</label>
+                            <p class="fs-5">{{ $conge->date_fin->format('d/m/Y à H:i') }}</p>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Durée') }}</label>
-                            <p class="fs-5">{{ $conge->date_debut->diffInDays($conge->date_fin) + 1 }} jour(s)</p>
+                            <p class="fs-5">
+                                @php
+                                    $diff = $conge->date_debut->diffInDays($conge->date_fin);
+                                    $heures = $conge->date_debut->diffInHours($conge->date_fin) % 24;
+                                    $minutes = $conge->date_debut->diffInMinutes($conge->date_fin) % 60;
+                                @endphp
+                                {{ $diff }} jour(s)
+                                @if($heures > 0)
+                                    {{ $heures }}h
+                                @endif
+                                @if($minutes > 0)
+                                    {{ $minutes }}min
+                                @endif
+                            </p>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Date de création') }}</label>
-                            <p class="fs-5">{{ $conge->created_at->format('d/m/Y H:i') }}</p>
+                            <p class="fs-5">{{ $conge->created_at->format('d/m/Y à H:i') }}</p>
                         </div>
                     </div>
                 </div>
