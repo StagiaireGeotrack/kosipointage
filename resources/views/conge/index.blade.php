@@ -113,13 +113,20 @@
                                         </span>
                                     </td>
                                     <td class="align-middle">
-                                        {{ $conge->date_debut->format('d/m/Y') }}
+                                        {{ $conge->date_debut->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $conge->date_fin->format('d/m/Y') }}
+                                        {{ $conge->date_fin->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $conge->date_debut->diffInDays($conge->date_fin) + 1 }} jour(s)
+                                        @php
+                                            $diff = $conge->date_debut->diffInDays($conge->date_fin);
+                                            $heures = $conge->date_debut->diffInHours($conge->date_fin) % 24;
+                                        @endphp
+                                        {{ $diff }} jour(s)
+                                        @if($heures > 0)
+                                            {{ $heures }}h
+                                        @endif
                                     </td>
                                     <td class="align-middle">
                                         {{ $conge->created_at->format('d/m/Y H:i') }}
