@@ -10,8 +10,64 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Rapports disponibles') }}</h3>
+
+                <div class="row g-4 mb-3">
+                    <!-- Rapport quotidien -->
+                    <div class="col-12 col-md-12">
+                        <div class="card h-100 shadow-sm border">
+                            <div class="card-body p-4">
+                                <form action="">
+                                    <div class="row g-3 mb-2">
+                                        <div class="col-lg-6">
+                                            <x-input-label for="SiegeID" :value="__('Siège')" /><span class="text-danger">*</span>
+                                            <select id="SiegeID" name="SiegeID" class="form-select mt-1" required>
+                                                <option value="">{{ __('Sélectionnez un siège') }}</option>
+                                                @foreach($sieges as $siege)
+                                                    <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
+                                                        {{ $siege->Nom }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <x-input-label for="email" :value="__('Envoyer à l\'E-mail')" />
+                                            <x-text-input id="email" name="email" type="email" class="form-control mt-1"/>
+                                            <small class="form-text text-muted">
+                                                Si non renseigné, le rapport sera envoyé à "{{ Auth::user()->Identifiant_email }}"
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-lg-6">
+                                            <x-input-label for="mois" :value="__('Mois')" /><span class="text-danger">*</span>
+                                            <select id="mois" name="mois" class="form-select mt-1" required>
+                                                <option value="">{{ __('Sélectionnez un mois') }}</option>
+                                                @foreach($mois as $m)
+                                                    <option value="{{ $m['numero'] }}" {{ $m['numero'] == now()->month ? 'selected' : '' }}>
+                                                        {{  ucfirst($m['nom']) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <x-input-label for="annee" :value="__('Année')" /><span class="text-danger">*</span>
+                                            <select id="annee" name="annee" class="form-select mt-1" required>
+                                                <option value="">{{ __('Sélectionnez une année') }}</option>
+                                                @foreach($annees as $a)
+                                                    <option value="{{ $a }}" {{ $a == now()->year ? 'selected' : '' }}>
+                                                        {{ $a }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-                <div class="row g-4 mb-5">
+                <div class="row g-4 mt-3">
                     <!-- Rapport quotidien -->
                     <div class="col-12 col-md-6">
                         <div class="card h-100 shadow-sm border">
@@ -40,7 +96,7 @@
                 </div>
                 
                 <!-- Statistiques globales -->
-                <div class="mt-5">
+                <div class="mt-3">
                     <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Statistiques') }}</h3>
                     
                     <div class="row g-3">

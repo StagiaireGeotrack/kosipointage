@@ -22,7 +22,14 @@ class ReportController extends Controller
     
     public function index()
     {
-        // Récupérer les statistiques globales
+        $sieges = EntrepriseSiege::all();
+        $mois = collect(range(1, 12))->map(function($m) {
+            return [
+                'numero' => $m,
+                'nom' => \Carbon\Carbon::create()->month($m)->locale('fr')->translatedFormat('F')
+            ];
+        });
+        $annees = range( 2010 , now()->year );
         $stats = [
             'employees_count' => \App\Models\Employe::count(),
             'pointages_count' => \App\Models\Pointage::count(),
@@ -30,8 +37,7 @@ class ReportController extends Controller
             'active_employees' => \App\Models\Employe::where('Actived', 1)->count(),
         ];
         
-        // Vue principale des rapports
-        return view('reports.index', compact('stats'));
+        return view('reports.index', compact('stats' , 'sieges' , 'mois' , 'annees'));
     }
     
     public function daily(Request $request)
