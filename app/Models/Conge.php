@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Conge extends Model
 {
     protected $table = 'conges';
+    public $timestamps = false;
     
     protected $fillable = [
         'employee_id',
@@ -20,6 +21,7 @@ class Conge extends Model
     protected $casts = [
         'date_debut' => 'datetime',
         'date_fin' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     public function employe(): BelongsTo
