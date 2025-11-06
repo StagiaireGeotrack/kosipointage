@@ -61,7 +61,7 @@ class JourNonTravailleRepository
         $sortOrder = $filters['sort_order'] ?? 'asc';
         $query->orderBy($sortBy, $sortOrder);
         
-        return $query->paginate(15);
+        return $query->paginate(5);
     }
     
     public function getAllForExport(array $filters = [])
