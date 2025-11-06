@@ -110,16 +110,31 @@
                                     <td class="align-middle">
                                         {{ $conge->date_fin->format('d/m/Y H:i') }}
                                     </td>
+                                    {{-- resources/views/conges/index.blade.php --}}
                                     <td class="align-middle">
                                         @php
-                                            $joursOuvrables = $conge->date_debut->diffInWeekdays($conge->date_fin);
-                                            $heures = $conge->date_debut->diffInHours($conge->date_fin) % 24;
+                                            $jourOuvrableService = app(\App\Services\JourOuvrableService::class);
+                                            $resultat = $jourOuvrableService->calculerJoursOuvrables(
+                                                $conge->date_debut, 
+                                                $conge->date_fin,
+                                                $conge->employe->SiegeID ?? null
+                                            );
                                         @endphp
                                         
-                                        {{ $joursOuvrables }} jour(s)
-                                        @if($heures > 0)
-                                            {{ $heures }} heure(s)
-                                        @endif
+                                        <div>
+                                            @if($resultat['jours'] > 0)
+                                                <span class="text-muted">{{ round( $resultat['jours'] ) }} jour(s) ouvrable(s)</span>
+                                            @endif
+                                            
+                                            @if($resultat['heures'] > 0)
+                                                @if($resultat['jours'] > 0) et @endif
+                                                <span class="text-muted">{{ round( $resultat['heures'] ) }} h</span>
+                                            @endif
+                                            
+                                            @if($resultat['jours'] == 0 && $resultat['heures'] == 0)
+                                                <span class="badge bg-warning text-dark">{{ __('Aucun jour ouvrable') }}</span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="align-middle">
                                         {{ $conge->created_at->format('d/m/Y H:i') }}

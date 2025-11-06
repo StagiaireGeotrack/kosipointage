@@ -1,0 +1,114 @@
+<?php
+// app/Repositories/JourNonTravailleRepository.php
+
+namespace App\Repositories;
+
+use App\Models\JourNonTravaille;
+
+class JourNonTravailleRepository
+{
+    protected $model;
+    
+    public function __construct(JourNonTravaille $model)
+    {
+        $this->model = $model;
+    }
+    
+    public function getFiltered(array $filters = [])
+    {
+        $query = $this->model->with('siege');
+        
+        // Filtre par recherche (nom)
+        if (!empty($filters['search'])) {
+            $query->where('Nom', 'like', '%' . $filters['search'] . '%');
+        }
+        
+        // Filtre par siège
+        if (!empty($filters['SiegeID'])) {
+            $query->where('SiegeID', $filters['SiegeID']);
+        }
+        
+        // Filtre par type
+        if (!empty($filters['Type'])) {
+            $query->where('Type', $filters['Type']);
+        }
+        
+        // Filtre par année
+        if (!empty($filters['annee'])) {
+            $query->whereYear('Date', $filters['annee']);
+        }
+        
+        // Filtre par récurrent
+        if (isset($filters['Recurrent']) && $filters['Recurrent'] !== '') {
+            $query->where('Recurrent', (bool)$filters['Recurrent']);
+        }
+        
+        // Tri
+        $sortBy = $filters['sort_by'] ?? 'Date';
+        $sortOrder = $filters['sort_order'] ?? 'asc';
+        $query->orderBy($sortBy, $sortOrder);
+        
+        return $query->paginate(15);
+    }
+    
+    public function getAllForExport(array $filters = [])
+    {
+        $query = $this->model->with('siege');
+        
+        if (!empty($filters['search'])) {
+            $query->where('Nom', 'like', '%' . $filters['search'] . '%');
+        }
+        
+        if (!empty($filters['SiegeID'])) {
+            $query->where('SiegeID', $filters['SiegeID']);
+        }
+        
+        if (!empty($filters['Type'])) {
+            $query->where('Type', $filters['Type']);
+        }
+        
+        if (!empty($filters['annee'])) {
+            $query->whereYear('Date', $filters['annee']);
+        }
+        
+        return $query->orderBy('Date', 'asc')->get();
+    }
+    
+    public function findById($id)
+    {
+        return $this->model->with('siege')->findOrFail($id);
+    }
+    
+    public function create(array $data)
+    {
+        return $this->model->create($data);
+    }
+    
+    public function update($id, array $data)
+    {
+        $jourNonTravaille = $this->findById($id);
+        $jourNonTravaille->update($data);
+        return $jourNonTravaille;
+    }
+    
+    public function delete($id)
+    {
+        $jourNonTravaille = $this->findById($id);
+        return $jourNonTravaille->delete();
+    }
+    
+    /**
+     * Obtenir les jours non travaillés pour une période et un siège
+     */
+    public function getJoursNonTravaillesPourPeriode($dateDebut, $dateFin, $siegeId = null)
+    {
+        $query = $this->model->actif()
+            ->periode($dateDebut, $dateFin)
+            ->where(function($q) use ($siegeId) {
+                $q->whereNull('SiegeID') // Jours nationaux
+                  ->orWhere('SiegeID', $siegeId); // Jours spécifiques au siège
+            });
+        
+        return $query->get();
+    }
+}

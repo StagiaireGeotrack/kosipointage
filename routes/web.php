@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\EntrepriseSiegeController;
+use App\Http\Controllers\JourNonTravailleController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -72,6 +73,12 @@ Route::middleware('auth')->group(function () {
 
         // Congés
         Route::resource('conges', CongeController::class);
+
+        // CRUD des jours non travaillés
+        Route::resource('jours-non-travailles', JourNonTravailleController::class);
+        Route::get('/jours-non-travailles-export/excel', [JourNonTravailleController::class, 'exportExcel'])->name('jours-non-travailles.export.excel');
+        Route::get('/jours-non-travailles-export/pdf', [JourNonTravailleController::class, 'exportPdf'])->name('jours-non-travailles.export.pdf');
+
     });
     
     // Routes accessibles uniquement aux SuperAdmin
