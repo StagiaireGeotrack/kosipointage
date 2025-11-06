@@ -9,8 +9,15 @@ use Illuminate\Support\Facades\Gate;
 class JourNonTravailleRequest extends FormRequest
 {
     public function authorize(): bool
-    {
-        return Gate::allows('superadmin');
+    {        
+        // SuperAdmin OU Admin de siège (pour leur siège uniquement)
+        if (Gate::allows('superadmin')) {
+            return true;
+        }
+        
+        // Si c'est un admin de siège, vérifier qu'il gère bien son propre siège
+        $siegeId = $this->input('SiegeID');
+        return Gate::allows('access-siege', $siegeId);
     }
 
     public function rules(): array

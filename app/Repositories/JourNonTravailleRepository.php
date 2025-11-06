@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Models\JourNonTravaille;
+use Illuminate\Support\Facades\DB;
 
 class JourNonTravailleRepository
 {
@@ -18,14 +19,26 @@ class JourNonTravailleRepository
     {
         $query = $this->model->with('siege');
         
+        // ✅ AJOUT : Filtrer automatiquement par siège pour les admins non-superadmin
+        if (!auth()->user()->IsSuperAdmin) {
+            $query->where(function($q) {
+                $q->whereNull('SiegeID') // Jours nationaux
+                  ->orWhere('SiegeID', auth()->user()->SiegeID); // Jours du siège
+            });
+        }
+        
         // Filtre par recherche (nom)
         if (!empty($filters['search'])) {
             $query->where('Nom', 'like', '%' . $filters['search'] . '%');
         }
         
-        // Filtre par siège
+        // Filtre par siège (pour les superadmins)
         if (!empty($filters['SiegeID'])) {
-            $query->where('SiegeID', $filters['SiegeID']);
+            if ($filters['SiegeID'] === 'null') {
+                $query->whereNull('SiegeID');
+            } else {
+                $query->where('SiegeID', $filters['SiegeID']);
+            }
         }
         
         // Filtre par type
@@ -55,12 +68,24 @@ class JourNonTravailleRepository
     {
         $query = $this->model->with('siege');
         
+        // ✅ Même filtre pour les admins non-superadmin
+        if (!auth()->user()->IsSuperAdmin) {
+            $query->where(function($q) {
+                $q->whereNull('SiegeID')
+                  ->orWhere('SiegeID', auth()->user()->SiegeID);
+            });
+        }
+        
         if (!empty($filters['search'])) {
             $query->where('Nom', 'like', '%' . $filters['search'] . '%');
         }
         
         if (!empty($filters['SiegeID'])) {
-            $query->where('SiegeID', $filters['SiegeID']);
+            if ($filters['SiegeID'] === 'null') {
+                $query->whereNull('SiegeID');
+            } else {
+                $query->where('SiegeID', $filters['SiegeID']);
+            }
         }
         
         if (!empty($filters['Type'])) {
@@ -76,7 +101,17 @@ class JourNonTravailleRepository
     
     public function findById($id)
     {
-        return $this->model->with('siege')->findOrFail($id);
+        $query = $this->model->with('siege');
+        
+        // ✅ Filtrer pour les admins non-superadmin
+        if (!auth()->user()->IsSuperAdmin) {
+            $query->where(function($q) {
+                $q->whereNull('SiegeID')
+                  ->orWhere('SiegeID', auth()->user()->SiegeID);
+            });
+        }
+        
+        return $query->findOrFail($id);
     }
     
     public function create(array $data)

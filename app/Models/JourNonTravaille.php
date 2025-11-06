@@ -49,9 +49,4 @@ class JourNonTravaille extends Model
         return $query->whereBetween('Date', [$dateDebut, $dateFin]);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new SiegeScope());
-    }
 }
