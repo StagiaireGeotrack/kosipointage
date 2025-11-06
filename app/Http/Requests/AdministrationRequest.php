@@ -23,6 +23,7 @@ class AdministrationRequest extends FormRequest
             'Actived' => 'nullable|boolean',
         ];
         
+
         // Pour la création, le mot de passe est obligatoire
         if ($this->isMethod('post')) {
             $rules['password'] = ['required', 'confirmed', Password::min(8)];
@@ -66,8 +67,8 @@ class AdministrationRequest extends FormRequest
         // Convertir les checkboxes en 1/0 au lieu de true/false
         // Car required_unless attend une valeur numérique
         $this->merge([
-            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? 1 : 0,
-            'Actived' => $this->has('Actived') ? 1 : 0,
+            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? true : false,
+            'Actived' => $this->has('Actived') ? true : false,
         ]);
         
         // Convertir SiegeID vide en null pour éviter les problèmes de validation
