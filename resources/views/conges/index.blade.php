@@ -28,7 +28,7 @@
                                 <option value="">{{ __('Tous') }}</option>
                                 @foreach($employes as $employe)
                                     <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
-                                        {{ $employe->Nom }} {{ $employe->Prenom }}
+                                        {{ $employe->Nom }}
                                     </option>
                                 @endforeach
                             </select>
@@ -88,7 +88,7 @@
                             @forelse ($conges as $conge)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $conge->employe->Nom }} {{ $conge->employe->Prenom }}
+                                        {{ $conge->employe->Nom }}
                                     </td>
                                     <td class="align-middle">
                                         @php

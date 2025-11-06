@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\SiegeScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -27,5 +28,11 @@ class Conge extends Model
     public function employe(): BelongsTo
     {
         return $this->belongsTo(Employe::class, 'employee_id', 'ID');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new SiegeScope());
     }
 }

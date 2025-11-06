@@ -23,7 +23,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Employé') }}</label>
-                            <p class="fs-5">{{ $conge->employe->Nom }} {{ $conge->employe->Prenom }}</p>
+                            <p class="fs-5">{{ $conge->employe->Nom }}</p>
                         </div>
 
                         <div class="mb-3">
