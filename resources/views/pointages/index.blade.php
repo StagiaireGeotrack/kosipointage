@@ -25,7 +25,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="SiegeID" :value="__('Siège')" />
                             <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="updateEmployeesList()">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
@@ -37,7 +37,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="employee_id" :value="__('Employé')" />
                             <select id="employee_id" name="employee_id" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($employes as $employe)
                                     <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
                                         {{ $employe->Nom }} ({{ $employe->BadgeID }})
@@ -49,7 +49,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="type_" :value="__('Type')" />
                             <select id="type_" name="type_" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="entry" {{ isset($filters['type_']) && $filters['type_'] == 'entry' ? 'selected' : '' }}>{{ __('Entrée') }}</option>
                                 <option value="exit" {{ isset($filters['type_']) && $filters['type_'] == 'exit' ? 'selected' : '' }}>{{ __('Sortie') }}</option>
                             </select>
@@ -58,7 +58,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="auth_method" :value="__('Méthode')" />
                             <select id="auth_method" name="auth_method" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="rfid" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'badge' ? 'selected' : '' }}>{{ __('Badge') }}</option>
                                 <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
                                 <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>

@@ -24,7 +24,7 @@
                         <div class="col-12 col-sm-6 col-md-3">
                             <x-input-label for="SiegeID" :value="__('Siège')" />
                             <select id="SiegeID" name="SiegeID" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
@@ -35,7 +35,7 @@
                         <div class="col-12 col-sm-6 col-md-3">
                             <x-input-label for="Actived" :value="__('Statut')" />
                             <select id="Actived" name="Actived" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('Activé') }}</option>
                                 <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('Désactivé') }}</option>
                             </select>

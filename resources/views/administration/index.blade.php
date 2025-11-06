@@ -25,7 +25,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="SiegeID" :value="__('Siège')" />
                             <select id="SiegeID" name="SiegeID" class="form-select">
-                                <option value="">{{ __('touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
@@ -37,7 +37,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="IsSuperAdmin" :value="__('Type')" />
                             <select id="IsSuperAdmin" name="IsSuperAdmin" class="form-select">
-                                <option value="">{{ __('touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="1" {{ isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] == '1' ? 'selected' : '' }}>{{ __('Super administrateur') }}</option>
                                 <option value="0" {{ isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] == '0' ? 'selected' : '' }}>{{ __('Administrateur simple') }}</option>
                             </select>

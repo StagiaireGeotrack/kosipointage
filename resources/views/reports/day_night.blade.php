@@ -25,7 +25,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="SiegeID" :value="__('Siège')" />
                             <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="this.form.submit()">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
@@ -36,7 +36,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="employee_id" :value="__('Employé')" />
                             <select id="employee_id" name="employee_id" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($employes as $employe)
                                     <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
                                         {{ $employe->Nom }}
@@ -47,7 +47,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="type_travail" :value="__('Type')" />
                             <select id="type_travail" name="type_travail" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="JOUR" {{ isset($filters['type_travail']) && $filters['type_travail'] == 'JOUR' ? 'selected' : '' }}>{{ __('Jour') }}</option>
                                 <option value="NUIT" {{ isset($filters['type_travail']) && $filters['type_travail'] == 'NUIT' ? 'selected' : '' }}>{{ __('Nuit') }}</option>
                             </select>

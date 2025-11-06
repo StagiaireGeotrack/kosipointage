@@ -25,7 +25,7 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <x-input-label for="SiegeID" :value="__('Siège')" />
                             <select id="SiegeID" name="SiegeID" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
@@ -37,7 +37,7 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <x-input-label for="Actived" :value="__('Statut')" />
                             <select id="Actived" name="Actived" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="1" {{ isset($filters['Actived']) && $filters['Actived'] == '1' ? 'selected' : '' }}>{{ __('Activé') }}</option>
                                 <option value="0" {{ isset($filters['Actived']) && $filters['Actived'] == '0' ? 'selected' : '' }}>{{ __('Désactivé') }}</option>
                             </select>
@@ -46,7 +46,7 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <x-input-label for="HasBiometricSetup" :value="__('Empreinte')" />
                             <select id="HasBiometricSetup" name="HasBiometricSetup" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="1" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '1' ? 'selected' : '' }}>{{ __('Oui') }}</option>
                                 <option value="0" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '0' ? 'selected' : '' }}>{{ __('Non') }}</option>
                             </select>
@@ -55,7 +55,7 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <x-input-label for="HasFaceSetup" :value="__('Face image')" />
                             <select id="HasFaceSetup" name="HasFaceSetup" class="form-select mt-1">
-                                <option value="">{{ __('Touts') }}</option>
+                                <option value="">{{ __('Tous') }}</option>
                                 <option value="1" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '1' ? 'selected' : '' }}>{{ __('Oui') }}</option>
                                 <option value="0" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '0' ? 'selected' : '' }}>{{ __('Non') }}</option>
                             </select>
