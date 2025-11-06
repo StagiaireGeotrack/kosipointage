@@ -16,14 +16,23 @@ class AdministrationRequest extends FormRequest
 
     public function rules(): array
     {
+        $isSuperAdmin = $this->input('IsSuperAdmin', 0);
+        
         $rules = [
             'Identifiant_email' => 'required|email|max:255|unique:administration,Identifiant_email',
             'IsSuperAdmin' => 'nullable|boolean',
-            'SiegeID' => 'required_unless:IsSuperAdmin,1|nullable|exists:Entreprises_sieges,ID', 
             'Actived' => 'nullable|boolean',
         ];
         
-
+        // Gestion conditionnelle du SiegeID
+        if ($isSuperAdmin == 1) {
+            // Si c'est un super admin, SiegeID est optionnel
+            $rules['SiegeID'] = 'nullable|exists:Entreprises_sieges,ID';
+        } else {
+            // Si c'est un admin simple, SiegeID est obligatoire
+            $rules['SiegeID'] = 'required|exists:Entreprises_sieges,ID';
+        }
+        
         // Pour la création, le mot de passe est obligatoire
         if ($this->isMethod('post')) {
             $rules['password'] = ['required', 'confirmed', Password::min(8)];
@@ -52,7 +61,7 @@ class AdministrationRequest extends FormRequest
             
             'IsSuperAdmin.boolean' => __('Le champ :attribute doit être vrai ou faux', ['attribute' => __('Super Administrateur')]),
             
-            'SiegeID.required_unless' => __('Le champ :attribute est obligatoire pour les administrateurs simples', ['attribute' => __('Siège')]),
+            'SiegeID.required' => __('Le champ :attribute est obligatoire pour les administrateurs simples', ['attribute' => __('Siège')]),
             'SiegeID.exists' => __('Le siège sélectionné n\'existe pas'),
             
             'Actived.boolean' => __('Le champ :attribute doit être vrai ou faux', ['attribute' => __('Activé')]),
@@ -64,11 +73,10 @@ class AdministrationRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convertir les checkboxes en 1/0 au lieu de true/false
-        // Car required_unless attend une valeur numérique
+        // Convertir les checkboxes en 1/0
         $this->merge([
-            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? true : false,
-            'Actived' => $this->has('Actived') ? true : false,
+            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? 1 : 0,
+            'Actived' => $this->has('Actived') ? 1 : 0,
         ]);
         
         // Convertir SiegeID vide en null pour éviter les problèmes de validation
