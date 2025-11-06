@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conge;
 use App\Models\Employe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CongeController extends Controller
 {
@@ -12,6 +13,7 @@ class CongeController extends Controller
     {
         $filters = $request->only(['search', 'type_conge', 'employee_id']);
         
+        // Le scope global s'applique automatiquement
         $query = Conge::with('employe');
         
         if (!empty($filters['search'])) {
@@ -28,7 +30,9 @@ class CongeController extends Controller
             $query->where('employee_id', $filters['employee_id']);
         }
         
-        $conges = $query->orderBy('created_at', 'desc')->paginate(15);
+        $conges = $query->orderBy('id', 'desc')->paginate(15);
+        
+        // Les employés sont déjà filtrés par le scope global
         $employes = Employe::orderBy('Nom')->get();
         
         return view('conges.index', compact('conges', 'employes', 'filters'));
@@ -51,27 +55,19 @@ class CongeController extends Controller
             'type_conge' => 'required|in:CP,RTT,Maladie,Autres',
             'commentaire' => 'nullable|string',
         ], [
-            // Messages pour employee_id
             'employee_id.required' => 'Veuillez sélectionner un employé.',
             'employee_id.exists' => 'L\'employé sélectionné n\'existe pas.',
-            
-            // Messages pour date_debut
             'date_debut.required' => 'La date de début est obligatoire.',
             'date_debut.date' => 'La date de début doit être une date valide.',
-            
-            // Messages pour date_fin
             'date_fin.required' => 'La date de fin est obligatoire.',
             'date_fin.date' => 'La date de fin doit être une date valide.',
             'date_fin.after_or_equal' => 'La date de fin doit être postérieure ou égale à la date de début.',
-            
-            // Messages pour type_conge
             'type_conge.required' => 'Veuillez sélectionner un type de congé.',
             'type_conge.in' => 'Le type de congé sélectionné n\'est pas valide.',
-            
-            // Messages pour commentaire
             'commentaire.string' => 'Le commentaire doit être du texte.'
         ]);
 
+        // Le SiegeID sera automatiquement rempli par le boot()
         Conge::create($validated);
 
         return redirect()->route('conges.index')
@@ -80,12 +76,14 @@ class CongeController extends Controller
 
     public function show(Conge $conge)
     {
+        // Le scope global vérifie automatiquement l'accès
         $conge->load('employe');
         return view('conges.show', compact('conge'));
     }
 
     public function edit(Conge $conge)
     {
+        // Le scope global vérifie automatiquement l'accès
         $employes = Employe::orderBy('Nom')->get();
         $typesConge = ['CP', 'RTT', 'Maladie', 'Autres'];
         
@@ -94,6 +92,7 @@ class CongeController extends Controller
 
     public function update(Request $request, Conge $conge)
     {
+        // Le scope global vérifie automatiquement l'accès
         $validated = $request->validate([
             'employee_id' => 'required|exists:Employes,ID',
             'date_debut' => 'required|date',
@@ -101,24 +100,15 @@ class CongeController extends Controller
             'type_conge' => 'required|in:CP,RTT,Maladie,Autres',
             'commentaire' => 'nullable|string',
         ], [
-            // Messages pour employee_id
             'employee_id.required' => 'Veuillez sélectionner un employé.',
             'employee_id.exists' => 'L\'employé sélectionné n\'existe pas.',
-            
-            // Messages pour date_debut
             'date_debut.required' => 'La date de début est obligatoire.',
             'date_debut.date' => 'La date de début doit être une date valide.',
-            
-            // Messages pour date_fin
             'date_fin.required' => 'La date de fin est obligatoire.',
             'date_fin.date' => 'La date de fin doit être une date valide.',
             'date_fin.after_or_equal' => 'La date de fin doit être postérieure ou égale à la date de début.',
-            
-            // Messages pour type_conge
             'type_conge.required' => 'Veuillez sélectionner un type de congé.',
             'type_conge.in' => 'Le type de congé sélectionné n\'est pas valide.',
-            
-            // Messages pour commentaire
             'commentaire.string' => 'Le commentaire doit être du texte.'
         ]);
 
@@ -130,6 +120,7 @@ class CongeController extends Controller
 
     public function destroy(Conge $conge)
     {
+        // Le scope global vérifie automatiquement l'accès
         $conge->delete();
 
         return redirect()->route('conges.index')
