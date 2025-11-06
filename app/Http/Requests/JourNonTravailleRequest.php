@@ -5,25 +5,20 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class JourNonTravailleRequest extends FormRequest
 {
     public function authorize(): bool
-    {        
-        // SuperAdmin : Accès complet (jours nationaux + tous les sièges)
-        if (Gate::allows('superadmin')) {
-            return true;
-        }
-        
-        // Admin de siège : Peut gérer UNIQUEMENT les jours de son propre siège
+    {
         $siegeId = $this->input('SiegeID');
         
-        // ❌ Si SiegeID est null (jour national), seuls les SuperAdmin peuvent le gérer
+        // ✅ Si SiegeID est null (jour national), tous les admins peuvent gérer
         if ($siegeId === null || $siegeId === '') {
-            return false;
+            return auth()->check(); // Tous les admins authentifiés
         }
         
-        // ✅ Vérifier que l'admin a accès à ce siège
+        // ✅ Sinon, vérifier l'accès au siège spécifique
         return Gate::allows('access-siege', $siegeId);
     }
 
@@ -66,6 +61,9 @@ class JourNonTravailleRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        Log::info('=== DEBUT prepareForValidation JourNonTravailleRequest ===');
+        Log::info('Données AVANT: ', $this->all());
+        
         $this->merge([
             'Recurrent' => $this->has('Recurrent') ? true : false,
             'Actived' => $this->has('Actived') ? true : false,
@@ -74,5 +72,8 @@ class JourNonTravailleRequest extends FormRequest
         if ($this->input('SiegeID') === '' || $this->input('SiegeID') === null) {
             $this->merge(['SiegeID' => null]);
         }
+        
+        Log::info('Données APRÈS: ', $this->all());
+        Log::info('=== FIN prepareForValidation ===');
     }
 }
