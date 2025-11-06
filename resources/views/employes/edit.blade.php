@@ -28,10 +28,8 @@
                                     id="Nom" 
                                     name="Nom" 
                                     value="{{ old('Nom', $employe->Nom) }}" 
-                                    required>
-                            @error('Nom')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                                    required>                            
+                            <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
 
                         <!-- BadgeID -->
@@ -45,9 +43,7 @@
                                     maxlength="25"
                                     required>
                             <small class="form-text text-muted">Identifiant unique de l'employé</small>
-                            @error('BadgeID')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('BadgeID')" class="mt-2" />
                         </div>
 
                         <!-- SiegeID -->
@@ -65,9 +61,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('SiegeID')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                         </div>
 
                         <!-- Pin -->
@@ -82,9 +76,7 @@
                                     pattern="[0-9]{6}"
                                     placeholder="000000">
                             <small class="form-text text-muted">Code PIN à 6 chiffres</small>
-                            @error('Pin')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
                         </div>
                     
                         <!-- Photo de visage actuelle -->
@@ -109,9 +101,7 @@
                                 <label class="form-check-label" for="HasBiometricSetup">
                                     <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
                                 </label>
-                                @error('HasBiometricSetup')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('HasBiometricSetup')" class="mt-2" />
                             </div>
                         </div>
 
@@ -138,9 +128,7 @@
                                         <small class="text-muted">(réservé aux super administrateurs)</small>
                                     @endif
                                 </label>
-                                @error('Actived')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('Actived')" class="mt-2" />
                             </div>
                         </div>
                         

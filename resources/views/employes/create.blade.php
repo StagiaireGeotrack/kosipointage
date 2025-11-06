@@ -29,9 +29,7 @@
                                     value="{{ old('Nom') }}" 
                                     required 
                                     autofocus>
-                            @error('Nom')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
 
                         <!-- BadgeID -->
@@ -44,10 +42,7 @@
                                     value="{{ old('BadgeID') }}" 
                                     maxlength="25"
                                     required>
-                            <small class="form-text text-muted">Identifiant unique de l'employé (max 25 caractères)</small>
-                            @error('BadgeID')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('BadgeID')" class="mt-2" />
                         </div>
 
                         <!-- SiegeID -->
@@ -65,9 +60,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('SiegeID')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                         </div>
 
                         <!-- Pin -->
@@ -81,10 +74,8 @@
                                     maxlength="6"
                                     pattern="[0-9]{6}"
                                     placeholder="000000">
+                            <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
                             <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
-                            @error('Pin')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <!-- HasBiometricSetup -->
@@ -98,10 +89,8 @@
                                         {{ old('HasBiometricSetup') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="HasBiometricSetup">
                                     <i class="bi bi-fingerprint"></i> Empreinte digitale
-                                </label>
-                                @error('HasBiometricSetup')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                </label>                                
+                                <x-input-error :messages="$errors->get('HasBiometricSetup')" class="mt-2" />
                             </div>
                         </div>                              
                                                         
@@ -122,9 +111,7 @@
                                         <small class="text-muted">(réservé aux super administrateurs)</small>
                                     @endif
                                 </label>
-                                @error('Actived')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('Actived')" class="mt-2" />
                             </div>
                         </div
                         
