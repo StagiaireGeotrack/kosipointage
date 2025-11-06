@@ -41,13 +41,20 @@ class AdministrationRequest extends FormRequest
     {
         return [
             'Identifiant_email.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Identifiant ou E-mail')]),
-            'Identifiant_email.email' => __('Le champ :attribute doit être un e-mail', ['attribute' => __('Identifiant ou E-mail')]),
+            'Identifiant_email.email' => __('Le champ :attribute doit être un e-mail valide', ['attribute' => __('Identifiant ou E-mail')]),
             'Identifiant_email.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Identifiant ou E-mail'), 'max' => 255]),
             'Identifiant_email.unique' => __('La valeur de :attribute est déjà utilisée', ['attribute' => __('Identifiant ou E-mail')]),
+            
             'password.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Mot de passe')]),
             'password.confirmed' => __('Veuillez bien confirmer le champ :attribute', ['attribute' => __('Mot de passe')]),
-            'SiegeID.required_unless' => __('Le champ :attribute est obligatoire pour les administrateurs simples.', ['attribute' => __('Siège')]),
-            'SiegeID.exists' => __('Le siège sélectionné n\'existe pas', ['attribute' => __('Siège')]),
+            'password.min' => __('Le champ :attribute doit contenir au moins :min caractères', ['attribute' => __('Mot de passe'), 'min' => 8]),
+            
+            'IsSuperAdmin.boolean' => __('Le champ :attribute doit être vrai ou faux', ['attribute' => __('Super Administrateur')]),
+            
+            'SiegeID.required_unless' => __('Le champ :attribute est obligatoire pour les administrateurs simples', ['attribute' => __('Siège')]),
+            'SiegeID.exists' => __('Le siège sélectionné n\'existe pas'),
+            
+            'Actived.boolean' => __('Le champ :attribute doit être vrai ou faux', ['attribute' => __('Activé')]),
         ];
     }
 
