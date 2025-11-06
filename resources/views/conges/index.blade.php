@@ -14,14 +14,6 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <!-- Messages de succès -->
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <!-- Filtres -->
                 <form action="{{ route('conges.index') }}" method="GET" class="mb-4">
                     <div class="row g-3 mb-3">
