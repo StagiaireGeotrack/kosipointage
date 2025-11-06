@@ -112,12 +112,13 @@
                                     </td>
                                     <td class="align-middle">
                                         @php
-                                            $diff = $conge->date_debut->diffInDays($conge->date_fin);
+                                            $joursOuvrables = $conge->date_debut->diffInWeekdays($conge->date_fin);
                                             $heures = $conge->date_debut->diffInHours($conge->date_fin) % 24;
                                         @endphp
-                                        {{ $diff }} jour(s)
+                                        
+                                        {{ $joursOuvrables }} jour(s)
                                         @if($heures > 0)
-                                            {{ $heures }}h
+                                            {{ $heures }} heure(s)
                                         @endif
                                     </td>
                                     <td class="align-middle">
