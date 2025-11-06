@@ -16,7 +16,7 @@ class EntrepriseRequest extends FormRequest
 
     public function rules(): array
     {
-        $rules = [
+        return [
             'Nom' => 'required|string|max:255',
             'Nom_Lieu_Ville' => 'nullable|string|max:255',
             'Latitude' => 'required|numeric|between:-90,90',
@@ -26,16 +26,14 @@ class EntrepriseRequest extends FormRequest
             'SiegeID' => 'required|exists:Entreprises_sieges,ID',
             'Logo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
-
-        return $rules;
     }
 
     public function messages(): array
     {
         return [
             'Nom.required' => 'Le nom est obligatoire.',
-            'Nom.max' => 'Le nom ne peut pas dépasser :max caractères.',
             'Nom.string' => 'Le nom doit être une chaîne de caractères.',
+            'Nom.max' => 'Le nom ne peut pas dépasser :max caractères.',
             
             'Nom_Lieu_Ville.string' => 'Le nom du lieu/ville doit être une chaîne de caractères.',
             'Nom_Lieu_Ville.max' => 'Le nom du lieu/ville ne peut pas dépasser :max caractères.',
@@ -65,18 +63,11 @@ class EntrepriseRequest extends FormRequest
     /**
      * Prépare les données pour la validation
      */
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         // Convertir la checkbox Actived en booléen
-        if ($this->has('Actived')) {
-            $this->merge([
-                'Actived' => $this->input('Actived') ? true : false,
-            ]);
-        } else {
-            // Si la checkbox n'est pas cochée, elle n'est pas envoyée dans la requête
-            $this->merge([
-                'Actived' => false,
-            ]);
-        }
+        $this->merge([
+            'Actived' => $this->has('Actived') ? true : false,
+        ]);
     }
 }
