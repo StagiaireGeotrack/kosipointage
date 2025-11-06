@@ -20,9 +20,7 @@
                     <div class="form-group mb-3">
                         <label for="Nom">Nom <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('Nom') is-invalid @enderror" id="Nom" name="Nom" value="{{ old('Nom', $entreprise->Nom) }}" required>
-                        @error('Nom')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                     </div>
                     
                     <div class="form-group mb-3">
@@ -35,17 +33,13 @@
                                 </option>
                             @endforeach
                         </select>
-                        @error('SiegeID')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                     </div>
                     
                     <div class="form-group mb-3">
                         <label for="Nom_Lieu_Ville">Nom du lieu / Ville</label>
                         <input type="text" class="form-control @error('Nom_Lieu_Ville') is-invalid @enderror" id="Nom_Lieu_Ville" name="Nom_Lieu_Ville" value="{{ old('Nom_Lieu_Ville', $entreprise->Nom_Lieu_Ville) }}">
-                        @error('Nom_Lieu_Ville')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <x-input-error :messages="$errors->get('Nom_Lieu_Ville')" class="mt-2" />
                     </div>
                     
                     <div class="row">
@@ -54,9 +48,7 @@
                                 <label for="Latitude">Latitude <span class="text-danger">*</span></label>
                                 <input type="number" step="0.00000001" class="form-control @error('Latitude') is-invalid @enderror" id="Latitude" name="Latitude" value="{{ old('Latitude', $entreprise->Latitude) }}" required>
                                 <small class="form-text text-muted">Valeur entre -90 et 90</small>
-                                @error('Latitude')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('Latitude')" class="mt-2" />
                             </div>
                         </div>
                         
@@ -65,9 +57,7 @@
                                 <label for="Longitude">Longitude <span class="text-danger">*</span></label>
                                 <input type="number" step="0.00000001" class="form-control @error('Longitude') is-invalid @enderror" id="Longitude" name="Longitude" value="{{ old('Longitude', $entreprise->Longitude) }}" required>
                                 <small class="form-text text-muted">Valeur entre -180 et 180</small>
-                                @error('Longitude')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('Longitude')" class="mt-2" />
                             </div>
                         </div>
                     </div>
@@ -76,9 +66,7 @@
                         <label for="RadiusInMeters">Rayon (en mètres)</label>
                         <input type="number" step="0.01" class="form-control @error('RadiusInMeters') is-invalid @enderror" id="RadiusInMeters" name="RadiusInMeters" value="{{ old('RadiusInMeters', $entreprise->RadiusInMeters) }}">
                         <small class="form-text text-muted">Rayon de géolocalisation pour l'entreprise</small>
-                        @error('RadiusInMeters')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <x-input-error :messages="$errors->get('RadiusInMeters')" class="mt-2" />
                     </div>
                     
                     <div class="form-group mb-3">
@@ -93,9 +81,7 @@
                         
                         <input type="file" class="form-control @error('Logo') is-invalid @enderror" id="Logo" name="Logo" accept="image/*">
                         <small class="form-text text-muted">Formats acceptés : JPG, PNG, GIF. Max : 2Mo. Laisser vide pour conserver le logo actuel.</small>
-                        @error('Logo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <x-input-error :messages="$errors->get('Logo')" class="mt-2" />
                         <div id="logoPreview" class="mt-2"></div>
                     </div>
                     
@@ -108,9 +94,7 @@
                                 name="Actived" {{ old('Actived', $entreprise->Actived) ? 'checked' : '' }}
                                 {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
                             <label class="form-check-label" for="Actived">Activer</label>
-                            @error('Actived')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <x-input-error :messages="$errors->get('Actived')" class="mt-2" />
                         </div>
                     </div>
                     
