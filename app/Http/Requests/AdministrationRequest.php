@@ -3,12 +3,17 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Administration;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Password;
 
 class AdministrationRequest extends FormRequest
 {
+    // Variable pour stocker si la checkbox était présente dans le formulaire original
+    private $originalHasIsSuperAdmin = false;
+    private $originalHasActived = false;
+
     public function authorize(): bool
     {
         return Gate::allows('superadmin');
@@ -18,6 +23,22 @@ class AdministrationRequest extends FormRequest
     {
         $isSuperAdmin = $this->input('IsSuperAdmin', 0);
         
+        // ⚠️ IMPORTANT : En mode UPDATE, vérifier si c'est déjà un super admin dans la BD
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $adminId = $this->route('administrateur');
+            if ($adminId) {
+                $existingAdmin = Administration::find($adminId);
+                if ($existingAdmin && $existingAdmin->IsSuperAdmin == 1) {
+                    
+                    // Si la checkbox n'était pas dans le formulaire, on conserve l'état super admin
+                    if (!$this->originalHasIsSuperAdmin) {
+                        $isSuperAdmin = 1;
+                        $this->merge(['IsSuperAdmin' => 1]);
+                    } 
+                }
+            }
+        }
+                
         $rules = [
             'Identifiant_email' => 'required|email|max:255|unique:administration,Identifiant_email',
             'IsSuperAdmin' => 'nullable|boolean',
@@ -26,24 +47,20 @@ class AdministrationRequest extends FormRequest
         
         // Gestion conditionnelle du SiegeID
         if ($isSuperAdmin == 1) {
-            // Si c'est un super admin, SiegeID est optionnel
             $rules['SiegeID'] = 'nullable|exists:Entreprises_sieges,ID';
         } else {
-            // Si c'est un admin simple, SiegeID est obligatoire
             $rules['SiegeID'] = 'required|exists:Entreprises_sieges,ID';
         }
+        
         
         // Pour la création, le mot de passe est obligatoire
         if ($this->isMethod('post')) {
             $rules['password'] = ['required', 'confirmed', Password::min(8)];
         } else {
-            // Pour la mise à jour, le mot de passe est optionnel
             $rules['password'] = ['nullable', 'confirmed', Password::min(8)];
             
-            // Permettre de conserver le même email pour l'administrateur actuel
             $rules['Identifiant_email'] = 'required|email|max:255|unique:administration,Identifiant_email,'.$this->route('administrateur').',ID';
         }
-        
         return $rules;
     }
 
@@ -72,16 +89,20 @@ class AdministrationRequest extends FormRequest
      * Préparer les données pour la validation
      */
     protected function prepareForValidation(): void
-    {
+    {        
+        // 🎯 STOCKER l'état ORIGINAL avant toute modification
+        $this->originalHasIsSuperAdmin = $this->has('IsSuperAdmin');
+        $this->originalHasActived = $this->has('Actived');
+        
         // Convertir les checkboxes en 1/0
         $this->merge([
-            'IsSuperAdmin' => $this->has('IsSuperAdmin') ? 1 : 0,
-            'Actived' => $this->has('Actived') ? 1 : 0,
+            'IsSuperAdmin' => $this->originalHasIsSuperAdmin ? 1 : 0,
+            'Actived' => $this->originalHasActived ? 1 : 0,
         ]);
         
-        // Convertir SiegeID vide en null pour éviter les problèmes de validation
+        // Convertir SiegeID vide en null
         if ($this->input('SiegeID') === '' || $this->input('SiegeID') === null) {
             $this->merge(['SiegeID' => null]);
-        }
+        } 
     }
 }
