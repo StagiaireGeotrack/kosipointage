@@ -120,11 +120,12 @@
         function loadEmployeesBySiege(siegeId) {
             if (!siegeId) return;
             
-            fetch('{{ route("pointages.employees-by-siege") }}?siege_id=' + siegeId)
+            // ✅ Utiliser le paramètre de route au lieu de query string
+            fetch(`/pointages/get-employes-by-siege/${siegeId}`)
                 .then(response => response.json())
                 .then(data => {
                     const employeeSelect = document.getElementById('employee_id');
-                    employeeSelect.innerHTML = '';
+                    employeeSelect.innerHTML = '<option value="">{{ __('Sélectionner un employé') }}</option>';
                     
                     data.forEach(employee => {
                         const option = document.createElement('option');
@@ -135,6 +136,16 @@
                 })
                 .catch(error => console.error('Error loading employees:', error));
         }
+        
+        // Si position actuelle est demandée
+        document.addEventListener('DOMContentLoaded', function() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                });
+            }
+        });
     </script>
     @endpush
 </x-app-layout>

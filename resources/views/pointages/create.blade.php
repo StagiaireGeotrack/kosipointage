@@ -103,7 +103,8 @@
         function loadEmployeesBySiege(siegeId) {
             if (!siegeId) return;
             
-            fetch('{{ route("pointages.employees-by-siege") }}?siege_id=' + siegeId)
+            // ✅ Utiliser le paramètre de route au lieu de query string
+            fetch(`/pointages/get-employes-by-siege/${siegeId}`)
                 .then(response => response.json())
                 .then(data => {
                     const employeeSelect = document.getElementById('employee_id');

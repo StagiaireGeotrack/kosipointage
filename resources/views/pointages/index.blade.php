@@ -256,7 +256,7 @@
             }
             
             // Appel AJAX pour récupérer les employés du siège sélectionné
-            fetch(`{{ route('pointages.employees-by-siege') }}?siege_id=${siegeId}`)
+            fetch(`/pointages/get-employes-by-siege/${siegeId}`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(employe => {

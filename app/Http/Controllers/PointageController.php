@@ -199,15 +199,13 @@ class PointageController extends Controller
             ->header('Content-Type', 'image/png');
     }
     
-    public function getEmployesBySiege(Request $request)
+    public function getEmployesBySiege($SiegeID)
     {
-        $siegeId = $request->input('siege_id');
-        
-        if (!$siegeId) {
+        if (!$SiegeID) {
             return response()->json([]);
         }
         
-        $employes = Employe::where('SiegeID', $siegeId)
+        $employes = Employe::where('SiegeID', $SiegeID)
             ->where('Actived', 1)
             ->get(['ID', 'Nom', 'BadgeID']);
             

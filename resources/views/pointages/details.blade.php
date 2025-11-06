@@ -155,36 +155,4 @@
             </div>
         </div>
     </div>
-    
-    @push('scripts')
-    <script>
-        function updateEmployeesList() {
-            const siegeId = document.getElementById('SiegeID').value;
-            const employeeSelect = document.getElementById('employee_id');
-            
-            if (!siegeId) {
-                // Si aucun siège n'est sélectionné, ne rien faire
-                return;
-            }
-            
-            // Vider la liste des employés sauf l'option "Tous"
-            while (employeeSelect.options.length > 1) {
-                employeeSelect.remove(1);
-            }
-            
-            // Appel AJAX pour récupérer les employés du siège sélectionné
-            fetch(`{{ route('pointages.employees-by-siege') }}?siege_id=${siegeId}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(employe => {
-                        const option = document.createElement('option');
-                        option.value = employe.ID;
-                        option.textContent = `${employe.Nom} (${employe.BadgeID})`;
-                        employeeSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Erreur lors du chargement des employés:', error));
-        }
-    </script>
-    @endpush
 </x-app-layout>
