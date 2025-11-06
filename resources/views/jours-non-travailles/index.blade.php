@@ -81,10 +81,10 @@
                         
                         <div class="d-flex gap-2">
                             <a href="{{ route('jours-non-travailles.export.excel', request()->query()) }}" class="btn btn-success">
-                                <i class="bi bi-file-earmark-excel me-1"></i>{{ __('Excel') }}
+                                <i class="bi bi-file-earmark-excel me-1"></i>{{ __('Exporter en EXCEL') }}
                             </a>
                             <a href="{{ route('jours-non-travailles.export.pdf', request()->query()) }}" class="btn btn-danger">
-                                <i class="bi bi-file-earmark-pdf me-1"></i>{{ __('PDF') }}
+                                <i class="bi bi-file-earmark-pdf me-1"></i>{{ __('Exporter en PDF') }}
                             </a>
                         </div>
                     </div>

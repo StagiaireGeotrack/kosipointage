@@ -276,20 +276,25 @@
                     @foreach($row as $key => $cell)
                         <td>
                             {{-- Gérer les différents types de données --}}
-                            @if(is_bool($cell))
+                            @if(is_array($cell))
+                                {{-- Si c'est un tableau, le convertir en JSON --}}
+                                {{ json_encode($cell) }}
+                            @elseif(is_bool($cell))
                                 @if($cell)
                                     <span class="badge badge-success">Oui</span>
                                 @else
                                     <span class="badge badge-danger">Non</span>
                                 @endif
-                            @elseif(is_numeric($cell) && strlen($cell) > 10)
+                            @elseif(is_numeric($cell) && strlen((string)$cell) > 10)
                                 {{-- Formater les grands nombres --}}
                                 {{ number_format($cell, 0, ',', ' ') }}
-                            @elseif(preg_match('/^\d{4}-\d{2}-\d{2}/', $cell))
+                            @elseif(is_string($cell) && preg_match('/^\d{4}-\d{2}-\d{2}/', $cell))
                                 {{-- Formater les dates --}}
                                 {{ \Carbon\Carbon::parse($cell)->format('d/m/Y H:i') }}
+                            @elseif(is_null($cell))
+                                -
                             @else
-                                {{ $cell ?? '-' }}
+                                {{ $cell }}
                             @endif
                         </td>
                     @endforeach
