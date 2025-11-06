@@ -13,6 +13,7 @@ class Conge extends Model
     
     protected $fillable = [
         'employee_id',
+        'SiegeID',
         'date_debut',
         'date_fin',
         'type_conge',
@@ -30,9 +31,29 @@ class Conge extends Model
         return $this->belongsTo(Employe::class, 'employee_id', 'ID');
     }
 
+    public function siege(): BelongsTo
+    {
+        return $this->belongsTo(EntrepriseSiege::class, 'SiegeID', 'ID');
+    }
+
     protected static function boot()
     {
         parent::boot();
+        
+        // Appliquer le scope global
         static::addGlobalScope(new SiegeScope());
+        
+        // Auto-remplir le SiegeID lors de la création
+        static::creating(function ($conge) {
+            if (!$conge->SiegeID) {
+                // Récupérer le SiegeID de l'employé
+                $employe = \App\Models\Employe::withoutGlobalScope(SiegeScope::class)
+                    ->find($conge->employee_id);
+                
+                if ($employe) {
+                    $conge->SiegeID = $employe->SiegeID;
+                }
+            }
+        });
     }
 }
