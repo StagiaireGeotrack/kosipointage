@@ -20,7 +20,8 @@ class EmployeRepository extends BaseRepository
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->where(function($q) use ($filters) {
                 $q->where('Nom', 'LIKE', "%{$filters['search']}%")
-                  ->orWhere('BadgeID', 'LIKE', "%{$filters['search']}%");
+                  ->orWhere('BadgeID', 'LIKE', "%{$filters['search']}%")
+                  ->orWhere('Pin', 'LIKE', "%{$filters['search']}%");
             });
         }
         

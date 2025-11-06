@@ -19,7 +19,7 @@
                     <div class="row g-3 mb-3">
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="search" :value="__('Recherche')" />
-                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID') }}" />
+                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID ou Code PIN') }}" />
                         </div>
                         
                         <div class="col-12 col-sm-6 col-md-4">
@@ -138,7 +138,8 @@
                                             @endif
                                             <div>
                                                 <div class="fw-medium">{{ $pointage->employe->Nom }}</div>
-                                                <small class="text-muted">{{ $pointage->employe->BadgeID }}</small>
+                                                <small class="text-muted">Badge: {{ $pointage->employe->BadgeID }}</small> / 
+                                                <small class="text-muted">Code PIN: {{ $pointage->employe->Pin }}</small>
                                             </div>
                                         </div>
                                     </td>

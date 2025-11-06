@@ -13,7 +13,7 @@
                     @method('PUT')
                     
                     <!-- Siège -->
-                    @can('superadmin')
+                    @can('superadmin') 
                     <div class="mb-3">
                         <x-input-label for="SiegeID" :value="__('Siège')" />
                         <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="loadEmployeesBySiege(this.value)" required>
