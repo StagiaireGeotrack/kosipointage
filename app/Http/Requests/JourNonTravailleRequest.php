@@ -10,13 +10,20 @@ class JourNonTravailleRequest extends FormRequest
 {
     public function authorize(): bool
     {        
-        // SuperAdmin OU Admin de siège (pour leur siège uniquement)
+        // SuperAdmin : Accès complet (jours nationaux + tous les sièges)
         if (Gate::allows('superadmin')) {
             return true;
         }
         
-        // Si c'est un admin de siège, vérifier qu'il gère bien son propre siège
+        // Admin de siège : Peut gérer UNIQUEMENT les jours de son propre siège
         $siegeId = $this->input('SiegeID');
+        
+        // ❌ Si SiegeID est null (jour national), seuls les SuperAdmin peuvent le gérer
+        if ($siegeId === null || $siegeId === '') {
+            return false;
+        }
+        
+        // ✅ Vérifier que l'admin a accès à ce siège
         return Gate::allows('access-siege', $siegeId);
     }
 
