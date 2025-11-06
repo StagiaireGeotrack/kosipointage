@@ -16,7 +16,7 @@ class EntrepriseSiegeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Nom' => 'required|string|max:255',
+            'Nom' => 'required|string|max:255|unique:Entreprises_sieges,Nom',
             'Nom_Lieu_Ville' => 'nullable|string|max:255',
             'Actived' => 'nullable|boolean',
         ];

@@ -17,10 +17,10 @@ class EmployeRequest extends FormRequest
     {
         $rules = [
             'Nom' => 'required|string|max:255',
-            'BadgeID' => 'required|string|max:25|unique:Employes,BadgeID',
+            'BadgeID' => 'required|string|max:25|unique:Employes,BadgeID', // unique dans le siège correspondant à modifier si c'est possible
             'HasBiometricSetup' => 'nullable|boolean',
             'HasFaceSetup' => 'nullable|boolean',
-            'Pin' => 'nullable|string|size:6|regex:/^[0-9]{6}$/',
+            'Pin' => 'nullable|string|size:6|regex:/^[0-9]{6}$/', // unique dans le siège correspondant à modifier si c'est possible
             'Actived' => 'nullable|boolean',
             'SiegeID' => 'required|exists:Entreprises_sieges,ID',
             'FaceEncodingFile' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5120',
