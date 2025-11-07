@@ -31,27 +31,36 @@ class AuthenticatedSessionController extends Controller
             'password' => $request->input('password')
         ];
         
-        // Rechercher manuellement l'utilisateur
         $admin = Administration::where('Identifiant_email', $credentials['Identifiant_email'])->first();
         
-        if ($admin && $admin->Password_ === sha1($credentials['password'])) {
-            Auth::login($admin, $request->boolean('remember'));
-            
-            $request->session()->regenerate();
-            
-            if ($admin->IsSuperAdmin) {
-                return redirect()->intended(route('dashboard'));
-            } else {
-                // Rediriger les admin standards vers une autre page
-                // Par exemple la liste des entreprises de leur siège
-                return redirect()->intended(route('sieges.index'));
-            }
+        if (!$admin) {
+            return back()->withErrors([
+                'email' => __('Cet identifiant ou e-mail est introuvable.'),
+            ])->onlyInput('email');
         }
-        
-        return back()->withErrors([
-            'email' => __('auth.failed'),
-        ])->onlyInput('email');
+
+        if (isset($admin->Actived) && !$admin->Actived) {
+            return back()->withErrors([
+                'actived' => __('Votre compte administrateur est désactivé.'),
+            ])->onlyInput('email');
+        }
+
+        if ($admin->Password_ !== sha1($credentials['password'])) {
+            return back()->withErrors([
+                'password' => __('Le mot de passe saisi est incorrect.'),
+            ])->onlyInput('email');
+        }
+
+        Auth::login($admin, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        if ($admin->IsSuperAdmin) {
+            return redirect()->intended(route('dashboard'));
+        } else {
+            return redirect()->intended(route('sieges.index'));
+        }
     }
+
 
     /**
      * Destroy an authenticated session.
