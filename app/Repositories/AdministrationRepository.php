@@ -64,7 +64,7 @@ class AdministrationRepository extends BaseRepository
         $query->with('siege');
         
         // Sélectionner et formater les données pour l'export
-        return $query->get()->map(function ($admin) {
+        return $query->orderBy('created_at', 'asc')->get()->map(function ($admin) {
             return [
                 'ID' => $admin->ID,
                 'E-mail' => $admin->Identifiant_email,

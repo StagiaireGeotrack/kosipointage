@@ -88,7 +88,7 @@ class EmployeRepository extends BaseRepository
         $query->with('siege');
         
         // Sélectionner et formater les données pour l'export
-        return $query->get()->map(function ($employe) {
+        return $query->orderBy('CreatedAt', 'asc')->get()->map(function ($employe) {
             return [
                 'ID' => $employe->ID,
                 'Nom' => $employe->Nom,

@@ -232,7 +232,40 @@ class ReportController extends Controller
         }
         
         // Récupérer toutes les données pour l'export
-        $data = $query->get();
+
+        if( $table == 'rapports_details' )
+        {
+            $data = $query->get()->map(function ($rapport) {
+                return [
+                    'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) ,
+                    'Siège ID' => $rapport->SiegeID ,
+                    'Siège Nom' => $rapport->siege_nom ,
+                    'Employé(e) ID' => $rapport->employee_id ,
+                    'Employé(e) Nom' => $rapport->employee_nom ,
+                    'Heure Entrée' => $rapport->heure_entree ,
+                    'Pause Déjeuner' => $rapport->pause_dejeuner ,
+                    'Heure Sortie' => $rapport->heure_sortie ,
+                    'Total Heure Journée' => $rapport->total_heure_journee ,
+                ];
+            });
+        }
+        else
+        {
+            $data = $query->get()->map(function ($rapport) {
+                return [
+                    'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) ,
+                    'Siège ID' => $rapport->SiegeID ,
+                    'Siège Nom' => $rapport->siege_nom ,
+                    'Employé(e) ID' => $rapport->employee_id ,
+                    'Employé(e) Nom' => $rapport->employee_nom ,
+                    'Type travail' => $rapport->type_travail ,
+                    'Heure Entrée' => $rapport->heure_entree ,
+                    'Pause Déjeuner' => $rapport->pause_dejeuner ,
+                    'Heure Sortie' => $rapport->heure_sortie ,
+                    'Total Heure Journée' => $rapport->total_heure_journee ,
+                ];
+            });
+        }    
         
         // Déterminer le titre et la vue du rapport
         $title = ($type === 'day-night') 

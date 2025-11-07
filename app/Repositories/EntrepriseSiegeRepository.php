@@ -54,7 +54,7 @@ class EntrepriseSiegeRepository extends BaseRepository
         }
         
         // Formater les données pour l'export
-        return $query->get()->map(function ($siege) {
+        return $query->orderBy('CreatedAt', 'asc')->get()->map(function ($siege) {
             $entreprisesCount = $siege->entreprises()->count();
             $employesCount = $siege->employes()->count();
             

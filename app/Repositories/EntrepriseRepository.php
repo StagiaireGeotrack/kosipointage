@@ -80,7 +80,7 @@ class EntrepriseRepository extends BaseRepository
         $query->with('siege');
         
         // Sélectionner et formater les données pour l'export
-        return $query->get()->map(function ($entreprise) {
+        return $query->orderBy('CreatedAt', 'asc')->get()->map(function ($entreprise) {
             return [
                 'ID' => $entreprise->ID,
                 'Nom' => $entreprise->Nom,
