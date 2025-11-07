@@ -181,11 +181,13 @@ class ReportController extends Controller
     public function exportExcel(Request $request, string $type)
     {
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+        
         // Filtres
         $filters = $this->getFilters($request);
         
         // Déterminer la table source en fonction du type de rapport
         $table = ($type === 'day-night') ? 'rapports_details_jour_nuit' : 'rapports_details';
+        $isDayNight = ($type === 'day-night');
         
         // Requête d'export
         $query = DB::table($table)->select('*');
@@ -194,18 +196,38 @@ class ReportController extends Controller
         $query = $this->applyFilters($query, $filters);
         
         // Si c'est un rapport jour et nuit et qu'un filtre de type est spécifié
-        if ($type === 'day-night' && !empty($request->input('type_travail'))) {
+        if ($isDayNight && !empty($request->input('type_travail'))) {
             $query->where('type_travail', $request->input('type_travail'));
         }
         
-        // Récupérer toutes les données pour l'export
-        $data = $query->get();
+        // Récupérer et mapper les données
+        $data = $query->get()->map(function ($rapport) use ($isDayNight) {
+            $row = [
+                'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
+                'Siège ID' => $rapport->SiegeID,
+                'Siège Nom' => $rapport->siege_nom,
+                'Employé(e) ID' => $rapport->employee_id,
+                'Employé(e) Nom' => $rapport->employee_nom,
+            ];
+            
+            // Ajouter le type de travail uniquement pour les rapports jour/nuit
+            if ($isDayNight) {
+                $row['Type travail'] = $rapport->type_travail;
+            }
+            
+            $row += [
+                'Heure Entrée' => $rapport->heure_entree,
+                'Pause Déjeuner' => $rapport->pause_dejeuner,
+                'Heure Sortie' => $rapport->heure_sortie,
+                'Total Heure Journée' => $rapport->total_heure_journee,
+            ];
+            
+            return $row;
+        });
         
         // Déterminer le titre du rapport
-        $title = ($type === 'day-night') 
-            ? __('Rapport jour et nuit') 
-            : __('Rapport quotidien');
-            
+        $title = $isDayNight ? __('Rapport jour et nuit') : __('Rapport quotidien');
+        
         // Exporter vers Excel
         return $this->exportService->exportToExcel($data, $title);
     }
@@ -219,6 +241,7 @@ class ReportController extends Controller
         
         // Déterminer la table source en fonction du type de rapport
         $table = ($type === 'day-night') ? 'rapports_details_jour_nuit' : 'rapports_details';
+        $isDayNight = ($type === 'day-night');
         
         // Requête d'export
         $query = DB::table($table)->select('*');
@@ -227,52 +250,38 @@ class ReportController extends Controller
         $query = $this->applyFilters($query, $filters);
         
         // Si c'est un rapport jour et nuit et qu'un filtre de type est spécifié
-        if ($type === 'day-night' && !empty($request->input('type_travail'))) {
+        if ($isDayNight && !empty($request->input('type_travail'))) {
             $query->where('type_travail', $request->input('type_travail'));
         }
         
-        // Récupérer toutes les données pour l'export
-
-        if( $table == 'rapports_details' )
-        {
-            $data = $query->get()->map(function ($rapport) {
-                return [
-                    'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) ,
-                    'Siège ID' => $rapport->SiegeID ,
-                    'Siège Nom' => $rapport->siege_nom ,
-                    'Employé(e) ID' => $rapport->employee_id ,
-                    'Employé(e) Nom' => $rapport->employee_nom ,
-                    'Heure Entrée' => $rapport->heure_entree ,
-                    'Pause Déjeuner' => $rapport->pause_dejeuner ,
-                    'Heure Sortie' => $rapport->heure_sortie ,
-                    'Total Heure Journée' => $rapport->total_heure_journee ,
-                ];
-            });
-        }
-        else
-        {
-            $data = $query->get()->map(function ($rapport) {
-                return [
-                    'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) ,
-                    'Siège ID' => $rapport->SiegeID ,
-                    'Siège Nom' => $rapport->siege_nom ,
-                    'Employé(e) ID' => $rapport->employee_id ,
-                    'Employé(e) Nom' => $rapport->employee_nom ,
-                    'Type travail' => $rapport->type_travail ,
-                    'Heure Entrée' => $rapport->heure_entree ,
-                    'Pause Déjeuner' => $rapport->pause_dejeuner ,
-                    'Heure Sortie' => $rapport->heure_sortie ,
-                    'Total Heure Journée' => $rapport->total_heure_journee ,
-                ];
-            });
-        }    
-        
-        // Déterminer le titre et la vue du rapport
-        $title = ($type === 'day-night') 
-            ? 'Rapport jour et nuit' 
-            : 'Rapport quotidien';
-
+        // Récupérer et mapper les données
+        $data = $query->get()->map(function ($rapport) use ($isDayNight) {
+            $row = [
+                'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
+                'Siège ID' => $rapport->SiegeID,
+                'Siège Nom' => $rapport->siege_nom,
+                'Employé(e) ID' => $rapport->employee_id,
+                'Employé(e) Nom' => $rapport->employee_nom,
+            ];
             
+            // Ajouter le type de travail uniquement pour les rapports jour/nuit
+            if ($isDayNight) {
+                $row['Type travail'] = $rapport->type_travail;
+            }
+            
+            $row += [
+                'Heure Entrée' => $rapport->heure_entree,
+                'Pause Déjeuner' => $rapport->pause_dejeuner,
+                'Heure Sortie' => $rapport->heure_sortie,
+                'Total Heure Journée' => $rapport->total_heure_journee,
+            ];
+            
+            return $row;
+        });
+        
+        // Déterminer le titre du rapport
+        $title = $isDayNight ? 'Rapport jour et nuit' : 'Rapport quotidien';
+        
         // Exporter vers PDF
         return $this->exportService->exportToPdf($data, $title, 'exports.generic', [
             'filters' => $filters,
