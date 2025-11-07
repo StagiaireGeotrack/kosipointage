@@ -18,6 +18,11 @@
                     @csrf
                     @method('PUT')
 
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary">{{ __('Siège') }}</label>
+                        <p class="fs-5">{{ $conge->siege->Nom }}</p>
+                    </div>
+
                     <div class="row g-3 mb-4">
                         <div class="col-lg-6">
                             <x-input-label for="employee_id" :value="__('Employé')" />

@@ -17,6 +17,18 @@
                 <!-- Filtres -->
                 <form action="{{ route('conges.index') }}" method="GET" class="mb-4">
                     <div class="row g-3 mb-3">
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <x-input-label for="SiegeID" :value="__('Siège')" />
+                            <select id="SiegeID" name="SiegeID" class="form-select mt-1">
+                                <option value="">{{ __('Tous') }}</option>
+                                @foreach($sieges as $siege)
+                                    <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
+                                        {{ $siege->Nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="search" :value="__('Recherche')" />
                             <x-text-input id="search" name="search" type="text" class="form-control" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom de l\'employé') }}" />
@@ -56,6 +68,16 @@
                     </div>
                 </form>
 
+                <!-- Exports -->
+                <div class="d-flex justify-content-end mb-3 gap-2">
+                    <a href="{{ route('conges.export.excel', request()->query()) }}" class="btn btn-success">
+                        {{ __('Export en EXCEL') }}
+                    </a>
+                    <a href="{{ route('conges.export.pdf', request()->query()) }}" class="btn btn-danger">
+                        {{ __('Export en PDF') }}
+                    </a>
+                </div>
+
                 <!-- Tableau des congés -->
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -63,6 +85,9 @@
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Employé') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Siège') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Type') }}
@@ -89,6 +114,9 @@
                                 <tr>
                                     <td class="align-middle">
                                         {{ $conge->employe->Nom }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ $conge->siege->Nom }}
                                     </td>
                                     <td class="align-middle">
                                         @php

@@ -5,16 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Conge;
 use App\Models\Employe;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\EntrepriseSiege;
+use App\Services\ExportService;
 
 class CongeController extends Controller
 {
+    protected $exportService;
+
+    public function __construct(ExportService $exportService)
+    {
+        $this->exportService = $exportService;
+    }
+
     public function index(Request $request)
     {
-        $filters = $request->only(['search', 'type_conge', 'employee_id']);
+        $sieges = EntrepriseSiege::all();
+        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
         
         // Le scope global s'applique automatiquement
         $query = Conge::with('employe');
+
+        if (!empty($filters['SiegeID'])) {
+            $query->where('SiegeID', $filters['SiegeID']);
+        }
         
         if (!empty($filters['search'])) {
             $query->whereHas('employe', function($q) use ($filters) {
@@ -30,20 +43,21 @@ class CongeController extends Controller
             $query->where('employee_id', $filters['employee_id']);
         }
         
-        $conges = $query->orderBy('id', 'desc')->paginate(15);
+        $conges = $query->orderBy('id', 'desc')->paginate(5);
         
         // Les employés sont déjà filtrés par le scope global
         $employes = Employe::orderBy('Nom')->get();
         
-        return view('conges.index', compact('conges', 'employes', 'filters'));
+        return view( 'conges.index', compact('conges', 'employes', 'filters' , 'sieges') );
     }
 
     public function create()
     {
+        $sieges = EntrepriseSiege::all();
         $employes = Employe::orderBy('Nom')->get();
         $typesConge = ['CP', 'RTT', 'Maladie', 'Autres'];
         
-        return view('conges.create', compact('employes', 'typesConge'));
+        return view('conges.create', compact('employes', 'typesConge', 'sieges'));
     }
 
     public function store(Request $request)
@@ -78,6 +92,7 @@ class CongeController extends Controller
     {
         // Le scope global vérifie automatiquement l'accès
         $conge->load('employe');
+        $conge->load('siege');
         return view('conges.show', compact('conge'));
     }
 
@@ -125,5 +140,83 @@ class CongeController extends Controller
 
         return redirect()->route('conges.index')
             ->with('success', 'Congé supprimé avec succès.');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
+        $query = Conge::with('employe');        
+        $query = Conge::with('siege');   
+        
+        if (!empty($filters['search'])) {
+            $query->whereHas('employe', function($q) use ($filters) {
+                $q->where('Nom', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+        
+        if (!empty($filters['type_conge'])) {
+            $query->where('type_conge', $filters['type_conge']);
+        }
+        
+        if (!empty($filters['employee_id'])) {
+            $query->where('employee_id', $filters['employee_id']);
+        }
+        
+        $data = $query->orderBy('date_debut', 'desc')->get()->map(function ($conge) {
+            return [
+                'ID' => $conge->ID ,
+                'Employé(e) ID' => $conge->employe->ID ,
+                'Employé(e) Nom' => $conge->employe->Nom ,
+                'Siège ID' => $conge->siege->ID ,
+                'Siège Nom' => $conge->siege->Nom ,
+                'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+                'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+                'Observation / Commentaire' => $conge->commentaire ,
+                'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+            ];
+        });
+
+        return $this->exportService->exportToExcel($data, "Liste des congés" );
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
+        $query = Conge::with('employe');        
+        $query = Conge::with('siege');        
+        
+        if (!empty($filters['SiegeID'])) {
+            $query->where('SiegeID', $filters['SiegeID']);
+        }
+
+        if (!empty($filters['search'])) {
+            $query->whereHas('employe', function($q) use ($filters) {
+                $q->where('Nom', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+        
+        if (!empty($filters['type_conge'])) {
+            $query->where('type_conge', $filters['type_conge']);
+        }
+        
+        if (!empty($filters['employee_id'])) {
+            $query->where('employee_id', $filters['employee_id']);
+        }
+        
+        $data = $query->orderBy('date_debut', 'desc')->get()->map(function ($conge) {
+            return [
+                'ID' => $conge->ID ,
+                'Employé(e) ID' => $conge->employe->ID ,
+                'Employé(e) Nom' => $conge->employe->Nom ,
+                'Siège ID' => $conge->siege->ID ,
+                'Siège Nom' => $conge->siege->Nom ,
+                'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+                'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+                'Observation / Commentaire' => $conge->commentaire ,
+                'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+            ];
+        });
+
+        return $this->exportService->exportToPdf($data, "Liste des congés" , 'exports.generic' );
     }
 }

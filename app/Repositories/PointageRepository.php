@@ -114,7 +114,7 @@ class PointageRepository extends BaseRepository
                 'Type' => $pointage->type_ === 'entry' ? __('Entrée') : __('Sortie'),
                 'Méthode' => $this->formatAuthMethod($pointage->auth_method),
                 'Date' => ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY')),
-                'Heure' => $pointage->timestamp_->format('H:i'),
+                'Heure' => $pointage->timestamp_->format('H:i:s'),
                 'Siège' => $pointage->siege->Nom,
                 'Latitude' => $pointage->latitude,
                 'Longitude' => $pointage->longitude,

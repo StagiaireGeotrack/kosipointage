@@ -73,7 +73,9 @@ Route::middleware('auth')->group(function () {
 
         // Congés
         Route::resource('conges', CongeController::class);
-
+        Route::get('/conges-export/excel', [CongeController::class, 'exportExcel'])->name('conges.export.excel');
+        Route::get('/conges-export/pdf', [CongeController::class, 'exportPdf'])->name('conges.export.pdf');
+        
         // CRUD des jours non travaillés
         Route::resource('jours-non-travailles', JourNonTravailleController::class);
         Route::get('/jours-non-travailles-export/excel', [JourNonTravailleController::class, 'exportExcel'])->name('jours-non-travailles.export.excel');

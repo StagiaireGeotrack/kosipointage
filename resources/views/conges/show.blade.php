@@ -22,8 +22,14 @@
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">{{ __('Employé') }}</label>
+                            <label class="form-label fw-semibold text-secondary">{{ __('Employé(e)') }}</label>
                             <p class="fs-5">{{ $conge->employe->Nom }}</p>
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">{{ __('Siège') }}</label>
+                            <p class="fs-5">{{ $conge->siege->Nom }}</p>
                         </div>
 
                         <div class="mb-3">
