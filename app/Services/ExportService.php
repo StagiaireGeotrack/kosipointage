@@ -19,7 +19,7 @@ class ExportService
         
         return Excel::download(
             new GenericExport($exportData, $title, $columns),
-            $title . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx'
+            $title . '_' . Carbon::now()->isoFormat('dddd D MMMM YYYY - HH:mm:ss') . '.xlsx'
         );
     }
     
@@ -32,12 +32,12 @@ class ExportService
         $viewData = array_merge([
             'data' => $exportData,
             'title' => $title,
-            'date' => Carbon::now()->format('d/m/Y H:i'),
+            'date' => Carbon::now()->isoFormat('dddd D MMMM YYYY - HH:mm:ss'),
             'user' => Auth::user()->Identifiant_email,
         ], $extraData);
         
         // Génération du PDF
-        $pdf = Pdf::loadView($viewPath, $viewData);
+        $pdf = Pdf::loadView($viewPath, $viewData); 
         
         // Configurer les options PDF si nécessaire
         $pdf->setPaper('a4', 'landscape');
