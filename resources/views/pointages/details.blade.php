@@ -57,12 +57,13 @@
                                             @endif
                                             <div>
                                                 <div class="fw-medium">{{ $pointage->employe->Nom }}</div>
-                                                <small class="text-muted">{{ $pointage->employe->BadgeID }}</small>
+                                                <small class="text-muted">Badge: {{ $pointage->employe->BadgeID }}</small> / 
+                                                <small class="text-muted">Code PIN: {{ $pointage->employe->Pin }}</small>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        {{ $pointage->timestamp_->format('d/m/Y H:i:s') }}
+                                        {{ ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($pointage->type_ == 'entry')

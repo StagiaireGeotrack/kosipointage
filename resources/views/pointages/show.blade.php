@@ -64,7 +64,7 @@
                                             {{ __('Sortie') }}
                                         @endif
                                     </h4>
-                                    <p class="small text-muted mb-0">{{ $pointage->timestamp_->format('d/m/Y H:i:s') }}</p>
+                                    <p class="small text-muted mb-0">{{ ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}</p>
                                 </div>
                             </div>
                             

@@ -22,8 +22,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <h6 class="text-uppercase text-secondary small fw-semibold">{{ __('Date') }}</h6>
-                        <p class="fs-5 fw-bold mb-0">{{ $jourNonTravaille->Date->format('d/m/Y') }}</p>
-                        <small class="text-muted">{{ $jourNonTravaille->Date->isoFormat('dddd D MMMM YYYY') }}</small>
+                        <p class="fs-5 fw-bold mb-0">{{ ucfirst($jourNonTravaille->Date->isoFormat('dddd D MMMM YYYY')) }}</p>
                     </div>
                     
                     <div class="col-md-6 mb-3">
@@ -88,12 +87,12 @@
                     
                     <div class="col-md-4 mb-3">
                         <h6 class="text-uppercase text-secondary small fw-semibold">{{ __('Créé le') }}</h6>
-                        <p class="mb-0">{{ $jourNonTravaille->created_at->format('d/m/Y H:i') }}</p>
+                        <p class="mb-0">{{ ucfirst($jourNonTravaille->created_at->isoFormat('dddd D MMMM YYYY')) }}</p>
                     </div>
                     
                     <div class="col-md-4 mb-3">
                         <h6 class="text-uppercase text-secondary small fw-semibold">{{ __('Modifié le') }}</h6>
-                        <p class="mb-0">{{ $jourNonTravaille->updated_at->format('d/m/Y H:i') }}</p>
+                        <p class="mb-0">{{ ucfirst($jourNonTravaille->updated_at->isoFormat('dddd D MMMM YYYY')) }}</p>
                     </div>
                 </div>
             </div>

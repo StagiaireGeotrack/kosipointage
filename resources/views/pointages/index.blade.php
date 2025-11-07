@@ -144,7 +144,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        {{ $pointage->timestamp_->format('d/m/Y H:i:s') }}
+                                        {{ ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($pointage->type_ == 'entry')

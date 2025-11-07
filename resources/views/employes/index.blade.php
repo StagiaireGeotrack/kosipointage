@@ -103,6 +103,9 @@
                                     {{ __('Face image') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date de création') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Statut') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -147,6 +150,9 @@
                                                 </span>
                                             @endif
                                         </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($employe->Actived)

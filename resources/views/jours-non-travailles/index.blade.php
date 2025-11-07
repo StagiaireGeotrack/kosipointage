@@ -122,8 +122,7 @@
                             @forelse ($joursNonTravailles as $jour)
                                 <tr>
                                     <td class="align-middle">
-                                        <strong>{{ $jour->Date->format('d/m/Y') }}</strong>
-                                        <small class="text-muted d-block">{{ $jour->Date->isoFormat('dddd') }}</small>
+                                        {{ ucfirst($jour->Date->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $jour->Nom }}

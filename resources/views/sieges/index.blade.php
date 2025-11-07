@@ -71,6 +71,9 @@
                                     {{ __('Nombre d\'employés') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date création') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Statut') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -95,6 +98,9 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $siege->employes()->count() }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($siege->Actived)

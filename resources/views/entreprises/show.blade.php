@@ -60,8 +60,8 @@
                                     <dd class="col-sm-9">{{ $entreprise->Longitude}}</dd>
                                     
                                     @if ($entreprise->CreatedAt)
-                                        <dt class="col-sm-3">Créé le</dt>
-                                        <dd class="col-sm-9">{{ $entreprise->CreatedAt->format('d/m/Y H:i') }}</dd>
+                                        <dt class="col-sm-3">Créée le</dt>
+                                        <dd class="col-sm-9">{{ ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}</dd>
                                     @endif                                           
                                     
                                 </dl>

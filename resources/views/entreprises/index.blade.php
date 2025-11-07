@@ -79,6 +79,9 @@
                                     {{ __('Siège') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date de création') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Statut') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -106,6 +109,9 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $entreprise->siege->Nom }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($entreprise->Actived)

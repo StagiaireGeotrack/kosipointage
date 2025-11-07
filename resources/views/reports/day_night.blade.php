@@ -109,7 +109,7 @@
                             @forelse ($rapports as $rapport)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $rapport->date_pointage }}
+                                        {{ ucfirst(\Carbon\Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $rapport->siege_nom }}

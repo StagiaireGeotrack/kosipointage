@@ -71,14 +71,14 @@
                                 @if ($administrateur->created_at)
                                     <div class="bg-white p-3 rounded mb-2">
                                         <dt class="small fw-medium text-secondary">{{ __('Date de création') }}</dt>
-                                        <dd class="mb-0 small text-dark">{{ $administrateur->created_at->format('d/m/Y H:i') }}</dd>
+                                        <dd class="mb-0 small text-dark">{{ ucfirst($administrateur->created_at->isoFormat('dddd D MMMM YYYY')) }}</dd>
                                     </div>
                                 @endif
 
                                 @if ($administrateur->updated_at)
                                     <div class="bg-white p-3 rounded mb-2">
                                         <dt class="small fw-medium text-secondary">{{ __('Dernière mise à jour') }}</dt>
-                                        <dd class="mb-0 small text-dark">{{ $administrateur->updated_at->format('d/m/Y H:i') }}</dd>
+                                        <dd class="mb-0 small text-dark">{{ ucfirst($administrateur->updated_at->isoFormat('dddd D MMMM YYYY')) }}</dd>
                                     </div>
                                 @endif
                             </dl>

@@ -21,6 +21,7 @@ class EntrepriseSiege extends Model
     
     protected $casts = [
         'Actived' => 'boolean',
+        'CreatedAt' => 'datetime'
     ];
     
     public function entreprises(): HasMany

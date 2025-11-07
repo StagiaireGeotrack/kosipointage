@@ -38,6 +38,7 @@ class Administration extends Authenticatable
     protected $casts = [
         'IsSuperAdmin' => 'boolean',
         'Actived' => 'boolean',
+        'created_at' => 'datetime'
     ];
     
     // Méthode nécessaire pour l'authentification Laravel

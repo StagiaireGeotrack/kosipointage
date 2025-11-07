@@ -105,10 +105,10 @@
                                         </span>
                                     </td>
                                     <td class="align-middle">
-                                        {{ $conge->date_debut->format('d/m/Y H:i') }}
+                                        {{ ucfirst($conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $conge->date_fin->format('d/m/Y H:i') }}
+                                        {{ ucfirst($conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                     </td>
                                     {{-- resources/views/conges/index.blade.php --}}
                                     <td class="align-middle">
@@ -137,7 +137,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        {{ $conge->created_at->format('d/m/Y H:i') }}
+                                        {{ ucfirst($conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">

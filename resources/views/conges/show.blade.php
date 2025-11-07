@@ -43,40 +43,50 @@
                                 </span>
                             </p>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">{{ __('Date et heure de début') }}</label>
-                            <p class="fs-5">{{ $conge->date_debut->format('d/m/Y à H:i') }}</p>
-                        </div>
                     </div>
 
                     <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">{{ __('Date et heure de début') }}</label>
+                            <p class="fs-5">{{ ucfirst($conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}</p>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Date et heure de fin') }}</label>
-                            <p class="fs-5">{{ $conge->date_fin->format('d/m/Y à H:i') }}</p>
+                            <p class="fs-5">{{ ucfirst($conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}</p>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Durée') }}</label>
                             <p class="fs-5">
                                 @php
-                                    $diff = $conge->date_debut->diffInDays($conge->date_fin);
-                                    $heures = $conge->date_debut->diffInHours($conge->date_fin) % 24;
-                                    $minutes = $conge->date_debut->diffInMinutes($conge->date_fin) % 60;
+                                    $jourOuvrableService = app(\App\Services\JourOuvrableService::class);
+                                    $resultat = $jourOuvrableService->calculerJoursOuvrables(
+                                        $conge->date_debut, 
+                                        $conge->date_fin,
+                                        $conge->employe->SiegeID ?? null
+                                    );
                                 @endphp
-                                {{ $diff }} jour(s)
-                                @if($heures > 0)
-                                    {{ $heures }}h
+                                
+                                @if($resultat['jours'] > 0)
+                                    <span class="text-muted">{{ round( $resultat['jours'] ) }} jour(s) ouvrable(s)</span>
                                 @endif
-                                @if($minutes > 0)
-                                    {{ $minutes }}min
+                                
+                                @if($resultat['heures'] > 0)
+                                    @if($resultat['jours'] > 0) et @endif
+                                    <span class="text-muted">{{ round( $resultat['heures'] ) }} h</span>
+                                @endif
+                                
+                                @if($resultat['jours'] == 0 && $resultat['heures'] == 0)
+                                    <span class="badge bg-warning text-dark">{{ __('Aucun jour ouvrable') }}</span>
                                 @endif
                             </p>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Date de création') }}</label>
-                            <p class="fs-5">{{ $conge->created_at->format('d/m/Y à H:i') }}</p>
+                            <p class="fs-5">{{ ucfirst($conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}</p>
                         </div>
                     </div>
                 </div>

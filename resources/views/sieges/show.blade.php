@@ -51,6 +51,10 @@
                         <p class="small text-muted mb-1">{{ __('ID') }}</p>
                         <p class="fw-medium mb-0">{{ $siege->ID }}</p>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <p class="small text-muted mb-1">{{ __('Date de création') }}</p>
+                        <p class="fw-medium mb-0">{{ ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,6 +80,9 @@
                                     {{ __('Adresse ou ville') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date de création') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Statut') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -91,6 +98,9 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $entreprise->Nom_Lieu_Ville }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($entreprise->Actived)
@@ -157,7 +167,13 @@
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Code PIN') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Badge ID') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date de création') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Statut') }}
@@ -174,7 +190,13 @@
                                         {{ $employe->Nom }}
                                     </td>
                                     <td class="align-middle">
+                                        {{ $employe->Pin }}
+                                    </td>
+                                    <td class="align-middle">
                                         {{ $employe->BadgeID }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         @if ($employe->Actived)
