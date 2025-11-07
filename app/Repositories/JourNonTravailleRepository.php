@@ -96,7 +96,20 @@ class JourNonTravailleRepository
             $query->whereYear('Date', $filters['annee']);
         }
         
-        return $query->orderBy('Date', 'asc')->get();
+        return $query->orderBy('Date', 'asc')->get()->map(function ($jour) {
+            return [
+                'ID' => $jour->ID,
+                'Date' => ucfirst($jour->Date ? $jour->Date->isoFormat('dddd D MMMM YYYY') : ''),
+                'Nom' => $jour->Nom ?? '',
+                'Description' => $jour->Description ?? '',
+                'Type' => $jour->Type ?? '',
+                'Récurrent' => $jour->Recurrent ?? '',
+                'Siège' => $jour->siege->Nom ?? '',
+                'Date de création' => ucfirst($jour->created_at ? $jour->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
+                'Dernière mise à jour' => ucfirst($jour->updated_at ? $jour->updated_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
+                'Statut' => $jour->Actived ?? '',
+            ];
+        });
     }
     
     public function findById($id)
