@@ -92,12 +92,12 @@ class EmployeRepository extends BaseRepository
             return [
                 'ID' => $employe->ID,
                 'Nom' => $employe->Nom,
-                'BadgeID' => $employe->BadgeID,
-                'HasBiometricSetup' => $employe->HasBiometricSetup ? __('Oui') : __('Non'),
-                'HasFaceSetup' => $employe->HasFaceSetup ? __('Oui') : __('Non'),
-                'CreatedAt' => $employe->CreatedAt->format('d/m/Y H:i'),
-                'Actived' => $employe->Actived ? __('Oui') : __('Non'),
-                'Siege' => $employe->siege->Nom,
+                'Badge ID' => $employe->BadgeID,
+                'Empreinte Biométrique' => $employe->HasBiometricSetup ? __('Oui') : __('Non'),
+                'Image Faciale' => $employe->HasFaceSetup ? __('Oui') : __('Non'),
+                'Date de création' => ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
+                'Statut' => $employe->Actived ? __('Oui') : __('Non'),
+                'Siège' => $employe->siege->Nom,
             ];
         });
     }

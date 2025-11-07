@@ -84,13 +84,13 @@ class EntrepriseRepository extends BaseRepository
             return [
                 'ID' => $entreprise->ID,
                 'Nom' => $entreprise->Nom,
-                'Nom_Lieu_Ville' => $entreprise->Nom_Lieu_Ville,
+                'Nom Lieu ou Ville' => $entreprise->Nom_Lieu_Ville,
                 'Latitude' => $entreprise->Latitude,
                 'Longitude' => $entreprise->Longitude,
-                'RadiusInMeters' => $entreprise->RadiusInMeters,
-                'CreatedAt' => $entreprise->CreatedAt->format('d/m/Y H:i'),
-                'Actived' => $entreprise->Actived ? __('Oui') : __('Non'),
-                'Siege' => $entreprise->siege->Nom,
+                'Rayon' => $entreprise->RadiusInMeters,
+                'Date de création' => ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
+                'Statut' => $entreprise->Actived ? __('Oui') : __('Non'),
+                'Siège' => $entreprise->siege->Nom,
             ];
         });
     }

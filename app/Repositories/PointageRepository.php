@@ -109,16 +109,15 @@ class PointageRepository extends BaseRepository
         return $query->get()->map(function ($pointage) {
             return [
                 'ID' => $pointage->ID,
-                'Employe' => $pointage->employe->Nom,
-                'BadgeID' => $pointage->employe->BadgeID,
+                'Employé(e)' => $pointage->employe->Nom,
+                'Badge ID' => $pointage->employe->BadgeID,
                 'Type' => $pointage->type_ === 'entry' ? __('Entrée') : __('Sortie'),
-                'Methode' => $this->formatAuthMethod($pointage->auth_method),
-                'Date' => $pointage->timestamp_->format('d/m/Y'),
+                'Méthode' => $this->formatAuthMethod($pointage->auth_method),
+                'Date' => ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY')),
                 'Heure' => $pointage->timestamp_->format('H:i'),
-                'Siege' => $pointage->siege->Nom,
+                'Siège' => $pointage->siege->Nom,
                 'Latitude' => $pointage->latitude,
                 'Longitude' => $pointage->longitude,
-                'Synced' => $pointage->synced ? __('Oui') : __('Non'),
             ];
         });
     }

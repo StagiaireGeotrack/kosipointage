@@ -61,10 +61,11 @@ class EntrepriseSiegeRepository extends BaseRepository
             return [
                 'ID' => $siege->ID,
                 'Nom' => $siege->Nom,
-                'Nom_Lieu_Ville' => $siege->Nom_Lieu_Ville,
-                'Actived' => $siege->Actived ? __('Oui') : __('Non'),
-                'Entreprises' => $entreprisesCount,
-                'Employes' => $employesCount,
+                'Nom Lieu ou Ville' => $siege->Nom_Lieu_Ville,
+                'Statut' => $siege->Actived ? __('Oui') : __('Non'),
+                'Date de création' => ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
+                'Nb sites ou établissements' => $entreprisesCount,
+                'Nb employés' => $employesCount,
             ];
         });
     }

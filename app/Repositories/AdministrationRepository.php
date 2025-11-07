@@ -67,11 +67,11 @@ class AdministrationRepository extends BaseRepository
         return $query->get()->map(function ($admin) {
             return [
                 'ID' => $admin->ID,
-                'Email' => $admin->Identifiant_email,
+                'E-mail' => $admin->Identifiant_email,
                 'Type' => $admin->IsSuperAdmin ? __('Super Administrateur') : __('Simpe Administrateur'),
-                'Siege' => $admin->SiegeID ? $admin->siege->Nom : __(''),
-                'Créé le' => $admin->created_at ? $admin->created_at->format('d/m/Y H:i') : '',
-                'Dernière mise à jour' => $admin->updated_at ? $admin->updated_at->format('d/m/Y H:i') : '',
+                'Siège' => $admin->SiegeID ? $admin->siege->Nom : __(''),
+                'Date de création' => ucfirst($admin->created_at ? $admin->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
+                'Dernière mise à jour' => ucfirst($admin->updated_at ? $admin->updated_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
             ];
         });
     }
