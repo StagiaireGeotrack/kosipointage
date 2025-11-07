@@ -200,8 +200,16 @@ class ReportController extends Controller
             $query->where('type_travail', $request->input('type_travail'));
         }
         
-        // Récupérer et mapper les données
-        $data = $query->get()->map(function ($rapport) use ($isDayNight) {
+        // Récupérer les données
+        $results = $query->get();
+        
+        // ✅ Trier par date_reel avec PHP (plus ancien en premier)
+        $sortedResults = $results->sortBy(function ($rapport) {
+            return strtotime($rapport->date_reel);
+        });
+        
+        // Mapper les données
+        $data = $sortedResults->map(function ($rapport) use ($isDayNight) {
             $row = [
                 'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
                 'Siège ID' => $rapport->SiegeID,
@@ -219,11 +227,11 @@ class ReportController extends Controller
                 'Heure Entrée' => $rapport->heure_entree,
                 'Pause Déjeuner' => $rapport->pause_dejeuner,
                 'Heure Sortie' => $rapport->heure_sortie,
-                'Total Heure Journée' => $rapport->total_heure_journee,
+                'Total Heure' => $rapport->total_heure_journee,
             ];
             
             return $row;
-        });
+        })->values(); // ✅ Réindexer la collection après le tri
         
         // Déterminer le titre du rapport
         $title = $isDayNight ? __('Rapport jour et nuit') : __('Rapport quotidien');
@@ -231,7 +239,7 @@ class ReportController extends Controller
         // Exporter vers Excel
         return $this->exportService->exportToExcel($data, $title);
     }
-    
+
     public function exportPdf(Request $request, string $type)
     {
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
@@ -254,8 +262,16 @@ class ReportController extends Controller
             $query->where('type_travail', $request->input('type_travail'));
         }
         
-        // Récupérer et mapper les données
-        $data = $query->get()->map(function ($rapport) use ($isDayNight) {
+        // Récupérer les données
+        $results = $query->get();
+        
+        // ✅ Trier par date_reel avec PHP (plus ancien en premier)
+        $sortedResults = $results->sortBy(function ($rapport) {
+            return strtotime($rapport->date_reel);
+        });
+        
+        // Mapper les données
+        $data = $sortedResults->map(function ($rapport) use ($isDayNight) {
             $row = [
                 'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
                 'Siège ID' => $rapport->SiegeID,
@@ -273,11 +289,11 @@ class ReportController extends Controller
                 'Heure Entrée' => $rapport->heure_entree,
                 'Pause Déjeuner' => $rapport->pause_dejeuner,
                 'Heure Sortie' => $rapport->heure_sortie,
-                'Total Heure Journée' => $rapport->total_heure_journee,
+                'Total Heure' => $rapport->total_heure_journee,
             ];
             
             return $row;
-        });
+        })->values(); // ✅ Réindexer la collection après le tri
         
         // Déterminer le titre du rapport
         $title = $isDayNight ? 'Rapport jour et nuit' : 'Rapport quotidien';
