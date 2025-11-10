@@ -1,129 +1,188 @@
 {{-- resources/views/admin/sellers/index.blade.php --}}
-
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2>Gestion des Vendeurs</h2>
-                <a href="{{ route('admin.sellers.create') }}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Nouveau Revendeur
-                </a>
-            </div>
+<x-app-layout>
+    <x-slot name="header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark mb-0">
+                {{ __('Gestion des Revendeurs') }}
+            </h2>
+            <a href="{{ route('sellers.create') }}" class="btn btn-primary">
+                {{ __('Nouveau revendeur') }}
+            </a>
         </div>
-    </div>
+    </x-slot>
 
-    <div class="card">
-        <div class="card-body">
-            @if($sellers->isEmpty())
-                <div class="text-center py-5">
-                    <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-                    <p class="mt-3 text-muted">Aucun revendeur enregistré</p>
-                    <a href="{{ route('admin.sellers.create') }}" class="btn btn-primary mt-2">
-                        Créer le premier revendeur
-                    </a>
-                </div>
-            @else
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Email</th>
-                                <th>Nombre de Sièges</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($sellers as $seller)
+    <div class="p-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                <!-- Filtres -->
+                <form action="{{ route('sellers.index') }}" method="GET" class="mb-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <x-input-label for="search" :value="__('Recherche')" />
+                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="request('search')" placeholder="{{ __('Email du revendeur') }}" />
+                        </div>
+                        
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <x-input-label for="status" :value="__('Statut')" />
+                            <select id="status" name="status" class="form-select mt-1">
+                                <option value="">{{ __('Tous') }}</option>
+                                <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>{{ __('Actif') }}</option>
+                                <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>{{ __('Inactif') }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Rechercher') }}
+                        </button>
+                        <a href="{{ route('sellers.index') }}" class="btn btn-secondary">
+                            {{ __('Réinitialiser') }}
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Tableau des vendeurs -->
+                @if($sellers->isEmpty())
+                    <div class="text-center py-5">
+                        <svg class="bi text-muted" width="48" height="48" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                        </svg>
+                        <p class="mt-3 text-muted">{{ __('Aucun revendeur enregistré') }}</p>
+                        <a href="{{ route('sellers.create') }}" class="btn btn-primary mt-2">
+                            {{ __('Créer le premier revendeur') }}
+                        </a>
+                    </div>
+                @else
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
                                 <tr>
-                                    <td>{{ $seller->ID }}</td>
-                                    <td>{{ $seller->Identifiant_email }}</td>
-                                    <td>
-                                        <span class="badge bg-info">
-                                            {{ $seller->sellerSieges->count() }} siège(s)
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if($seller->Actived)
-                                            <span class="badge bg-success">Actif</span>
-                                        @else
-                                            <span class="badge bg-secondary">Inactif</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('admin.sellers.show', $seller->ID) }}" 
-                                               class="btn btn-sm btn-info" 
-                                               title="Voir">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.sellers.edit', $seller->ID) }}" 
-                                               class="btn btn-sm btn-warning" 
-                                               title="Modifier">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <form action="{{ route('admin.sellers.toggle-active', $seller->ID) }}" 
-                                                  method="POST" 
-                                                  class="d-inline">
-                                                @csrf
-                                                <button type="submit" 
-                                                        class="btn btn-sm {{ $seller->Actived ? 'btn-secondary' : 'btn-success' }}" 
-                                                        title="{{ $seller->Actived ? 'Désactiver' : 'Activer' }}">
-                                                    <i class="bi bi-{{ $seller->Actived ? 'pause' : 'play' }}"></i>
-                                                </button>
-                                            </form>
-                                            <button type="button" 
-                                                    class="btn btn-sm btn-danger" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#deleteModal{{ $seller->ID }}"
-                                                    title="Supprimer">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+                                    <th class="text-uppercase small fw-semibold text-secondary">{{ __('ID') }}</th>
+                                    <th class="text-uppercase small fw-semibold text-secondary">{{ __('Email') }}</th>
+                                    <th class="text-uppercase small fw-semibold text-secondary">{{ __('Nombre de Sièges') }}</th>
+                                    <th class="text-uppercase small fw-semibold text-secondary">{{ __('Statut') }}</th>
+                                    <th class="text-uppercase small fw-semibold text-secondary">{{ __('Actions') }}</th>
                                 </tr>
-
-                                <!-- Modal de confirmation de suppression -->
-                                <div class="modal fade" id="deleteModal{{ $seller->ID }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Confirmer la suppression</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </thead>
+                            <tbody>
+                                @foreach($sellers as $seller)
+                                    <tr>
+                                        <td class="align-middle">{{ $seller->ID }}</td>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="height: 32px; width: 32px;">
+                                                    <span class="small fw-semibold text-white">{{ substr($seller->Identifiant_email, 0, 1) }}</span>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-medium">{{ $seller->Identifiant_email }}</div>
+                                                </div>
                                             </div>
-                                            <div class="modal-body">
-                                                Êtes-vous sûr de vouloir supprimer le revendeur 
-                                                <strong>{{ $seller->Identifiant_email }}</strong> ?
-                                                <br><br>
-                                                Cette action est irréversible.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    Annuler
-                                                </button>
-                                                <form action="{{ route('admin.sellers.destroy', $seller->ID) }}" 
-                                                      method="POST" 
-                                                      class="d-inline">
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="badge bg-info">
+                                                {{ $seller->sellerSieges->count() }} {{ __('siège(s)') }}
+                                            </span>
+                                        </td>
+                                        <td class="align-middle">
+                                            @if($seller->Actived)
+                                                <span class="badge bg-success">{{ __('Actif') }}</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ __('Inactif') }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ route('sellers.show', $seller->ID) }}" class="text-primary" title="{{ __('Voir') }}">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </a>
+                                                <a href="{{ route('sellers.edit', $seller->ID) }}" class="text-warning" title="{{ __('Modifier') }}">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                    </svg>
+                                                </a>
+                                                <form action="{{ route('sellers.toggle-active', $seller->ID) }}" method="POST" class="d-inline">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">
-                                                        Supprimer
+                                                    <button type="submit" class="btn btn-link p-0 border-0 {{ $seller->Actived ? 'text-secondary' : 'text-success' }}" title="{{ $seller->Actived ? __('Désactiver') : __('Activer') }}">
+                                                        @if($seller->Actived)
+                                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        @else
+                                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        @endif
                                                     </button>
                                                 </form>
+                                                <button type="button" class="btn btn-link text-danger p-0 border-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $seller->ID }}" title="{{ __('Supprimer') }}">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Modal de confirmation de suppression -->
+                                    <div class="modal fade" id="deleteModal{{ $seller->ID }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ __('Confirmer la suppression') }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ __('Êtes-vous sûr de vouloir supprimer le revendeur') }} 
+                                                    <strong>{{ $seller->Identifiant_email }}</strong> ?
+                                                    <br><br>
+                                                    {{ __('Cette action est irréversible.') }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                        {{ __('Annuler') }}
+                                                    </button>
+                                                    <form action="{{ route('sellers.destroy', $seller->ID) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">
+                                                            {{ __('Supprimer') }}
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    @if($sellers->hasPages())
+                        <div class="mt-1">
+                            {{ $sellers->links("pagination.custom") }}
+                        </div>
+                    @endif
+                @endif
+            </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

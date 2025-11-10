@@ -13,7 +13,7 @@ use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\EntrepriseSiegeController;
 use App\Http\Controllers\JourNonTravailleController;
-use App\Http\Controllers\Admin\SellerController;
+use App\Http\Controllers\SellerController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
