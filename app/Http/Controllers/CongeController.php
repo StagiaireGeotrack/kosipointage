@@ -147,42 +147,17 @@ class CongeController extends Controller
 
     public function exportExcel(Request $request)
     {
-        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
-        $query = Conge::with('employe');        
-        $query = Conge::with('siege');   
-        
-        if (!empty($filters['search'])) {
-            $query->whereHas('employe', function($q) use ($filters) {
-                $q->where('Nom', 'like', '%' . $filters['search'] . '%');
-            });
-        }
-        
-        if (!empty($filters['type_conge'])) {
-            $query->where('type_conge', $filters['type_conge']);
-        }
-        
-        if (!empty($filters['employee_id'])) {
-            $query->where('employee_id', $filters['employee_id']);
-        }
-        
-        $data = $query->orderBy('date_debut', 'desc')->get()->map(function ($conge) {
-            return [
-                'ID' => $conge->ID ,
-                'Employé(e) ID' => $conge->employe->ID ,
-                'Employé(e) Nom' => $conge->employe->Nom ,
-                'Siège ID' => $conge->siege->ID ,
-                'Siège Nom' => $conge->siege->Nom ,
-                'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
-                'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
-                'Observation / Commentaire' => $conge->commentaire ,
-                'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
-            ];
-        });
-
+        $this->prepareExportData($request) ;
         return $this->exportService->exportToExcel($data, "Liste des congés" );
     }
 
     public function exportPdf(Request $request)
+    {
+        $this->prepareExportData($request) ;
+        return $this->exportService->exportToPdf($data, "Liste des congés" , 'exports.generic' );
+    }
+
+    public function prepareExportData(Request $request)
     {
         $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
         $query = Conge::with('employe');        
@@ -248,6 +223,6 @@ class CongeController extends Controller
             ];
         });
 
-        return $this->exportService->exportToPdf($data, "Liste des congés" , 'exports.generic' );
+        return $data ;
     }
 }
