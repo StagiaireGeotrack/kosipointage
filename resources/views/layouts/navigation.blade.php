@@ -87,6 +87,30 @@
         box-shadow: 0 2px 4px rgba(63, 82, 164, 0.3);
     }
 
+    /* Badge pour vendeur */
+    .badge-seller {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Badge pour simple admin */
+    .badge-simple {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+    }
+
     /* Dropdown user button */
     .user-dropdown-btn {
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -104,7 +128,9 @@
         transform: translateY(-2px);
     }
 
-    .user-dropdown-btn:hover .badge-custom {
+    .user-dropdown-btn:hover .badge-custom,
+    .user-dropdown-btn:hover .badge-seller,
+    .user-dropdown-btn:hover .badge-simple {
         background: white;
         color: #3F52A4;
     }
@@ -208,58 +234,64 @@
                 @can('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active-link' : '' }}">
-                        <i class="bi bi-speedometer2"></i> Tableau de bord
+                        <i class="bi bi-speedometer2"></i> {{ __('Tableau de bord') }}
                     </a>
                 </li>
                 @endcan                
                 
                 <li class="nav-item">
                     <a href="{{ route('sieges.index') }}" class="nav-link {{ request()->routeIs('sieges.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-building"></i> Siège
+                        <i class="bi bi-building"></i> {{ __('Siège') }}
                     </a>
                 </li>
 
                 @can('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-person-gear"></i> Administrateur
+                        <i class="bi bi-person-gear"></i> {{ __('Administrateur') }}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('sellers.index') }}" class="nav-link {{ request()->routeIs('sellers.*') ? 'active-link' : '' }}">
+                        <i class="bi bi-shop-window"></i> {{ __('Vendeur') }}
                     </a>
                 </li>
                 @endcan
                 
                 <li class="nav-item">
                     <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-shop"></i> Site ou établissement
+                        <i class="bi bi-shop"></i> {{ __('Site ou établissement') }}
                     </a>
                 </li>
                 
                 <li class="nav-item">
                     <a href="{{ route('employes.index') }}" class="nav-link {{ request()->routeIs('employes.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-people"></i> Employé
+                        <i class="bi bi-people"></i> {{ __('Employé') }}
                     </a>
                 </li>
                 
                 <li class="nav-item">
                     <a href="{{ route('pointages.index') }}" class="nav-link {{ request()->routeIs('pointages.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-clock-history"></i> Pointage
+                        <i class="bi bi-clock-history"></i> {{ __('Pointage') }}
                     </a>
                 </li>
                 
                 <li class="nav-item">
                     <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-file-earmark-text"></i> Rapport
+                        <i class="bi bi-file-earmark-text"></i> {{ __('Rapport') }}
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('conges.index') }}" class="nav-link {{ request()->routeIs('conges.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-file-earmark-text"></i> Congé
+                        <i class="bi bi-calendar-x"></i> {{ __('Congé') }}
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('jours-non-travailles.index') }}" class="nav-link {{ request()->routeIs('jours-non-travailles.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-file-earmark-text"></i> Jour férié
+                        <i class="bi bi-calendar-event"></i> {{ __('Jour férié') }}
                     </a>
                 </li>
 
@@ -271,16 +303,18 @@
                     <button class="btn user-dropdown-btn text-decoration-none dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle me-2"></i>
                         <div>{{ Auth::user()->Identifiant_email }}</div>
-                        @if(Auth::user()->IsSuperAdmin)
-                            <span class="badge-custom">Super Administrateur</span>
+                        @if(Auth::user()->isTrueSuperAdmin())
+                            <span class="badge-custom">{{ __('Super Administrateur') }}</span>
+                        @elseif(Auth::user()->isSeller())
+                            <span class="badge-seller">{{ __('Vendeur') }}</span>
                         @else
-                            <span class="badge-custom">Simple Administrateur</span>
+                            <span class="badge-simple">{{ __('Simple Administrateur') }}</span>
                         @endif
                     </button>
                     <ul class="dropdown-menu dropdown-menu-custom dropdown-menu-end" aria-labelledby="userDropdown">
                         <li>
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                <i class="bi bi-person"></i> Identifiant
+                                <i class="bi bi-person"></i> {{ __('Identifiant') }}
                             </a>
                         </li>
                         <li><hr class="dropdown-divider" style="border-color: #3F52A4; opacity: 0.3;"></li>
@@ -288,7 +322,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                                    <i class="bi bi-box-arrow-right"></i> {{ __('Déconnexion') }}
                                 </button>
                             </form>
                         </li>
