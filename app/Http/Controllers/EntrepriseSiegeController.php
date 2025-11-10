@@ -27,11 +27,22 @@ class EntrepriseSiegeController extends Controller
     
     public function index(Request $request)
     {
-        // Seul un SuperAdmin peut voir tous les sièges
-        if (!Gate::allows('superadmin')) {
-            return redirect()->route('sieges.show', auth()->user()->SiegeID);
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur : afficher la liste des sièges (filtrée automatiquement par SiegeScope)
+        if ($user->isTrueSuperAdmin() || $user->isSeller()) {
+            $filters = $request->only(['search', 'Actived', 'sort_by', 'sort_order']);
+            $sieges = $this->repository->getFiltered($filters);
+            
+            return view('sieges.index', compact('sieges', 'filters'));
         }
         
+        // Simple Admin : rediriger vers son siège s'il en a un
+        if ($user->isSimpleAdmin() && $user->SiegeID) {
+            return redirect()->route('sieges.show', $user->SiegeID);
+        }
+        
+        // Simple Admin sans siège : afficher la liste vide
         $filters = $request->only(['search', 'Actived', 'sort_by', 'sort_order']);
         $sieges = $this->repository->getFiltered($filters);
         
@@ -40,10 +51,10 @@ class EntrepriseSiegeController extends Controller
     
     public function create()
     {
-        // Seul un SuperAdmin peut créer des sièges
+        // Seul un vrai SuperAdmin peut créer des sièges (pas les vendeurs)
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('Vous n\'avez pas accès à ce page'));
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         return view('sieges.create');
@@ -51,10 +62,10 @@ class EntrepriseSiegeController extends Controller
     
     public function store(EntrepriseSiegeRequest $request)
     {
-        // Seul un SuperAdmin peut créer des sièges
+        // Seul un vrai SuperAdmin peut créer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('Vous n\'avez pas accès à ce page'));
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         $this->repository->create($request->validated());
@@ -69,7 +80,7 @@ class EntrepriseSiegeController extends Controller
         
         // Vérifier si l'utilisateur peut accéder à ce siège
         if (!Gate::allows('access-siege', $siege->ID)) {
-            abort(403, __('Vous n\'avez pas accès à ce page'));
+            abort(403, __('Vous n\'avez pas accès à cette page'));
         }
         
         // Récupérer les entreprises et employés associés
@@ -81,23 +92,23 @@ class EntrepriseSiegeController extends Controller
     
     public function edit($id)
     {
-        // Seul un SuperAdmin peut éditer des sièges
+        // Seul un vrai SuperAdmin peut éditer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('Vous n\'avez pas accès à ce page'));
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         $siege = $this->repository->findById($id);
         
-        return view('sieges.edit', compact('siege' , 'id'));
+        return view('sieges.edit', compact('siege', 'id'));
     }
     
-    public function update(Request $request , $id)
+    public function update(Request $request, $id)
     {
-        // Seul un SuperAdmin peut mettre à jour des sièges
+        // Seul un vrai SuperAdmin peut mettre à jour des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('Vous n\'avez pas accès à ce page'));
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         $validated = $request->validated();
@@ -105,7 +116,7 @@ class EntrepriseSiegeController extends Controller
         // Forcer Actived à 0 si absent
         $validated['Actived'] = $request->has('Actived') ? 1 : 0;
 
-        $this->repository->update($id, $validated );
+        $this->repository->update($id, $validated);
         
         return redirect()->route('sieges.index')
             ->with('success', __('Siège modifié avec succès'));
@@ -147,10 +158,10 @@ class EntrepriseSiegeController extends Controller
     
     public function destroy($id)
     {
-        // Seul un SuperAdmin peut supprimer des sièges
+        // Seul un vrai SuperAdmin peut supprimer des sièges
         if (!Gate::allows('superadmin')) {
             return redirect()->route('sieges.index')
-                ->with('error', __('Vous n\'avez pas accès à ce page'));
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         $this->repository->delete($id);
