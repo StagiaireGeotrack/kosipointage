@@ -33,51 +33,63 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // ========== Routes pour VENDEURS uniquement ==========
-    // Liste et exports SEULEMENT (pas de create, edit, delete)
-    Route::middleware(['siege.access', 'only.sellers'])->group(function () {
+    // ========== Routes de CONSULTATION accessibles à TOUS ==========
+    // (Vendeurs, Super Admin, Simple Admin)
+    Route::middleware('siege.access')->group(function () {
         
-        // Sièges : LISTE et EXPORTS uniquement
+        // Sièges : LISTE et EXPORTS (accessible à tous)
         Route::get('/sieges', [EntrepriseSiegeController::class, 'index'])->name('sieges.index');
+        Route::get('/sieges/{siege}', [EntrepriseSiegeController::class, 'show'])->name('sieges.show');
         Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
         Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
         
-        // Entreprises : LISTE et EXPORTS uniquement
+        // Entreprises : LISTE et EXPORTS (accessible à tous)
         Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
-        Route::get('/entreprises-export/excel', [EntrepriseController::class, 'exportExcel'])->name('entreprises.export.excel');
-        Route::get('/entreprises-export/pdf', [EntrepriseController::class, 'exportPdf'])->name('entreprises.export.pdf');
-        
-        // Employés : LISTE et EXPORTS uniquement
-        Route::get('/employes', [EmployeController::class, 'index'])->name('employes.index');
-        Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel');
-        Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf');
-    });
-    
-    // ========== Routes pour SUPER ADMIN et SIMPLE ADMIN ==========
-    // CRUD COMPLET (create, store, edit, update, destroy, show)
-    Route::middleware(['siege.access', 'block.sellers'])->group(function () {
-        
-        // CRUD complet des sièges
-        Route::resource('sieges', EntrepriseSiegeController::class)->except(['index']);
-        Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
-        Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
-        Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
-        
-        // CRUD complet des entreprises
-        Route::resource('entreprises', EntrepriseController::class)->except(['index']);
+        Route::get('/entreprises/{entreprise}', [EntrepriseController::class, 'show'])->name('entreprises.show');
         Route::get('/entreprises/{id}/logo', [EntrepriseController::class, 'getLogo'])->name('entreprises.logo');
         Route::get('/entreprises/{id}/logo/thumbnail', [EntrepriseController::class, 'getLogoThumbnail'])->name('entreprises.logo.thumbnail');
         Route::get('/entreprises-export/excel', [EntrepriseController::class, 'exportExcel'])->name('entreprises.export.excel');
         Route::get('/entreprises-export/pdf', [EntrepriseController::class, 'exportPdf'])->name('entreprises.export.pdf');
         
-        // CRUD complet des employés
-        Route::resource('employes', EmployeController::class)->except(['index']);
+        // Employés : LISTE et EXPORTS (accessible à tous)
+        Route::get('/employes', [EmployeController::class, 'index'])->name('employes.index');
+        Route::get('/employes/{employe}', [EmployeController::class, 'show'])->name('employes.show');
         Route::get('/employes/{id}/face', [EmployeController::class, 'getFaceEncoding'])->name('employes.face');
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
         Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel');
         Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf');
+    });
+    
+    // ========== Routes de MODIFICATION interdites aux VENDEURS ==========
+    // (Super Admin et Simple Admin uniquement)
+    Route::middleware(['siege.access', 'block.sellers'])->group(function () {
         
-        // CRUD des pointages
+        // Sièges : CREATE, EDIT, DELETE
+        Route::get('/sieges/create', [EntrepriseSiegeController::class, 'create'])->name('sieges.create');
+        Route::post('/sieges', [EntrepriseSiegeController::class, 'store'])->name('sieges.store');
+        Route::get('/sieges/{siege}/edit', [EntrepriseSiegeController::class, 'edit'])->name('sieges.edit');
+        Route::put('/sieges/{siege}', [EntrepriseSiegeController::class, 'update'])->name('sieges.update');
+        Route::patch('/sieges/{siege}', [EntrepriseSiegeController::class, 'update']);
+        Route::delete('/sieges/{siege}', [EntrepriseSiegeController::class, 'destroy'])->name('sieges.destroy');
+        Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
+        
+        // Entreprises : CREATE, EDIT, DELETE
+        Route::get('/entreprises/create', [EntrepriseController::class, 'create'])->name('entreprises.create');
+        Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
+        Route::get('/entreprises/{entreprise}/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
+        Route::put('/entreprises/{entreprise}', [EntrepriseController::class, 'update'])->name('entreprises.update');
+        Route::patch('/entreprises/{entreprise}', [EntrepriseController::class, 'update']);
+        Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
+        
+        // Employés : CREATE, EDIT, DELETE
+        Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
+        Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
+        Route::get('/employes/{employe}/edit', [EmployeController::class, 'edit'])->name('employes.edit');
+        Route::put('/employes/{employe}', [EmployeController::class, 'update'])->name('employes.update');
+        Route::patch('/employes/{employe}', [EmployeController::class, 'update']);
+        Route::delete('/employes/{employe}', [EmployeController::class, 'destroy'])->name('employes.destroy');
+        
+        // CRUD complet des pointages
         Route::resource('pointages', PointageController::class);
         Route::get('/pointages/{id}/photo', [PointageController::class, 'getPhoto'])->name('pointages.photo');
         Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
