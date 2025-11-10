@@ -147,21 +147,20 @@ class CongeController extends Controller
 
     public function exportExcel(Request $request)
     {
-        $this->prepareExportData($request) ;
-        return $this->exportService->exportToExcel($data, "Liste des congés" );
+        $data = $this->prepareExportData($request);
+        return $this->exportService->exportToExcel($data, "Liste des congés");
     }
 
     public function exportPdf(Request $request)
     {
-        $this->prepareExportData($request) ;
-        return $this->exportService->exportToPdf($data, "Liste des congés" , 'exports.generic' );
+        $data = $this->prepareExportData($request);
+        return $this->exportService->exportToPdf($data, "Liste des congés", 'exports.generic');
     }
 
     public function prepareExportData(Request $request)
     {
-        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
-        $query = Conge::with('employe');        
-        $query = Conge::with('siege');        
+        $filters = $request->only(['SiegeID', 'search', 'type_conge', 'employee_id']);
+        $query = Conge::with(['employe', 'siege']);
         
         if (!empty($filters['SiegeID'])) {
             $query->where('SiegeID', $filters['SiegeID']);
@@ -183,46 +182,42 @@ class CongeController extends Controller
         
         $data = $query->orderBy('date_debut', 'desc')->get()->map(function ($conge) {
             $joursOuvrables = $this->jourOuvrableService->calculerJoursOuvrables(
-                                                $conge->date_debut, 
-                                                $conge->date_fin,
-                                                $conge->employe->SiegeID ?? null
-                                            );
+                $conge->date_debut, 
+                $conge->date_fin,
+                $conge->employe->SiegeID ?? null
+            );
 
             $resultat_duree = "";
 
-            if ($joursOuvrables['jours'] > 0) 
-            {
+            if ($joursOuvrables['jours'] > 0) {
                 $resultat_duree .= round($joursOuvrables['jours']) . " jour(s) ouvrable(s)";
             }
 
-            if ($joursOuvrables['heures'] > 0) 
-            {
-                if ($joursOuvrables['jours'] > 0) 
-                {
+            if ($joursOuvrables['heures'] > 0) {
+                if ($joursOuvrables['jours'] > 0) {
                     $resultat_duree .= " et ";
                 }
                 $resultat_duree .= round($joursOuvrables['heures']) . " heure(s)";
             }
 
-            if ($joursOuvrables['jours'] == 0 && $joursOuvrables['heures'] == 0) 
-            {
+            if ($joursOuvrables['jours'] == 0 && $joursOuvrables['heures'] == 0) {
                 $resultat_duree = "Aucun jour ouvrable";
             }
 
             return [
-                'ID' => $conge->ID ,
-                'Employé(e) ID' => $conge->employe->ID ,
-                'Employé(e) Nom' => $conge->employe->Nom ,
-                'Siège ID' => $conge->siege->ID ,
-                'Siège Nom' => $conge->siege->Nom ,
-                'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
-                'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
-                'Durée' => $resultat_duree ,
-                'Observation / Commentaire' => $conge->commentaire ,
-                'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+                'ID' => $conge->ID,
+                'Employé(e) ID' => $conge->employe->ID,
+                'Employé(e) Nom' => $conge->employe->Nom,
+                'Siège ID' => $conge->siege->ID,
+                'Siège Nom' => $conge->siege->Nom,
+                'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
+                'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
+                'Durée' => $resultat_duree,
+                'Observation / Commentaire' => $conge->commentaire,
+                'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
             ];
         });
 
-        return $data ;
+        return $data;
     }
 }
