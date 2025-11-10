@@ -24,7 +24,7 @@ class SellerController extends Controller
             ->where('IsSuperAdmin', 1)
             ->with('sellerSieges')
             ->orderBy('Identifiant_email')
-            ->get();
+            ->paginate(5);
 
         return view('admin.sellers.index', compact('sellers'));
     }
