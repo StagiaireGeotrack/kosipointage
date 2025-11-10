@@ -72,7 +72,13 @@ class EntrepriseSiegeController extends Controller
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
-        $this->repository->create($request->validated());
+        $validated = $request->validated() ;
+
+        if ( $user->isSeller() ) {
+            $validated["Actived"] = 0 ;
+        }
+
+        $this->repository->create($validated);
         
         return redirect()->route('sieges.index')
             ->with('success', __('Siège créé avec succès'));
