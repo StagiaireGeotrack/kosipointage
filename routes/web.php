@@ -33,17 +33,38 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // ========== Routes de CONSULTATION accessibles à TOUS ==========
-    // (Vendeurs, Super Admin, Simple Admin)
     Route::middleware('siege.access')->group(function () {
         
-        // ========== SIÈGES : Consultation ==========
+        // ========== SIÈGES : CRUD (Super Admin uniquement) ==========
+        // ⚠️ CRITIQUE : Ces routes doivent être AVANT les routes de consultation
+        Route::middleware(['block.sellers', 'block.simple.admin.sieges'])->group(function () {
+            Route::get('/sieges/create', [EntrepriseSiegeController::class, 'create'])->name('sieges.create');
+            Route::post('/sieges', [EntrepriseSiegeController::class, 'store'])->name('sieges.store');
+            Route::get('/sieges/{siege}/edit', [EntrepriseSiegeController::class, 'edit'])->name('sieges.edit');
+            Route::put('/sieges/{siege}', [EntrepriseSiegeController::class, 'update'])->name('sieges.update');
+            Route::patch('/sieges/{siege}', [EntrepriseSiegeController::class, 'update']);
+            Route::delete('/sieges/{siege}', [EntrepriseSiegeController::class, 'destroy'])->name('sieges.destroy');
+            Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
+        });
+        
+        // ========== SIÈGES : Consultation (Tous) ==========
         Route::get('/sieges', [EntrepriseSiegeController::class, 'index'])->name('sieges.index');
         Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
         Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
         Route::get('/sieges/{siege}', [EntrepriseSiegeController::class, 'show'])->name('sieges.show');
         
-        // ========== ENTREPRISES : Consultation ==========
+        // ========== ENTREPRISES : CRUD (Super Admin + Simple Admin) ==========
+        // ⚠️ CRITIQUE : Ces routes doivent être AVANT les routes de consultation
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/entreprises/create', [EntrepriseController::class, 'create'])->name('entreprises.create');
+            Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
+            Route::get('/entreprises/{entreprise}/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
+            Route::put('/entreprises/{entreprise}', [EntrepriseController::class, 'update'])->name('entreprises.update');
+            Route::patch('/entreprises/{entreprise}', [EntrepriseController::class, 'update']);
+            Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
+        });
+        
+        // ========== ENTREPRISES : Consultation (Tous) ==========
         Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
         Route::get('/entreprises-export/excel', [EntrepriseController::class, 'exportExcel'])->name('entreprises.export.excel');
         Route::get('/entreprises-export/pdf', [EntrepriseController::class, 'exportPdf'])->name('entreprises.export.pdf');
@@ -51,93 +72,80 @@ Route::middleware('auth')->group(function () {
         Route::get('/entreprises/{id}/logo', [EntrepriseController::class, 'getLogo'])->name('entreprises.logo');
         Route::get('/entreprises/{id}/logo/thumbnail', [EntrepriseController::class, 'getLogoThumbnail'])->name('entreprises.logo.thumbnail');
         
-        // ========== EMPLOYÉS : Consultation ==========
+        // ========== EMPLOYÉS : CRUD (Super Admin + Simple Admin) ==========
+        // ⚠️ CRITIQUE : Ces routes doivent être AVANT les routes de consultation
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
+            Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
+            Route::get('/employes/{employe}/edit', [EmployeController::class, 'edit'])->name('employes.edit');
+            Route::put('/employes/{employe}', [EmployeController::class, 'update'])->name('employes.update');
+            Route::patch('/employes/{employe}', [EmployeController::class, 'update']);
+            Route::delete('/employes/{employe}', [EmployeController::class, 'destroy'])->name('employes.destroy');
+        });
+        
+        // ========== EMPLOYÉS : Consultation (Tous) ==========
         Route::get('/employes', [EmployeController::class, 'index'])->name('employes.index');
         Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel');
         Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf');
         Route::get('/employes/{employe}', [EmployeController::class, 'show'])->name('employes.show');
         Route::get('/employes/{id}/face', [EmployeController::class, 'getFaceEncoding'])->name('employes.face');
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
-    });
-    
-    // ========== Routes INTERDITES aux VENDEURS ==========
-    // (Super Admin et Simple Admin uniquement)
-    Route::middleware(['siege.access', 'block.sellers'])->group(function () {
         
-        // ========== ENTREPRISES : CRUD (sauf consultation) ==========
-        Route::get('/entreprises/create', [EntrepriseController::class, 'create'])->name('entreprises.create');
-        Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
-        Route::get('/entreprises/{entreprise}/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
-        Route::put('/entreprises/{entreprise}', [EntrepriseController::class, 'update'])->name('entreprises.update');
-        Route::patch('/entreprises/{entreprise}', [EntrepriseController::class, 'update']);
-        Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
+        // ========== POINTAGES : CRUD complet (Super Admin + Simple Admin) ==========
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/pointages', [PointageController::class, 'index'])->name('pointages.index');
+            Route::get('/pointages/create', [PointageController::class, 'create'])->name('pointages.create');
+            Route::post('/pointages', [PointageController::class, 'store'])->name('pointages.store');
+            Route::get('/pointages-export/excel', [PointageController::class, 'exportExcel'])->name('pointages.export.excel');
+            Route::get('/pointages-export/pdf', [PointageController::class, 'exportPdf'])->name('pointages.export.pdf');
+            Route::get('/pointages/get-employes-by-siege/{SiegeID}', [PointageController::class, 'getEmployesBySiege'])->name('pointages.employees-by-siege');
+            Route::get('/pointages/details/{employe}/{date}', [PointageController::class, 'showDetails'])->name('pointages.show.details');
+            Route::get('/pointages/{pointage}', [PointageController::class, 'show'])->name('pointages.show');
+            Route::get('/pointages/{pointage}/edit', [PointageController::class, 'edit'])->name('pointages.edit');
+            Route::put('/pointages/{pointage}', [PointageController::class, 'update'])->name('pointages.update');
+            Route::patch('/pointages/{pointage}', [PointageController::class, 'update']);
+            Route::delete('/pointages/{pointage}', [PointageController::class, 'destroy'])->name('pointages.destroy');
+            Route::get('/pointages/{id}/photo', [PointageController::class, 'getPhoto'])->name('pointages.photo');
+            Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
+        });
         
-        // ========== EMPLOYÉS : CRUD (sauf consultation) ==========
-        Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
-        Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
-        Route::get('/employes/{employe}/edit', [EmployeController::class, 'edit'])->name('employes.edit');
-        Route::put('/employes/{employe}', [EmployeController::class, 'update'])->name('employes.update');
-        Route::patch('/employes/{employe}', [EmployeController::class, 'update']);
-        Route::delete('/employes/{employe}', [EmployeController::class, 'destroy'])->name('employes.destroy');
-        
-        // ========== POINTAGES : CRUD complet ==========
-        Route::get('/pointages', [PointageController::class, 'index'])->name('pointages.index');
-        Route::get('/pointages/create', [PointageController::class, 'create'])->name('pointages.create');
-        Route::post('/pointages', [PointageController::class, 'store'])->name('pointages.store');
-        Route::get('/pointages-export/excel', [PointageController::class, 'exportExcel'])->name('pointages.export.excel');
-        Route::get('/pointages-export/pdf', [PointageController::class, 'exportPdf'])->name('pointages.export.pdf');
-        Route::get('/pointages/get-employes-by-siege/{SiegeID}', [PointageController::class, 'getEmployesBySiege'])->name('pointages.employees-by-siege');
-        Route::get('/pointages/details/{employe}/{date}', [PointageController::class, 'showDetails'])->name('pointages.show.details');
-        Route::get('/pointages/{pointage}', [PointageController::class, 'show'])->name('pointages.show');
-        Route::get('/pointages/{pointage}/edit', [PointageController::class, 'edit'])->name('pointages.edit');
-        Route::put('/pointages/{pointage}', [PointageController::class, 'update'])->name('pointages.update');
-        Route::patch('/pointages/{pointage}', [PointageController::class, 'update']);
-        Route::delete('/pointages/{pointage}', [PointageController::class, 'destroy'])->name('pointages.destroy');
-        Route::get('/pointages/{id}/photo', [PointageController::class, 'getPhoto'])->name('pointages.photo');
-        Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
-        
-        // ========== RAPPORTS ==========
-        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-        Route::get('/reports/daily', [ReportController::class, 'daily'])->name('reports.daily');
-        Route::get('/reports/day-night', [ReportController::class, 'dayNight'])->name('reports.day-night');
-        Route::get('/reports/export/excel/{type}', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
-        Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
-        Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
+        // ========== RAPPORTS (Super Admin + Simple Admin) ==========
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/reports/daily', [ReportController::class, 'daily'])->name('reports.daily');
+            Route::get('/reports/day-night', [ReportController::class, 'dayNight'])->name('reports.day-night');
+            Route::get('/reports/export/excel/{type}', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
+            Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
+            Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
+        });
 
-        // ========== CONGÉS ==========
-        Route::get('/conges', [CongeController::class, 'index'])->name('conges.index');
-        Route::get('/conges/create', [CongeController::class, 'create'])->name('conges.create');
-        Route::post('/conges', [CongeController::class, 'store'])->name('conges.store');
-        Route::get('/conges-export/excel', [CongeController::class, 'exportExcel'])->name('conges.export.excel');
-        Route::get('/conges-export/pdf', [CongeController::class, 'exportPdf'])->name('conges.export.pdf');
-        Route::get('/conges/{conge}', [CongeController::class, 'show'])->name('conges.show');
-        Route::get('/conges/{conge}/edit', [CongeController::class, 'edit'])->name('conges.edit');
-        Route::put('/conges/{conge}', [CongeController::class, 'update'])->name('conges.update');
-        Route::patch('/conges/{conge}', [CongeController::class, 'update']);
-        Route::delete('/conges/{conge}', [CongeController::class, 'destroy'])->name('conges.destroy');
+        // ========== CONGÉS : CRUD complet (Super Admin + Simple Admin) ==========
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/conges', [CongeController::class, 'index'])->name('conges.index');
+            Route::get('/conges/create', [CongeController::class, 'create'])->name('conges.create');
+            Route::post('/conges', [CongeController::class, 'store'])->name('conges.store');
+            Route::get('/conges-export/excel', [CongeController::class, 'exportExcel'])->name('conges.export.excel');
+            Route::get('/conges-export/pdf', [CongeController::class, 'exportPdf'])->name('conges.export.pdf');
+            Route::get('/conges/{conge}', [CongeController::class, 'show'])->name('conges.show');
+            Route::get('/conges/{conge}/edit', [CongeController::class, 'edit'])->name('conges.edit');
+            Route::put('/conges/{conge}', [CongeController::class, 'update'])->name('conges.update');
+            Route::patch('/conges/{conge}', [CongeController::class, 'update']);
+            Route::delete('/conges/{conge}', [CongeController::class, 'destroy'])->name('conges.destroy');
+        });
         
-        // ========== JOURS NON TRAVAILLÉS ==========
-        Route::get('/jours-non-travailles', [JourNonTravailleController::class, 'index'])->name('jours-non-travailles.index');
-        Route::get('/jours-non-travailles/create', [JourNonTravailleController::class, 'create'])->name('jours-non-travailles.create');
-        Route::post('/jours-non-travailles', [JourNonTravailleController::class, 'store'])->name('jours-non-travailles.store');
-        Route::get('/jours-non-travailles-export/excel', [JourNonTravailleController::class, 'exportExcel'])->name('jours-non-travailles.export.excel');
-        Route::get('/jours-non-travailles-export/pdf', [JourNonTravailleController::class, 'exportPdf'])->name('jours-non-travailles.export.pdf');
-        Route::get('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'show'])->name('jours-non-travailles.show');
-        Route::get('/jours-non-travailles/{jours_non_travaille}/edit', [JourNonTravailleController::class, 'edit'])->name('jours-non-travailles.edit');
-        Route::put('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'update'])->name('jours-non-travailles.update');
-        Route::patch('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'update']);
-        Route::delete('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'destroy'])->name('jours-non-travailles.destroy');
-    });
-    
-    // ========== Routes SIÈGES : CRUD (Super Admin uniquement, Simple Admin bloqué) ==========
-    Route::middleware(['siege.access', 'block.sellers', 'block.simple.admin.sieges'])->group(function () {
-        Route::get('/sieges/create', [EntrepriseSiegeController::class, 'create'])->name('sieges.create');
-        Route::post('/sieges', [EntrepriseSiegeController::class, 'store'])->name('sieges.store');
-        Route::get('/sieges/{siege}/edit', [EntrepriseSiegeController::class, 'edit'])->name('sieges.edit');
-        Route::put('/sieges/{siege}', [EntrepriseSiegeController::class, 'update'])->name('sieges.update');
-        Route::patch('/sieges/{siege}', [EntrepriseSiegeController::class, 'update']);
-        Route::delete('/sieges/{siege}', [EntrepriseSiegeController::class, 'destroy'])->name('sieges.destroy');
-        Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
+        // ========== JOURS NON TRAVAILLÉS : CRUD complet (Super Admin + Simple Admin) ==========
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/jours-non-travailles', [JourNonTravailleController::class, 'index'])->name('jours-non-travailles.index');
+            Route::get('/jours-non-travailles/create', [JourNonTravailleController::class, 'create'])->name('jours-non-travailles.create');
+            Route::post('/jours-non-travailles', [JourNonTravailleController::class, 'store'])->name('jours-non-travailles.store');
+            Route::get('/jours-non-travailles-export/excel', [JourNonTravailleController::class, 'exportExcel'])->name('jours-non-travailles.export.excel');
+            Route::get('/jours-non-travailles-export/pdf', [JourNonTravailleController::class, 'exportPdf'])->name('jours-non-travailles.export.pdf');
+            Route::get('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'show'])->name('jours-non-travailles.show');
+            Route::get('/jours-non-travailles/{jours_non_travaille}/edit', [JourNonTravailleController::class, 'edit'])->name('jours-non-travailles.edit');
+            Route::put('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'update'])->name('jours-non-travailles.update');
+            Route::patch('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'update']);
+            Route::delete('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'destroy'])->name('jours-non-travailles.destroy');
+        });
     });
     
     // ========== Routes accessibles uniquement aux VRAIS SuperAdmin ==========
