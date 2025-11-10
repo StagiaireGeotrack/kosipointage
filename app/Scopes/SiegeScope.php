@@ -20,11 +20,44 @@ class SiegeScope implements Scope
         
         $admin = Auth::user();
         
-        // Si l'administrateur n'est pas SuperAdmin, limiter aux données de son siège
-        if (!$admin->IsSuperAdmin) {
-            $table = $model->getTable();
+        // Si c'est un vrai Super Admin (pas un vendeur), pas de restriction
+        if ($admin->isTrueSuperAdmin()) {
+            return;
+        }
+        
+        $table = $model->getTable();
+        
+        // Gestion pour les vendeurs
+        if ($admin->isSeller()) {
+            $siegeIds = $admin->getSiegeIdsAccessibles();
             
-            // Vérifier si la table a une colonne SiegeID avant d'appliquer le scope
+            // Si le vendeur n'a aucun siège assigné, bloquer l'accès
+            if (empty($siegeIds)) {
+                $builder->whereRaw('1 = 0');
+                return;
+            }
+            
+            // Vérifier si la table a une colonne SiegeID
+            if (Schema::hasColumn($table, 'SiegeID')) {
+                $builder->whereIn($table . '.SiegeID', $siegeIds);
+            }
+            // Si c'est la table Entreprises_sieges, filtrer par ID
+            elseif ($table === 'Entreprises_sieges') {
+                $builder->whereIn($table . '.ID', $siegeIds);
+            }
+            
+            return;
+        }
+        
+        // Gestion pour les Simple Admin
+        if ($admin->isSimpleAdmin()) {
+            // Si le Simple Admin n'a pas de siège assigné, bloquer l'accès
+            if (!$admin->SiegeID) {
+                $builder->whereRaw('1 = 0');
+                return;
+            }
+            
+            // Vérifier si la table a une colonne SiegeID
             if (Schema::hasColumn($table, 'SiegeID')) {
                 $builder->where($table . '.SiegeID', $admin->SiegeID);
             }
