@@ -10,22 +10,30 @@ use App\Models\Administration;
 
 class AuthServiceProvider extends ServiceProvider
 {
+    /**
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
     protected $policies = [
         //
     ];
     
+    /**
+     * Register any authentication / authorization services.
+     */
     public function boot(): void
     {
         $this->registerPolicies(); 
         
-        // Définition du Gate pour les SuperAdmins
+        // Définition du Gate pour les SuperAdmins (vrais Super Admin uniquement, pas les vendeurs)
         Gate::define('superadmin', function (Administration $user) {
-            return $user->IsSuperAdmin;
+            return $user->isTrueSuperAdmin();
         });
         
         // Définition du Gate pour l'accès au siège
         Gate::define('access-siege', function (Administration $user, $siegeId) {
-            return $user->IsSuperAdmin || $user->SiegeID == $siegeId;
+            return $user->isTrueSuperAdmin() || $user->hasAccessToSiege($siegeId);
         });
     }
 }
