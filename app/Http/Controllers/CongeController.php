@@ -207,31 +207,31 @@ class CongeController extends Controller
         }
         
         $data = $query->orderBy('date_debut', 'desc')->get()->map(function ($conge) {
-            $joursOuvrables = $this->$jourOuvrableService->calculerJoursOuvrables(
+            $joursOuvrables = $this->jourOuvrableService->calculerJoursOuvrables(
                                                 $conge->date_debut, 
                                                 $conge->date_fin,
                                                 $conge->employe->SiegeID ?? null
                                             );
 
-            $resultat_duree = "" ;
-            
-            if( $joursOuvrables['jours'] > 0 )
+            $resultat_duree = "";
+
+            if ($joursOuvrables['jours'] > 0) 
             {
-                $resultat_duree += round( $joursOuvrables['jours'] ) . " jour(s) ouvrable(s)" ;
+                $resultat_duree .= round($joursOuvrables['jours']) . " jour(s) ouvrable(s)";
             }
 
-            if( $joursOuvrables['heures'] > 0 )
+            if ($joursOuvrables['heures'] > 0) 
             {
-                if( $joursOuvrables['jours'] > 0 )
+                if ($joursOuvrables['jours'] > 0) 
                 {
-                    $resultat_duree += " et" ;
+                    $resultat_duree .= " et ";
                 }
-                $resultat_duree += round( $joursOuvrables['heures'] ) ;
+                $resultat_duree .= round($joursOuvrables['heures']) . " heure(s)";
             }
 
-            if( $joursOuvrables['jours'] == 0 && $joursOuvrables['heures'] == 0 )
+            if ($joursOuvrables['jours'] == 0 && $joursOuvrables['heures'] == 0) 
             {
-                $resultat_duree += "Aucun jour ouvrable" ;
+                $resultat_duree = "Aucun jour ouvrable";
             }
 
             return [
