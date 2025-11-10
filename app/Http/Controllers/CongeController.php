@@ -34,7 +34,7 @@ class CongeController extends Controller
         
         if (!empty($filters['search'])) {
             $query->whereHas('employe', function($q) use ($filters) {
-                $q->where('Nom', 'like', '%' . $filters['search'] . '%');
+                $q->where('Nom', 'like', '%' . $filters['search'] . '%'); 
             });
         }
         

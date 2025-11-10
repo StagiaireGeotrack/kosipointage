@@ -17,6 +17,7 @@
                 <!-- Filtres -->
                 <form action="{{ route('pointages.index') }}" method="GET" class="mb-4">
                     <div class="row g-3 mb-3">
+                        
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="search" :value="__('Recherche')" />
                             <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID ou Code PIN') }}" />
