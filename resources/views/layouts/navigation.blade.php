@@ -240,14 +240,14 @@
                 </li>
                 @endcan                
                 
-                {{-- Siège : Visible par tous (Super Admin, Vendeur, Simple Admin) --}}
+                {{-- Siège : Visible par tous (Super Admin, Revendeur, Simple Admin) --}}
                 <li class="nav-item">
                     <a href="{{ route('sieges.index') }}" class="nav-link {{ request()->routeIs('sieges.*') ? 'active-link' : '' }}">
                         <i class="bi bi-building"></i> {{ __('Siège') }}
                     </a>
                 </li>
 
-                {{-- Administrateur et Vendeur : Seulement pour les vrais Super Admin --}}
+                {{-- Administrateur et Revendeur : Seulement pour les vrais Super Admin --}}
                 @can('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'active-link' : '' }}">
@@ -257,19 +257,19 @@
 
                 <li class="nav-item">
                     <a href="{{ route('sellers.index') }}" class="nav-link {{ request()->routeIs('sellers.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-shop-window"></i> {{ __('Vendeur') }}
+                        <i class="bi bi-shop-window"></i> {{ __('Revendeur') }}
                     </a>
                 </li>
                 @endcan
                 
-                {{-- Entreprises : Visible par tous (Super Admin, Vendeur, Simple Admin) --}}
+                {{-- Entreprises : Visible par tous (Super Admin, Revendeur, Simple Admin) --}}
                 <li class="nav-item">
                     <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'active-link' : '' }}">
                         <i class="bi bi-shop"></i> {{ __('Site ou établissement') }}
                     </a>
                 </li>
                 
-                {{-- Employés : Visible par tous (Super Admin, Vendeur, Simple Admin) --}}
+                {{-- Employés : Visible par tous (Super Admin, Revendeur, Simple Admin) --}}
                 <li class="nav-item">
                     <a href="{{ route('employes.index') }}" class="nav-link {{ request()->routeIs('employes.*') ? 'active-link' : '' }}">
                         <i class="bi bi-people"></i> {{ __('Employé') }}
@@ -318,7 +318,7 @@
                         @if(Auth::user()->isTrueSuperAdmin())
                             <span class="badge-custom">{{ __('Super Administrateur') }}</span>
                         @elseif(Auth::user()->isSeller())
-                            <span class="badge-seller">{{ __('Vendeur') }}</span>
+                            <span class="badge-seller">{{ __('Revendeur') }}</span>
                         @else
                             <span class="badge-simple">{{ __('Simple Administrateur') }}</span>
                         @endif
