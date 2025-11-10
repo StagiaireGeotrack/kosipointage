@@ -40,7 +40,8 @@ class Administration extends Authenticatable
         'IsSuperAdmin' => 'boolean',
         'IsSeller' => 'boolean',
         'Actived' => 'boolean',
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     public $timestamps = false;
