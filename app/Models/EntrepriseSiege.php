@@ -49,4 +49,16 @@ class EntrepriseSiege extends Model
         parent::boot();
         static::addGlobalScope(new SiegeScope());
     }
+
+    public function sellers()
+    {
+        return $this->belongsToMany(
+            Administration::class,
+            'seller_sieges',
+            'SiegeID',
+            'SellerID',
+            'ID',
+            'ID'
+        )->withPivot('CreatedAt');
+    }
 }
