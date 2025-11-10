@@ -26,6 +26,7 @@ class Administration extends Authenticatable
         'Identifiant_email',
         'Password_',
         'IsSuperAdmin',
+        'IsSeller',
         'SiegeID',
         'Actived'
     ];
@@ -38,6 +39,7 @@ class Administration extends Authenticatable
     protected $casts = [
         'IsSuperAdmin' => 'boolean',
         'Actived' => 'boolean',
+        'IsSeller' => 'boolean',
         'created_at' => 'datetime'
     ];
     

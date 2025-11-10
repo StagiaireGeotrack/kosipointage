@@ -259,7 +259,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('jours-non-travailles.index') }}" class="nav-link {{ request()->routeIs('jours-non-travailles.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-file-earmark-text"></i> Jour
+                        <i class="bi bi-file-earmark-text"></i> Jour férié
                     </a>
                 </li>
 

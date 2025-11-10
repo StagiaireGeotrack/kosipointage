@@ -22,7 +22,7 @@
                         
                         <!-- Nom -->
                         <div class="col-md-6 mb-3">
-                            <x-input-label for="Nom" :value="__('Nom du jour')" />
+                            <x-input-label for="Nom" :value="__('Jour férié')" />
                             <x-text-input id="Nom" name="Nom" type="text" class="form-control mt-1" :value="old('Nom')" placeholder="{{ __('Ex: Fête nationale') }}" required />
                             <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
@@ -36,6 +36,7 @@
                                 <option value="">{{ __('Sélectionnez un type') }}</option>
                                 <option value="ferie" {{ old('Type') == 'ferie' ? 'selected' : '' }}>{{ __('Férié') }}</option>
                                 <option value="fermeture" {{ old('Type') == 'fermeture' ? 'selected' : '' }}>{{ __('Fermeture exceptionnelle') }}</option>
+                                <option value="CT" {{ old('Type') == 'CT' ? 'selected' : '' }}>{{ __('Chômage technique') }}</option>
                                 <option value="autre" {{ old('Type') == 'autre' ? 'selected' : '' }}>{{ __('Autre') }}</option>
                             </select>
                             <x-input-error :messages="$errors->get('Type')" class="mt-2" />
