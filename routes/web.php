@@ -33,29 +33,36 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Routes protégées par le middleware siege.access
+    // ========== Routes accessibles aux VENDEURS ==========
+    // Sièges, Employés, Sites (Entreprises) uniquement
     Route::middleware('siege.access')->group(function () {
-        // CRUD des entreprises
+        
+        // CRUD des sièges (Vendeurs OK)
+        Route::resource('sieges', EntrepriseSiegeController::class);
+        Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
+        Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
+        Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
+        
+        // CRUD des sites/entreprises (Vendeurs OK)
         Route::resource('entreprises', EntrepriseController::class);
         Route::get('/entreprises/{id}/logo', [EntrepriseController::class, 'getLogo'])->name('entreprises.logo');
         Route::get('/entreprises/{id}/logo/thumbnail', [EntrepriseController::class, 'getLogoThumbnail'])->name('entreprises.logo.thumbnail');
         Route::get('/entreprises-export/excel', [EntrepriseController::class, 'exportExcel'])->name('entreprises.export.excel');
         Route::get('/entreprises-export/pdf', [EntrepriseController::class, 'exportPdf'])->name('entreprises.export.pdf');
         
-        // CRUD des sièges
-        Route::resource('sieges', EntrepriseSiegeController::class);
-        Route::patch("/update-siege" , [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
-        Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
-        Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
-        
-        // CRUD des employés
+        // CRUD des employés (Vendeurs OK)
         Route::resource('employes', EmployeController::class);
         Route::get('/employes/{id}/face', [EmployeController::class, 'getFaceEncoding'])->name('employes.face');
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
         Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel');
         Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf');
+    });
+    
+    // ========== Routes INTERDITES aux VENDEURS ==========
+    // Pointages, Rapports, Congés, Jours fériés (Super Admin et Simple Admin uniquement)
+    Route::middleware(['siege.access', 'block.sellers'])->group(function () {
         
-        // CRUD des pointages
+        // CRUD des pointages (Vendeurs NON)
         Route::resource('pointages', PointageController::class);
         Route::get('/pointages/{id}/photo', [PointageController::class, 'getPhoto'])->name('pointages.photo');
         Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
@@ -64,7 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pointages/get-employes-by-siege/{SiegeID}', [PointageController::class, 'getEmployesBySiege'])->name('pointages.employees-by-siege');
         Route::get('/pointages/details/{employe}/{date}', [PointageController::class, 'showDetails'])->name('pointages.show.details');
         
-        // Rapports
+        // Rapports (Vendeurs NON)
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/daily', [ReportController::class, 'daily'])->name('reports.daily');
         Route::get('/reports/day-night', [ReportController::class, 'dayNight'])->name('reports.day-night');
@@ -72,19 +79,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
         Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
 
-        // Congés
+        // Congés (Vendeurs NON)
         Route::resource('conges', CongeController::class);
         Route::get('/conges-export/excel', [CongeController::class, 'exportExcel'])->name('conges.export.excel');
         Route::get('/conges-export/pdf', [CongeController::class, 'exportPdf'])->name('conges.export.pdf');
         
-        // CRUD des jours non travaillés
+        // CRUD des jours non travaillés (Vendeurs NON)
         Route::resource('jours-non-travailles', JourNonTravailleController::class);
         Route::get('/jours-non-travailles-export/excel', [JourNonTravailleController::class, 'exportExcel'])->name('jours-non-travailles.export.excel');
         Route::get('/jours-non-travailles-export/pdf', [JourNonTravailleController::class, 'exportPdf'])->name('jours-non-travailles.export.pdf');
-
     });
     
-    // Routes accessibles uniquement aux SuperAdmin
+    // ========== Routes accessibles uniquement aux VRAIS SuperAdmin ==========
     Route::middleware('can:superadmin')->group(function () {
 
         // CRUD des administrateurs
@@ -98,7 +104,6 @@ Route::middleware('auth')->group(function () {
 
         // Dashboard (SuperAdmin uniquement)
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
     });
 });
 
