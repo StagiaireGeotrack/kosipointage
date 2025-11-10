@@ -32,7 +32,14 @@ class AuthServiceProvider extends ServiceProvider
         });
         
         // Définition du Gate pour l'accès au siège
-        Gate::define('access-siege', function (Administration $user, $siegeId) {
+        // ⚠️ MODIFIÉ : Le $siegeId est maintenant optionnel
+        Gate::define('access-siege', function (Administration $user, $siegeId = null) {
+            // Si pas de siegeId fourni, vérifier juste si l'utilisateur a des accès
+            if ($siegeId === null) {
+                return $user->isTrueSuperAdmin() || !empty($user->getSiegeIdsAccessibles());
+            }
+            
+            // Sinon, vérifier l'accès au siège spécifique
             return $user->isTrueSuperAdmin() || $user->hasAccessToSiege($siegeId);
         });
     }
