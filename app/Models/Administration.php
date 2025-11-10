@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Scopes\SiegeScope;
 
 class Administration extends Authenticatable
 {
@@ -37,8 +38,8 @@ class Administration extends Authenticatable
     
     protected $casts = [
         'IsSuperAdmin' => 'boolean',
-        'Actived' => 'boolean',
         'IsSeller' => 'boolean',
+        'Actived' => 'boolean',
         'created_at' => 'datetime'
     ];
 
@@ -91,17 +92,25 @@ class Administration extends Authenticatable
         return $this->where('Identifiant_email', $username)->first();
     }
 
-    // Récupère tous les IDs des sièges accessibles pour cet utilisateur
+    /**
+     * Récupère tous les IDs des sièges accessibles pour cet utilisateur
+     * ⚠️ CRITIQUE : Utiliser withoutGlobalScope pour éviter la boucle infinie
+     */
     public function getSiegeIdsAccessibles(): array
     {
         // Vrai Super Admin : accès à tous les sièges
         if ($this->isTrueSuperAdmin()) {
-            return EntrepriseSiege::pluck('ID')->toArray();
+            return EntrepriseSiege::withoutGlobalScope(SiegeScope::class)
+                ->pluck('ID')
+                ->toArray();
         }
 
         // Vendeur : accès aux sièges assignés dans seller_sieges
         if ($this->isSeller()) {
-            return $this->sellerSieges()->pluck('Entreprises_sieges.ID')->toArray();
+            return $this->sellerSieges()
+                ->withoutGlobalScope(SiegeScope::class)
+                ->pluck('Entreprises_sieges.ID')
+                ->toArray();
         }
 
         // Simple Admin : accès uniquement à son siège
