@@ -13,6 +13,7 @@ use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\EntrepriseSiegeController;
 use App\Http\Controllers\JourNonTravailleController;
+use App\Http\Controllers\Admin\SellerController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -90,6 +91,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('administrateurs', AdministrationController::class);
         Route::get('/administrateurs-export/excel', [AdministrationController::class, 'exportExcel'])->name('administrateurs.export.excel');
         Route::get('/administrateurs-export/pdf', [AdministrationController::class, 'exportPdf'])->name('administrateurs.export.pdf');
+
+        // CRUD des vendeurs
+        Route::resource('sellers', SellerController::class);
+        Route::post('sellers/{id}/toggle-active', [SellerController::class, 'toggleActive'])->name('sellers.toggle-active');
 
         // Dashboard (SuperAdmin uniquement)
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
