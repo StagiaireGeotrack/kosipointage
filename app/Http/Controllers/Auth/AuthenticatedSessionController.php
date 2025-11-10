@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -54,9 +53,16 @@ class AuthenticatedSessionController extends Controller
         Auth::login($admin, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        if ($admin->IsSuperAdmin) {
+        if ($admin->isTrueSuperAdmin() ) 
+        {
             return redirect()->intended(route('dashboard'));
-        } else {
+        } 
+        elseif($admin->isSimpleAdmin() ) 
+        {        
+            return redirect()->intended(route('sieges.index'));
+        }
+        else
+        {
             return redirect()->intended(route('sieges.index'));
         }
     }
