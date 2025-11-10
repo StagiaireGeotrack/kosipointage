@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'siege.access' => \App\Http\Middleware\SiegeAccessMiddleware::class,
             'block.sellers' => \App\Http\Middleware\BlockSellers::class,
+            'only.sellers' => \App\Http\Middleware\OnlySellers::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

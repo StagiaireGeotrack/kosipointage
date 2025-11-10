@@ -62,7 +62,7 @@ class EntrepriseSiegeController extends Controller
         return view('sieges.create');
     }
     
-    public function store(EntrepriseSiegeRequest $request)
+    public function store(EntrepriseSiegeRequest $request) 
     {
         $user = auth()->user();
         
