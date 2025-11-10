@@ -7,14 +7,17 @@ use App\Models\Employe;
 use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
+use App\Services\JourOuvrableService;
 
 class CongeController extends Controller
 {
     protected $exportService;
+    protected $jourOuvrableService;
 
-    public function __construct(ExportService $exportService)
+    public function __construct(ExportService $exportService , JourOuvrableService $jourOuvrableService )
     {
         $this->exportService = $exportService;
+        $this->jourOuvrableService = $jourOuvrableService;
     }
 
     public function index(Request $request)
@@ -204,6 +207,33 @@ class CongeController extends Controller
         }
         
         $data = $query->orderBy('date_debut', 'desc')->get()->map(function ($conge) {
+            $joursOuvrables = $this->$jourOuvrableService->calculerJoursOuvrables(
+                                                $conge->date_debut, 
+                                                $conge->date_fin,
+                                                $conge->employe->SiegeID ?? null
+                                            );
+
+            $resultat_duree = "" ;
+            
+            if( $joursOuvrables['jours'] > 0 )
+            {
+                $resultat_duree += round( $joursOuvrables['jours'] ) . " jour(s) ouvrable(s)" ;
+            }
+
+            if( $joursOuvrables['heures'] > 0 )
+            {
+                if( $joursOuvrables['jours'] > 0 )
+                {
+                    $resultat_duree += " et" ;
+                }
+                $resultat_duree += round( $joursOuvrables['heures'] ) ;
+            }
+
+            if( $joursOuvrables['jours'] == 0 && $joursOuvrables['heures'] == 0 )
+            {
+                $resultat_duree += "Aucun jour ouvrable" ;
+            }
+
             return [
                 'ID' => $conge->ID ,
                 'Employé(e) ID' => $conge->employe->ID ,
@@ -212,6 +242,7 @@ class CongeController extends Controller
                 'Siège Nom' => $conge->siege->Nom ,
                 'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
                 'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
+                'Durée' => $resultat_duree ,
                 'Observation / Commentaire' => $conge->commentaire ,
                 'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : '') ,
             ];
