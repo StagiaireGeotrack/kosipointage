@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('jours-non-travailles', JourNonTravailleController::class);
         Route::get('/jours-non-travailles-export/excel', [JourNonTravailleController::class, 'exportExcel'])->name('jours-non-travailles.export.excel');
         Route::get('/jours-non-travailles-export/pdf', [JourNonTravailleController::class, 'exportPdf'])->name('jours-non-travailles.export.pdf');
+
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
     
     // ========== Routes accessibles uniquement aux VRAIS SuperAdmin ==========

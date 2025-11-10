@@ -14,9 +14,12 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // Vérifier si l'utilisateur est SuperAdmin
-        if (!Gate::allows('superadmin')) {
-            return redirect()->route('home');
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent éditer des sièges
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         // Période par défaut (aujourd'hui)

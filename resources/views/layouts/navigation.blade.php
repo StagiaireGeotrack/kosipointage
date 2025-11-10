@@ -216,7 +216,7 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-custom">
     <div class="container-fluid">
         <!-- Logo et titre -->
-        <a href="{{ route('dashboard') }}" class="navbar-brand d-flex align-items-center">
+        <a href="{{ auth()->user()->isTrueSuperAdmin() ? route('dashboard') : route('sieges.index') }}" class="navbar-brand d-flex align-items-center">
             <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="60" class="me-2">
             <h1 class="fs-4 mb-0">{{ __('KOSI-TIME') }}</h1>
         </a>
@@ -231,6 +231,7 @@
             
             <ul class="navbar-nav me-auto">
                 
+                {{-- Tableau de bord : Seulement pour les vrais Super Admin --}}
                 @can('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active-link' : '' }}">
@@ -239,12 +240,14 @@
                 </li>
                 @endcan                
                 
+                {{-- Siège : Visible par tous (Super Admin, Vendeur, Simple Admin) --}}
                 <li class="nav-item">
                     <a href="{{ route('sieges.index') }}" class="nav-link {{ request()->routeIs('sieges.*') ? 'active-link' : '' }}">
                         <i class="bi bi-building"></i> {{ __('Siège') }}
                     </a>
                 </li>
 
+                {{-- Administrateur et Vendeur : Seulement pour les vrais Super Admin --}}
                 @can('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('administrateurs.index') }}" class="nav-link {{ request()->routeIs('administrateurs.*') ? 'active-link' : '' }}">
@@ -259,41 +262,50 @@
                 </li>
                 @endcan
                 
+                {{-- Entreprises : Visible par tous (Super Admin, Vendeur, Simple Admin) --}}
                 <li class="nav-item">
                     <a href="{{ route('entreprises.index') }}" class="nav-link {{ request()->routeIs('entreprises.*') ? 'active-link' : '' }}">
                         <i class="bi bi-shop"></i> {{ __('Site ou établissement') }}
                     </a>
                 </li>
                 
+                {{-- Employés : Visible par tous (Super Admin, Vendeur, Simple Admin) --}}
                 <li class="nav-item">
                     <a href="{{ route('employes.index') }}" class="nav-link {{ request()->routeIs('employes.*') ? 'active-link' : '' }}">
                         <i class="bi bi-people"></i> {{ __('Employé') }}
                     </a>
                 </li>
                 
-                <li class="nav-item">
-                    <a href="{{ route('pointages.index') }}" class="nav-link {{ request()->routeIs('pointages.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-clock-history"></i> {{ __('Pointage') }}
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-file-earmark-text"></i> {{ __('Rapport') }}
-                    </a>
-                </li>
+                {{-- Sections INTERDITES aux vendeurs --}}
+                @if(!auth()->user()->isSeller())
+                    {{-- Pointage : Super Admin et Simple Admin uniquement --}}
+                    <li class="nav-item">
+                        <a href="{{ route('pointages.index') }}" class="nav-link {{ request()->routeIs('pointages.*') ? 'active-link' : '' }}">
+                            <i class="bi bi-clock-history"></i> {{ __('Pointage') }}
+                        </a>
+                    </li>
+                    
+                    {{-- Rapport : Super Admin et Simple Admin uniquement --}}
+                    <li class="nav-item">
+                        <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'active-link' : '' }}">
+                            <i class="bi bi-file-earmark-text"></i> {{ __('Rapport') }}
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('conges.index') }}" class="nav-link {{ request()->routeIs('conges.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-calendar-x"></i> {{ __('Congé') }}
-                    </a>
-                </li>
+                    {{-- Congé : Super Admin et Simple Admin uniquement --}}
+                    <li class="nav-item">
+                        <a href="{{ route('conges.index') }}" class="nav-link {{ request()->routeIs('conges.*') ? 'active-link' : '' }}">
+                            <i class="bi bi-calendar-x"></i> {{ __('Congé') }}
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('jours-non-travailles.index') }}" class="nav-link {{ request()->routeIs('jours-non-travailles.*') ? 'active-link' : '' }}">
-                        <i class="bi bi-calendar-event"></i> {{ __('Jour férié') }}
-                    </a>
-                </li>
+                    {{-- Jour férié : Super Admin et Simple Admin uniquement --}}
+                    <li class="nav-item">
+                        <a href="{{ route('jours-non-travailles.index') }}" class="nav-link {{ request()->routeIs('jours-non-travailles.*') ? 'active-link' : '' }}">
+                            <i class="bi bi-calendar-event"></i> {{ __('Jour férié') }}
+                        </a>
+                    </li>
+                @endif
 
             </ul>
 
