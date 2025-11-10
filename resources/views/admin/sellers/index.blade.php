@@ -14,20 +14,7 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
+                
                 <!-- Filtres -->
                 <form action="{{ route('sellers.index') }}" method="GET" class="mb-4">
                     <div class="row g-3 mb-3">
@@ -59,13 +46,7 @@
                 <!-- Tableau des vendeurs -->
                 @if($sellers->isEmpty())
                     <div class="text-center py-5">
-                        <svg class="bi text-muted" width="48" height="48" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                        </svg>
                         <p class="mt-3 text-muted">{{ __('Aucun revendeur enregistré') }}</p>
-                        <a href="{{ route('sellers.create') }}" class="btn btn-primary mt-2">
-                            {{ __('Créer le premier revendeur') }}
-                        </a>
                     </div>
                 @else
                     <div class="table-responsive">

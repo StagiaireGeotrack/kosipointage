@@ -91,7 +91,7 @@ class SellerController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('success', 'Vendeur créé avec succès');
 
         } catch (\Exception $e) {
@@ -116,7 +116,7 @@ class SellerController extends Controller
         // Vérifier que c'est bien un vendeur
         if (!$seller->isSeller()) {
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un vendeur');
         }
 
@@ -135,7 +135,7 @@ class SellerController extends Controller
         // Vérifier que c'est bien un vendeur
         if (!$seller->isSeller()) {
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un vendeur');
         }
 
@@ -160,7 +160,7 @@ class SellerController extends Controller
         // Vérifier que c'est bien un vendeur
         if (!$seller->isSeller()) {
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un vendeur');
         }
 
@@ -206,7 +206,7 @@ class SellerController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('success', 'Vendeur mis à jour avec succès');
 
         } catch (\Exception $e) {
@@ -231,7 +231,7 @@ class SellerController extends Controller
         // Vérifier que c'est bien un vendeur
         if (!$seller->isSeller()) {
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un vendeur');
         }
 
@@ -244,7 +244,7 @@ class SellerController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('success', 'Vendeur supprimé avec succès');
 
         } catch (\Exception $e) {
@@ -267,7 +267,7 @@ class SellerController extends Controller
 
         if (!$seller->isSeller()) {
             return redirect()
-                ->route('admin.sellers.index')
+                ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un vendeur');
         }
 
