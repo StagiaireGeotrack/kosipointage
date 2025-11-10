@@ -51,8 +51,10 @@ class EntrepriseSiegeController extends Controller
     
     public function create()
     {
-        // Seul un vrai SuperAdmin peut créer des sièges (pas les vendeurs)
-        if (!Gate::allows('superadmin')) {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent créer des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
@@ -62,8 +64,10 @@ class EntrepriseSiegeController extends Controller
     
     public function store(EntrepriseSiegeRequest $request)
     {
-        // Seul un vrai SuperAdmin peut créer des sièges
-        if (!Gate::allows('superadmin')) {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent créer des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
@@ -92,23 +96,41 @@ class EntrepriseSiegeController extends Controller
     
     public function edit($id)
     {
-        // Seul un vrai SuperAdmin peut éditer des sièges
-        if (!Gate::allows('superadmin')) {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent éditer des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         $siege = $this->repository->findById($id);
         
+        // Vérifier que le vendeur a accès à ce siège spécifique
+        if ($user->isSeller() && !$user->hasAccessToSiege($siege->ID)) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à ce siège'));
+        }
+        
         return view('sieges.edit', compact('siege', 'id'));
     }
     
     public function update(Request $request, $id)
     {
-        // Seul un vrai SuperAdmin peut mettre à jour des sièges
-        if (!Gate::allows('superadmin')) {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent mettre à jour des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
+        }
+        
+        $siege = $this->repository->findById($id);
+        
+        // Vérifier que le vendeur a accès à ce siège spécifique
+        if ($user->isSeller() && !$user->hasAccessToSiege($siege->ID)) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à ce siège'));
         }
         
         $validated = $request->validated();
@@ -124,12 +146,21 @@ class EntrepriseSiegeController extends Controller
 
     public function update_siege(Request $request)
     {
-        if (!Gate::allows('superadmin')) {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent mettre à jour des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
         $id = $request->ID;
+        
+        // Vérifier que le vendeur a accès à ce siège spécifique
+        if ($user->isSeller() && !$user->hasAccessToSiege($id)) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à ce siège'));
+        }
         
         $validated = $request->validate([
             'ID' => 'required|integer',
@@ -158,10 +189,20 @@ class EntrepriseSiegeController extends Controller
     
     public function destroy($id)
     {
-        // Seul un vrai SuperAdmin peut supprimer des sièges
-        if (!Gate::allows('superadmin')) {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent supprimer des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
+        }
+        
+        $siege = $this->repository->findById($id);
+        
+        // Vérifier que le vendeur a accès à ce siège spécifique
+        if ($user->isSeller() && !$user->hasAccessToSiege($siege->ID)) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à ce siège'));
         }
         
         $this->repository->delete($id);
