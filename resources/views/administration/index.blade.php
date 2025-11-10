@@ -96,9 +96,13 @@
                                         {{ $admin->Identifiant_email }}
                                     </td>
                                     <td class="align-middle">
-                                        @if ($admin->IsSuperAdmin)
+                                        @if ($admin->isTrueSuperAdmin())
                                             <span class="badge bg-primary">
                                                 {{ __('Super administrateur') }}
+                                            </span>
+                                        @elseif ($admin->isSeller())
+                                            <span class="badge bg-success">
+                                                {{ __('Vendeur') }}
                                             </span>
                                         @else
                                             <span class="badge bg-info">
