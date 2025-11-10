@@ -213,6 +213,7 @@ class CongeController extends Controller
                 'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
                 'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
                 'Durée' => $resultat_duree,
+                'Type Congé' => $conge->type_conge ,
                 'Observation / Commentaire' => $conge->commentaire,
                 'Date de création' => ucfirst($conge->created_at ? $conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
             ];
