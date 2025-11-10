@@ -23,7 +23,7 @@ class CongeController extends Controller
     public function index(Request $request)
     {
         $sieges = EntrepriseSiege::all();
-        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]);
+        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]); 
         
         // Le scope global s'applique automatiquement
         $query = Conge::with('employe');
