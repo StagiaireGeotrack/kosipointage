@@ -240,7 +240,7 @@
                             @elseif(auth()->user()->isSeller()) {{ route('dashboard.seller') }} 
                             @else {{ route('dashboard.simple-admin') }} 
                             @endif" 
-                            class="nav-link {{ request()->routeIs('dashboard') ? 'active-link' : '' }}">
+                            class="nav-link {{ request()->routeIs('dashboard*') ? 'active-link' : '' }}">
                         <i class="bi bi-speedometer2"></i> {{ __('Tableau de bord') }}
                     </a>
                 </li>

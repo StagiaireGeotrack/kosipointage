@@ -47,7 +47,7 @@
                 {{ __('Tableau de bord') }}
             </h2>
             <div class="text-muted small">
-                <i class="bi bi-calendar3"></i> {{ Carbon\Carbon::now()->isoFormat('dddd D MMMM YYYY') }}
+                <i class="bi bi-calendar3"></i> {{ ucfirst( Carbon\Carbon::now()->isoFormat('dddd D MMMM YYYY') ) }}
             </div>
         </div>
     </x-slot>
@@ -61,6 +61,7 @@
                         <div>
                             <div class="small opacity-75">{{ __('Sièges') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $totalSieges }}</h3>
+                            <small class="badge-new mt-1 text-white">Total</small>
                         </div>
                         <i class="bi bi-building fs-2 opacity-50"></i>
                     </div>
@@ -71,26 +72,35 @@
                 <div class="stats-card green">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Entreprises') }}</div>
+                            <div class="small opacity-75">{{ __('Sites ou établissements') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $totalEntreprises }}</h3>
-                            @if($entreprisesCeMois > 0)
-                                <small class="badge-new mt-1">+{{ $entreprisesCeMois }}</small>
-                            @endif
+                            <small class="badge-new mt-1 text-white">Total</small>
                         </div>
                         <i class="bi bi-shop fs-2 opacity-50"></i>
                     </div>
                 </div>
-            </div>
+            </div>            
             
+            <div class="col-lg-2 col-md-4">
+                <div class="stats-card red">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="small opacity-75">{{ __('Sites ou établissements. Actifs') }}</div>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $entreprisesActives }}</h3>
+                            <small class="opacity-75 text-white"" style="font-size: 0.7rem;">{{ round(($entreprisesActives / max($totalEntreprises, 1)) * 100, 1) }}%</small>
+                        </div>
+                        <i class="bi bi-check2-square fs-2 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-lg-2 col-md-4">
                 <div class="stats-card orange">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="small opacity-75">{{ __('Employés') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $totalEmployes }}</h3>
-                            @if($employesCeMois > 0)
-                                <small class="badge-new mt-1">+{{ $employesCeMois }}</small>
-                            @endif
+                            <small class="badge-new mt-1 text-white">Total</small>
                         </div>
                         <i class="bi bi-people fs-2 opacity-50"></i>
                     </div>
@@ -101,24 +111,11 @@
                 <div class="stats-card purple">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Actifs') }}</div>
+                            <div class="small opacity-75">{{ __('Employés. Actifs') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $employesActifs }}</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ round(($employesActifs / max($totalEmployes, 1)) * 100, 1) }}%</small>
+                            <small class="opacity-75 text-white"" style="font-size: 0.7rem;">{{ round(($employesActifs / max($totalEmployes, 1)) * 100, 1) }}%</small>
                         </div>
                         <i class="bi bi-check-circle fs-2 opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-2 col-md-4">
-                <div class="stats-card red">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="small opacity-75">{{ __('Ent. Actives') }}</div>
-                            <h3 class="fw-bold mt-1 mb-0">{{ $entreprisesActives }}</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ round(($entreprisesActives / max($totalEntreprises, 1)) * 100, 1) }}%</small>
-                        </div>
-                        <i class="bi bi-check2-square fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -127,9 +124,9 @@
                 <div class="stats-card teal">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Semaine') }}</div>
+                            <div class="small opacity-75">{{ __('Nouveaux employés') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $employesCetteSemaine }}</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('nouveaux') }}</small>
+                            <small class="opacity-75 text-white"" style="font-size: 0.7rem;">{{ __('Ajoutés pour cette semaine') }}</small>
                         </div>
                         <i class="bi bi-calendar-week fs-2 opacity-50"></i>
                     </div>
@@ -148,12 +145,12 @@
                         <table class="table table-sm table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center">#</th>
-                                    <th>{{ __('Siège') }}</th>
-                                    <th>{{ __('Localisation') }}</th>
-                                    <th class="text-center">{{ __('Employés') }}</th>
-                                    <th class="text-center">{{ __('Entreprises') }}</th>
-                                    <th class="text-center">{{ __('Action') }}</th>
+                                    <th class="text-center text-dark">#</th>
+                                    <th class="text-dark">{{ __('Siège') }}</th>
+                                    <th class="text-dark">{{ __('Localisation') }}</th>
+                                    <th class="text-center text-dark">{{ __('Employés') }}</th>
+                                    <th class="text-center text-dark">{{ __('Entreprises') }}</th>
+                                    <th class="text-center text-dark">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -170,7 +167,10 @@
                                     <td class="text-center"><span class="badge bg-success">{{ $siege->entreprises_count }}</span></td>
                                     <td class="text-center">
                                         <a href="{{ route('sieges.show', $siege->ID) }}" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
+                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                            </svg>
                                         </a>
                                     </td>
                                 </tr>

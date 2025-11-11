@@ -316,6 +316,7 @@ class AllDashboardController extends Controller
         $entreprisesCeMois = Entreprise::where('SiegeID', $user->SiegeID)
             ->where('CreatedAt', '>=', $startOfMonth)
             ->count();
+
         
         return view('dashboards.simple-admin', compact(
             'siege',

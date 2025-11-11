@@ -59,11 +59,22 @@
                 <div class="stats-card blue">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Entreprises') }}</div>
+                            <div class="small opacity-75">{{ __('Sites ou établissements') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $totalEntreprises }}</h3>
-                            @if($entreprisesCeMois > 0)
-                                <small class="badge-new mt-1">+{{ $entreprisesCeMois }}</small>
-                            @endif
+                            <small class="badge-new mt-1 text-white">Total</small>
+                        </div>
+                        <i class="bi bi-shop fs-2 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4">
+                <div class="stats-card blue">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="small opacity-75">{{ __('Sites ou établissements') }}</div>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $totalEntreprises }}</h3>
+                            <small class="badge-new mt-1 text-white">{{$entreprisesActives . " actifs / " . $entreprisesInactives . " inactifs"}}</small>
                         </div>
                         <i class="bi bi-shop fs-2 opacity-50"></i>
                     </div>
@@ -76,9 +87,22 @@
                         <div>
                             <div class="small opacity-75">{{ __('Employés') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $totalEmployes }}</h3>
-                            @if($employesCeMois > 0)
-                                <small class="badge-new mt-1">+{{ $employesCeMois }}</small>
-                            @endif
+                            <small class="badge-new mt-1 text-white">{{ __('Total') }}</small>
+                        </div>
+                        <i class="bi bi-people fs-2 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            
+            
+            <div class="col-lg-2 col-md-4">
+                <div class="stats-card green">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="small opacity-75">{{ __('Employés') }}</div>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $totalEmployes }}</h3>
+                            <small class="badge-new mt-1 text-white">{{$employesActifs . " actifs / " . $employesInactifs . " inactifs"}}</small>
                         </div>
                         <i class="bi bi-people fs-2 opacity-50"></i>
                     </div>
@@ -89,24 +113,11 @@
                 <div class="stats-card orange">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Aujourd\'hui') }}</div>
+                            <div class="small opacity-75">{{ __('Pointages aujourd\'hui') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $pointagesToday }}</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('pointages') }}</small>
+                            <small class="opacity-75 text-white" style="font-size: 0.7rem;">{{ $pointagesWeek . " cette semaine" }}</small>
                         </div>
                         <i class="bi bi-clock-history fs-2 opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-2 col-md-4">
-                <div class="stats-card purple">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="small opacity-75">{{ __('Semaine') }}</div>
-                            <h3 class="fw-bold mt-1 mb-0">{{ $pointagesWeek }}</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('pointages') }}</small>
-                        </div>
-                        <i class="bi bi-calendar-week fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -115,24 +126,11 @@
                 <div class="stats-card red">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Ce mois') }}</div>
+                            <div class="small opacity-75">{{ __('Pointages') }}</div>
                             <h3 class="fw-bold mt-1 mb-0">{{ $pointagesMonth }}</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('pointages') }}</small>
+                            <small class="opacity-75 text-white" style="font-size: 0.7rem;">{{ __('Ce mois') }}</small>
                         </div>
                         <i class="bi bi-calendar3 fs-2 opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-2 col-md-4">
-                <div class="stats-card teal">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="small opacity-75">{{ __('Présence') }}</div>
-                            <h3 class="fw-bold mt-1 mb-0">{{ $tauxPresence }}%</h3>
-                            <small class="opacity-75" style="font-size: 0.7rem;">{{ $employesPresentsToday }}/{{ $totalEmployes }}</small>
-                        </div>
-                        <i class="bi bi-person-check fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -194,16 +192,16 @@
             <div class="col-12">
                 <div class="chart-card">
                     <h6 class="fw-bold mb-2 small">
-                        <i class="bi bi-award text-warning"></i> {{ __('Top 10 Employés (Ce mois)') }}
+                        <i class="bi bi-award text-warning"></i> {{ __('Pointages ce mois)') }}
                     </h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center">#</th>
-                                    <th>{{ __('Employé') }}</th>
-                                    <th class="text-center">{{ __('Pointages') }}</th>
-                                    <th>{{ __('Progression') }}</th>
+                                    <th class="text-center text-dark">#</th>
+                                    <th class="text-dark">{{ __('Employé') }}</th>
+                                    <th class="text-center text-dark">{{ __('Pointages') }}</th>
+                                    <th class="text-dark">{{ __('Progression') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
