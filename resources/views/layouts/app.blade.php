@@ -80,6 +80,8 @@
         </svg>
     </button>
     
+    @stack('scripts')
+    
     <script>
         // Scroll to top functionality
         const scrollToTopBtn = document.getElementById('scrollToTop');
@@ -102,6 +104,5 @@
         });
     </script>
     
-    @stack('scripts')
 </body>
 </html>
