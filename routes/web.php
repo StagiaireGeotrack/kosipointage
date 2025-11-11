@@ -181,6 +181,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/sellers', [SellerController::class, 'store'])->name('sellers.store');
         Route::post('/sellers/{id}/toggle-active', [SellerController::class, 'toggleActive'])->name('sellers.toggle-active');
         Route::get('/sellers/{seller}', [SellerController::class, 'show'])->name('sellers.show');
+
+        Route::get('/sellers-export/excel', [SellerController::class, 'exportExcel'])->name('sellers.export.excel');
+        Route::get('/sellers-export/pdf', [SellerController::class, 'exportPdf'])->name('sellers.export.pdf');
+
         Route::get('/sellers/{seller}/edit', [SellerController::class, 'edit'])->name('sellers.edit');
         Route::put('/sellers/{seller}', [SellerController::class, 'update'])->name('sellers.update');
         Route::patch('/sellers/{seller}', [SellerController::class, 'update']);

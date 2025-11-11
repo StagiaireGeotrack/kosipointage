@@ -43,6 +43,18 @@
                     </div>
                 </form>
 
+                
+                
+                <!-- Exports -->
+                <div class="d-flex justify-content-end mb-3 gap-2">
+                    <a href="{{ route('sellers.export.excel', request()->query()) }}" class="btn btn-success">
+                        {{ __('Export en EXCEL') }}
+                    </a>
+                    <a href="{{ route('sellers.export.pdf', request()->query()) }}" class="btn btn-danger">
+                        {{ __('Export en PDF') }}
+                    </a>
+                </div>
+
                 <!-- Tableau des vendeurs -->
                 @if($sellers->isEmpty())
                     <div class="text-center py-5">

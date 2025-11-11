@@ -3,31 +3,88 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Administration;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Administration;
+use App\Services\ExportService;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class SellerController extends Controller
 {
+    public function __construct(ExportService $exportService)
+    {
+        $this->exportService = $exportService;
+    }
+
     // Afficher la liste des vendeurs
-    public function index()
+    public function index(Request $request)
     {
         // Vérifier que l'utilisateur connecté est un vrai Super Admin
         if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+            $message = 'Accès réservé aux Administrateurs';
+            return view('403', compact('message'));
         }
 
-        // Récupérer tous les vendeurs avec leurs sièges
-        $sellers = Administration::where('IsSeller', 1)
+        // Construction de la requête de base
+        $query = Administration::where('IsSeller', 1)
             ->where('IsSuperAdmin', 1)
-            ->with('sellerSieges')
-            ->orderBy('Identifiant_email')
-            ->paginate(5);
+            ->with('sellerSieges');
+
+        // Filtre par recherche (email)
+        if ($request->filled('search')) {
+            $query->where('Identifiant_email', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtre par statut
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('Actived', $request->status);
+        }
+
+        // Récupérer les vendeurs avec pagination
+        $sellers = $query->orderBy('Identifiant_email')
+            ->paginate(5)
+            ->appends($request->except('page')); // Maintenir les paramètres dans la pagination
 
         return view('admin.sellers.index', compact('sellers'));
+    }
+
+    public function prepareExportData(Request $request) 
+    {        
+        $query = Administration::where('IsSeller', 1)
+            ->where('IsSuperAdmin', 1)
+            ->with('sellerSieges');
+
+        if ($request->filled('search')) {
+            $query->where('Identifiant_email', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('Actived', $request->status);
+        }
+
+        $data = $query->orderBy('Identifiant_email')->get()->map( function ($revender) {
+            return [
+                "ID" => $revender->ID ,
+                "Email" => $revender->Identifiant_email ,
+                "Nombre de Sièges" => $revender->sellerSieges->count() ,
+                "Statut" => $revender->Actived ? __('Oui') : __('Non') 
+            ] ;
+        } ) ;
+
+        return $data;
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $data = $this->prepareExportData($request);
+        return $this->exportService->exportToExcel($data, "Liste des revendeurs");
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $data = $this->prepareExportData($request);
+        return $this->exportService->exportToPdf($data, "Liste des revendeurs", 'exports.generic');
     }
 
     // Afficher le formulaire de création d'un vendeur
