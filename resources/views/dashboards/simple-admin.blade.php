@@ -106,96 +106,136 @@
 
     @push('scripts')
     <script>
-        // Graphique pointages 7 jours
-        const pointagesCtx = document.getElementById('pointagesChart').getContext('2d');
-        new Chart(pointagesCtx, {
-            type: 'line',
-            data: {
-                labels: @json($last7Days),
-                datasets: [{
-                    label: 'Pointages',
-                    data: @json($pointagesLast7Days),
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration globale
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+            
+            // Graphique pointages 7 jours
+            const pointagesCtx = document.getElementById('pointagesChart');
+            if (pointagesCtx) {
+                new Chart(pointagesCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: @json($last7Days),
+                        datasets: [{
+                            label: 'Pointages',
+                            data: @json($pointagesLast7Days),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        }
                     }
-                }
+                });
             }
-        });
 
-        // Graphique Employés
-        const employesCtx = document.getElementById('employesChart').getContext('2d');
-        new Chart(employesCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Actifs', 'Inactifs'],
-                datasets: [{
-                    data: [{{ $employesActifs }}, {{ $employesInactifs }}],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(255, 99, 132, 0.6)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+            // Graphique Employés
+            const employesCtx = document.getElementById('employesChart');
+            if (employesCtx) {
+                new Chart(employesCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Actifs', 'Inactifs'],
+                        datasets: [{
+                            data: [{{ $employesActifs }}, {{ $employesInactifs }}],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(255, 99, 132, 0.6)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
                     }
-                }
+                });
             }
-        });
 
-        // Graphique par type
-        const typeCtx = document.getElementById('typeChart').getContext('2d');
-        new Chart(typeCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Entrées', 'Sorties'],
-                datasets: [{
-                    data: [{{ $pointagesEntree }}, {{ $pointagesSortie }}],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(255, 206, 86, 0.6)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-
-        // Graphique par méthode
-        const methodCtx = document.getElementById('methodChart').getContext('2d');
-        new Chart(methodCtx, {
-            type: 'bar',
-            data: {
-                labels: @json($pointagesByMethod->pluck('auth_method')),
-                datasets: [{
-                    label: 'Pointages',
-                    data: @json($pointagesByMethod->pluck('count')),
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+            // Graphique par type
+            const typeCtx = document.getElementById('typeChart');
+            if (typeCtx) {
+                new Chart(typeCtx.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Entrées', 'Sorties'],
+                        datasets: [{
+                            data: [{{ $pointagesEntree }}, {{ $pointagesSortie }}],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(255, 206, 86, 0.6)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
                     }
-                }
+                });
+            }
+
+            // Graphique par méthode
+            const methodCtx = document.getElementById('methodChart');
+            if (methodCtx) {
+                new Chart(methodCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: @json($pointagesByMethod->pluck('auth_method')),
+                        datasets: [{
+                            label: 'Pointages',
+                            data: @json($pointagesByMethod->pluck('count')),
+                            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
             }
         });
     </script>

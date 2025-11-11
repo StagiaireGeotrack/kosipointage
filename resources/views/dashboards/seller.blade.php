@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="fw-semibold fs-4 text-dark mb-0">
-            {{ __('Tableau de bord') }}
+            {{ __('Tableau de bord Vendeur') }}
         </h2>
     </x-slot>
 
@@ -135,65 +135,85 @@
 
     @push('scripts')
     <script>
-        // Graphique par siège
-        const siegesCtx = document.getElementById('siegesChart').getContext('2d');
-        new Chart(siegesCtx, {
-            type: 'bar',
-            data: {
-                labels: @json($siegesData['labels']),
-                datasets: [
-                    {
-                        label: 'Entreprises',
-                        data: @json($siegesData['entreprises']),
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration globale
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+            
+            // Graphique par siège
+            const siegesCtx = document.getElementById('siegesChart');
+            if (siegesCtx) {
+                new Chart(siegesCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: @json($siegesData['labels']),
+                        datasets: [
+                            {
+                                label: 'Entreprises',
+                                data: @json($siegesData['entreprises']),
+                                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Employés',
+                                data: @json($siegesData['employes']),
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }
+                        ]
                     },
-                    {
-                        label: 'Employés',
-                        data: @json($siegesData['employes']),
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        }
                     }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                });
             }
-        });
 
-        // Graphique Employés
-        const employesCtx = document.getElementById('employesChart').getContext('2d');
-        new Chart(employesCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Actifs', 'Inactifs'],
-                datasets: [{
-                    data: [{{ $employesActifs }}, {{ $employesInactifs }}],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(255, 99, 132, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+            // Graphique Employés
+            const employesCtx = document.getElementById('employesChart');
+            if (employesCtx) {
+                new Chart(employesCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Actifs', 'Inactifs'],
+                        datasets: [{
+                            data: [{{ $employesActifs }}, {{ $employesInactifs }}],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(255, 99, 132, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
                     }
-                }
+                });
             }
         });
     </script>
