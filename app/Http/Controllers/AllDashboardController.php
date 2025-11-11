@@ -60,6 +60,7 @@ class AllDashboardController extends Controller
         $topSieges = EntrepriseSiege::whereIn('ID', $siegeIds)
             ->withCount('employes')
             ->orderBy('employes_count', 'desc')
+            ->take(5)
             ->get();
         
         // Évolution des employés sur 12 mois
@@ -293,7 +294,7 @@ class AllDashboardController extends Controller
         $pointagesByEntreprise = Pointage::where('pointages.SiegeID', $user->SiegeID)
             ->whereDate('pointages.timestamp_', $today)
             ->join('employes', 'pointages.employee_id', '=', 'employes.ID')
-            ->join('entreprises', 'employes.company_id', '=', 'entreprises.ID')
+            ->join('entreprises', 'employes.EntrepriseID', '=', 'entreprises.ID')
             ->select('entreprises.Nom', DB::raw('COUNT(*) as total'))
             ->groupBy('entreprises.ID', 'entreprises.Nom')
             ->orderBy('total', 'desc')
