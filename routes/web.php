@@ -14,6 +14,7 @@ use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\EntrepriseSiegeController;
 use App\Http\Controllers\JourNonTravailleController;
 use App\Http\Controllers\SellerController;
+use App\Http\Controllers\AllDashboardController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -32,6 +33,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_email', [ProfileController::class, 'update_Identifiant_email'])->name('profile.update_Identifiant_email');
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // ========== DASHBOARDS ==========
+    // Dashboard pour Vendeurs uniquement
+    Route::get('/dashboard/seller', [AllDashboardController::class, 'dashboardSeller'])
+        ->name('dashboard.seller')
+        ->middleware('only.sellers');
+    
+    // Dashboard pour Simple Admin uniquement
+    Route::get('/dashboard/simple-admin', [AllDashboardController::class, 'dashboardSimpleAdmin'])
+        ->name('dashboard.simple-admin')
+        ->middleware('block.sellers');
     
     Route::middleware('siege.access')->group(function () {
         
