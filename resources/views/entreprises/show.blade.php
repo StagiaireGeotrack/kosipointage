@@ -23,11 +23,13 @@
                             </div>
                         @endif
                         
+                        @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                         <div class="d-grid gap-2">
                             <a href="{{ route('entreprises.edit', $entreprise->ID) }}" class="btn btn-primary">
                                 <i class="bi bi-pencil"></i> Modifier
                             </a>
                         </div>
+                        @endif
                     </div>
                     
                     <div class="col-md-8">
@@ -71,6 +73,7 @@
                 </div>
             </div>
             
+            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
             <div class="card-footer">
                 <form action="{{ route('entreprises.destroy', $entreprise->ID) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise?')">
                     @csrf
@@ -80,6 +83,7 @@
                     </button>
                 </form>
             </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

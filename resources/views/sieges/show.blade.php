@@ -62,12 +62,15 @@
         <!-- Entreprises associées -->
         <div class="card shadow-sm mb-4">
             <div class="card-body">
+
+                @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3 class="fs-5 fw-semibold mb-0">{{ __('Site ou établissement') }}</h3>
                     <a href="{{ route('entreprises.create', ['SiegeID' => $siege->ID]) }}" class="btn btn-primary btn-sm">
                         {{ __('Nouveau site ou établissement') }}
                     </a>
                 </div>
+                @endif
                 
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -152,12 +155,15 @@
         <!-- Employés associés -->
         <div class="card shadow-sm">
             <div class="card-body">
+                
+                @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3 class="fs-5 fw-semibold mb-0">{{ __('Employés') }}</h3>
                     <a href="{{ route('employes.create', ['SiegeID' => $siege->ID]) }}" class="btn btn-primary btn-sm">
                         {{ __('Nouveau employé') }}
                     </a>
                 </div>
+                @endif
                 
                 <div class="table-responsive">
                     <table class="table table-hover">

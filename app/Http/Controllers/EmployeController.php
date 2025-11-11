@@ -84,6 +84,12 @@ class EmployeController extends Controller
     {
         $employe = $this->repository->findById($id);
         $sieges = EntrepriseSiege::all();
+
+        $user = auth()->user();
+        if ($user->isSeller()) 
+        {
+            $this->show( $id) ;
+        }
         
         return view('employes.edit', compact('employe', 'sieges'));
     }

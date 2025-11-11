@@ -27,7 +27,7 @@
                                     id="Nom" 
                                     name="Nom" 
                                     value="{{ old('Nom', $employe->Nom) }}" 
-                                    required>
+                                    disabled>
                             @error('Nom')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -39,7 +39,7 @@
                             <select class="form-control @error('SiegeID') is-invalid @enderror" 
                                     id="SiegeID" 
                                     name="SiegeID" 
-                                    required>
+                                    disabled>
                                 <option value="">Sélectionnez un siège</option>
                                 @foreach($sieges as $siege)
                                     <option value="{{ $siege->ID }}" 
@@ -64,7 +64,7 @@
                                             name="BadgeID" 
                                             value="{{ old('BadgeID', $employe->BadgeID) }}" 
                                             maxlength="25"
-                                            required>
+                                            disabled>
                                     <small class="form-text text-muted">Identifiant unique de l'employé</small>
                                     @error('BadgeID')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -82,7 +82,8 @@
                                             value="{{ old('Pin', $employe->Pin) }}" 
                                             maxlength="6"
                                             pattern="[0-9]{6}"
-                                            placeholder="000000">
+                                            placeholder="000000"
+                                            disabled>
                                     <small class="form-text text-muted">Code PIN à 6 chiffres</small>
                                     @error('Pin')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -112,7 +113,8 @@
                                         value="1" 
                                         id="HasBiometricSetup" 
                                         name="HasBiometricSetup" 
-                                        {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}>
+                                        {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}
+                                        disabled>
                                 <label class="form-check-label" for="HasBiometricSetup">
                                     <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
                                 </label>
@@ -124,7 +126,7 @@
 
                         <!-- HasFaceSetup (lecture seule, automatique) -->
                         @if($employe->HasFaceSetup)
-                            <div class="alert alert-info">
+                            <div class="alert alert-info m-2">
                                 <i class="bi bi-check-circle"></i> Reconnaissance faciale configurée
                             </div>
                         @endif
@@ -139,7 +141,8 @@
                                         id="Actived" 
                                         name="Actived" 
                                         {{ old('Actived', $employe->Actived) ? 'checked' : '' }}
-                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
+                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}
+                                        disabled>
                                 <label class="form-check-label" for="Actived">
                                     Activer
                                     @if(!Auth::user()->IsSuperAdmin)
@@ -154,6 +157,7 @@
                             
                     </div>
 
+                    @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                     <div class="text-end mt-4">
                         <a href="{{ route('employes.index') }}" class="btn btn-secondary me-2">
                             <i class="bi bi-x-circle"></i> Annuler
@@ -162,6 +166,7 @@
                             <i class="bi bi-save"></i> Enregistrer les modifications
                         </button>
                     </div>
+                    @endif
                 </form>
             </div>
         </div>

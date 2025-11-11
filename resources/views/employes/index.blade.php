@@ -5,9 +5,11 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 {{ __('Employés') }}
             </h2>
+            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
             <a href="{{ route('employes.create') }}" class="btn btn-primary">
                 {{ __('Nouveau employé') }}
             </a>
+            @endif
         </div>
     </x-slot>
 
@@ -173,6 +175,8 @@
                                                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                                                 </svg>
                                             </a>
+
+                                            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                                             <form action="{{ route('employes.destroy', $employe->ID) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -182,6 +186,7 @@
                                                     </svg>
                                                 </button>
                                             </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

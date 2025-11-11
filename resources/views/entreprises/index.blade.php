@@ -5,9 +5,11 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 {{ __('Sites ou établissements') }}
             </h2>
+            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
             <a href="{{ route('entreprises.create') }}" class="btn btn-primary">
                 {{ __('Nouveau site ou établissement') }}
             </a>
+            @endif
         </div>
     </x-slot>
 
@@ -132,6 +134,8 @@
                                                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                                                 </svg>
                                             </a>
+
+                                            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                                             <a href="{{ route('entreprises.edit', $entreprise->ID) }}" class="text-warning" title="Modifier">
                                                 <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -146,6 +150,8 @@
                                                     </svg>
                                                 </button>
                                             </form>
+                                            @endif
+                                            
                                         </div>
                                     </td>
                                 </tr>
