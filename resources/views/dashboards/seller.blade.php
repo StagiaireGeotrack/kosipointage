@@ -69,7 +69,7 @@
     <div class="p-2">
         {{-- Formulaire de filtres --}}
         <div class="filter-card">
-            <form method="GET" action="{{ route('dashboard') }}" class="row g-3 align-items-end">
+            <form method="GET" action="{{ route('dashboard.seller') }}" class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label for="period" class="form-label small fw-medium">{{ __('Période') }}</label>
                     <select name="period" id="period" class="form-select" onchange="toggleCustomDates()">
@@ -197,12 +197,12 @@
                         <table class="table table-sm table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center">#</th>
-                                    <th>{{ __('Siège') }}</th>
-                                    <th>{{ __('Localisation') }}</th>
-                                    <th class="text-center">{{ __('Employés') }}</th>
-                                    <th class="text-center">{{ __('Entreprises') }}</th>
-                                    <th class="text-center">{{ __('Action') }}</th>
+                                    <th class="text-center text-dark">#</th>
+                                    <th class="text-dark">{{ __('Siège') }}</th>
+                                    <th class="text-dark">{{ __('Localisation') }}</th>
+                                    <th class="text-center text-dark">{{ __('Employés') }}</th>
+                                    <th class="text-center text-dark">{{ __('Entreprises') }}</th>
+                                    <th class="text-center text-dark">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -219,7 +219,10 @@
                                     <td class="text-center"><span class="badge bg-success">{{ $siege->entreprises_count }}</span></td>
                                     <td class="text-center">
                                         <a href="{{ route('sieges.show', $siege->ID) }}" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
+                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                            </svg>
                                         </a>
                                     </td>
                                 </tr>

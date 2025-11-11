@@ -82,11 +82,9 @@ class AllDashboardController extends Controller
             ->where('CreatedAt', '>=', $startOfWeek)
             ->count();
         
-        // Top 5 sièges par nombre d'employés
         $topSieges = EntrepriseSiege::whereIn('ID', $siegeIds)
             ->withCount('employes')
             ->orderBy('employes_count', 'desc')
-            ->take(5)
             ->get();
         
         // Évolution des employés sur 12 mois
@@ -347,7 +345,6 @@ class AllDashboardController extends Controller
             ->select('employee_id', DB::raw('COUNT(*) as total_pointages'))
             ->groupBy('employee_id')
             ->orderBy('total_pointages', 'desc')
-            ->take(10)
             ->get()
             ->map(function($item) {
                 $employe = Employe::find($item->employee_id);
