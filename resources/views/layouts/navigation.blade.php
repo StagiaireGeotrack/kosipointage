@@ -216,7 +216,11 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-custom">
     <div class="container-fluid">
         <!-- Logo et titre -->
-        <a href="{{ auth()->user()->isTrueSuperAdmin() ? route('dashboard') : route('sieges.index') }}" class="navbar-brand d-flex align-items-center">
+        <a href="@if(auth()->user()->isTrueSuperAdmin()) {{ route('dashboard') }} 
+                @elseif(auth()->user()->isSeller()) {{ route('dashboard.seller') }} 
+                @else {{ route('dashboard.simple-admin') }} 
+                @endif" 
+                class="navbar-brand d-flex align-items-center">
             <img src="{{ asset('images/logo.png') }}" alt="KOSI-TIME Logo" height="60" class="me-2">
             <h1 class="fs-4 mb-0">{{ __('KOSI-TIME') }}</h1>
         </a>
