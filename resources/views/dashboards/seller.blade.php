@@ -44,6 +44,14 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
+        
+        .filter-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
     </style>
     @endpush
 
@@ -59,6 +67,41 @@
     </x-slot>
 
     <div class="p-2">
+        {{-- Formulaire de filtres --}}
+        <div class="filter-card">
+            <form method="GET" action="{{ route('dashboard') }}" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="period" class="form-label small fw-medium">{{ __('Période') }}</label>
+                    <select name="period" id="period" class="form-select" onchange="toggleCustomDates()">
+                        <option value="all" {{ $period == 'all' ? 'selected' : '' }}>{{ __('Tout') }}</option>
+                        <option value="today" {{ $period == 'today' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
+                        <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
+                        <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
+                        <option value="custom" {{ $period == 'custom' ? 'selected' : '' }}>{{ __('Personnalisée') }}</option>
+                    </select>
+                </div>
+                
+                <div id="customDates" class="col-md-6 {{ $period !== 'custom' ? 'd-none' : '' }}">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label small fw-medium">{{ __('Date début') }}</label>
+                            <input type="date" name="start_date" id="start_date" value="{{ $startDate ? $startDate->format('Y-m-d') : '' }}" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label small fw-medium">{{ __('Date fin') }}</label>
+                            <input type="date" name="end_date" id="end_date" value="{{ $endDate ? $endDate->format('Y-m-d') : '' }}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> {{ __('Filtrer') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
         {{-- Statistiques principales --}}
         <div class="row g-3 mb-4">
             <div class="col-lg-2 col-md-4">
@@ -79,8 +122,8 @@
                         <div>
                             <div class="small opacity-75">{{ __('Entreprises') }}</div>
                             <h2 class="fw-bold mt-2 mb-0">{{ $totalEntreprises }}</h2>
-                            @if($entreprisesCeMois > 0)
-                                <small class="badge-new mt-2">+{{ $entreprisesCeMois }} ce mois</small>
+                            @if($entreprisesPeriode > 0 && $period != 'all')
+                                <small class="badge-new mt-2">+{{ $entreprisesPeriode }} période</small>
                             @endif
                         </div>
                         <i class="bi bi-shop fs-1 opacity-50"></i>
@@ -94,8 +137,8 @@
                         <div>
                             <div class="small opacity-75">{{ __('Employés') }}</div>
                             <h2 class="fw-bold mt-2 mb-0">{{ $totalEmployes }}</h2>
-                            @if($employesCeMois > 0)
-                                <small class="badge-new mt-2">+{{ $employesCeMois }} ce mois</small>
+                            @if($employesPeriode > 0 && $period != 'all')
+                                <small class="badge-new mt-2">+{{ $employesPeriode }} période</small>
                             @endif
                         </div>
                         <i class="bi bi-people fs-1 opacity-50"></i>
@@ -135,7 +178,7 @@
                         <div>
                             <div class="small opacity-75">{{ __('Cette Semaine') }}</div>
                             <h2 class="fw-bold mt-2 mb-0">{{ $employesCetteSemaine }}</h2>
-                            <small class="opacity-75">{{ __('nouveaux employés') }}</small>
+                            <small class="opacity-75">{{ __('nouveaux') }}</small>
                         </div>
                         <i class="bi bi-calendar-week fs-1 opacity-50"></i>
                     </div>
@@ -147,19 +190,19 @@
         <div class="row g-3 mb-4">
             <div class="col-12">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
+                    <h6 class="fw-bold mb-3">
                         <i class="bi bi-trophy text-warning"></i> {{ __('Sièges') }}
-                    </h5>
+                    </h6>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
+                        <table class="table table-sm table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center text-dark">#</th>
-                                    <th class="text-dark">{{ __('Siège') }}</th>
-                                    <th class="text-dark">{{ __('Localisation') }}</th>
-                                    <th class="text-center text-dark">{{ __('Employés') }}</th>
-                                    <th class="text-center text-dark">{{ __('Entreprises') }}</th>
-                                    <th class="text-center text-dark">{{ __('Action') }}</th>
+                                    <th class="text-center">#</th>
+                                    <th>{{ __('Siège') }}</th>
+                                    <th>{{ __('Localisation') }}</th>
+                                    <th class="text-center">{{ __('Employés') }}</th>
+                                    <th class="text-center">{{ __('Entreprises') }}</th>
+                                    <th class="text-center">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -171,21 +214,12 @@
                                         </span>
                                     </td>
                                     <td class="fw-bold">{{ $siege->Nom }}</td>
-                                    <td>
-                                        <i class="bi bi-geo-alt text-muted"></i> {{ $siege->Nom_Lieu_Ville }}
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-primary">{{ $siege->employes_count }}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-success">{{ $siege->entreprises_count }}</span>
-                                    </td>
+                                    <td><i class="bi bi-geo-alt text-muted"></i> {{ $siege->Nom_Lieu_Ville }}</td>
+                                    <td class="text-center"><span class="badge bg-primary">{{ $siege->employes_count }}</span></td>
+                                    <td class="text-center"><span class="badge bg-success">{{ $siege->entreprises_count }}</span></td>
                                     <td class="text-center">
                                         <a href="{{ route('sieges.show', $siege->ID) }}" class="btn btn-sm btn-outline-primary">
-                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                                            </svg>
+                                            <i class="bi bi-eye"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -197,65 +231,63 @@
             </div>
         </div>
 
-        {{-- Graphiques d'évolution --}}
-        <div class="row g-3 mb-4">
+        {{-- Graphiques --}}
+        <div class="row g-3 mb-3">
             <div class="col-lg-6">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-graph-up text-success"></i> {{ __('Évolution Totale des Employés (12 mois)') }}
-                    </h5>
-                    <canvas id="employesEvolutionChart" height="280"></canvas>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up text-success"></i> {{ __('Évolution Employés (12 mois)') }}
+                    </h6>
+                    <canvas id="employesEvolutionChart" height="200"></canvas>
                 </div>
             </div>
             
             <div class="col-lg-6">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution Totale des Entreprises (12 mois)') }}
-                    </h5>
-                    <canvas id="entreprisesEvolutionChart" height="280"></canvas>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution Entreprises (12 mois)') }}
+                    </h6>
+                    <canvas id="entreprisesEvolutionChart" height="200"></canvas>
                 </div>
             </div>
         </div>
 
-        {{-- Graphiques d'ajouts mensuels --}}
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-3">
             <div class="col-lg-6">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-bar-chart text-info"></i> {{ __('Employés Ajoutés par Mois (6 derniers mois)') }}
-                    </h5>
-                    <canvas id="employesParMoisChart" height="280"></canvas>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-bar-chart text-info"></i> {{ __('Employés Ajoutés (6 mois)') }}
+                    </h6>
+                    <canvas id="employesParMoisChart" height="200"></canvas>
                 </div>
             </div>
             
             <div class="col-lg-6">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-bar-chart text-warning"></i> {{ __('Entreprises Ajoutées par Mois (6 derniers mois)') }}
-                    </h5>
-                    <canvas id="entreprisesParMoisChart" height="280"></canvas>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-bar-chart text-warning"></i> {{ __('Entreprises Ajoutées (6 mois)') }}
+                    </h6>
+                    <canvas id="entreprisesParMoisChart" height="200"></canvas>
                 </div>
             </div>
         </div>
 
-        {{-- Répartitions --}}
         <div class="row g-3">
             <div class="col-lg-6">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-pie-chart text-info"></i> {{ __('Répartition des Employés par Siège') }}
-                    </h5>
-                    <canvas id="employesBySiegeChart" height="280"></canvas>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-pie-chart text-info"></i> {{ __('Employés par Siège') }}
+                    </h6>
+                    <canvas id="employesBySiegeChart" height="200"></canvas>
                 </div>
             </div>
             
             <div class="col-lg-6">
                 <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-pie-chart text-warning"></i> {{ __('Répartition des Entreprises par Siège') }}
-                    </h5>
-                    <canvas id="entreprisesBySiegeChart" height="280"></canvas>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-pie-chart text-warning"></i> {{ __('Entreprises par Siège') }}
+                    </h6>
+                    <canvas id="entreprisesBySiegeChart" height="200"></canvas>
                 </div>
             </div>
         </div>
@@ -263,8 +295,20 @@
 
     @push('scripts')
     <script>
+        function toggleCustomDates() {
+            const period = document.getElementById('period').value;
+            const customDates = document.getElementById('customDates');
+            
+            if (period === 'custom') {
+                customDates.classList.remove('d-none');
+            } else {
+                customDates.classList.add('d-none');
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+            Chart.defaults.font.size = 11;
             
             const colors = {
                 primary: 'rgba(59, 130, 246, 0.8)',
@@ -273,7 +317,7 @@
                 info: 'rgba(99, 102, 241, 0.8)',
             };
             
-            // Évolution totale employés
+            // Charts configs (reduced size)
             new Chart(document.getElementById('employesEvolutionChart'), {
                 type: 'line',
                 data: {
@@ -285,7 +329,7 @@
                         backgroundColor: colors.success.replace('0.8', '0.2'),
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 3
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -296,7 +340,6 @@
                 }
             });
             
-            // Évolution totale entreprises
             new Chart(document.getElementById('entreprisesEvolutionChart'), {
                 type: 'line',
                 data: {
@@ -308,7 +351,7 @@
                         backgroundColor: colors.primary.replace('0.8', '0.2'),
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 3
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -319,16 +362,15 @@
                 }
             });
             
-            // Employés ajoutés par mois
             new Chart(document.getElementById('employesParMoisChart'), {
                 type: 'bar',
                 data: {
                     labels: @json(collect($employesParMois)->pluck('month')),
                     datasets: [{
-                        label: 'Employés Ajoutés',
+                        label: 'Ajoutés',
                         data: @json(collect($employesParMois)->pluck('count')),
                         backgroundColor: colors.info,
-                        borderRadius: 8
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -339,16 +381,15 @@
                 }
             });
             
-            // Entreprises ajoutées par mois
             new Chart(document.getElementById('entreprisesParMoisChart'), {
                 type: 'bar',
                 data: {
                     labels: @json(collect($entreprisesParMois)->pluck('month')),
                     datasets: [{
-                        label: 'Entreprises Ajoutées',
+                        label: 'Ajoutées',
                         data: @json(collect($entreprisesParMois)->pluck('count')),
                         backgroundColor: colors.warning,
-                        borderRadius: 8
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -359,7 +400,6 @@
                 }
             });
             
-            // Répartition employés
             new Chart(document.getElementById('employesBySiegeChart'), {
                 type: 'doughnut',
                 data: {
@@ -372,11 +412,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }
                 }
             });
             
-            // Répartition entreprises
             new Chart(document.getElementById('entreprisesBySiegeChart'), {
                 type: 'doughnut',
                 data: {
@@ -389,7 +428,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }
                 }
             });
         });
