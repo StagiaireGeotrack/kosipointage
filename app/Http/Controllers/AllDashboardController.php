@@ -290,17 +290,6 @@ class AllDashboardController extends Controller
                 ];
             });
         
-        // Pointages par entreprise (top 5)
-        $pointagesByEntreprise = Pointage::where('pointages.SiegeID', $user->SiegeID)
-            ->whereDate('pointages.timestamp_', $today)
-            ->join('employes', 'pointages.employee_id', '=', 'employes.ID')
-            ->join('entreprises', 'employes.EntrepriseID', '=', 'entreprises.ID')
-            ->select('entreprises.Nom', DB::raw('COUNT(*) as total'))
-            ->groupBy('entreprises.ID', 'entreprises.Nom')
-            ->orderBy('total', 'desc')
-            ->take(5)
-            ->get();
-        
         // Évolution des pointages sur 30 jours
         $pointagesLast30Days = [];
         $datesLast30Days = [];
@@ -341,7 +330,6 @@ class AllDashboardController extends Controller
             'pointagesParHeure',
             'topEmployes',
             'tauxPresence',
-            'pointagesByEntreprise',
             'avgPointagesPerDay',
             'employesPresentsToday',
             'pointagesLast30Days',
