@@ -89,8 +89,9 @@ class EntrepriseSiegeController extends Controller
         $siege = $this->repository->findById($id);
         
         // Vérifier si l'utilisateur peut accéder à ce siège
-        if (!Gate::allows('access-siege', $siege->ID)) {
-            abort(403, __('Vous n\'avez pas accès à cette page'));
+        if (!Gate::allows('access-siege', $siege->ID)) {            
+            $message = 'Vous n\'avez pas accès à cette page' ;
+            return view( '403' , compact('message') );
         }
         
         // Récupérer les entreprises et employés associés

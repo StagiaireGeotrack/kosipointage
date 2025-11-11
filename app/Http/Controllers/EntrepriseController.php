@@ -130,7 +130,8 @@ class EntrepriseController extends Controller
         $entreprise = Entreprise::findOrFail($id);
         
         if (!$entreprise->Logo) {
-            abort(404, 'Logo non trouvé');
+            $message = "Logo non trouvé" ;
+            return view( '404' , compact('message') );
         }
         
         // Décoder (et décompresser si nécessaire)
@@ -153,7 +154,8 @@ class EntrepriseController extends Controller
         $entreprise = Entreprise::findOrFail($id);
         
         if (!$entreprise->Logo) {
-            abort(404, 'Logo non trouvé');
+            $message = "Logo non trouvé" ;
+            return view( '404' , compact('message') );
         }
         
         // Décoder

@@ -16,7 +16,8 @@ class SellerController extends Controller
     {
         // Vérifier que l'utilisateur connecté est un vrai Super Admin
         if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         // Récupérer tous les vendeurs avec leurs sièges
@@ -33,7 +34,8 @@ class SellerController extends Controller
     public function create()
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         // Récupérer tous les sièges actifs
@@ -49,7 +51,8 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         $request->validate([
@@ -108,7 +111,8 @@ class SellerController extends Controller
     public function show($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         $seller = Administration::with('sellerSieges')->findOrFail($id);
@@ -127,7 +131,8 @@ class SellerController extends Controller
     public function edit($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         $seller = Administration::with('sellerSieges')->findOrFail($id);
@@ -152,7 +157,8 @@ class SellerController extends Controller
     public function update(Request $request, $id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         $seller = Administration::findOrFail($id);
@@ -222,8 +228,9 @@ class SellerController extends Controller
     // Supprimer un vendeur
     public function destroy($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+        if (!auth()->user()->isTrueSuperAdmin()) {            
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         $seller = Administration::findOrFail($id);
@@ -259,8 +266,9 @@ class SellerController extends Controller
     // Activer/Désactiver un vendeur
     public function toggleActive($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Super Administrateurs');
+        if (!auth()->user()->isTrueSuperAdmin()) {            
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
         }
 
         $seller = Administration::findOrFail($id);

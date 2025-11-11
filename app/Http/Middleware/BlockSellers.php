@@ -19,7 +19,7 @@ class BlockSellers
 
         // Si l'utilisateur est un vendeur, bloquer l'accès
         if ($user && $user->isSeller()) {
-            abort(403, __('Les vendeurs n\'ont pas accès à cette section.'));
+            abort(403, __('Les revendeurs n\'ont pas accès à cette section.'));
         }
 
         return $next($request);

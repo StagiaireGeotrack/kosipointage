@@ -157,7 +157,8 @@ class EmployeController extends Controller
         $employe = Employe::findOrFail($id);
         
         if (!$employe->FaceEncodingPath) {
-            abort(404, __('Photo de visage non trouvée'));
+            $message = "Photo de visage non trouvée" ;
+            return view( '404' , compact('message') );
         }
         
         // Décoder (et décompresser si nécessaire)
@@ -180,7 +181,8 @@ class EmployeController extends Controller
         $employe = Employe::findOrFail($id);
         
         if (!$employe->FaceEncodingPath) {
-            abort(404, __('Photo de visage non trouvée'));
+            $message = "Photo de visage non trouvée" ;
+            return view( '404' , compact('message') );
         }
         
         // Décoder

@@ -175,7 +175,8 @@ class PointageController extends Controller
         $pointage = Pointage::findOrFail($id);
         
         if (!$pointage->photo_path) {
-            abort(404, __('Face non trouvée'));
+            $message = 'Face non trouvée' ;
+            return view( '404' , compact('message') );
         }
         
         $imageData = $this->fileService->retrieveFromDatabase($pointage, 'photo_path');
@@ -189,7 +190,8 @@ class PointageController extends Controller
         $pointage = Pointage::findOrFail($id);
         
         if (!$pointage->photo_path) {
-            abort(404, __('Face non trouvée'));
+            $message = 'Face non trouvée' ;
+            return view( '404' , compact('message') );
         }
         
         $imageData = $this->fileService->retrieveFromDatabase($pointage, 'photo_path');

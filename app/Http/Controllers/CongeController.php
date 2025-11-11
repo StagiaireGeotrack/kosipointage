@@ -103,7 +103,7 @@ class CongeController extends Controller
     {
         // Le scope global vérifie automatiquement l'accès
         $employes = Employe::orderBy('Nom')->get();
-        $typesConge = ['CP', 'RTT', 'Maladie', 'Autres'];
+        $typesConge = ['CP', 'RTT', 'Maladie', 'Autres' , 'CT'];
         
         return view('conges.edit', compact('conge', 'employes', 'typesConge'));
     }
@@ -115,7 +115,7 @@ class CongeController extends Controller
             'employee_id' => 'required|exists:Employes,ID',
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
-            'type_conge' => 'required|in:CP,RTT,Maladie,Autres',
+            'type_conge' => 'required|in:CP,CT,RTT,Maladie,Autres',
             'commentaire' => 'nullable|string',
         ], [
             'employee_id.required' => 'Veuillez sélectionner un employé.',
