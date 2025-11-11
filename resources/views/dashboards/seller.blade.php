@@ -58,7 +58,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('Tableau de bord Vendeur') }}
+                {{ __('Tableau de bord') }}
             </h2>
             <div class="text-muted">
                 <i class="bi bi-calendar3"></i> {{ Carbon\Carbon::now()->isoFormat('dddd D MMMM YYYY') }}
@@ -186,7 +186,7 @@
             </div>
         </div>
 
-        {{-- Top 5 Sièges --}}
+        {{-- Sièges --}}
         <div class="row g-3 mb-4">
             <div class="col-12">
                 <div class="chart-card">

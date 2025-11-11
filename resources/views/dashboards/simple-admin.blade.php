@@ -196,21 +196,21 @@
             </div>
         </div>
 
-        {{-- Top 10 employés --}}
+        {{-- Employés --}}
         <div class="row g-3">
             <div class="col-12">
                 <div class="chart-card">
                     <h5 class="fw-bold mb-3">
-                        <i class="bi bi-award text-warning"></i> {{ __('Top 10 Employés (Ce mois)') }}
+                        <i class="bi bi-award text-warning"></i> {{ __('Employés (Ce mois)') }}
                     </h5>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center">#</th>
-                                    <th>{{ __('Employé') }}</th>
-                                    <th class="text-center">{{ __('Total Pointages') }}</th>
-                                    <th>{{ __('Progression') }}</th>
+                                    <th class="text-center text-dark">#</th>
+                                    <th class="text-dark">{{ __('Employé') }}</th>
+                                    <th class="text-center text-dark">{{ __('Total Pointages') }}</th>
+                                    <th class="text-dark">{{ __('Progression') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

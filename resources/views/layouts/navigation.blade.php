@@ -235,14 +235,15 @@
             
             <ul class="navbar-nav me-auto">
                 
-                {{-- Tableau de bord : Seulement pour les vrais Super Admin --}}
-                @can('superadmin')
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active-link' : '' }}">
+                    <a href="@if(auth()->user()->isTrueSuperAdmin()) {{ route('dashboard') }} 
+                            @elseif(auth()->user()->isSeller()) {{ route('dashboard.seller') }} 
+                            @else {{ route('dashboard.simple-admin') }} 
+                            @endif" 
+                            class="nav-link {{ request()->routeIs('dashboard') ? 'active-link' : '' }}">
                         <i class="bi bi-speedometer2"></i> {{ __('Tableau de bord') }}
                     </a>
                 </li>
-                @endcan                
                 
                 {{-- Siège : Visible par tous (Super Admin, Revendeur, Simple Admin) --}}
                 <li class="nav-item">
