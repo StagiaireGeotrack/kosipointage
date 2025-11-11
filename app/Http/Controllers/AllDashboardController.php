@@ -20,7 +20,8 @@ class AllDashboardController extends Controller
         
         // Vérifier que c'est bien un vendeur
         if (!$user->isSeller()) {
-            abort(403, 'Accès réservé aux vendeurs');
+            $message = "Accès réservé aux vendeurs" ;
+            return view( '403' , compact('message') );
         }
         
         $siegeIds = $user->getSiegeIdsAccessibles();
@@ -80,13 +81,14 @@ class AllDashboardController extends Controller
         
         // Vérifier que c'est bien un simple admin
         if (!$user->isSimpleAdmin()) {
-            abort(403, 'Accès réservé aux administrateurs simples');
+            $message = "Accès réservé aux administrateurs simples" ;
+            return view( '403' , compact('message') );
         }
         
         // Vérifier qu'il a un siège
-        if (!$user->SiegeID) {
-            abort(403, 'Aucun siège assigné');
-        }
+        // if (!$user->SiegeID) {
+        //     abort(403, 'Aucun siège assigné');
+        // }
         
         $siege = EntrepriseSiege::find($user->SiegeID);
         
