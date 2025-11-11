@@ -82,8 +82,9 @@ class AllDashboardController extends Controller
             ->where('CreatedAt', '>=', $startOfWeek)
             ->count();
         
+        // Tous les sièges
         $topSieges = EntrepriseSiege::whereIn('ID', $siegeIds)
-            ->withCount('employes')
+            ->withCount('employes', 'entreprises')
             ->orderBy('employes_count', 'desc')
             ->get();
         
@@ -228,13 +229,13 @@ class AllDashboardController extends Controller
         
         $siege = EntrepriseSiege::find($user->SiegeID);
         
-        // Gestion des filtres de période
-        $period = $request->get('period', 'today');
+        // Gestion des filtres de période - CORRECTION: défaut 'week' au lieu de 'today'
+        $period = $request->get('period', 'week');
         $filterStartDate = null;
         $filterEndDate = null;
         
         if ($period === 'custom') {
-            $filterStartDate = $request->get('start_date') ? Carbon::parse($request->get('start_date')) : Carbon::today();
+            $filterStartDate = $request->get('start_date') ? Carbon::parse($request->get('start_date')) : Carbon::now()->startOfWeek();
             $filterEndDate = $request->get('end_date') ? Carbon::parse($request->get('end_date')) : Carbon::now();
         } elseif ($period === 'today') {
             $filterStartDate = Carbon::today();
@@ -259,11 +260,9 @@ class AllDashboardController extends Controller
         $totalEmployes = Employe::where('SiegeID', $user->SiegeID)->count();
         
         // Pointages avec filtre
-        $pointagesQuery = Pointage::where('SiegeID', $user->SiegeID);
-        if ($filterStartDate && $filterEndDate) {
-            $pointagesQuery->whereBetween('timestamp_', [$filterStartDate, $filterEndDate]);
-        }
-        $pointagesPeriode = $pointagesQuery->count();
+        $pointagesPeriode = Pointage::where('SiegeID', $user->SiegeID)
+            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
+            ->count();
         
         $pointagesToday = Pointage::where('SiegeID', $user->SiegeID)->whereDate('timestamp_', $today)->count();
         $pointagesWeek = Pointage::where('SiegeID', $user->SiegeID)->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])->count();
@@ -297,26 +296,20 @@ class AllDashboardController extends Controller
                 ->count();
         }
         
-        // Pointages par type (utilise les filtres)
+        // Pointages par type (utilise les filtres) - CORRECTION
         $pointagesEntree = Pointage::where('SiegeID', $user->SiegeID)
             ->where('type_', 'entry')
-            ->when($filterStartDate && $filterEndDate, function($q) use ($filterStartDate, $filterEndDate) {
-                return $q->whereBetween('timestamp_', [$filterStartDate, $filterEndDate]);
-            })
+            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
             ->count();
             
         $pointagesSortie = Pointage::where('SiegeID', $user->SiegeID)
             ->where('type_', 'exit')
-            ->when($filterStartDate && $filterEndDate, function($q) use ($filterStartDate, $filterEndDate) {
-                return $q->whereBetween('timestamp_', [$filterStartDate, $filterEndDate]);
-            })
+            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
             ->count();
         
-        // Pointages par méthode (utilise les filtres)
+        // Pointages par méthode (utilise les filtres) - CORRECTION
         $pointagesByMethod = Pointage::where('SiegeID', $user->SiegeID)
-            ->when($filterStartDate && $filterEndDate, function($q) use ($filterStartDate, $filterEndDate) {
-                return $q->whereBetween('timestamp_', [$filterStartDate, $filterEndDate]);
-            })
+            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
             ->select('auth_method', DB::raw('COUNT(*) as count'))
             ->groupBy('auth_method')
             ->get();
@@ -339,12 +332,13 @@ class AllDashboardController extends Controller
             ];
         }
         
-        // Top 10 employés ce mois
+        // Top 10 employés ce mois - CORRECTION: ajout de ->take(10)
         $topEmployes = Pointage::where('SiegeID', $user->SiegeID)
             ->whereBetween('timestamp_', [$startOfMonth, $endOfMonth])
             ->select('employee_id', DB::raw('COUNT(*) as total_pointages'))
             ->groupBy('employee_id')
             ->orderBy('total_pointages', 'desc')
+            ->take(10)
             ->get()
             ->map(function($item) {
                 $employe = Employe::find($item->employee_id);
