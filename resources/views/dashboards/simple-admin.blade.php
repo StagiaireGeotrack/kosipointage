@@ -5,15 +5,15 @@
         .stats-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
         
         .stats-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
         
         .stats-card.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
@@ -25,32 +25,18 @@
         
         .chart-card {
             background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-        }
-        
-        .chart-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         
         .badge-new {
             background: rgba(16, 185, 129, 0.15);
             color: #10b981;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .filter-card {
-            background: white;
+            padding: 3px 8px;
             border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
         }
     </style>
     @endpush
@@ -60,60 +46,26 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 {{ __('Tableau de bord') }} - {{ $siege->Nom }}
             </h2>
-            <div class="text-muted">
+            <div class="text-muted small">
                 <i class="bi bi-calendar3"></i> {{ Carbon\Carbon::now()->isoFormat('dddd D MMMM YYYY') }}
             </div>
         </div>
     </x-slot>
 
     <div class="p-2">
-        {{-- Formulaire de filtres --}}
-        <div class="filter-card">
-            <form method="GET" action="{{ route('dashboard.simple-admin') }}" class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label for="period" class="form-label small fw-medium">{{ __('Période pour Pointages') }}</label>
-                    <select name="period" id="period" class="form-select" onchange="toggleCustomDates()">
-                        <option value="today" {{ $period == 'today' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
-                        <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
-                        <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
-                        <option value="custom" {{ $period == 'custom' ? 'selected' : '' }}>{{ __('Personnalisée') }}</option>
-                    </select>
-                </div>
-                
-                <div id="customDates" class="col-md-6 {{ $period !== 'custom' ? 'd-none' : '' }}">
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <label for="start_date" class="form-label small fw-medium">{{ __('Date début') }}</label>
-                            <input type="date" name="start_date" id="start_date" value="{{ $filterStartDate ? $filterStartDate->format('Y-m-d') : '' }}" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="end_date" class="form-label small fw-medium">{{ __('Date fin') }}</label>
-                            <input type="date" name="end_date" id="end_date" value="{{ $filterEndDate ? $filterEndDate->format('Y-m-d') : '' }}" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-search"></i> {{ __('Filtrer') }}
-                    </button>
-                </div>
-            </form>
-        </div>
-
         {{-- Statistiques principales --}}
-        <div class="row g-3 mb-4">
+        <div class="row g-2 mb-3">
             <div class="col-lg-2 col-md-4">
                 <div class="stats-card blue">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="small opacity-75">{{ __('Entreprises') }}</div>
-                            <h2 class="fw-bold mt-2 mb-0">{{ $totalEntreprises }}</h2>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $totalEntreprises }}</h3>
                             @if($entreprisesCeMois > 0)
-                                <small class="badge-new mt-2">+{{ $entreprisesCeMois }} ce mois</small>
+                                <small class="badge-new mt-1">+{{ $entreprisesCeMois }}</small>
                             @endif
                         </div>
-                        <i class="bi bi-shop fs-1 opacity-50"></i>
+                        <i class="bi bi-shop fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -123,12 +75,12 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="small opacity-75">{{ __('Employés') }}</div>
-                            <h2 class="fw-bold mt-2 mb-0">{{ $totalEmployes }}</h2>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $totalEmployes }}</h3>
                             @if($employesCeMois > 0)
-                                <small class="badge-new mt-2">+{{ $employesCeMois }} ce mois</small>
+                                <small class="badge-new mt-1">+{{ $employesCeMois }}</small>
                             @endif
                         </div>
-                        <i class="bi bi-people fs-1 opacity-50"></i>
+                        <i class="bi bi-people fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -137,11 +89,11 @@
                 <div class="stats-card orange">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Période filtrée') }}</div>
-                            <h2 class="fw-bold mt-2 mb-0">{{ $pointagesPeriode }}</h2>
-                            <small class="opacity-75">{{ __('pointages') }}</small>
+                            <div class="small opacity-75">{{ __('Aujourd\'hui') }}</div>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $pointagesToday }}</h3>
+                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('pointages') }}</small>
                         </div>
-                        <i class="bi bi-filter fs-1 opacity-50"></i>
+                        <i class="bi bi-clock-history fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -150,11 +102,11 @@
                 <div class="stats-card purple">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Cette semaine') }}</div>
-                            <h2 class="fw-bold mt-2 mb-0">{{ $pointagesWeek }}</h2>
-                            <small class="opacity-75">{{ __('pointages') }}</small>
+                            <div class="small opacity-75">{{ __('Semaine') }}</div>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $pointagesWeek }}</h3>
+                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('pointages') }}</small>
                         </div>
-                        <i class="bi bi-calendar-week fs-1 opacity-50"></i>
+                        <i class="bi bi-calendar-week fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -164,10 +116,10 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="small opacity-75">{{ __('Ce mois') }}</div>
-                            <h2 class="fw-bold mt-2 mb-0">{{ $pointagesMonth }}</h2>
-                            <small class="opacity-75">{{ __('pointages') }}</small>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $pointagesMonth }}</h3>
+                            <small class="opacity-75" style="font-size: 0.7rem;">{{ __('pointages') }}</small>
                         </div>
-                        <i class="bi bi-calendar3 fs-1 opacity-50"></i>
+                        <i class="bi bi-calendar3 fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -176,83 +128,82 @@
                 <div class="stats-card teal">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="small opacity-75">{{ __('Taux présence') }}</div>
-                            <h2 class="fw-bold mt-2 mb-0">{{ $tauxPresence }}%</h2>
-                            <small class="opacity-75">{{ $employesPresentsToday }}/{{ $totalEmployes }}</small>
+                            <div class="small opacity-75">{{ __('Présence') }}</div>
+                            <h3 class="fw-bold mt-1 mb-0">{{ $tauxPresence }}%</h3>
+                            <small class="opacity-75" style="font-size: 0.7rem;">{{ $employesPresentsToday }}/{{ $totalEmployes }}</small>
                         </div>
-                        <i class="bi bi-person-check fs-1 opacity-50"></i>
+                        <i class="bi bi-person-check fs-2 opacity-50"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Graphiques principaux --}}
-        <div class="row g-3 mb-3">
-            <div class="col-lg-12">
+        {{-- Graphiques principaux en 2 colonnes --}}
+        <div class="row g-2 mb-2">
+            <div class="col-lg-6">
                 <div class="chart-card">
-                    <h6 class="fw-bold mb-3">
-                        <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution des Pointages (30 derniers jours)') }}
+                    <h6 class="fw-bold mb-2 small">
+                        <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution Pointages (30 jours)') }}
                     </h6>
-                    <canvas id="pointagesEvolutionChart" height="150"></canvas>
+                    <canvas id="pointagesEvolutionChart" height="120"></canvas>
                 </div>
             </div>
-        </div>
 
-        <div class="row g-3 mb-3">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <div class="chart-card">
-                    <h6 class="fw-bold mb-3">
+                    <h6 class="fw-bold mb-2 small">
                         <i class="bi bi-clock text-info"></i> {{ __('Pointages par Heure (Aujourd\'hui)') }}
                     </h6>
-                    <canvas id="pointagesByHourChart" height="130"></canvas>
+                    <canvas id="pointagesByHourChart" height="120"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="row g-3 mb-3">
+        {{-- Charts en 3 colonnes --}}
+        <div class="row g-2 mb-2">
             <div class="col-lg-4">
                 <div class="chart-card">
-                    <h6 class="fw-bold mb-3">
-                        <i class="bi bi-arrow-left-right text-success"></i> {{ __('Type de Pointages') }}
+                    <h6 class="fw-bold mb-2 small">
+                        <i class="bi bi-arrow-left-right text-success"></i> {{ __('Type Pointages (Semaine)') }}
                     </h6>
-                    <canvas id="typeChart" height="180"></canvas>
+                    <canvas id="typeChart" height="140"></canvas>
                 </div>
             </div>
             
             <div class="col-lg-4">
                 <div class="chart-card">
-                    <h6 class="fw-bold mb-3">
+                    <h6 class="fw-bold mb-2 small">
                         <i class="bi bi-person-check text-info"></i> {{ __('Statut Employés') }}
                     </h6>
-                    <canvas id="employesChart" height="180"></canvas>
+                    <canvas id="employesChart" height="140"></canvas>
                 </div>
             </div>
             
             <div class="col-lg-4">
                 <div class="chart-card">
-                    <h6 class="fw-bold mb-3">
-                        <i class="bi bi-fingerprint text-primary"></i> {{ __('Méthodes Auth.') }}
+                    <h6 class="fw-bold mb-2 small">
+                        <i class="bi bi-fingerprint text-primary"></i> {{ __('Méthodes Auth. (Semaine)') }}
                     </h6>
-                    <canvas id="methodChart" height="180"></canvas>
+                    <canvas id="methodChart" height="140"></canvas>
                 </div>
             </div>
         </div>
 
-        {{-- Top 10 employés --}}
-        <div class="row g-3">
+        {{-- Top employés --}}
+        <div class="row g-2">
             <div class="col-12">
                 <div class="chart-card">
-                    <h6 class="fw-bold mb-3">
-                        <i class="bi bi-award text-warning"></i> {{ __('Employés (Ce mois)') }}
+                    <h6 class="fw-bold mb-2 small">
+                        <i class="bi bi-award text-warning"></i> {{ __('Top 10 Employés (Ce mois)') }}
                     </h6>
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover align-middle">
+                        <table class="table table-sm table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center text-dark">#</th>
-                                    <th class="text-center text-dark">{{ __('Employé') }}</th>
-                                    <th  class="text-center text-dark">{{ __('Total Pointages') }}</th>
-                                    <th class="text-center text-dark">{{ __('Progression') }}</th>
+                                    <th class="text-center">#</th>
+                                    <th>{{ __('Employé') }}</th>
+                                    <th class="text-center">{{ __('Pointages') }}</th>
+                                    <th>{{ __('Progression') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -263,22 +214,22 @@
                                             {{ $index + 1 }}
                                         </span>
                                     </td>
-                                    <td class="fw-bold">{{ $emp['name'] }}</td>
+                                    <td class="fw-bold small">{{ $emp['name'] }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-primary">{{ $emp['total'] }}</span>
                                     </td>
                                     <td>
-                                        <div class="progress" style="height: 18px;">
+                                        <div class="progress" style="height: 16px;">
                                             <div class="progress-bar bg-success" 
                                                  style="width: {{ ($emp['total'] / max($topEmployes->first()['total'], 1)) * 100 }}%">
-                                                {{ round(($emp['total'] / max($topEmployes->first()['total'], 1)) * 100, 1) }}%
+                                                <small style="font-size: 0.7rem;">{{ round(($emp['total'] / max($topEmployes->first()['total'], 1)) * 100, 1) }}%</small>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">
+                                    <td colspan="4" class="text-center text-muted small">
                                         {{ __('Aucun pointage ce mois') }}
                                     </td>
                                 </tr>
@@ -293,20 +244,9 @@
 
     @push('scripts')
     <script>
-        function toggleCustomDates() {
-            const period = document.getElementById('period').value;
-            const customDates = document.getElementById('customDates');
-            
-            if (period === 'custom') {
-                customDates.classList.remove('d-none');
-            } else {
-                customDates.classList.add('d-none');
-            }
-        }
-        
         document.addEventListener('DOMContentLoaded', function() {
             Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
-            Chart.defaults.font.size = 11;
+            Chart.defaults.font.size = 10;
             
             const colors = {
                 primary: 'rgba(59, 130, 246, 0.8)',
@@ -324,7 +264,7 @@
                     datasets: [{
                         label: 'Pointages',
                         data: @json($pointagesLast30Days),
-                        backgroundColor: colors.primary.replace('0.8', '0.2'),
+                        backgroundColor: colors.primary.replace('0.8', '0.1'),
                         borderColor: colors.primary,
                         borderWidth: 2,
                         tension: 0.4,
@@ -335,7 +275,10 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                    scales: { 
+                        y: { beginAtZero: true, ticks: { font: { size: 9 } } }, 
+                        x: { ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 45 } } 
+                    }
                 }
             });
             
@@ -348,14 +291,17 @@
                         label: 'Pointages',
                         data: @json(collect($pointagesParHeure)->pluck('count')),
                         backgroundColor: colors.info,
-                        borderRadius: 6
+                        borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                    scales: { 
+                        y: { beginAtZero: true, ticks: { font: { size: 9 } } }, 
+                        x: { ticks: { font: { size: 9 } } } 
+                    }
                 }
             });
             
@@ -375,7 +321,7 @@
                     plugins: { 
                         legend: { 
                             position: 'bottom',
-                            labels: { font: { size: 10 } }
+                            labels: { font: { size: 9 }, boxWidth: 12, padding: 8 }
                         } 
                     }
                 }
@@ -397,7 +343,7 @@
                     plugins: { 
                         legend: { 
                             position: 'bottom',
-                            labels: { font: { size: 10 } }
+                            labels: { font: { size: 9 }, boxWidth: 12, padding: 8 }
                         } 
                     }
                 }
@@ -412,14 +358,17 @@
                         label: 'Pointages',
                         data: @json($pointagesByMethod->pluck('count')),
                         backgroundColor: colors.primary,
-                        borderRadius: 6
+                        borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                    scales: { 
+                        y: { beginAtZero: true, ticks: { font: { size: 9 } } }, 
+                        x: { ticks: { font: { size: 9 } } } 
+                    }
                 }
             });
         });

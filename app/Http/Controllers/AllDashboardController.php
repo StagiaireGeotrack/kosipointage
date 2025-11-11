@@ -16,7 +16,7 @@ class AllDashboardController extends Controller
     /**
      * Dashboard pour les Vendeurs
      */
-    public function dashboardSeller(Request $request) 
+    public function dashboardSeller() 
     {
         $user = auth()->user();
         
@@ -25,37 +25,6 @@ class AllDashboardController extends Controller
         }
         
         $siegeIds = $user->getSiegeIdsAccessibles();
-        
-        // Gestion des filtres de période
-        $period = $request->get('period', 'all');
-        $startDate = null;
-        $endDate = null;
-        
-        if ($period === 'custom') {
-            $startDate = $request->get('start_date') ? Carbon::parse($request->get('start_date')) : Carbon::now()->subMonth();
-            $endDate = $request->get('end_date') ? Carbon::parse($request->get('end_date')) : Carbon::now();
-        } elseif ($period === 'today') {
-            $startDate = Carbon::today();
-            $endDate = Carbon::now();
-        } elseif ($period === 'week') {
-            $startDate = Carbon::now()->startOfWeek();
-            $endDate = Carbon::now()->endOfWeek();
-        } elseif ($period === 'month') {
-            $startDate = Carbon::now()->startOfMonth();
-            $endDate = Carbon::now()->endOfMonth();
-        }
-        
-        // Query builder pour employés
-        $employesQuery = Employe::whereIn('SiegeID', $siegeIds);
-        if ($startDate && $endDate) {
-            $employesQuery->whereBetween('CreatedAt', [$startDate, $endDate]);
-        }
-        
-        // Query builder pour entreprises
-        $entreprisesQuery = Entreprise::whereIn('SiegeID', $siegeIds);
-        if ($startDate && $endDate) {
-            $entreprisesQuery->whereBetween('CreatedAt', [$startDate, $endDate]);
-        }
         
         // Statistiques générales
         $totalSieges = EntrepriseSiege::whereIn('ID', $siegeIds)->count();
@@ -70,11 +39,16 @@ class AllDashboardController extends Controller
         $entreprisesActives = Entreprise::whereIn('SiegeID', $siegeIds)->where('Actived', 1)->count();
         $entreprisesInactives = Entreprise::whereIn('SiegeID', $siegeIds)->where('Actived', 0)->count();
         
-        // Employés ajoutés dans la période
-        $employesPeriode = $employesQuery->count();
+        // Employés ajoutés ce mois
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $employesCeMois = Employe::whereIn('SiegeID', $siegeIds)
+            ->where('CreatedAt', '>=', $startOfMonth)
+            ->count();
         
-        // Entreprises ajoutées dans la période
-        $entreprisesPeriode = $entreprisesQuery->count();
+        // Entreprises ajoutées ce mois
+        $entreprisesCeMois = Entreprise::whereIn('SiegeID', $siegeIds)
+            ->where('CreatedAt', '>=', $startOfMonth)
+            ->count();
         
         // Employés ajoutés cette semaine
         $startOfWeek = Carbon::now()->startOfWeek();
@@ -85,6 +59,7 @@ class AllDashboardController extends Controller
         // Tous les sièges
         $topSieges = EntrepriseSiege::whereIn('ID', $siegeIds)
             ->withCount('employes', 'entreprises')
+            ->orderBy('employes_count', 'desc')
             ->get();
         
         // Évolution des employés sur 12 mois
@@ -195,8 +170,8 @@ class AllDashboardController extends Controller
             'employesInactifs',
             'entreprisesActives',
             'entreprisesInactives',
-            'employesPeriode',
-            'entreprisesPeriode',
+            'employesCeMois',
+            'entreprisesCeMois',
             'employesCetteSemaine',
             'topSieges',
             'employesBySiege',
@@ -204,17 +179,14 @@ class AllDashboardController extends Controller
             'entreprisesEvolution',
             'entreprisesBySiege',
             'employesParMois',
-            'entreprisesParMois',
-            'period',
-            'startDate',
-            'endDate'
+            'entreprisesParMois'
         ));
     }
 
     /**
      * Dashboard pour les Simple Admin
      */
-    public function dashboardSimpleAdmin(Request $request) 
+    public function dashboardSimpleAdmin() 
     {
         $user = auth()->user();
         
@@ -228,25 +200,6 @@ class AllDashboardController extends Controller
         
         $siege = EntrepriseSiege::find($user->SiegeID);
         
-        // Gestion des filtres de période - CORRECTION: défaut 'week' au lieu de 'today'
-        $period = $request->get('period', 'week');
-        $filterStartDate = null;
-        $filterEndDate = null;
-        
-        if ($period === 'custom') {
-            $filterStartDate = $request->get('start_date') ? Carbon::parse($request->get('start_date')) : Carbon::now()->startOfWeek();
-            $filterEndDate = $request->get('end_date') ? Carbon::parse($request->get('end_date')) : Carbon::now();
-        } elseif ($period === 'today') {
-            $filterStartDate = Carbon::today();
-            $filterEndDate = Carbon::now();
-        } elseif ($period === 'week') {
-            $filterStartDate = Carbon::now()->startOfWeek();
-            $filterEndDate = Carbon::now()->endOfWeek();
-        } elseif ($period === 'month') {
-            $filterStartDate = Carbon::now()->startOfMonth();
-            $filterEndDate = Carbon::now()->endOfMonth();
-        }
-        
         // Dates pour les statistiques
         $today = Carbon::today();
         $startOfWeek = Carbon::now()->startOfWeek();
@@ -258,11 +211,7 @@ class AllDashboardController extends Controller
         $totalEntreprises = Entreprise::where('SiegeID', $user->SiegeID)->count();
         $totalEmployes = Employe::where('SiegeID', $user->SiegeID)->count();
         
-        // Pointages avec filtre
-        $pointagesPeriode = Pointage::where('SiegeID', $user->SiegeID)
-            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
-            ->count();
-        
+        // Pointages
         $pointagesToday = Pointage::where('SiegeID', $user->SiegeID)->whereDate('timestamp_', $today)->count();
         $pointagesWeek = Pointage::where('SiegeID', $user->SiegeID)->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])->count();
         $pointagesMonth = Pointage::where('SiegeID', $user->SiegeID)->whereBetween('timestamp_', [$startOfMonth, $endOfMonth])->count();
@@ -295,20 +244,20 @@ class AllDashboardController extends Controller
                 ->count();
         }
         
-        // Pointages par type (utilise les filtres) - CORRECTION
+        // Pointages par type
         $pointagesEntree = Pointage::where('SiegeID', $user->SiegeID)
             ->where('type_', 'entry')
-            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
+            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])
             ->count();
             
         $pointagesSortie = Pointage::where('SiegeID', $user->SiegeID)
             ->where('type_', 'exit')
-            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
+            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])
             ->count();
         
-        // Pointages par méthode (utilise les filtres) - CORRECTION
+        // Pointages par méthode
         $pointagesByMethod = Pointage::where('SiegeID', $user->SiegeID)
-            ->whereBetween('timestamp_', [$filterStartDate, $filterEndDate])
+            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])
             ->select('auth_method', DB::raw('COUNT(*) as count'))
             ->groupBy('auth_method')
             ->get();
@@ -331,7 +280,7 @@ class AllDashboardController extends Controller
             ];
         }
         
-        // Top 10 employés ce mois - CORRECTION: ajout de ->take(10)
+        // Top 10 employés ce mois
         $topEmployes = Pointage::where('SiegeID', $user->SiegeID)
             ->whereBetween('timestamp_', [$startOfMonth, $endOfMonth])
             ->select('employee_id', DB::raw('COUNT(*) as total_pointages'))
@@ -375,7 +324,6 @@ class AllDashboardController extends Controller
             'pointagesToday',
             'pointagesWeek',
             'pointagesMonth',
-            'pointagesPeriode',
             'employesActifs',
             'employesInactifs',
             'entreprisesActives',
@@ -393,10 +341,7 @@ class AllDashboardController extends Controller
             'pointagesLast30Days',
             'datesLast30Days',
             'employesCeMois',
-            'entreprisesCeMois',
-            'period',
-            'filterStartDate',
-            'filterEndDate'
+            'entreprisesCeMois'
         ));
     }
 }
