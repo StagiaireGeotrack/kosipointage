@@ -146,28 +146,12 @@
 
         {{-- Graphiques principaux --}}
         <div class="row g-3 mb-4">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="chart-card">
                     <h5 class="fw-bold mb-3">
                         <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution des Pointages (30 derniers jours)') }}
                     </h5>
                     <canvas id="pointagesEvolutionChart" height="200"></canvas>
-                </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <div class="chart-card">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-trophy text-warning"></i> {{ __('Top Entreprises') }}
-                    </h5>
-                    @forelse($pointagesByEntreprise as $item)
-                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
-                            <span class="fw-medium">{{ Str::limit($item->Nom, 20) }}</span>
-                            <span class="badge bg-primary">{{ $item->total }}</span>
-                        </div>
-                    @empty
-                        <p class="text-muted text-center">{{ __('Aucun pointage aujourd\'hui') }}</p>
-                    @endforelse
                 </div>
             </div>
         </div>
@@ -230,7 +214,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($topEmployes as $index => $emp)
+                                @forelse($topEmployes as $index => $emp)
                                 <tr>
                                     <td class="text-center">
                                         <span class="badge {{ $index == 0 ? 'bg-warning' : ($index == 1 ? 'bg-secondary' : 'bg-info') }}">
@@ -250,7 +234,13 @@
                                         </div>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        {{ __('Aucun pointage ce mois') }}
+                                    </td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
