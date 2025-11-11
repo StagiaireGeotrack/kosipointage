@@ -85,7 +85,6 @@ class AllDashboardController extends Controller
         // Tous les sièges
         $topSieges = EntrepriseSiege::whereIn('ID', $siegeIds)
             ->withCount('employes', 'entreprises')
-            ->orderBy('employes_count', 'desc')
             ->get();
         
         // Évolution des employés sur 12 mois
