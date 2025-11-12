@@ -87,8 +87,7 @@ class CongeController extends Controller
         // Le SiegeID sera automatiquement rempli par le boot()
         Conge::create($validated);
 
-        return redirect()->route('conges.index')
-            ->with('success', 'Congé créé avec succès.');
+        return redirect()->back()->with('success', 'Congé créé avec succès.');
     }
 
     public function show(Conge $conge)
@@ -132,8 +131,7 @@ class CongeController extends Controller
 
         $conge->update($validated);
 
-        return redirect()->route('conges.index')
-            ->with('success', 'Congé modifié avec succès.');
+        return redirect()->back()->with('success', 'Congé modifié avec succès.');
     }
 
     public function destroy(Conge $conge)
@@ -141,8 +139,7 @@ class CongeController extends Controller
         // Le scope global vérifie automatiquement l'accès
         $conge->delete();
 
-        return redirect()->route('conges.index')
-            ->with('success', 'Congé supprimé avec succès.');
+        return redirect()->back()->with('success', 'Congé supprimé avec succès.');
     }
 
     public function exportExcel(Request $request)

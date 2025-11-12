@@ -87,7 +87,7 @@ class SellerController extends Controller
         return $this->exportService->exportToPdf($data, "Liste des revendeurs", 'exports.generic');
     }
 
-    // Afficher le formulaire de création d'un vendeur
+    // Afficher le formulaire de création d'un revendeur
     public function create()
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
@@ -104,7 +104,7 @@ class SellerController extends Controller
         return view('admin.sellers.create', compact('sieges'));
     }
 
-    // Enregistrer un nouveau vendeur
+    // Enregistrer un nouveau revendeur
     public function store(Request $request)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
@@ -135,7 +135,7 @@ class SellerController extends Controller
         DB::beginTransaction();
 
         try {
-            // Créer le vendeur
+            // Créer le revendeur
             $seller = Administration::create([
                 'Identifiant_email' => $request->email,
                 'Password_' => sha1($request->password), // Utilisez Hash::make() si vous préférez bcrypt
@@ -145,14 +145,14 @@ class SellerController extends Controller
                 'Actived' => 1,
             ]);
 
-            // Assigner les sièges au vendeur
+            // Assigner les sièges au revendeur
             $seller->sellerSieges()->attach($request->siege_ids);
 
             DB::commit();
 
             return redirect()
                 ->route('sellers.index')
-                ->with('success', 'Vendeur créé avec succès');
+                ->with('success', 'Revendeur créé avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -160,11 +160,11 @@ class SellerController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création du vendeur : ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création du revendeur : ' . $e->getMessage());
         }
     }
 
-    // Afficher les détails d'un vendeur
+    // Afficher les détails d'un revendeur
     public function show($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
@@ -174,17 +174,17 @@ class SellerController extends Controller
 
         $seller = Administration::with('sellerSieges')->findOrFail($id);
 
-        // Vérifier que c'est bien un vendeur
+        // Vérifier que c'est bien un revendeur
         if (!$seller->isSeller()) {
             return redirect()
                 ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un vendeur');
+                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
         }
 
         return view('admin.sellers.show', compact('seller'));
     }
 
-    // Afficher le formulaire d'édition d'un vendeur
+    // Afficher le formulaire d'édition d'un revendeur
     public function edit($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
@@ -194,11 +194,11 @@ class SellerController extends Controller
 
         $seller = Administration::with('sellerSieges')->findOrFail($id);
 
-        // Vérifier que c'est bien un vendeur
+        // Vérifier que c'est bien un revendeur
         if (!$seller->isSeller()) {
             return redirect()
                 ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un vendeur');
+                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
         }
 
         // Récupérer tous les sièges actifs
@@ -210,7 +210,7 @@ class SellerController extends Controller
         return view('admin.sellers.edit', compact('seller', 'sieges'));
     }
 
-    // Mettre à jour un vendeur
+    // Mettre à jour un revendeur
     public function update(Request $request, $id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
@@ -220,11 +220,11 @@ class SellerController extends Controller
 
         $seller = Administration::findOrFail($id);
 
-        // Vérifier que c'est bien un vendeur
+        // Vérifier que c'est bien un revendeur
         if (!$seller->isSeller()) {
             return redirect()
                 ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un vendeur');
+                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
         }
 
         $request->validate([
@@ -250,7 +250,7 @@ class SellerController extends Controller
         DB::beginTransaction();
 
         try {
-            // Mettre à jour les informations du vendeur
+            // Mettre à jour les informations du revendeur
             $dataToUpdate = [
                 'Identifiant_email' => $request->email,
                 'Actived' => $request->has('actived') ? 1 : 0,
@@ -268,9 +268,7 @@ class SellerController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route('sellers.index')
-                ->with('success', 'Vendeur mis à jour avec succès');
+            return redirect()->back()->with('success', 'Revendeur mis à jour avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -278,11 +276,11 @@ class SellerController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour du vendeur : ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour du revendeur : ' . $e->getMessage());
         }
     }
 
-    // Supprimer un vendeur
+    // Supprimer un revendeur
     public function destroy($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {            
@@ -292,11 +290,11 @@ class SellerController extends Controller
 
         $seller = Administration::findOrFail($id);
 
-        // Vérifier que c'est bien un vendeur
+        // Vérifier que c'est bien un revendeur
         if (!$seller->isSeller()) {
             return redirect()
                 ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un vendeur');
+                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
         }
 
         DB::beginTransaction();
@@ -307,20 +305,18 @@ class SellerController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route('sellers.index')
-                ->with('success', 'Vendeur supprimé avec succès');
+            return redirect()->back()->with('success', 'Revendeur supprimé avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
             
             return redirect()
                 ->back()
-                ->with('error', 'Erreur lors de la suppression du vendeur : ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la suppression du revendeur : ' . $e->getMessage());
         }
     }
 
-    // Activer/Désactiver un vendeur
+    // Activer/Désactiver un revendeur
     public function toggleActive($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {            
@@ -333,7 +329,7 @@ class SellerController extends Controller
         if (!$seller->isSeller()) {
             return redirect()
                 ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un vendeur');
+                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
         }
 
         $seller->update([
@@ -342,8 +338,6 @@ class SellerController extends Controller
 
         $status = $seller->Actived ? 'activé' : 'désactivé';
 
-        return redirect()
-            ->back()
-            ->with('success', "Vendeur {$status} avec succès");
+        return redirect()->back()->with('success', "Revendeur {$status} avec succès");
     }
 }

@@ -109,8 +109,7 @@ class PointageController extends Controller
             $this->fileService->storeInDatabase($request->file('photo'), 'photo_path', $pointage, 'ID');
         }
         
-        return redirect()->route('pointages.index')
-            ->with('success', __('Pointage créé avec succès'));
+        return redirect()->back()->with('success', __('Pointage créé avec succès'));
     }
     
     public function show($id)
@@ -145,16 +144,14 @@ class PointageController extends Controller
             $this->fileService->storeInDatabase($request->file('photo'), 'photo_path', $pointage, 'ID');
         }
         
-        return redirect()->route('pointages.index')
-            ->with('success', __('Pointage modifié avec succès'));
+        return redirect()->back()->with('success', __('Pointage modifié avec succès'));
     }
     
     public function destroy($id)
     {
         $this->repository->delete($id);
         
-        return redirect()->route('pointages.index')
-            ->with('success', __('Pointage supprimé avec succès'));
+        return redirect()->back()->with('success', __('Pointage supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)

@@ -67,8 +67,7 @@ class EmployeController extends Controller
         
         $employe = $this->repository->create($data);
         
-        return redirect()->route('employes.index')
-            ->with('success', __('Employé créé avec succès'));
+        return redirect()->back()->with('success', __('Employé créé avec succès'));
     }
     
     public function show($id)
@@ -121,16 +120,14 @@ class EmployeController extends Controller
         
         $this->repository->update($id, $data);
         
-        return redirect()->route('employes.index')
-            ->with('success', __('Employé modifié avec succès'));
+        return redirect()->back()->with('success', __('Employé modifié avec succès'));
     }
     
     public function destroy($id)
     {
         $this->repository->delete($id);
         
-        return redirect()->route('employes.index')
-            ->with('success', __('Employé supprimé avec succès'));
+        return redirect()->back()->with('success', __('Employé supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)

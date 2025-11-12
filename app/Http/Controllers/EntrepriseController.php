@@ -57,8 +57,7 @@ class EntrepriseController extends Controller
         
         $entreprise = $this->repository->create($data);
         
-        return redirect()->route('entreprises.index')
-            ->with('success', __('Site ou établissement créé avec succès.'));
+        return redirect()->back()->with('success', __('Site ou établissement créé avec succès.'));
     }
     
     public function show($id)
@@ -95,15 +94,13 @@ class EntrepriseController extends Controller
 
         $this->repository->update($id, $data);
         
-        return redirect()->route('entreprises.index')
-            ->with('success', __('Site ou établissement modifié avec succès.'));
+        return redirect()->back()->with('success', __('Site ou établissement modifié avec succès.'));
     }
     
     public function destroy($id)
     {
         $this->repository->delete($id);
-        return redirect()->route('entreprises.index')
-            ->with('success', __('Site ou établissement supprimé avec succès.'));
+        return redirect()->back()->with('success', __('Site ou établissement supprimé avec succès.'));
     }
     
     public function exportExcel(Request $request)

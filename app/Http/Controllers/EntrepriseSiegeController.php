@@ -82,8 +82,7 @@ class EntrepriseSiegeController extends Controller
 
         $this->repository->create($validated);
         
-        return redirect()->route('sieges.index')
-            ->with('success', __('Siège créé avec succès'));
+        return redirect()->back()->with('success', __('Siège créé avec succès'));
     }
     
     public function show($id)
@@ -151,8 +150,7 @@ class EntrepriseSiegeController extends Controller
 
         $this->repository->update($id, $validated);
         
-        return redirect()->route('sieges.index')
-            ->with('success', __('Siège modifié avec succès'));
+        return redirect()->back()->with('success', __('Siège modifié avec succès'));
     }
 
     public function update_siege(Request $request)
@@ -197,8 +195,7 @@ class EntrepriseSiegeController extends Controller
         $siege = EntrepriseSiege::findOrFail($id); 
         $siege->update($validated);
         
-        return redirect()->route('sieges.index')
-            ->with('success', __('Siège modifié avec succès'));
+        return redirect()->back()->with('success', __('Siège modifié avec succès'));
     }
     
     public function destroy($id)
@@ -221,8 +218,7 @@ class EntrepriseSiegeController extends Controller
         
         $this->repository->delete($id);
         
-        return redirect()->route('sieges.index')
-            ->with('success', __('Siège supprimé avec succès'));
+        return redirect()->back()->with('success', __('Siège supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)

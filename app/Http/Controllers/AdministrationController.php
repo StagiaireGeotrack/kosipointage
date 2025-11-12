@@ -51,8 +51,7 @@ class AdministrationController extends Controller
         
         $this->repository->create($data);
         
-        return redirect()->route('administrateurs.index')
-            ->with('success', __('Administrateur simple créé'));
+        return redirect()->back()->with('success', __('Administrateur simple créé'));
     }
     
     public function show($id)
@@ -90,22 +89,19 @@ class AdministrationController extends Controller
         
         $this->repository->update($id, $data);
         
-        return redirect()->route('administrateurs.index')
-            ->with('success', __('Compte modifié avec succès'));
+        return redirect()->back()->with('success', __('Compte modifié avec succès'));
     }
     
     public function destroy($id)
     {
         // Empêcher la suppression du compte courant
         if ((int)$id === auth()->user()->ID) {
-            return redirect()->route('administrateurs.index')
-                ->with('error', __('Ce compte ne peut pas être supprimé'));
+            return redirect()->back()->with('error', __('Ce compte ne peut pas être supprimé'));
         }
         
         $this->repository->delete($id);
         
-        return redirect()->route('administrateurs.index')
-            ->with('success', __('Compte supprimé avec succès'));
+        return redirect()->back()->with('success', __('Compte supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)

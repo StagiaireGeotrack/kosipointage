@@ -44,8 +44,7 @@ class JourNonTravailleController extends Controller
     {
         $this->repository->create($request->validated());
         
-        return redirect()->route('jours-non-travailles.index')
-            ->with('success', __('Jour non travaillé créé avec succès'));
+        return redirect()->back()->with('success', __('Jour non travaillé créé avec succès'));
     }
     
     public function show($id)
@@ -65,16 +64,14 @@ class JourNonTravailleController extends Controller
     {
         $this->repository->update($id, $request->validated());
         
-        return redirect()->route('jours-non-travailles.index')
-            ->with('success', __('Jour non travaillé modifié avec succès'));
+        return redirect()->back()->with('success', __('Jour non travaillé modifié avec succès'));
     }
     
     public function destroy($id)
     {
         $this->repository->delete($id);
         
-        return redirect()->route('jours-non-travailles.index')
-            ->with('success', __('Jour non travaillé supprimé avec succès'));
+        return redirect()->back()->with('success', __('Jour non travaillé supprimé avec succès'));
     }
     
     public function exportExcel(Request $request)
