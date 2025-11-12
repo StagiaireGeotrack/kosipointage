@@ -59,11 +59,11 @@ class AuthenticatedSessionController extends Controller
         } 
         elseif($admin->isSimpleAdmin() ) 
         {        
-            return redirect()->intended(route('sieges.index'));
+            return redirect()->intended(route('dashboard.simple-admin'));
         }
         else
         {
-            return redirect()->intended(route('sieges.index'));
+            return redirect()->intended(route('dashboard.seller'));
         }
     }
 
