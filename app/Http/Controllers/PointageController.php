@@ -62,7 +62,7 @@ class PointageController extends Controller
         
         $query = Pointage::where('employee_id', $employe->ID);
         
-        if ($type_travail) {
+        if ($type_travail  && strtoupper($type_travail) === 'NUIT' ) {
 
             // De 07h00 de la date jusqu'à 07h00 du lendemain (24h)
             $dateDebut = $date->copy()->setTime(7, 0, 0); // Ex: 2025-01-15 07:00:00
