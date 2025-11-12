@@ -54,18 +54,29 @@ class PointageController extends Controller
         return view('pointages.index', compact('pointages', 'sieges', 'employes', 'filters'));
     }
 
-    public function showDetails($employe, $date)
+    public function showDetails($employe, $date, $type_travail = null)
     {
         $employe = Employe::findOrFail($employe);
         
         $date = Carbon::parse($date);
         
-        $pointages = Pointage::where('employee_id', $employe->ID)
-            ->whereDate('timestamp_', $date)
-            ->orderBy('timestamp_')
-            ->get();
+        $query = Pointage::where('employee_id', $employe->ID);
         
-        return view('pointages.details', compact('employe', 'date', 'pointages'));
+        if ($type_travail) {
+
+            // De 07h00 de la date jusqu'à 07h00 du lendemain (24h)
+            $dateDebut = $date->copy()->setTime(7, 0, 0); // Ex: 2025-01-15 07:00:00
+            $dateFin = $date->copy()->addDay()->setTime(7, 0, 0); // Ex: 2025-01-16 07:00:00
+            
+            $query->whereBetween('timestamp_', [$dateDebut, $dateFin]);
+        } else {
+            // Travail normal : toute la journée
+            $query->whereDate('timestamp_', $date);
+        }
+        
+        $pointages = $query->orderBy('timestamp_')->get();
+        
+        return view('pointages.details', compact('employe', 'date', 'pointages', 'type_travail'));
     }
 
     public function create()
