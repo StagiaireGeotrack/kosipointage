@@ -18,6 +18,7 @@ class EntrepriseSiegeRequest extends FormRequest
         $rules = [
             'Nom' => 'required|string|max:255|unique:Entreprises_sieges,Nom',
             'Nom_Lieu_Ville' => 'nullable|string|max:255',
+            'Pays' => 'nullable|string|max:255',
             'Actived' => 'nullable|boolean',
         ];
 
@@ -40,6 +41,9 @@ class EntrepriseSiegeRequest extends FormRequest
             
             'Nom_Lieu_Ville.string' => __('Le champ :attribute doit être une chaîne de caractères', ['attribute' => __('Adresse ou ville')]),
             'Nom_Lieu_Ville.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Adresse ou ville'), 'max' => 255]),
+
+            'Pays.string' => __('Le champ :attribute doit être une chaîne de caractères', ['attribute' => __('Pays')]),
+            'Pays.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Pays'), 'max' => 255]),
             
             'Actived.boolean' => __('Le statut actif doit être vrai ou faux'),
         ];

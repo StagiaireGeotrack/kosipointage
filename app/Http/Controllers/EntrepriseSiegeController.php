@@ -3,14 +3,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Validation\Rule;
-use App\Http\Requests\EntrepriseSiegeRequest;
-use App\Models\EntrepriseSiege;
-use App\Repositories\EntrepriseSiegeRepository;
-use App\Services\ExportService;
 use Illuminate\Http\Request;
+use App\Models\EntrepriseSiege;
+use App\Services\ExportService;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\EntrepriseSiegeRequest;
+use App\Repositories\EntrepriseSiegeRepository;
 
 class EntrepriseSiegeController extends Controller
 {
@@ -52,6 +52,8 @@ class EntrepriseSiegeController extends Controller
     public function create()
     {
         $user = auth()->user();
+
+        $countries = countries();
         
         // Super Admin et Vendeur peuvent créer des sièges
         if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
@@ -59,7 +61,7 @@ class EntrepriseSiegeController extends Controller
                 ->with('error', __('Vous n\'avez pas accès à cette page'));
         }
         
-        return view('sieges.create');
+        return view( 'sieges.create', compact('countries') );
     }
     
     public function store(EntrepriseSiegeRequest $request) 
@@ -104,6 +106,8 @@ class EntrepriseSiegeController extends Controller
     public function edit($id)
     {
         $user = auth()->user();
+
+        $countries = countries();
         
         // Super Admin et Vendeur peuvent éditer des sièges
         if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
@@ -119,7 +123,7 @@ class EntrepriseSiegeController extends Controller
                 ->with('error', __('Vous n\'avez pas accès à ce siège'));
         }
         
-        return view('sieges.edit', compact('siege', 'id'));
+        return view('sieges.edit', compact('siege', 'id' , 'countries'));
     }
     
     public function update(Request $request, $id)
@@ -168,9 +172,10 @@ class EntrepriseSiegeController extends Controller
             return redirect()->route('sieges.index')
                 ->with('error', __('Vous n\'avez pas accès à ce siège'));
         }
-        
+
         $validated = $request->validate([
             'ID' => 'required|integer',
+            'Pays' => 'nullable|string|max:255',
             'Nom' => [
                 'required',
                 Rule::unique('entreprises_sieges', 'Nom')->ignore($id), 
@@ -180,6 +185,8 @@ class EntrepriseSiegeController extends Controller
             'Nom.required' => 'Le champ nom est obligatoire.',
             'Nom.unique' => 'Ce nom de siège existe déjà.',
             'Nom_Lieu_Ville.required' => 'Le champ Adresse ou ville est obligatoire.',
+            'Pays.string' => __('Le champ Pays doit être une chaîne de caractères'),
+            'Pays.max' => __('Le champ Pays ne doit pas dépasser :max caractères'),
         ]);
 
         $validated['Actived'] = $request->has('Actived') ? 1 : 0;

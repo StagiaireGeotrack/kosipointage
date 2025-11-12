@@ -16,6 +16,7 @@ class EntrepriseSiege extends Model
     protected $fillable = [
         'Nom',
         'Nom_Lieu_Ville',
+        'Pays',
         'Actived',
     ];
     

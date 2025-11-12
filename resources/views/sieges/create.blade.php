@@ -19,6 +19,19 @@
                         <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                     </div>
 
+                    <div class="mb-3">
+                        <x-input-label for="Pays" :value="__('Pays')" />
+                        <select id="Pays" name="Pays" class="form-control">
+                            <option value="">Sélectionnez un pays</option>
+                            @foreach($countries as $code => $country)
+                                <option value="{{ $code }}">
+                                    {{ $country['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('Pays')" class="mt-2" />
+                    </div>
+
                     <!-- Nom_Lieu_Ville -->
                     <div class="mb-3">
                         <x-input-label for="Nom_Lieu_Ville" :value="__('Adresse ou ville')" />
@@ -47,4 +60,6 @@
             </div>
         </div>
     </div>
+
+
 </x-app-layout>

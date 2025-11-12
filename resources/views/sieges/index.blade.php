@@ -66,7 +66,10 @@
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Adresse oun ville') }}
+                                    {{ __('Pays') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Adresse ou ville') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Nombre de sites ou établissement') }}
@@ -93,6 +96,13 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $siege->Nom }}
+                                    </td>
+                                    <td class="align-middle">
+                                        @if($siege->Pays && country($siege->Pays))
+                                            {{ strtoupper($siege->Pays) . " " . country($siege->Pays)->getName() }}
+                                        @else
+                                            <em>-</em>
+                                        @endif
                                     </td>
                                     <td class="align-middle">
                                         {{ $siege->Nom_Lieu_Ville }}
