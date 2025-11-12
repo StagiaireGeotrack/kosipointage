@@ -29,6 +29,20 @@
                         <input type="hidden" name="SiegeID" value="{{ $pointage->SiegeID }}" />
                     @endcan
                     
+                    <!-- site ou établissement -->
+                    <div class="mb-3">
+                        <x-input-label for="company_id" :value="__('Site ou établissement')" />
+                        <select id="company_id" name="company_id" class="form-select mt-1" required>
+                            <option value="">{{ __('Sélectionnez un site ou établissement') }}</option>
+                            @foreach($sites as $site)
+                                <option value="{{ $site->ID }}" {{ old('company_id') == $pointage->company_id ? 'selected' : '' }}>
+                                    {{ $site->Nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('employee_id')" class="mt-2" />
+                    </div>
+
                     <!-- Employé -->
                     <div class="mb-3">
                         <x-input-label for="employee_id" :value="__('Employé')" />

@@ -106,6 +106,9 @@
                                     {{ __('Employé') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Site ou établissement') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Date et Heure') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -143,6 +146,9 @@
                                                 <small class="text-muted">Code PIN: {{ $pointage->employe->Pin }}</small>
                                             </div>
                                         </div>
+                                    </td>                                    
+                                    <td class="align-middle">
+                                        {{ $pointage->company?->Nom }}
                                     </td>
                                     <td class="align-middle">
                                         {{ ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}

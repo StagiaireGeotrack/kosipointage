@@ -20,6 +20,7 @@ class Pointage extends Model
         'timestamp_',
         'latitude',
         'longitude',
+        'company_id',
         'photo_path',
         'synced',
         'SiegeID',
@@ -37,6 +38,11 @@ class Pointage extends Model
         return $this->belongsTo(Employe::class, 'employee_id', 'ID');
     }
     
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Entreprise::class, 'company_id', 'ID');
+    }
+
     public function siege(): BelongsTo
     {
         return $this->belongsTo(EntrepriseSiege::class, 'SiegeID', 'ID');

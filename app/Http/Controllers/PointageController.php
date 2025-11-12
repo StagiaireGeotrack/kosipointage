@@ -7,6 +7,7 @@ use App\Models\Pointage;
 use App\Models\Employe;
 use App\Models\EntrepriseSiege;
 use App\Http\Requests\PointageRequest;
+use App\Models\Entreprise;
 use App\Repositories\PointageRepository;
 use App\Services\ExportService;
 use App\Services\FileStorageService;
@@ -95,12 +96,14 @@ class PointageController extends Controller
         if (auth()->user()->IsSuperAdmin) {
             $sieges = EntrepriseSiege::all();
             $employes = collect(); // Collection vide, sera remplie par AJAX
+            $sites = Entreprise::all();
         } else {
             $sieges = EntrepriseSiege::where('ID', auth()->user()->SiegeID)->get();
             $employes = Employe::where('SiegeID', auth()->user()->SiegeID)->get();
+            $sites = Entreprise::where('SiegeID', auth()->user()->SiegeID)->get();
         }
         
-        return view('pointages.create', compact('sieges', 'employes'));
+        return view('pointages.create', compact('sieges', 'employes' , 'sites'));
     }
     
     public function store(PointageRequest $request)
@@ -137,12 +140,14 @@ class PointageController extends Controller
             $sieges = EntrepriseSiege::all();
             // Récupérer les employés du siège actuel du pointage
             $employes = Employe::where('SiegeID', $pointage->SiegeID)->get();
+            $sites = Entreprise::where('SiegeID', $pointage->SiegeID)->get();
         } else {
             $sieges = EntrepriseSiege::where('ID', auth()->user()->SiegeID)->get();
             $employes = Employe::where('SiegeID', auth()->user()->SiegeID)->get();
+            $sites = Entreprise::where('SiegeID', auth()->user()->SiegeID)->get();
         }
         
-        return view('pointages.edit', compact('pointage', 'sieges', 'employes'));
+        return view('pointages.edit', compact('pointage', 'sieges', 'employes', 'sites'));
     }
     
     public function update(PointageRequest $request, $id)

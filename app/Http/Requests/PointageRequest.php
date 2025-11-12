@@ -24,6 +24,7 @@ class PointageRequest extends FormRequest
             'longitude' => 'required|numeric|between:-180,180',
             'synced' => 'nullable|boolean',
             'SiegeID' => 'required|exists:Entreprises_sieges,ID',
+            'company_id' => 'required|exists:Entreprises,ID',
             'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5120', 
         ];
     }
@@ -55,6 +56,9 @@ class PointageRequest extends FormRequest
             
             'SiegeID.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('Siège')]),
             'SiegeID.exists' => __('Le siège sélectionné n\'existe pas'),
+
+            'company_id.required' => __('Le champ :attribute est obligatoire', ['attribute' => __('site ou établissement')]),
+            'company_id.exists' => __('Le :attribute sélectionné n\'existe pas' , ['attribute' => __('site ou établissement')]),
             
             'photo.image' => __('Le fichier doit être une image'),
             'photo.mimes' => __('L\'image doit être au format : :values'),
