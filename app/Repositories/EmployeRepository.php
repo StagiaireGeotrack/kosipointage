@@ -96,7 +96,7 @@ class EmployeRepository extends BaseRepository
                 'Empreinte Biométrique' => $employe->HasBiometricSetup ? __('Oui') : __('Non'),
                 'Image Faciale' => $employe->HasFaceSetup ? __('Oui') : __('Non'),
                 'Date de création' => ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
-                'Statut' => $employe->Actived ? __('Oui') : __('Non'),
+                'Statut' => $employe->Actived ? __('Activé') : __('Désactivé'),
                 'Siège' => $employe->siege->Nom,
             ];
         });

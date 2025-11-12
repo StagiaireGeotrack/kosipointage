@@ -68,7 +68,7 @@ class SellerController extends Controller
                 "ID" => $revender->ID ,
                 "Email" => $revender->Identifiant_email ,
                 "Nombre de Sièges" => $revender->sellerSieges->count() ,
-                "Statut" => $revender->Actived ? __('Oui') : __('Non') 
+                "Statut" => $revender->Actived ? __('Activé') : __('Désactivé') 
             ] ;
         } ) ;
 

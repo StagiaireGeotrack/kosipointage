@@ -89,7 +89,7 @@ class EntrepriseRepository extends BaseRepository
                 'Longitude' => $entreprise->Longitude,
                 'Rayon' => $entreprise->RadiusInMeters,
                 'Date de création' => ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
-                'Statut' => $entreprise->Actived ? __('Oui') : __('Non'),
+                'Statut' => $entreprise->Actived ? __('Activé') : __('Désactivé'),
                 'Siège' => $entreprise->siege->Nom,
             ];
         });

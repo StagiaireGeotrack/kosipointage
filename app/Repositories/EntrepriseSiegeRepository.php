@@ -63,7 +63,7 @@ class EntrepriseSiegeRepository extends BaseRepository
                 'Nom' => $siege->Nom,
                 'Pays' => $siege->Pays && country($siege->Pays) ? strtoupper($siege->Pays) . " " . country($siege->Pays)->getName()  : '-',
                 'Nom Lieu ou Ville' => $siege->Nom_Lieu_Ville,
-                'Statut' => $siege->Actived ? __('Oui') : __('Non'),
+                'Statut' => $siege->Actived ? __('Activé') : __('Désactivé'),
                 'Date de création' => ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
                 'Nb sites ou établissements' => $entreprisesCount,
                 'Nb employés' => $employesCount,

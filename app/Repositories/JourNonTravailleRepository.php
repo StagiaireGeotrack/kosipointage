@@ -107,7 +107,7 @@ class JourNonTravailleRepository
                 'Siège' => $jour->siege->Nom ?? '',
                 'Date de création' => ucfirst($jour->created_at ? $jour->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
                 'Dernière mise à jour' => ucfirst($jour->updated_at ? $jour->updated_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
-                'Statut' => $jour->Actived ?? '',
+                'Statut' => $jour->Actived ? __('Activé') : __('Désactivé'),
             ];
         });
     }
