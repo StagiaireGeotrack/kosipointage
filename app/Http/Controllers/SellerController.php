@@ -111,45 +111,54 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+            abort(403, 'Accès réservé aux Administrateurs');
         }
 
-        $request->validate([
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('administration', 'Identifiant_email')
-            ],
-            'password' => 'required|string|min:6',
-            'siege_ids' => 'required|array|min:1',
-            'siege_ids.*' => 'exists:Entreprises_sieges,ID',
+        $validated = $request->validate([
+            'email' => 'required|email|unique:administration,Identifiant_email',
+            'password' => 'required|min:8|confirmed',
+            'sieges' => 'required|array|min:1',
+            'sieges.*' => 'exists:Entreprises_sieges,ID',
         ], [
-            'email.required' => 'L\'email est obligatoire',
-            'email.email' => 'L\'email doit être valide',
-            'email.unique' => 'Cet email est déjà utilisé',
+            'email.required' => 'L\'adresse email est obligatoire',
+            'email.email' => 'L\'adresse email doit être valide',
+            'email.unique' => 'Cette adresse email est déjà utilisée',
             'password.required' => 'Le mot de passe est obligatoire',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères',
-            'siege_ids.required' => 'Vous devez sélectionner au moins un siège',
-            'siege_ids.min' => 'Vous devez sélectionner au moins un siège',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas',
+            'sieges.required' => 'Vous devez sélectionner au moins un siège',
+            'sieges.min' => 'Vous devez sélectionner au moins un siège',
         ]);
 
-        DB::beginTransaction();
+        // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un autre vendeur
+        $alreadyAssigned = DB::table('seller_siege')
+            ->whereIn('SiegeID', $validated['sieges'])
+            ->exists();
 
+        if ($alreadyAssigned) {
+            return back()
+                ->withErrors(['sieges' => 'Un ou plusieurs sièges sont déjà associés à un autre vendeur'])
+                ->withInput();
+        }
+
+        DB::beginTransaction();
         try {
-            // Créer le revendeur
+            // Créer le vendeur
             $seller = Administration::create([
-                'Identifiant_email' => $request->email,
-                'Password_' => sha1($request->password), // Utilisez Hash::make() si vous préférez bcrypt
+                'Identifiant_email' => $validated['email'],
+                'Password_' => sha1($validated['password']),
                 'IsSuperAdmin' => 1,
                 'IsSeller' => 1,
-                'SiegeID' => null, // Les vendeurs n'ont pas de siège principal
                 'Actived' => 1,
             ]);
 
-            // Assigner les sièges au revendeur
-            $seller->sellerSieges()->attach($request->siege_ids);
+            // Associer les sièges
+            foreach ($validated['sieges'] as $siegeId) {
+                DB::table('seller_siege')->insert([
+                    'SellerID' => $seller->ID,
+                    'SiegeID' => $siegeId,
+                ]);
+            }
 
             DB::commit();
 
@@ -159,11 +168,9 @@ class SellerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Erreur lors de la création du revendeur : ' . $e->getMessage());
+            return back()
+                ->withErrors(['error' => 'Erreur lors de la création du revendeur'])
+                ->withInput();
         }
     }
 
