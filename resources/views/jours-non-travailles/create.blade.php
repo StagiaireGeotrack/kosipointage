@@ -1,9 +1,14 @@
 {{-- resources/views/jours-non-travailles/create.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('Ajouter un jour non travaillé') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark mb-0">
+                {{ __('Ajouter un jour non travaillé') }}
+            </h2>
+            <a href="{{ route('jours-non-travailles.index') }}" class="btn btn-secondary">
+                {{ __('Retour à la liste') }}
+            </a>
+        </div>
     </x-slot>
 
     <div class="p-2">
@@ -92,9 +97,6 @@
                     
                     <!-- Boutons -->
                     <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a href="{{ route('jours-non-travailles.index') }}" class="btn btn-secondary">
-                            {{ __('Annuler') }}
-                        </a>
                         <x-primary-button class="btn btn-primary">
                             {{ __('Créer') }}
                         </x-primary-button>

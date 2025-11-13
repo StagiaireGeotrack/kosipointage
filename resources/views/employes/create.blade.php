@@ -6,7 +6,7 @@
                 {{ __('Nouveau employé') }}
             </h2>
             <a href="{{ route('employes.index') }}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Retour
+                Retour à la liste
             </a>
         </div>
     </x-slot>
@@ -118,9 +118,6 @@
                     </div>
 
                     <div class="text-end mt-4">
-                        <a href="{{ route('employes.index') }}" class="btn btn-secondary me-2">
-                            <i class="bi bi-x-circle"></i> Annuler
-                        </a>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> Enregistrer
                         </button>

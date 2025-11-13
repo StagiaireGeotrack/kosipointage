@@ -2,11 +2,11 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 class="fw-semibold fs-4 text-dark mb-0">
+            <h2 class="fw-semibold fs-4 text-dark">
                 {{ __('Nouveau revendeur') }}
             </h2>
             <a href="{{ route('sellers.index') }}" class="btn btn-secondary">
-                {{ __('Retour') }}
+                {{ __('Retour à la liste') }}
             </a>
         </div>
     </x-slot>
@@ -74,9 +74,6 @@
 
                     <!-- Boutons -->
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('sellers.index') }}" class="btn btn-secondary">
-                            {{ __('Annuler') }}
-                        </a>
                         <button type="submit" class="btn btn-primary" {{ $sieges->isEmpty() ? 'disabled' : '' }}>
                             {{ __('Créer le revendeur') }}
                         </button>

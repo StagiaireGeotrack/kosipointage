@@ -5,7 +5,7 @@
                 Détails du site ou établissement
             </h2>
             <a href="{{ route('entreprises.index') }}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Retour
+                Retour à la liste
             </a>
         </div>
     </x-slot>

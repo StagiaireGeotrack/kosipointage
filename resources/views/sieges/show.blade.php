@@ -12,7 +12,7 @@
                     </a>
                 @endcan
                 <a href="{{ route('sieges.index') }}" class="btn btn-secondary">
-                    {{ __('Retour') }}
+                    {{ __('Retour à la liste') }}
                 </a>
             </div>
         </div>

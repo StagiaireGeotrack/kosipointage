@@ -6,7 +6,7 @@
                 {{ __('Modifier le revendeur') }}
             </h2>
             <a href="{{ route('sellers.index') }}" class="btn btn-secondary">
-                {{ __('Retour') }}
+                {{ __('Retour à liste') }}
             </a>
         </div>
     </x-slot>
@@ -81,9 +81,6 @@
 
                     <!-- Boutons -->
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('sellers.index') }}" class="btn btn-secondary">
-                            {{ __('Annuler') }}
-                        </a>
                         <button type="submit" class="btn btn-primary">
                             {{ __('Mettre à jour') }}
                         </button>

@@ -6,7 +6,7 @@
                 {{ __('Nouveau Congé') }}
             </h2>
             <a href="{{ route('conges.index') }}" class="btn btn-secondary">
-                {{ __('Retour') }}
+                {{ __('Retour à la liste') }}
             </a>
         </div>
     </x-slot>
@@ -86,9 +86,6 @@
                         <x-primary-button class="btn btn-primary">
                             {{ __('Créer') }}
                         </x-primary-button>
-                        <a href="{{ route('conges.index') }}" class="btn btn-secondary">
-                            {{ __('Annuler') }}
-                        </a>
                     </div>
                 </form>
             </div>

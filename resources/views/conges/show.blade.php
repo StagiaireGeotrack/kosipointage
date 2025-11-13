@@ -10,7 +10,7 @@
                     {{ __('Modifier') }}
                 </a>
                 <a href="{{ route('conges.index') }}" class="btn btn-secondary">
-                    {{ __('Retour') }}
+                    {{ __('Retour à liste') }}
                 </a>
             </div>
         </div>

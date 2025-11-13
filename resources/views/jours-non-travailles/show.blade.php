@@ -10,7 +10,7 @@
                     <i class="bi bi-pencil me-1"></i>{{ __('Modifier') }}
                 </a>
                 <a href="{{ route('jours-non-travailles.index') }}" class="btn btn-secondary">
-                    {{ __('Retour') }}
+                    {{ __('Retour à la liste') }}
                 </a>
             </div>
         </div>

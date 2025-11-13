@@ -6,7 +6,7 @@
                 {{ __('Jours non travaillés') }}
             </h2>
             <a href="{{ route('jours-non-travailles.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i>{{ __('Nouveau jour') }}
+                <i class="bi bi-plus-circle me-1"></i>{{ __('Nouveau jour férié') }}
             </a>
         </div>
     </x-slot>

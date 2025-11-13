@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Créer une entreprise
+                Créer un site ou établissement
             </h2>
             <a href="{{ route('entreprises.index') }}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Retour
+                Retour à la liste
             </a>
         </div>
     </x-slot>

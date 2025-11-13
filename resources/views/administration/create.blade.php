@@ -1,9 +1,14 @@
 {{-- resources/views/administrateurs/create.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('Nouvel administrateur') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark">
+                {{ __('Nouveau administrateur') }}
+            </h2>
+            <a href="{{ route('administrateurs.index') }}" class="btn btn-secondary">
+                {{ __('Retour à la liste') }}
+            </a>
+        </div>
     </x-slot>
 
     <div class="p-2">
@@ -71,9 +76,6 @@
                     </div>
 
                     <div class="d-flex align-items-center justify-content-end mt-4">
-                        <a href="{{ route('administrateurs.index') }}" class="btn btn-secondary me-2">
-                            {{ __('ANNULER') }}
-                        </a>
                         <x-primary-button class="btn btn-primary">
                             {{ __('AJOUTER') }}
                         </x-primary-button>

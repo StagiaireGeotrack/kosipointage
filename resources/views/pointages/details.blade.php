@@ -5,9 +5,12 @@
             <h6 class="fw-semibold fs-4 text-dark mb-0">
                 {{ __('Détails pointages: ' . $date->format('d/m/Y') . ' - Employé(e): ' . $employe->Nom ) }}
             </h6>
-            <a href="{{ route('pointages.create') }}" class="btn btn-primary">
-                {{ __('Nouveau pointage') }}
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary btn-sm">
+                Retour
             </a>
+            <a href="{{ route('pointages.create') }}" class="btn btn-primary btn-sm">
+                {{ __('Nouveau pointage') }}
+            </a>            
         </div>
     </x-slot>
 

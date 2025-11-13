@@ -1,20 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold fs-4 text-dark">
-            {{ __('Détails administrateur') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark">
+                {{ __('Détails administrateur') }}
+            </h2>
+            <a href="{{ route('administrateurs.index') }}" class="btn btn-secondary">
+                {{ __('Retour à la liste') }}
+            </a>
+        </div>
     </x-slot>
 
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-4">
-                    <a href="{{ route('administrateurs.index') }}" class="btn btn-secondary d-inline-flex align-items-center">
-                        <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        {{ __('Retour') }}
-                    </a>
                     @if ( auth()->id() !== $administrateur->ID )
                         <div class="d-flex gap-2">
                             <a href="{{ route('administrateurs.edit', $administrateur->ID) }}" class="btn btn-primary d-inline-flex align-items-center">
