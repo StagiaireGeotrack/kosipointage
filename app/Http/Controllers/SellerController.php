@@ -162,9 +162,7 @@ class SellerController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route('sellers.index')
-                ->with('success', 'Revendeur créé avec succès');
+            return redirect()->back()->with('success', 'Revendeur créé avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -298,9 +296,7 @@ class SellerController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route('sellers.index')
-                ->with('success', 'Revendeur modifié avec succès');
+            return redirect()->back()->with('success', 'Revendeur modifié avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
