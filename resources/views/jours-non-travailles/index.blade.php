@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-end gap-2">
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-search me-1"></i>{{ __('Rechercher') }}
@@ -81,7 +81,7 @@
                     </div>
                 </form>
                     
-                <div class="d-flex mb-3 gap-2">
+                <div class="d-flex justify-content-end  mb-3 gap-2">
                     <a href="{{ route('jours-non-travailles.export.excel', request()->query()) }}" class="btn btn-success">
                         <i class="bi bi-file-earmark-excel me-1"></i>{{ __('Exporter en EXCEL') }}
                     </a>
