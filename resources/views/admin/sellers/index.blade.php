@@ -27,8 +27,8 @@
                             <x-input-label for="status" :value="__('Statut')" />
                             <select id="status" name="status" class="form-select mt-1">
                                 <option value="">{{ __('Tous') }}</option>
-                                <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>{{ __('Actif') }}</option>
-                                <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>{{ __('Inactif') }}</option>
+                                <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>{{ __('Activé') }}</option>
+                                <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>{{ __('Désactivé') }}</option>
                             </select>
                         </div>
                     </div>
@@ -93,9 +93,9 @@
                                         </td>
                                         <td class="align-middle">
                                             @if($seller->Actived)
-                                                <span class="badge bg-success">{{ __('Actif') }}</span>
+                                                <span class="badge bg-success">{{ __('Activé') }}</span>
                                             @else
-                                                <span class="badge bg-secondary">{{ __('Inactif') }}</span>
+                                                <span class="badge bg-secondary">{{ __('Désactivé') }}</span>
                                             @endif
                                         </td>
                                         <td class="align-middle">
