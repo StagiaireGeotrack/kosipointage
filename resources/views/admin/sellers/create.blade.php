@@ -54,9 +54,12 @@
                                            id="siege{{ $siege->ID }}"
                                            {{ in_array($siege->ID, old('sieges', [])) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="siege{{ $siege->ID }}">
-                                        <strong>{{ $siege->Nom }}</strong>
+                                        <strong>{{ $siege->Nom }}</strong>    
+                                        @if($siege->Pays && country($siege->Pays))
+                                            - {{ strtoupper($siege->Pays) . " " . country($siege->Pays)->getName() }} - 
+                                        @endif    
                                         @if($siege->Nom_Lieu_Ville)
-                                            - <small class="text-muted">{{ $siege->Nom_Lieu_Ville }}</small>
+                                            ( <small class="text-muted">{{ $siege->Nom_Lieu_Ville }}</small> )
                                         @endif
                                     </label>
                                 </div>

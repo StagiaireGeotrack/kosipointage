@@ -59,8 +59,11 @@
                                            {{ in_array($siege->ID, old('sieges', $currentSiegeIds)) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="siege{{ $siege->ID }}">
                                         <strong>{{ $siege->Nom }}</strong>
+                                        @if($siege->Pays && country($siege->Pays))
+                                            - {{ strtoupper($siege->Pays) . " " . country($siege->Pays)->getName() }} - 
+                                        @endif    
                                         @if($siege->Nom_Lieu_Ville)
-                                            - <small class="text-muted">{{ $siege->Nom_Lieu_Ville }}</small>
+                                            ( <small class="text-muted">{{ $siege->Nom_Lieu_Ville }}</small> )
                                         @endif
                                         @if($isCurrentlyAssigned)
                                             <span class="badge bg-success ms-2">Actuellement associé</span>
