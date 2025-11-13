@@ -131,7 +131,7 @@ class SellerController extends Controller
         ]);
 
         // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un autre vendeur
-        $alreadyAssigned = DB::table('seller_siege')
+        $alreadyAssigned = DB::table('seller_sieges')
             ->whereIn('SiegeID', $validated['sieges'])
             ->exists();
 
@@ -154,7 +154,7 @@ class SellerController extends Controller
 
             // Associer les sièges
             foreach ($validated['sieges'] as $siegeId) {
-                DB::table('seller_siege')->insert([
+                DB::table('seller_sieges')->insert([
                     'SellerID' => $seller->ID,
                     'SiegeID' => $siegeId,
                 ]);
@@ -241,67 +241,75 @@ class SellerController extends Controller
             return view( '403' , compact('message') );
         }
 
-        $seller = Administration::findOrFail($id);
+        $seller = Administration::where('ID', $id)
+            ->where('IsSeller', 1)
+            ->where('IsSuperAdmin', 1)
+            ->firstOrFail();
 
-        // Vérifier que c'est bien un revendeur
-        if (!$seller->isSeller()) {
-            return redirect()
-                ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
-        }
-
-        $request->validate([
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('administration', 'Identifiant_email')->ignore($id, 'ID')
-            ],
-            'password' => 'nullable|string|min:6',
-            'siege_ids' => 'required|array|min:1',
-            'siege_ids.*' => 'exists:Entreprises_sieges,ID',
-            'actived' => 'boolean',
+        $validated = $request->validate([
+            'email' => 'required|email|unique:administration,Identifiant_email,' . $id . ',ID',
+            'password' => 'nullable|min:8|confirmed',
+            'sieges' => 'required|array|min:1',
+            'sieges.*' => 'exists:Entreprises_sieges,ID',
         ], [
-            'email.required' => 'L\'email est obligatoire',
-            'email.email' => 'L\'email doit être valide',
-            'email.unique' => 'Cet email est déjà utilisé',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères',
-            'siege_ids.required' => 'Vous devez sélectionner au moins un siège',
-            'siege_ids.min' => 'Vous devez sélectionner au moins un siège',
+            'email.required' => 'L\'adresse email est obligatoire',
+            'email.email' => 'L\'adresse email doit être valide',
+            'email.unique' => 'Cette adresse email est déjà utilisée',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas',
+            'sieges.required' => 'Vous devez sélectionner au moins un siège',
+            'sieges.min' => 'Vous devez sélectionner au moins un siège',
         ]);
 
+        // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un AUTRE vendeur
+        $alreadyAssigned = DB::table('seller_sieges')
+            ->whereIn('SiegeID', $validated['sieges'])
+            ->where('SellerID', '!=', $id)
+            ->exists();
+
+        if ($alreadyAssigned) {
+            return back()
+                ->withErrors(['sieges' => 'Un ou plusieurs sièges sont déjà associés à un autre vendeur'])
+                ->withInput();
+        }
+
         DB::beginTransaction();
-
         try {
-            // Mettre à jour les informations du revendeur
-            $dataToUpdate = [
-                'Identifiant_email' => $request->email,
-                'Actived' => $request->has('actived') ? 1 : 0,
-            ];
+            // Mettre à jour l'email
+            $seller->Identifiant_email = $validated['email'];
 
-            // Si un nouveau mot de passe est fourni
-            if ($request->filled('password')) {
-                $dataToUpdate['Password_'] = sha1($request->password);
+            // Mettre à jour le mot de passe si fourni
+            if (!empty($validated['password'])) {
+                $seller->Password_ = sha1($validated['password']);
             }
 
-            $seller->update($dataToUpdate);
+            $seller->save();
 
-            // Synchroniser les sièges (supprimer les anciens et ajouter les nouveaux)
-            $seller->sellerSieges()->sync($request->siege_ids);
+            // Supprimer toutes les anciennes associations
+            DB::table('seller_sieges')->where('SellerID', $id)->delete();
+
+            // Créer les nouvelles associations
+            foreach ($validated['sieges'] as $siegeId) {
+                DB::table('seller_sieges')->insert([
+                    'SellerID' => $seller->ID,
+                    'SiegeID' => $siegeId,
+                ]);
+            }
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Revendeur mis à jour avec succès');
+            return redirect()
+                ->route('sellers.index')
+                ->with('success', 'Revendeur modifié avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour du revendeur : ' . $e->getMessage());
+            return back()
+                ->withErrors(['error' => 'Erreur lors de la modification du revendeur'])
+                ->withInput();
         }
     }
+
 
     // Supprimer un revendeur
     public function destroy($id)
