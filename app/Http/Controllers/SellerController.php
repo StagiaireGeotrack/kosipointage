@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Administration;
+use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -91,15 +92,17 @@ class SellerController extends Controller
     public function create()
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+            $message = 'Accès réservé aux Administrateurs';
+            return view('403', compact('message'));
         }
 
-        // Récupérer tous les sièges actifs
-        $sieges = DB::table('Entreprises_sieges')
-            ->where('Actived', 1)
-            ->orderBy('Nom')
-            ->get();
+        // Récupérer uniquement les sièges qui ne sont PAS déjà associés à un vendeur
+        $sieges = EntrepriseSiege::whereNotIn('ID', function($query) {
+            $query->select('SiegeID')
+                  ->from('seller_sieges');
+        })
+        ->orderBy('Nom')
+        ->get();
 
         return view('admin.sellers.create', compact('sieges'));
     }
