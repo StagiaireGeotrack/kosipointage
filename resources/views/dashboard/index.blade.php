@@ -4,51 +4,220 @@
     @push('styles')
     <style>
         /* ============================================
-           STYLES POUR LES CHARTS
+           STYLES AMÉLIORÉS POUR LE DASHBOARD
            ============================================ */
         
+        /* Cards KPI avec gradients colorés */
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card.blue {
+            --gradient-start: #3b82f6;
+            --gradient-end: #1d4ed8;
+        }
+
+        .kpi-card.green {
+            --gradient-start: #10b981;
+            --gradient-end: #059669;
+        }
+
+        .kpi-card.purple {
+            --gradient-start: #8b5cf6;
+            --gradient-end: #6d28d9;
+        }
+
+        .kpi-card.orange {
+            --gradient-start: #f59e0b;
+            --gradient-end: #d97706;
+        }
+
+        .kpi-card.red {
+            --gradient-start: #ef4444;
+            --gradient-end: #dc2626;
+        }
+
+        .kpi-card.teal {
+            --gradient-start: #14b8a6;
+            --gradient-end: #0d9488;
+        }
+
+        .kpi-card .card-body {
+            padding: 1rem;
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .kpi-card h6 {
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
         /* Cards des graphiques */
         .chart-card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border: 2px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .chart-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
 
         .chart-card .card-body {
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
-        /* Titres des graphiques */
+        /* Titres des graphiques avec couleurs */
         .chart-title {
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-            padding: 1rem 1.5rem;
-            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
-            border-bottom: 2px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            margin: -1rem -1rem 1rem -1rem;
+            border-bottom: 2px solid;
             font-weight: 700;
-            color: #1f2937;
-            font-size: 1rem;
+            color: white;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .chart-title::before {
-            content: "📊";
-            font-size: 1.2rem;
+        .chart-title.blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-color: #1e40af;
+        }
+
+        .chart-title.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #047857;
+        }
+
+        .chart-title.orange {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-color: #b45309;
+        }
+
+        .chart-title.purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            border-color: #5b21b6;
         }
 
         /* Conteneur du canvas */
         .chart-container {
             position: relative;
-            padding: 1rem 0;
+            padding: 0.75rem 0;
+        }
+
+        /* Grand graphique */
+        .chart-card-large {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .chart-card-large .card-body {
+            padding: 1.25rem;
+        }
+
+        .chart-card-large .chart-title {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border-color: #4338ca;
+            font-size: 0.95rem;
+            padding: 1rem 1.25rem;
+            margin: -1.25rem -1.25rem 1.25rem -1.25rem;
+        }
+
+        /* Formulaire de filtres stylisé */
+        .filter-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-card .card-body {
+            padding: 1rem;
+        }
+
+        .filter-card label {
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .filter-card .form-select,
+        .filter-card .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .filter-card .form-select:focus,
+        .filter-card .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-card .btn-primary {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .filter-card .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
 
         /* Animation d'entrée */
@@ -63,74 +232,22 @@
             }
         }
 
-        .chart-card {
-            animation: fadeInUp 0.6s ease-out;
+        .kpi-card, .chart-card {
+            animation: fadeInUp 0.5s ease-out;
         }
 
-        /* Délai d'animation pour chaque carte */
+        /* Délai d'animation */
+        .kpi-card:nth-child(1) { animation-delay: 0.05s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.15s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(5) { animation-delay: 0.25s; }
+        .kpi-card:nth-child(6) { animation-delay: 0.3s; }
+
         .chart-card:nth-child(1) { animation-delay: 0.1s; }
         .chart-card:nth-child(2) { animation-delay: 0.2s; }
         .chart-card:nth-child(3) { animation-delay: 0.3s; }
         .chart-card:nth-child(4) { animation-delay: 0.4s; }
-
-        /* Grand graphique */
-        .chart-card-large {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-            border: 2px solid #e5e7eb;
-        }
-
-        .chart-card-large .card-body {
-            padding: 2rem;
-        }
-
-        /* KPI Cards avec animation */
-        .kpi-card {
-            transition: all 0.3s ease;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .kpi-card .card-body {
-            text-align: center;
-        }
-
-        .kpi-card h6 {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .kpi-card p {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Loader pour les graphiques */
-        .chart-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f4f6;
-            border-top-color: #3b82f6;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
     </style>
     @endpush
 
@@ -141,12 +258,12 @@
     </x-slot>
 
     <div class="p-2">
-        <!-- Sélecteur de période -->
-        <div class="card shadow-sm mb-2">
+        <!-- Sélecteur de période stylisé -->
+        <div class="card filter-card shadow-sm mb-2">
             <div class="card-body">
                 <form action="{{ route('dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-3">
                     <div>
-                        <label for="period" class="form-label small fw-medium mb-1">{{ __('Période') }}</label>
+                        <label for="period" class="form-label small mb-1">{{ __('Période') }}</label>
                         <select id="period" name="period" class="form-select" onchange="toggleCustomDates()">
                             <option value="day" {{ $period == 'day' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
                             <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
@@ -155,19 +272,19 @@
                         </select>
                     </div>
                     
-                    <div id="customDates" class="d-flex gap-3 {{ $period !== 'custom' ? 'd-none' : '' }}">
+                    <div id="customDates" class="d-flex gap-2 {{ $period !== 'custom' ? 'd-none' : '' }}">
                         <div>
-                            <label for="start_date" class="form-label small fw-medium mb-1">{{ __('Date de début') }}</label>
+                            <label for="start_date" class="form-label small mb-1">{{ __('Date de début') }}</label>
                             <input type="date" id="start_date" name="start_date" value="{{ $startDate ? $startDate->format('Y-m-d') : '' }}" class="form-control">
                         </div>
                         
                         <div>
-                            <label for="end_date" class="form-label small fw-medium mb-1">{{ __('Date de fin') }}</label>
+                            <label for="end_date" class="form-label small mb-1">{{ __('Date de fin') }}</label>
                             <input type="date" id="end_date" name="end_date" value="{{ $endDate ? $endDate->format('Y-m-d') : '' }}" class="form-control">
                         </div>
                     </div>
                     
-                    <div class="align-self-end pb-1">
+                    <div class="align-self-end">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> {{ __('Rechercher') }}
                         </button>
@@ -176,102 +293,125 @@
             </div>
         </div>
 
-        <!-- KPI Cards -->
-        <div class="row g-3 mb-2">
+        <!-- KPI Cards avec icônes et couleurs -->
+        <div class="row g-2 mb-2">
             <div class="col-md-2">
-                <div class="card shadow-sm kpi-card">
-                    <div class="card-body">
+                <div class="card kpi-card blue">
+                    <div class="card-body text-center">
+                        <div class="kpi-icon mx-auto">
+                            <i class="bi bi-people-fill text-white"></i>
+                        </div>
                         <h6>{{ __('Employés') }}</h6>
-                        <p class="mb-0">{{ $kpis['total_employees'] }}</p>
+                        <p class="kpi-value mb-0">{{ $kpis['total_employees'] }}</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card shadow-sm kpi-card">
-                    <div class="card-body">
-                        <h6>{{ __('Sites ou établissements') }}</h6>
-                        <p class="mb-0">{{ $kpis['total_companies'] }}</p>
+                <div class="card kpi-card green">
+                    <div class="card-body text-center">
+                        <div class="kpi-icon mx-auto">
+                            <i class="bi bi-building text-white"></i>
+                        </div>
+                        <h6>{{ __('Sites') }}</h6>
+                        <p class="kpi-value mb-0">{{ $kpis['total_companies'] }}</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card shadow-sm kpi-card">
-                    <div class="card-body">
-                        <h6>{{ __('Siège') }}</h6>
-                        <p class="mb-0">{{ $kpis['total_sieges'] }}</p>
+                <div class="card kpi-card purple">
+                    <div class="card-body text-center">
+                        <div class="kpi-icon mx-auto">
+                            <i class="bi bi-geo-alt-fill text-white"></i>
+                        </div>
+                        <h6>{{ __('Sièges') }}</h6>
+                        <p class="kpi-value mb-0">{{ $kpis['total_sieges'] }}</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card shadow-sm kpi-card">
-                    <div class="card-body">
+                <div class="card kpi-card orange">
+                    <div class="card-body text-center">
+                        <div class="kpi-icon mx-auto">
+                            <i class="bi bi-fingerprint text-white"></i>
+                        </div>
                         <h6>{{ __('Pointages') }}</h6>
-                        <p class="mb-0">{{ $kpis['pointages_period'] }}</p>
+                        <p class="kpi-value mb-0">{{ $kpis['pointages_period'] }}</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card shadow-sm kpi-card">
-                    <div class="card-body">
-                        <h6>{{ __('Pointages (Entrée)') }}</h6>
-                        <p class="mb-0">{{ $kpis['entries_period'] }}</p>
+                <div class="card kpi-card teal">
+                    <div class="card-body text-center">
+                        <div class="kpi-icon mx-auto">
+                            <i class="bi bi-box-arrow-in-right text-white"></i>
+                        </div>
+                        <h6>{{ __('Entrées') }}</h6>
+                        <p class="kpi-value mb-0">{{ $kpis['entries_period'] }}</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card shadow-sm kpi-card">
-                    <div class="card-body">
-                        <h6>{{ __('Pointages (Sortie)') }}</h6>
-                        <p class="mb-0">{{ $kpis['exits_period'] }}</p>
+                <div class="card kpi-card red">
+                    <div class="card-body text-center">
+                        <div class="kpi-icon mx-auto">
+                            <i class="bi bi-box-arrow-right text-white"></i>
+                        </div>
+                        <h6>{{ __('Sorties') }}</h6>
+                        <p class="kpi-value mb-0">{{ $kpis['exits_period'] }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <hr>
-
-        <div class="row g-3">
-            <!-- Pointages par jour -->
+        <!-- Grand graphique -->
+        <div class="row g-2 mb-2">
             <div class="col-lg-12">
                 <div class="card chart-card-large">
                     <div class="card-body">
-                        <h6 class="chart-title">{{ __('Pointages par journée') }}</h6>
+                        <h6 class="chart-title">
+                            <i class="bi bi-graph-up"></i>
+                            {{ __('Pointages par journée') }}
+                        </h6>
                         <div class="chart-container">
-                            <canvas id="pointagesByDayChart" height="50"></canvas>
+                            <canvas id="pointagesByDayChart" height="45"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <hr>
-
-        <!-- Graphiques -->
-        <div class="row g-3">
-            <!-- Employés par date de création -->
+        <!-- Graphiques en 4 colonnes -->
+        <div class="row g-2">
+            <!-- Employés par date -->
             <div class="col-lg-3">
                 <div class="card chart-card">
                     <div class="card-body">
-                        <h6 class="chart-title">{{ __('Date d\'ajout des employés') }}</h6>
+                        <h6 class="chart-title green">
+                            <i class="bi bi-calendar-plus"></i>
+                            {{ __('Ajout employés') }}
+                        </h6>
                         <div class="chart-container">
-                            <canvas id="employeeCreatedAtChart" height="300"></canvas>
+                            <canvas id="employeeCreatedAtChart" height="220"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sites par date de création -->
+            <!-- Sites par date -->
             <div class="col-lg-3">
                 <div class="card chart-card">
                     <div class="card-body">
-                        <h6 class="chart-title">{{ __('Date d\'ajout sites ou établissements') }}</h6>
+                        <h6 class="chart-title orange">
+                            <i class="bi bi-calendar-check"></i>
+                            {{ __('Ajout sites') }}
+                        </h6>
                         <div class="chart-container">
-                            <canvas id="siegeCreatedAtChart" height="300"></canvas>
+                            <canvas id="siegeCreatedAtChart" height="220"></canvas>
                         </div>
                     </div>
                 </div>
@@ -281,21 +421,27 @@
             <div class="col-lg-3">
                 <div class="card chart-card">
                     <div class="card-body">
-                        <h6 class="chart-title">{{ __('Employés par siège') }}</h6>
+                        <h6 class="chart-title blue">
+                            <i class="bi bi-diagram-3"></i>
+                            {{ __('Par siège') }}
+                        </h6>
                         <div class="chart-container">
-                            <canvas id="employeesBySiegeChart" height="300"></canvas>
+                            <canvas id="employeesBySiegeChart" height="220"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Entreprises par statut -->
+            <!-- Statuts -->
             <div class="col-lg-3">
                 <div class="card chart-card">
                     <div class="card-body">
-                        <h6 class="chart-title">{{ __('Sites ou établissements') }}</h6>
+                        <h6 class="chart-title purple">
+                            <i class="bi bi-pie-chart"></i>
+                            {{ __('Statuts') }}
+                        </h6>
                         <div class="chart-container">
-                            <canvas id="companiesByStatusChart" height="300"></canvas>
+                            <canvas id="companiesByStatusChart" height="220"></canvas>
                         </div>
                     </div>
                 </div>
@@ -318,43 +464,38 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Configuration globale pour tous les graphiques
+            // Configuration globale
             Chart.defaults.font.family = "'Inter', 'Segoe UI', 'Roboto', sans-serif";
+            Chart.defaults.font.size = 10;
             Chart.defaults.plugins.legend.display = true;
             Chart.defaults.plugins.legend.position = 'bottom';
-            Chart.defaults.plugins.legend.labels.padding = 15;
+            Chart.defaults.plugins.legend.labels.padding = 10;
             Chart.defaults.plugins.legend.labels.usePointStyle = true;
             Chart.defaults.plugins.legend.labels.font = {
-                size: 12,
+                size: 10,
                 weight: '600'
             };
 
-            // Options communes pour les tooltips
+            // Options communes
             const commonTooltipOptions = {
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 titleColor: '#fff',
                 bodyColor: '#fff',
                 borderColor: '#3b82f6',
                 borderWidth: 2,
-                padding: 12,
+                padding: 10,
                 displayColors: true,
                 cornerRadius: 8,
-                titleFont: {
-                    size: 14,
-                    weight: 'bold'
-                },
-                bodyFont: {
-                    size: 13
-                }
+                titleFont: { size: 12, weight: 'bold' },
+                bodyFont: { size: 11 }
             };
 
-            // Options communes pour les animations
             const commonAnimationOptions = {
-                duration: 1500,
+                duration: 1200,
                 easing: 'easeInOutQuart'
             };
 
-            // Données pour les graphiques
+            // Données
             const employeesByCompany = @json($employeesByCompany);
             const employeesBySiege = @json($employeesBySiege);
             const companiesByStatus = @json($companiesByStatus);
@@ -362,7 +503,7 @@
             const sieges = @json($sieges);            
             const employeesByDate = @json($employeesByDate);
 
-            // Graphique des employés par date de création
+            // Graphique employés par date
             const employeesGroupedByDate = employeesByDate.reduce((acc, item) => {
                 const date = new Date(item.CreatedAt).toLocaleDateString('fr-FR');
                 acc[date] = (acc[date] || 0) + 1;
@@ -379,7 +520,7 @@
                 data: {
                     labels: sortedEmployeeDates,
                     datasets: [{
-                        label: '{{ __("Total employés créés") }}',
+                        label: '{{ __("Total employés") }}',
                         data: sortedEmployeeDates.map(date => employeesGroupedByDate[date]),
                         borderColor: 'rgba(16, 185, 129, 1)',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -387,10 +528,10 @@
                         tension: 0.4,
                         pointBackgroundColor: 'rgba(16, 185, 129, 1)',
                         pointBorderColor: '#fff',
-                        pointBorderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 8,
-                        pointHoverBorderWidth: 3
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -399,48 +540,27 @@
                     animation: commonAnimationOptions,
                     plugins: {
                         tooltip: commonTooltipOptions,
-                        legend: {
-                            display: true
-                        }
+                        legend: { display: true }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
+                            ticks: { stepSize: 1, font: { size: 9, weight: '600' } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         x: {
-                            title: {
-                                display: true,
-                                text: '{{ __("Date de création") }}',
-                                font: { weight: '700', size: 13 }
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                display: false
-                            }
+                            ticks: { maxRotation: 45, minRotation: 45, font: { size: 9 } },
+                            grid: { display: false }
                         }
                     }
                 }
             });
             
-            // Graphique des employés par siège
+            // Graphique employés par siège
             const employeesBySiegeCtx = document.getElementById('employeesBySiegeChart').getContext('2d');
             
             function getInitials(name) {
-                return name
-                    .split(' ')
-                    .map(word => word.charAt(0).toUpperCase())
-                    .join('');
+                return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
             }
 
             const siegeNames = employeesBySiege.map(item => item.Nom);
@@ -456,15 +576,14 @@
                         data: siegeTotals,
                         borderColor: 'rgba(59, 130, 246, 1)',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 3,
+                        borderWidth: 2,
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: 'rgba(59, 130, 246, 1)',
                         pointBorderColor: '#fff',
-                        pointBorderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 8,
-                        pointHoverBorderWidth: 3
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
@@ -476,49 +595,30 @@
                             ...commonTooltipOptions,
                             callbacks: {
                                 title: function(context) {
-                                    const index = context[0].dataIndex;
-                                    return siegeNames[index];
+                                    return siegeNames[context[0].dataIndex];
                                 },
                                 label: function(context) {
                                     return '{{ __("Employés") }}: ' + context.parsed.y;
                                 }
                             }
                         },
-                        legend: {
-                            display: true
-                        }
+                        legend: { display: true }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
+                            ticks: { stepSize: 1, font: { size: 9, weight: '600' } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         x: {
-                            title: {
-                                display: true,
-                                text: '{{ __("Sièges") }}',
-                                font: { weight: '700', size: 13 }
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                display: false
-                            }
+                            ticks: { maxRotation: 45, minRotation: 45, font: { size: 9 } },
+                            grid: { display: false }
                         }
                     }
                 }
             });
             
-            // Graphique des entreprises par statut
+            // Graphique statuts
             const companiesByStatusCtx = document.getElementById('companiesByStatusChart').getContext('2d');
             new Chart(companiesByStatusCtx, {
                 type: 'doughnut',
@@ -526,45 +626,29 @@
                     labels: ['{{ __("Activé") }}', '{{ __("Désactivé") }}'],
                     datasets: [{
                         data: [companiesByStatus.active, companiesByStatus.inactive],
-                        backgroundColor: [
-                            'rgba(16, 185, 129, 0.8)',
-                            'rgba(239, 68, 68, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(239, 68, 68, 1)'
-                        ],
-                        borderWidth: 3,
-                        hoverOffset: 15
+                        backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(239, 68, 68, 0.8)'],
+                        borderColor: ['rgba(16, 185, 129, 1)', 'rgba(239, 68, 68, 1)'],
+                        borderWidth: 2,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    animation: {
-                        animateRotate: true,
-                        animateScale: true,
-                        duration: 1500
-                    },
+                    animation: { animateRotate: true, animateScale: true, duration: 1200 },
                     plugins: {
                         tooltip: commonTooltipOptions,
-                        legend: {
-                            display: true,
-                            position: 'bottom'
-                        }
+                        legend: { display: true, position: 'bottom' }
                     }
                 }
             });
             
-            // Graphique des pointages par jour avec axe Y arrondi
+            // Graphique pointages par jour
             const pointagesByDayCtx = document.getElementById('pointagesByDayChart').getContext('2d');
             
-            // Trouver le max pour arrondir l'axe Y
             const maxEntries = Math.max(...pointagesByDay.map(item => item.entries), 0);
             const maxExits = Math.max(...pointagesByDay.map(item => item.exits), 0);
             const maxValue = Math.max(maxEntries, maxExits);
-            
-            // Arrondir au multiple de 5 supérieur (ou minimum 10)
             const suggestedMax = maxValue === 0 ? 10 : Math.ceil(maxValue / 5) * 5 + 5;
             
             new Chart(pointagesByDayCtx, {
@@ -579,12 +663,12 @@
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             fill: true,
                             tension: 0.4,
-                            borderWidth: 3,
+                            borderWidth: 2,
                             pointBackgroundColor: 'rgba(59, 130, 246, 1)',
                             pointBorderColor: '#fff',
-                            pointBorderWidth: 3,
-                            pointRadius: 5,
-                            pointHoverRadius: 8
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
                         },
                         {
                             label: '{{ __("Sortie") }}',
@@ -593,12 +677,12 @@
                             backgroundColor: 'rgba(239, 68, 68, 0.1)',
                             fill: true,
                             tension: 0.4,
-                            borderWidth: 3,
+                            borderWidth: 2,
                             pointBackgroundColor: 'rgba(239, 68, 68, 1)',
                             pointBorderColor: '#fff',
-                            pointBorderWidth: 3,
-                            pointRadius: 5,
-                            pointHoverRadius: 8
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
                         }
                     ]
                 },
@@ -608,10 +692,7 @@
                     animation: commonAnimationOptions,
                     plugins: {
                         tooltip: commonTooltipOptions,
-                        legend: {
-                            display: true,
-                            position: 'top'
-                        }
+                        legend: { display: true, position: 'top' }
                     },
                     scales: {
                         y: {
@@ -619,35 +700,20 @@
                             suggestedMax: suggestedMax,
                             ticks: {
                                 stepSize: 5,
-                                font: { weight: '600' },
-                                callback: function(value) {
-                                    return Math.round(value); // Assurer que les valeurs sont des entiers
-                                }
+                                font: { size: 10, weight: '600' },
+                                callback: function(value) { return Math.round(value); }
                             },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         x: {
-                            title: {
-                                display: true,
-                                text: '{{ __("Date de pointage") }}',
-                                font: { weight: '700', size: 14 }
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                display: false
-                            }
+                            ticks: { maxRotation: 45, minRotation: 45, font: { size: 10 } },
+                            grid: { display: false }
                         }
                     }
                 }
             });
 
-            // Graphique des sièges par date de création
+            // Graphique sièges par date
             const siegesByDate = sieges.reduce((acc, item) => {
                 const date = new Date(item.CreatedAt).toLocaleDateString('fr-FR');
                 acc[date] = (acc[date] || 0) + 1;
@@ -664,19 +730,18 @@
                 data: {
                     labels: sortedDates,
                     datasets: [{
-                        label: '{{ __("Nombre de sièges créés") }}',
+                        label: '{{ __("Sièges créés") }}',
                         data: sortedDates.map(date => siegesByDate[date]),
                         borderColor: 'rgba(245, 158, 11, 1)',
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 3,
+                        borderWidth: 2,
                         pointBackgroundColor: 'rgba(245, 158, 11, 1)',
                         pointBorderColor: '#fff',
-                        pointBorderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 8,
-                        pointHoverBorderWidth: 3
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
@@ -685,35 +750,17 @@
                     animation: commonAnimationOptions,
                     plugins: {
                         tooltip: commonTooltipOptions,
-                        legend: {
-                            display: true
-                        }
+                        legend: { display: true }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
+                            ticks: { stepSize: 1, font: { size: 9, weight: '600' } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         x: {
-                            title: {
-                                display: true,
-                                text: '{{ __("Date de création") }}',
-                                font: { weight: '700', size: 13 }
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { weight: '600' }
-                            },
-                            grid: {
-                                display: false
-                            }
+                            ticks: { maxRotation: 45, minRotation: 45, font: { size: 9 } },
+                            grid: { display: false }
                         }
                     }
                 }
