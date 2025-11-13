@@ -233,7 +233,7 @@
         <!-- Navigation Links -->
         <div class="collapse navbar-collapse" id="navbarNav">
             
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto p-2">
                 
                 <li class="nav-item">
                     <a href="@if(auth()->user()->isTrueSuperAdmin()) {{ route('dashboard') }} 
@@ -318,7 +318,6 @@
             <div class="d-flex align-items-center">
                 <div class="dropdown">
                     <button class="btn user-dropdown-btn text-decoration-none dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-2"></i>
                         <div>{{ Auth::user()->Identifiant_email }}</div>
                         @if(Auth::user()->isTrueSuperAdmin())
                             <span class="badge-custom">{{ __('Super Administrateur') }}</span>

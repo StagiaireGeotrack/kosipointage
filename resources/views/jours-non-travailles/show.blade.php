@@ -7,7 +7,7 @@
             </h2>
             <div class="d-flex gap-2">
                 <a href="{{ route('jours-non-travailles.edit', $jourNonTravaille->ID) }}" class="btn btn-warning">
-                    <i class="bi bi-pencil me-1"></i>{{ __('Modifier') }}
+                    </i>{{ __('Modifier') }}
                 </a>
                 <a href="{{ route('jours-non-travailles.index') }}" class="btn btn-secondary">
                     {{ __('Retour à la liste') }}
