@@ -4,43 +4,34 @@
     @push('styles')
     <style>
         /* ============================================
-           STYLES AMÉLIORÉS POUR LE DASHBOARD
+           KPI CARDS STYLE IMAGE
            ============================================ */
         
-        /* Cards KPI avec gradients colorés */
         .kpi-card {
-            background: white;
-            border-radius: 12px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 16px;
             border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
             overflow: hidden;
-            position: relative;
-        }
-
-        .kpi-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            min-height: 100px;
         }
 
         .kpi-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
+        /* Couleurs des cards */
         .kpi-card.blue {
-            --gradient-start: #3b82f6;
-            --gradient-end: #1d4ed8;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
         }
 
         .kpi-card.green {
-            --gradient-start: #10b981;
-            --gradient-end: #059669;
+            --gradient-start: #11998e;
+            --gradient-end: #38ef7d;
         }
 
         .kpi-card.purple {
@@ -50,49 +41,49 @@
 
         .kpi-card.orange {
             --gradient-start: #f59e0b;
-            --gradient-end: #d97706;
+            --gradient-end: #fb923c;
         }
 
-        .kpi-card.red {
-            --gradient-start: #ef4444;
-            --gradient-end: #dc2626;
+        .kpi-card.pink {
+            --gradient-start: #ec4899;
+            --gradient-end: #f472b6;
         }
 
         .kpi-card.teal {
             --gradient-start: #14b8a6;
-            --gradient-end: #0d9488;
+            --gradient-end: #06b6d4;
         }
 
         .kpi-card .card-body {
-            padding: 1rem;
-        }
-
-        .kpi-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            padding: 1.25rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .kpi-card h6 {
-            color: #6b7280;
+        /* Titre en haut */
+        .kpi-card .kpi-title {
             font-size: 0.8rem;
-            margin-bottom: 0.5rem;
             font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 0.5rem;
+            text-transform: capitalize;
         }
 
+        /* Valeur principale au centre */
         .kpi-card .kpi-value {
-            font-size: 1.75rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        /* Info secondaire en bas */
+        .kpi-card .kpi-info {
+            font-size: 0.75rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-top: 0.5rem;
         }
 
         /* Cards des graphiques */
@@ -293,76 +284,72 @@
             </div>
         </div>
 
-        <!-- KPI Cards avec icônes et couleurs -->
+        <!-- KPI Cards style image -->
         <div class="row g-2 mb-2">
             <div class="col-md-2">
-                <div class="card kpi-card blue">
-                    <div class="card-body text-center">
-                        <div class="kpi-icon mx-auto">
-                            <i class="bi bi-people-fill text-white"></i>
-                        </div>
-                        <h6>{{ __('Employés') }}</h6>
-                        <p class="kpi-value mb-0">{{ $kpis['total_employees'] }}</p>
+                <div class="kpi-card purple">
+                    <div class="card-body">
+                        <div class="kpi-title">{{ __('Sites ou établissements') }}</div>
+                        <div class="kpi-value">{{ $kpis['total_companies'] }}</div>
+                        <div class="kpi-info">{{ __('Total') }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="kpi-card purple">
+                    <div class="card-body">
+                        <div class="kpi-title">{{ __('Sites ou établissements') }}</div>
+                        <div class="kpi-value">{{ $kpis['total_companies'] }}</div>
+                        @php
+                            $actifs = \App\Models\Entreprise::where('Actived', 1)->count();
+                            $inactifs = \App\Models\Entreprise::where('Actived', 0)->count();
+                        @endphp
+                        <div class="kpi-info">{{ $actifs }} {{ __('actifs') }} / {{ $inactifs }} {{ __('inactifs') }}</div>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card kpi-card green">
-                    <div class="card-body text-center">
-                        <div class="kpi-icon mx-auto">
-                            <i class="bi bi-building text-white"></i>
-                        </div>
-                        <h6>{{ __('Sites') }}</h6>
-                        <p class="kpi-value mb-0">{{ $kpis['total_companies'] }}</p>
+                <div class="kpi-card green">
+                    <div class="card-body">
+                        <div class="kpi-title">{{ __('Employés') }}</div>
+                        <div class="kpi-value">{{ $kpis['total_employees'] }}</div>
+                        <div class="kpi-info">{{ __('Total') }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="kpi-card green">
+                    <div class="card-body">
+                        <div class="kpi-title">{{ __('Employés') }}</div>
+                        <div class="kpi-value">{{ $kpis['total_employees'] }}</div>
+                        @php
+                            $empActifs = \App\Models\Employe::where('Actived', 1)->count();
+                            $empInactifs = \App\Models\Employe::where('Actived', 0)->count();
+                        @endphp
+                        <div class="kpi-info">{{ $empActifs }} {{ __('actifs') }} / {{ $empInactifs }} {{ __('inactifs') }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="kpi-card pink">
+                    <div class="card-body">
+                        <div class="kpi-title">{{ __('Pointages') }}</div>
+                        <div class="kpi-value">{{ $kpis['pointages_period'] }}</div>
+                        <div class="kpi-info">{{ __('Total') }}</div>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-2">
-                <div class="card kpi-card purple">
-                    <div class="card-body text-center">
-                        <div class="kpi-icon mx-auto">
-                            <i class="bi bi-geo-alt-fill text-white"></i>
-                        </div>
-                        <h6>{{ __('Sièges') }}</h6>
-                        <p class="kpi-value mb-0">{{ $kpis['total_sieges'] }}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
-                <div class="card kpi-card orange">
-                    <div class="card-body text-center">
-                        <div class="kpi-icon mx-auto">
-                            <i class="bi bi-fingerprint text-white"></i>
-                        </div>
-                        <h6>{{ __('Pointages') }}</h6>
-                        <p class="kpi-value mb-0">{{ $kpis['pointages_period'] }}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
-                <div class="card kpi-card teal">
-                    <div class="card-body text-center">
-                        <div class="kpi-icon mx-auto">
-                            <i class="bi bi-box-arrow-in-right text-white"></i>
-                        </div>
-                        <h6>{{ __('Entrées') }}</h6>
-                        <p class="kpi-value mb-0">{{ $kpis['entries_period'] }}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
-                <div class="card kpi-card red">
-                    <div class="card-body text-center">
-                        <div class="kpi-icon mx-auto">
-                            <i class="bi bi-box-arrow-right text-white"></i>
-                        </div>
-                        <h6>{{ __('Sorties') }}</h6>
-                        <p class="kpi-value mb-0">{{ $kpis['exits_period'] }}</p>
+                <div class="kpi-card orange">
+                    <div class="card-body">
+                        <div class="kpi-title">{{ __('Pointages Entrée / Sortie') }}</div>
+                        <div class="kpi-value">{{ $kpis['pointages_period'] }}</div>
+                        <div class="kpi-info">{{ "Entrée " . $kpis['entries_period'] . " / Sortie " . $kpis['exits_period'] }}</div>
                     </div>
                 </div>
             </div>
@@ -371,7 +358,7 @@
         <!-- Grand graphique -->
         <div class="row g-2 mb-2">
             <div class="col-lg-12">
-                <div class="card chart-card-large">
+                <div class="chart-card-large">
                     <div class="card-body">
                         <h6 class="chart-title">
                             <i class="bi bi-graph-up"></i>
@@ -389,7 +376,7 @@
         <div class="row g-2">
             <!-- Employés par date -->
             <div class="col-lg-3">
-                <div class="card chart-card">
+                <div class="chart-card">
                     <div class="card-body">
                         <h6 class="chart-title green">
                             <i class="bi bi-calendar-plus"></i>
@@ -404,7 +391,7 @@
 
             <!-- Sites par date -->
             <div class="col-lg-3">
-                <div class="card chart-card">
+                <div class="chart-card">
                     <div class="card-body">
                         <h6 class="chart-title orange">
                             <i class="bi bi-calendar-check"></i>
@@ -419,7 +406,7 @@
             
             <!-- Employés par siège -->
             <div class="col-lg-3">
-                <div class="card chart-card">
+                <div class="chart-card">
                     <div class="card-body">
                         <h6 class="chart-title blue">
                             <i class="bi bi-diagram-3"></i>
@@ -434,7 +421,7 @@
             
             <!-- Statuts -->
             <div class="col-lg-3">
-                <div class="card chart-card">
+                <div class="chart-card">
                     <div class="card-body">
                         <h6 class="chart-title purple">
                             <i class="bi bi-pie-chart"></i>
