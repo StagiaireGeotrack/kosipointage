@@ -98,15 +98,5 @@
             </div>
         </div>
         
-        <!-- Actions -->
-        <div class="mt-3 d-flex justify-content-end">
-            <form action="{{ route('jours-non-travailles.destroy', $jourNonTravaille->ID) }}" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('Voulez-vous vraiment supprimer ce jour ?') }}')">
-                    <i class="bi bi-trash me-1"></i>{{ __('Supprimer') }}
-                </button>
-            </form>
-        </div>
     </div>
 </x-app-layout>

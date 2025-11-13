@@ -143,10 +143,8 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    {{ __('Êtes-vous sûr de vouloir supprimer le revendeur') }} 
+                                                    {{ __('Êtes-vous sûr de vouloir supprimer ce revendeur') }} 
                                                     <strong>{{ $seller->Identifiant_email }}</strong> ?
-                                                    <br><br>
-                                                    {{ __('Cette action est irréversible.') }}
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

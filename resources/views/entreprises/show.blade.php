@@ -73,17 +73,6 @@
                 </div>
             </div>
             
-            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
-            <div class="card-footer">
-                <form action="{{ route('entreprises.destroy', $entreprise->ID) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash"></i> Supprimer
-                    </button>
-                </form>
-            </div>
-            @endif
         </div>
     </div>
 </x-app-layout>

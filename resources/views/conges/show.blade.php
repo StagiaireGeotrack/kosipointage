@@ -107,16 +107,7 @@
                         </div>
                     </div>
                 @endif
-
-                <div class="mt-4 pt-3 border-top">
-                    <form action="{{ route('conges.destroy', $conge->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('Voulez-vous vraiment supprimer ce congé ?') }}')">
-                            {{ __('Supprimer ce congé') }}
-                        </button>
-                    </form>
-                </div>
+                
             </div>
         </div>
     </div>

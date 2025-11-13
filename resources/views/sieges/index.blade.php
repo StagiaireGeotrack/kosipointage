@@ -188,7 +188,7 @@
                             </div>
                             <div class="modal-body">
                                 <p>{{ __('Voulez-vous vraiment supprimer ce siège ?') }}</p>
-                                <p class="fw-bold" id="siegeName"></p>
+                                <p class="fw-bold" id="details_siege"></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
@@ -216,7 +216,7 @@
         <script>
         function setDeleteAction(url, name) {
             document.getElementById('deleteForm').action = url;
-            document.getElementById('siegeName').textContent = name;
+            document.getElementById('details_siege').textContent = name;
         }
         </script>
         
