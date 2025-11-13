@@ -191,26 +191,39 @@ class SellerController extends Controller
     public function edit($id)
     {
         if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+            $message = 'Accès réservé aux Administrateurs';
+            return view('403', compact('message'));
         }
 
-        $seller = Administration::with('sellerSieges')->findOrFail($id);
+        $seller = Administration::where('ID', $id)
+            ->where('IsSeller', 1)
+            ->where('IsSuperAdmin', 1)
+            ->with('sellerSieges')
+            ->firstOrFail();
 
-        // Vérifier que c'est bien un revendeur
-        if (!$seller->isSeller()) {
-            return redirect()
-                ->route('sellers.index')
-                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
-        }
+        // Sièges actuellement associés au vendeur
+        $currentSiegeIds = $seller->sellerSieges->pluck('ID')->toArray();
 
-        // Récupérer tous les sièges actifs
-        $sieges = DB::table('Entreprises_sieges')
-            ->where('Actived', 1)
-            ->orderBy('Nom')
-            ->get();
+        // Sièges disponibles : 
+        // - Soit pas encore associés à aucun vendeur
+        // - Soit déjà associés au vendeur actuel
+        $sieges = EntrepriseSiege::where(function($query) use ($id) {
+            // Sièges non associés
+            $query->whereNotIn('ID', function($subQuery) {
+                $subQuery->select('SiegeID')
+                         ->from('seller_sieges');
+            })
+            // OU sièges associés au vendeur actuel
+            ->orWhereIn('ID', function($subQuery) use ($id) {
+                $subQuery->select('SiegeID')
+                         ->from('seller_sieges')
+                         ->where('SellerID', $id);
+            });
+        })
+        ->orderBy('Nom')
+        ->get();
 
-        return view('admin.sellers.edit', compact('seller', 'sieges'));
+        return view('admin.sellers.edit', compact('seller', 'sieges', 'currentSiegeIds'));
     }
 
     // Mettre à jour un revendeur
