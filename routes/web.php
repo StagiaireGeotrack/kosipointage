@@ -20,8 +20,29 @@ use App\Http\Controllers\AllDashboardController;
 require __DIR__.'/auth.php';
 
 // Route d'accueil et langue
-Route::get('/', function () {
-    return redirect()->route('login');
+Route::get('/', function () 
+{
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
+
+    $user = auth()->user();    
+    
+    // Redirection selon le rôle
+    if ($user->isTrueSuperAdmin()) 
+    {
+        return redirect()->route('dashboard');
+    } 
+    elseif ($user->isSimpleAdmin()) 
+    {
+        return redirect()->route('dashboard.simple-admin');
+    } 
+    elseif ($user->isSeller()) {
+        return redirect()->route('dashboard.seller');
+    }
+    
+    // Par défaut, redirection vers sieges.index
+    return redirect()->route('sieges.index');
 });
 
 Route::middleware('auth')->group(function () {
