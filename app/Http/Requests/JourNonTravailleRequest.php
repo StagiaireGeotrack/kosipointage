@@ -46,7 +46,7 @@ class JourNonTravailleRequest extends FormRequest
             'Nom.max' => __('Le nom ne peut pas dépasser :max caractères.'),
             
             'Type.required' => __('Le type est obligatoire.'),
-            'Type.in' => __('Le type doit être : férié, fermeture ou autre.'),
+            'Type.in' => __('Le type doit être : férié, fermeture , CT ou autre.'),
             
             'SiegeID.exists' => __('Le siège sélectionné n\'existe pas.'),
             
