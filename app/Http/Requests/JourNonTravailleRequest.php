@@ -27,7 +27,7 @@ class JourNonTravailleRequest extends FormRequest
         return [
             'Date' => 'required|date',
             'Nom' => 'required|string|max:255',
-            'Type' => 'required|in:ferie,fermeture,autre',
+            'Type' => 'required|in:ferie,fermeture,autre,CT',
             'SiegeID' => 'nullable|exists:Entreprises_sieges,ID',
             'Recurrent' => 'nullable|boolean',
             'Description' => 'nullable|string|max:1000',

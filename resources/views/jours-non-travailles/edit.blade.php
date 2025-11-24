@@ -42,6 +42,7 @@
                                 <option value="">{{ __('Sélectionnez un type') }}</option>
                                 <option value="ferie" {{ old('Type', $jourNonTravaille->Type) == 'ferie' ? 'selected' : '' }}>{{ __('Férié') }}</option>
                                 <option value="fermeture" {{ old('Type', $jourNonTravaille->Type) == 'fermeture' ? 'selected' : '' }}>{{ __('Fermeture exceptionnelle') }}</option>
+                                <option value="CT" {{ old('Type', $jourNonTravaille->Type) == 'CT' ? 'selected' : '' }}>{{ __('Chômage technique') }}</option>
                                 <option value="autre" {{ old('Type', $jourNonTravaille->Type) == 'autre' ? 'selected' : '' }}>{{ __('Autre') }}</option>
                             </select>
                             <x-input-error :messages="$errors->get('Type')" class="mt-2" />
