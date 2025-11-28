@@ -26,6 +26,9 @@ class AdministrationController extends Controller
     {
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin', 'sort_by', 'sort_order']);
         $administrateurs = $this->repository->getFiltered($filters);
+
+        $administrateurs->appends($filters);
+
         $sieges = EntrepriseSiege::all(); // Pour le filtre par siège
         
         return view('administration.index', compact('administrateurs', 'sieges', 'filters'));

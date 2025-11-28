@@ -46,7 +46,7 @@ class CongeController extends Controller
             $query->where('employee_id', $filters['employee_id']);
         }
         
-        $conges = $query->orderBy('id', 'desc')->paginate(5);
+        $conges = $query->orderBy('id', 'desc')->paginate(5)->appends($filters);
         
         // Les employés sont déjà filtrés par le scope global
         $employes = Employe::orderBy('Nom')->get();

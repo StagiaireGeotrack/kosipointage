@@ -38,7 +38,7 @@
                             <x-input-label for="IsSuperAdmin" :value="__('Type')" />
                             <select id="IsSuperAdmin" name="IsSuperAdmin" class="form-select">
                                 <option value="">{{ __('Tous') }}</option>
-                                <option value="1" {{ isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] == '1' ? 'selected' : '' }}>{{ __('Super administrateur') }}</option>
+                                <option value="1" {{ isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] == '1' ? 'selected' : '' }}>{{ __('Super administrateur et/ou Vendeur') }}</option>
                                 <option value="0" {{ isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] == '0' ? 'selected' : '' }}>{{ __('Administrateur simple') }}</option>
                             </select>
                         </div>

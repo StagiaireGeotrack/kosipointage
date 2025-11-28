@@ -45,6 +45,8 @@ class EntrepriseSiegeController extends Controller
         // Simple Admin sans siège : afficher la liste vide
         $filters = $request->only(['search', 'Actived', 'sort_by', 'sort_order']);
         $sieges = $this->repository->getFiltered($filters);
+
+        $sieges->appends($filters);
         
         return view('sieges.index', compact('sieges', 'filters'));
     }

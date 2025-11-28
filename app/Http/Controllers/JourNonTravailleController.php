@@ -26,6 +26,7 @@ class JourNonTravailleController extends Controller
     {
         $filters = $request->only(['search', 'SiegeID', 'Type', 'annee', 'Recurrent', 'sort_by', 'sort_order']);
         $joursNonTravailles = $this->repository->getFiltered($filters);
+        $joursNonTravailles->appends($filters);
         $sieges = EntrepriseSiege::all();
         
         // Liste des années disponibles (5 dernières et 5 prochaines)

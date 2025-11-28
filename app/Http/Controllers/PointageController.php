@@ -38,6 +38,9 @@ class PointageController extends Controller
         ]);
         
         $pointages = $this->repository->getFiltered($filters);
+
+        $pointages->appends($filters);
+
         $sieges = EntrepriseSiege::all(); // Pour le filtre par siège
         
         // Récupérer les employés du siège sélectionné, ou tous si aucun siège sélectionné

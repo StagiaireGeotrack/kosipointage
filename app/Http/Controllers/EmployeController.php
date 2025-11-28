@@ -32,6 +32,8 @@ class EmployeController extends Controller
         ]);
         
         $employes = $this->repository->getFiltered($filters);
+        $employes->appends($filters);
+
         $sieges = EntrepriseSiege::all();
         
         return view('employes.index', compact('employes', 'sieges', 'filters'));

@@ -28,6 +28,7 @@ class EntrepriseController extends Controller
     {
         $filters = $request->only(['search', 'SiegeID', 'Actived', 'sort_by', 'sort_order']);
         $entreprises = $this->repository->getFiltered($filters);
+        $entreprises->appends($filters);
         $sieges = EntrepriseSiege::all();
         
         return view('entreprises.index', compact('entreprises', 'sieges', 'filters'));
