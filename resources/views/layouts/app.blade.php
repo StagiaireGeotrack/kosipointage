@@ -83,7 +83,7 @@
     @stack('scripts')
     
     <script>
-        // Scroll to top functionality
+        
         const scrollToTopBtn = document.getElementById('scrollToTop');
         
         // Show button when user scrolls down 300px
@@ -102,6 +102,42 @@
                 behavior: 'smooth'
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.auto-timezone').forEach(function(element) {
+                const dateString = element.getAttribute('data-date');
+                const format = element.getAttribute('data-format') || 'full';
+                
+                if (dateString) {
+                    const date = new Date(dateString);
+                    
+                    let options;
+                    if (format === 'short') {
+                        options = {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        };
+                    } else {
+                        options = {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        };
+                    }
+                    
+                    const formatted = date.toLocaleDateString('fr-FR', options);
+                    element.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                }
+            });
+        });
+
     </script>
     
 </body>

@@ -117,7 +117,7 @@
                                     </td>
                                     <td class="align-middle">
                                         @if( $admin->created_at  )
-                                            {{ ucfirst($admin->created_at->isoFormat('dddd D MMMM YYYY')) }}
+                                            {{ ucfirst($admin->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                         @endif
                                     </td>                                        
                                     <td class="align-middle">

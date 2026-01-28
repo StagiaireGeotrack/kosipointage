@@ -25,7 +25,6 @@ class JourOuvrableService
         $joursNonTravailles = $this->getJoursNonTravaillesArray($dateDebut, $dateFin, $siegeId);
         
         $joursOuvrables = 0;
-        $heuresOuvrables = 0;
         
         // Cloner les dates pour ne pas les modifier
         $debut = $dateDebut->copy();
@@ -35,44 +34,68 @@ class JourOuvrableService
         $diffJours = $debut->diffInDays($fin);
         $diffHeures = $debut->diffInHours($fin);
         
-        // Si c'est le même jour
+        // ✅ CAS 1 : Si c'est le même jour
         if ($debut->isSameDay($fin)) {
             if (!$debut->isWeekend() && !$this->estJourNonTravaille($debut, $joursNonTravailles)) {
-                $heuresOuvrables = $debut->diffInHours($fin);
+                $heures = $debut->diffInHours($fin);
+                
+                if ($heures > 4) {
+                    $joursOuvrables = 1;
+                } else {
+                    $joursOuvrables = 0.5;
+                }
             }
-        } else {
-            // Parcourir chaque jour de la période
+        } 
+        // ✅ CAS 2 : Plusieurs jours
+        else {
             $currentDate = $debut->copy()->startOfDay();
+            $premierJourHeures = 0;
+            $dernierJourHeures = 0;
             
             while ($currentDate->lte($fin->copy()->endOfDay())) {
                 // Vérifier si c'est un jour ouvrable
                 if (!$currentDate->isWeekend() && !$this->estJourNonTravaille($currentDate, $joursNonTravailles)) {
                     
                     if ($currentDate->isSameDay($debut)) {
-                        // Premier jour : compter les heures jusqu'à minuit
-                        $heuresOuvrables += $debut->diffInHours($debut->copy()->endOfDay());
-                    } elseif ($currentDate->isSameDay($fin)) {
-                        // Dernier jour : compter les heures depuis minuit
-                        $heuresOuvrables += $fin->copy()->startOfDay()->diffInHours($fin);
-                    } else {
-                        // Jour complet : 24 heures
-                        $joursOuvrables++;
+                        // Premier jour : compter les heures travaillées
+                        $premierJourHeures = $debut->diffInHours($debut->copy()->endOfDay());
+                    } 
+                    elseif ($currentDate->isSameDay($fin)) {
+                        // Dernier jour : compter les heures travaillées
+                        $dernierJourHeures = $fin->copy()->startOfDay()->diffInHours($fin);
+                    } 
+                    else {
+                        // Jour complet ouvrable
+                        $joursOuvrables += 1;
                     }
                 }
                 
                 $currentDate->addDay();
             }
+            
+            // ✅ Convertir le premier jour en demi-journée ou jour complet
+            if ($premierJourHeures > 0) {
+                if ($premierJourHeures > 4) {
+                    $joursOuvrables += 1;
+                } else {
+                    $joursOuvrables += 0.5;
+                }
+            }
+            
+            // ✅ Convertir le dernier jour en demi-journée ou jour complet
+            if ($dernierJourHeures > 0) {
+                if ($dernierJourHeures > 4) {
+                    $joursOuvrables += 1;
+                } else {
+                    $joursOuvrables += 0.5;
+                }
+            }
         }
-        
-        // Convertir les heures en jours si >= 24h
-        $joursSupplementaires = floor($heuresOuvrables / 24);
-        $joursOuvrables += $joursSupplementaires;
-        $heuresRestantes = $heuresOuvrables % 24;
-        
+
         return [
             'jours' => $joursOuvrables,
-            'heures' => round($heuresRestantes, 1),
-            'total_heures' => round(($joursOuvrables * 24) + $heuresRestantes, 1),
+            'heures' => 0,
+            'total_heures' => round($joursOuvrables * 8, 1),
             'jours_calendrier' => $diffJours,
             'heures_calendrier' => $diffHeures,
         ];
@@ -89,7 +112,7 @@ class JourOuvrableService
             $siegeId
         );
         
-        return $jours->pluck('Date')->map(fn($date) => $date->format('Y-m-d'))->toArray();
+        return $jours->pluck('Date')->map(fn($date) => Carbon::parse($date)->format('Y-m-d'))->toArray();
     }
     
     /**

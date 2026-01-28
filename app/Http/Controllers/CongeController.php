@@ -185,19 +185,11 @@ class CongeController extends Controller
             );
 
             $resultat_duree = "";
+            $jours = $joursOuvrables['jours'];
 
-            if ($joursOuvrables['jours'] > 0) {
-                $resultat_duree .= round($joursOuvrables['jours']) . " jour(s) ouvrable(s)";
-            }
-
-            if ($joursOuvrables['heures'] > 0) {
-                if ($joursOuvrables['jours'] > 0) {
-                    $resultat_duree .= " et ";
-                }
-                $resultat_duree .= round($joursOuvrables['heures']) . " heure(s)";
-            }
-
-            if ($joursOuvrables['jours'] == 0 && $joursOuvrables['heures'] == 0) {
+            if ($jours > 0) {
+                $resultat_duree = $jours . ($jours > 1 ? " jours" : " jour");
+            } else {
                 $resultat_duree = "Aucun jour ouvrable";
             }
 

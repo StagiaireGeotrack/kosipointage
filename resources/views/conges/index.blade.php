@@ -138,7 +138,6 @@
                                     <td class="align-middle">
                                         {{ ucfirst($conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
                                     </td>
-                                    {{-- resources/views/conges/index.blade.php --}}
                                     <td class="align-middle">
                                         @php
                                             $jourOuvrableService = app(\App\Services\JourOuvrableService::class);
@@ -147,20 +146,16 @@
                                                 $conge->date_fin,
                                                 $conge->employe->SiegeID ?? null
                                             );
+                                            $jours = $resultat['jours'];
                                         @endphp
                                         
                                         <div>
-                                            @if($resultat['jours'] > 0)
-                                                <span class="text-muted">{{ round( $resultat['jours'] ) }} jour(s) ouvrable(s)</span>
-                                            @endif
-                                            
-                                            @if($resultat['heures'] > 0)
-                                                @if($resultat['jours'] > 0) et @endif
-                                                <span class="text-muted">{{ round( $resultat['heures'] ) }} h</span>
-                                            @endif
-                                            
-                                            @if($resultat['jours'] == 0 && $resultat['heures'] == 0)
-                                                <span class="badge bg-warning text-dark">{{ __('Aucun jour ouvrable') }}</span>
+                                            @if($jours > 0)
+                                                <span class="text-muted">
+                                                    {{ $jours }} {{ $jours > 1 ? 'jours' : 'jour' }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-warning text-dark">Aucun jour</span>
                                             @endif
                                         </div>
                                     </td>
