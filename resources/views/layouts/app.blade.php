@@ -104,15 +104,17 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.auto-timezone').forEach(function(element) {
-                const dateString = element.getAttribute('data-date');
-                const format = element.getAttribute('data-format') || 'full';
+            // Convertir toutes les dates en timezone local du navigateur
+            document.querySelectorAll('.local-datetime').forEach(function(element) {
+                const utcDate = element.getAttribute('data-utc');
+                const format = element.getAttribute('data-format');
                 
-                if (dateString) {
-                    const date = new Date(dateString);
+                if (utcDate) {
+                    const date = new Date(utcDate);
                     
                     let options;
                     if (format === 'short') {
+                        // Format court : "28 jan. 2026, 21:34"
                         options = {
                             year: 'numeric',
                             month: 'short',
@@ -120,7 +122,16 @@
                             hour: '2-digit',
                             minute: '2-digit'
                         };
+                    } else if (format === 'date-only') {
+                        // Date seule : "Mercredi 28 janvier 2026"
+                        options = {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        };
                     } else {
+                        // Format complet : "Mercredi 28 janvier 2026 - 21:34:15"
                         options = {
                             weekday: 'long',
                             year: 'numeric',
@@ -133,7 +144,18 @@
                     }
                     
                     const formatted = date.toLocaleDateString('fr-FR', options);
-                    element.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                    
+                    // Formater avec tirets pour le format complet
+                    if (format === 'full') {
+                        const parts = formatted.split(' à ');
+                        if (parts.length === 2) {
+                            element.textContent = parts[0].charAt(0).toUpperCase() + parts[0].slice(1) + ' - ' + parts[1];
+                        } else {
+                            element.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                        }
+                    } else {
+                        element.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                    }
                 }
             });
         });
