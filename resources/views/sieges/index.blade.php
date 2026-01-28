@@ -114,7 +114,7 @@
                                         {{ $siege->employes()->count() }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
+                                        <x-local-date-time :datetime="$siege->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
                                         @if ($siege->Actived)

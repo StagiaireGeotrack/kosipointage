@@ -159,8 +159,8 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="align-middle">
-                                        {{ ucfirst($conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
+                                    <td class="align-middle">                                        
+                                        <x-local-date-time :datetime="$conge->created_at"/>
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">

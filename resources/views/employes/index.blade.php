@@ -154,7 +154,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        {{ ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
+                                        <x-local-date-time :datetime="$employe->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
                                         @if ($employe->Actived)

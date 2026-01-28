@@ -63,7 +63,7 @@
                                     
                                     @if ($entreprise->CreatedAt)
                                         <dt class="col-sm-3">Créée le</dt>
-                                        <dd class="col-sm-9">{{ ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}</dd>
+                                        <dd class="col-sm-9"><x-local-date-time :datetime="$entreprise->CreatedAt"/></dd>
                                     @endif                                           
                                     
                                 </dl>

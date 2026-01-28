@@ -92,7 +92,7 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Date de création') }}</label>
-                            <p class="fs-5">{{ ucfirst($conge->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}</p>
+                            <p class="fs-5"><x-local-date-time :datetime="$conge->created_at"/></p>
                         </div>
                     </div>
                 </div>

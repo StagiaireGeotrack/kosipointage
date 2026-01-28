@@ -87,12 +87,12 @@
                     
                     <div class="col-md-4 mb-3">
                         <h6 class="text-uppercase text-secondary small fw-semibold">{{ __('Créé le') }}</h6>
-                        <p class="mb-0">{{ ucfirst($jourNonTravaille->created_at->isoFormat('dddd D MMMM YYYY')) }}</p>
+                        <p class="mb-0"><x-local-date-time :datetime="$jourNonTravaille->created_at"/></p>
                     </div>
                     
                     <div class="col-md-4 mb-3">
                         <h6 class="text-uppercase text-secondary small fw-semibold">{{ __('Modifié le') }}</h6>
-                        <p class="mb-0">{{ ucfirst($jourNonTravaille->updated_at->isoFormat('dddd D MMMM YYYY')) }}</p>
+                        <p class="mb-0"><x-local-date-time :datetime="$jourNonTravaille->updated_at"/></p>
                     </div>
                 </div>
             </div>

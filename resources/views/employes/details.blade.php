@@ -115,13 +115,13 @@
                                 @if($employe->created_at)
                                     <div class="col-md-6">
                                         <label class="fw-bold text-muted d-block">Date de création</label>
-                                        <p class="text-muted">{{ $employe->created_at->format('d/m/Y H:i') }}</p>
+                                        <p class="text-muted"><x-local-date-time :datetime="$employe->created_at"/></p>
                                     </div>
                                 @endif
                                 @if($employe->updated_at)
                                     <div class="col-md-6">
                                         <label class="fw-bold text-muted d-block">Dernière modification</label>
-                                        <p class="text-muted">{{ $employe->updated_at->format('d/m/Y H:i') }}</p>
+                                        <p class="text-muted"><x-local-date-time :datetime="$employe->updated_at"/></p>
                                     </div>
                                 @endif
                             </div>

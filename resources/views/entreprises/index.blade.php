@@ -113,7 +113,7 @@
                                         {{ $entreprise->siege->Nom }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
+                                        <x-local-date-time :datetime="$entreprise->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
                                         @if ($entreprise->Actived)

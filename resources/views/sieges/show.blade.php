@@ -53,7 +53,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <p class="small text-muted mb-1">{{ __('Date de création') }}</p>
-                        <p class="fw-medium mb-0">{{ ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}</p>
+                        <p class="fw-medium mb-0"><x-local-date-time :datetime="$siege->CreatedAt"/></p>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                                         {{ $entreprise->Nom_Lieu_Ville }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ ucfirst($entreprise->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
+                                        <x-local-date-time :datetime="$entreprise->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
                                         @if ($entreprise->Actived)
@@ -202,7 +202,7 @@
                                         {{ $employe->BadgeID }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY')) }}
+                                        <x-local-date-time :datetime="$employe->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
                                         @if ($employe->Actived)
