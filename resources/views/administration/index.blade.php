@@ -117,7 +117,7 @@
                                     </td>
                                     <td class="align-middle">
                                         @if( $admin->created_at  )
-                                            {{ ucfirst($admin->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
+                                            <x-local-date-time :datetime="$admin->created_at"/>
                                         @endif
                                     </td>                                        
                                     <td class="align-middle">
