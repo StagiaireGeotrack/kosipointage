@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class EmployeRequest extends FormRequest
@@ -20,6 +21,14 @@ class EmployeRequest extends FormRequest
         $isUpdate = $this->method() === 'PUT' || $this->method() === 'PATCH';
         $employeId = $isUpdate ? $this->route('employe') : null;
 
+        // ✅ Si l'utilisateur n'est PAS SuperAdmin, il peut SEULEMENT modifier le Nom
+        if (!Auth::user()->IsSuperAdmin) {
+            return [
+                'Nom' => 'required|string|max:255',
+            ];
+        }
+
+        // ✅ Super Admin : toutes les règles de validation
         $rules = [
             'Nom' => 'required|string|max:255',
             'HasBiometricSetup' => 'nullable|boolean',
@@ -112,16 +121,19 @@ class EmployeRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convertir les checkboxes en booléens
-        $this->merge([
-            'HasBiometricSetup' => $this->has('HasBiometricSetup') ? true : false,
-            'HasFaceSetup' => $this->has('HasFaceSetup') ? true : false,
-            'Actived' => $this->has('Actived') ? true : false,
-        ]);
-        
-        // Convertir Pin vide en null pour éviter les problèmes de validation
-        if ($this->input('Pin') === '') {
-            $this->merge(['Pin' => null]);
+        // ✅ Ne préparer ces champs que pour les SuperAdmin
+        if (Auth::user()->IsSuperAdmin) {
+            // Convertir les checkboxes en booléens
+            $this->merge([
+                'HasBiometricSetup' => $this->has('HasBiometricSetup') ? true : false,
+                'HasFaceSetup' => $this->has('HasFaceSetup') ? true : false,
+                'Actived' => $this->has('Actived') ? true : false,
+            ]);
+            
+            // Convertir Pin vide en null pour éviter les problèmes de validation
+            if ($this->input('Pin') === '') {
+                $this->merge(['Pin' => null]);
+            }
         }
     }
 }

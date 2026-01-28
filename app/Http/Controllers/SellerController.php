@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employe;
 use Illuminate\Http\Request;
 use App\Models\Administration;
 use App\Models\EntrepriseSiege;
@@ -366,5 +367,12 @@ class SellerController extends Controller
         $status = $seller->Actived ? 'activé' : 'désactivé';
 
         return redirect()->back()->with('success', "Revendeur {$status} avec succès");
+    }
+
+    public function show_employee($id)
+    {
+        $employe = Employe::with('siege')->findOrFail($id);
+        
+        return view('employes.details', compact('employe'));
     }
 }

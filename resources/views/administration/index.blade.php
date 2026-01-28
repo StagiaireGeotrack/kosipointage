@@ -46,7 +46,7 @@
                     
                     <div class="d-flex justify-content-end gap-2">
                         <button type="submit" class="btn btn-primary">
-                            {{ __('Rechercher') }}
+                            {{ __('Valider') }}
                         </button>
                         <a href="{{ route('administrateurs.index') }}" class="btn btn-secondary">
                             {{ __('Réinitialiser') }}

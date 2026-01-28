@@ -19,7 +19,7 @@
                     @method('PUT')
 
                     <div class="row">
-                        <!-- Nom -->
+                        <!-- Nom - TOUS LES UTILISATEURS PEUVENT MODIFIER -->
                         <div class="form-group mb-3">
                             <label for="Nom">Nom <span class="text-danger">*</span></label>
                             <input type="text" 
@@ -27,66 +27,115 @@
                                     id="Nom" 
                                     name="Nom" 
                                     value="{{ old('Nom', $employe->Nom) }}" 
-                                    disabled>
+                                    required>
                             @error('Nom')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <!-- SiegeID -->
+                        <!-- SiegeID - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
                             <label for="SiegeID">Siège <span class="text-danger">*</span></label>
-                            <select class="form-control @error('SiegeID') is-invalid @enderror" 
-                                    id="SiegeID" 
-                                    name="SiegeID" 
-                                    disabled>
-                                <option value="">Sélectionnez un siège</option>
-                                @foreach($sieges as $siege)
-                                    <option value="{{ $siege->ID }}" 
-                                            {{ old('SiegeID', $employe->SiegeID) == $siege->ID ? 'selected' : '' }}>
-                                        {{ $siege->Nom }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            @if(Auth::user()->IsSuperAdmin)
+                                {{-- Super Admin : select MODIFIABLE --}}
+                                <select class="form-control @error('SiegeID') is-invalid @enderror" 
+                                        id="SiegeID" 
+                                        name="SiegeID" 
+                                        required>
+                                    <option value="">Sélectionnez un siège</option>
+                                    @foreach($sieges as $siege)
+                                        <option value="{{ $siege->ID }}" 
+                                                {{ old('SiegeID', $employe->SiegeID) == $siege->ID ? 'selected' : '' }}>
+                                            {{ $siege->Nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                                {{-- Non Super Admin : juste disabled (valeur non envoyée) --}}
+                                <select class="form-control" 
+                                        id="SiegeID" 
+                                        disabled>
+                                    <option value="">Sélectionnez un siège</option>
+                                    @foreach($sieges as $siege)
+                                        <option value="{{ $siege->ID }}" 
+                                                {{ $employe->SiegeID == $siege->ID ? 'selected' : '' }}>
+                                            {{ $siege->Nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted">Modification réservée aux super administrateurs</small>
+                            @endif
                             @error('SiegeID')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
                             @enderror
                         </div>
                         
                         <div class="row">
                             <div class="col-md-6">
-                                <!-- BadgeID -->
+                                <!-- BadgeID - SEULEMENT SUPER ADMIN -->
                                 <div class="form-group mb-3">
                                     <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
-                                    <input type="text" 
-                                            class="form-control @error('BadgeID') is-invalid @enderror" 
-                                            id="BadgeID" 
-                                            name="BadgeID" 
-                                            value="{{ old('BadgeID', $employe->BadgeID) }}" 
-                                            maxlength="25"
-                                            disabled>
-                                    <small class="form-text text-muted">Identifiant unique de l'employé</small>
+                                    @if(Auth::user()->IsSuperAdmin)
+                                        {{-- Super Admin : input MODIFIABLE --}}
+                                        <input type="text" 
+                                                class="form-control @error('BadgeID') is-invalid @enderror" 
+                                                id="BadgeID" 
+                                                name="BadgeID" 
+                                                value="{{ old('BadgeID', $employe->BadgeID) }}" 
+                                                maxlength="25"
+                                                required>
+                                    @else
+                                        {{-- Non Super Admin : disabled --}}
+                                        <input type="text" 
+                                                class="form-control" 
+                                                id="BadgeID" 
+                                                value="{{ $employe->BadgeID }}" 
+                                                maxlength="25"
+                                                disabled>
+                                    @endif
+                                    <small class="form-text text-muted">
+                                        Identifiant unique de l'employé
+                                        @if(!Auth::user()->IsSuperAdmin)
+                                            <span class="text-warning">(modification réservée aux super administrateurs)</span>
+                                        @endif
+                                    </small>
                                     @error('BadgeID')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">                                
-                                <!-- Pin -->
+                                <!-- Pin - SEULEMENT SUPER ADMIN -->
                                 <div class="form-group mb-3">
                                     <label for="Pin">Code PIN</label>
-                                    <input type="text" 
-                                            class="form-control @error('Pin') is-invalid @enderror" 
-                                            id="Pin" 
-                                            name="Pin" 
-                                            value="{{ old('Pin', $employe->Pin) }}" 
-                                            maxlength="6"
-                                            pattern="[0-9]{6}"
-                                            placeholder="000000"
-                                            disabled>
-                                    <small class="form-text text-muted">Code PIN à 6 chiffres</small>
+                                    @if(Auth::user()->IsSuperAdmin)
+                                        {{-- Super Admin : input MODIFIABLE --}}
+                                        <input type="text" 
+                                                class="form-control @error('Pin') is-invalid @enderror" 
+                                                id="Pin" 
+                                                name="Pin" 
+                                                value="{{ old('Pin', $employe->Pin) }}" 
+                                                maxlength="6"
+                                                pattern="[0-9]{6}"
+                                                placeholder="000000">
+                                    @else
+                                        {{-- Non Super Admin : disabled --}}
+                                        <input type="text" 
+                                                class="form-control" 
+                                                id="Pin" 
+                                                value="{{ $employe->Pin }}" 
+                                                maxlength="6"
+                                                placeholder="000000"
+                                                disabled>
+                                    @endif
+                                    <small class="form-text text-muted">
+                                        Code PIN à 6 chiffres
+                                        @if(!Auth::user()->IsSuperAdmin)
+                                            <span class="text-warning">(modification réservée aux super administrateurs)</span>
+                                        @endif
+                                    </small>
                                     @error('Pin')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -96,7 +145,6 @@
                         @if($employe->FaceEncodingPath)
                             <div class="form-group mb-3">
                                 <label class="d-block text-muted">Photo de visage actuelle :</label>
-                                {{-- ✅ Utiliser la ROUTE au lieu du Base64 direct --}}
                                 <img src="{{ route('employes.face.thumbnail', $employe->ID) }}" 
                                         alt="Photo {{ $employe->Nom }}" 
                                         style="max-width: 200px; max-height: 200px;" 
@@ -105,21 +153,33 @@
                             </div>
                         @endif
                         
-                        <!-- HasBiometricSetup -->
+                        <!-- HasBiometricSetup - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
                             <div class="form-check">
-                                <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
-                                        type="checkbox" 
-                                        value="1" 
-                                        id="HasBiometricSetup" 
-                                        name="HasBiometricSetup" 
-                                        {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}
-                                        disabled>
+                                @if(Auth::user()->IsSuperAdmin)
+                                    {{-- Super Admin : checkbox MODIFIABLE --}}
+                                    <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
+                                            type="checkbox" 
+                                            value="1"
+                                            id="HasBiometricSetup" 
+                                            name="HasBiometricSetup"
+                                            {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}>
+                                @else
+                                    {{-- Non Super Admin : juste disabled --}}
+                                    <input class="form-check-input" 
+                                            type="checkbox" 
+                                            id="HasBiometricSetup" 
+                                            {{ $employe->HasBiometricSetup ? 'checked' : '' }}
+                                            disabled>
+                                @endif
                                 <label class="form-check-label" for="HasBiometricSetup">
                                     <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
+                                    @if(!Auth::user()->IsSuperAdmin)
+                                        <small class="text-muted">(modification réservée aux super administrateurs)</small>
+                                    @endif
                                 </label>
                                 @error('HasBiometricSetup')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -131,33 +191,44 @@
                             </div>
                         @endif
 
-                        <!-- Actived -->
+                        <!-- Actived - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
                             <hr>
                             <div class="form-check">
-                                <input class="form-check-input @error('Actived') is-invalid @enderror" 
-                                        type="checkbox" 
-                                        value="1" 
-                                        id="Actived" 
-                                        name="Actived" 
-                                        {{ old('Actived', $employe->Actived) ? 'checked' : '' }}
-                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}
-                                        disabled>
-                                <label class="form-check-label" for="Actived">
-                                    Activer
-                                    @if(!Auth::user()->IsSuperAdmin)
+                                @if(Auth::user()->IsSuperAdmin)
+                                    {{-- Super Admin peut modifier --}}
+                                    <input class="form-check-input @error('Actived') is-invalid @enderror" 
+                                            type="checkbox" 
+                                            value="1" 
+                                            id="Actived" 
+                                            name="Actived" 
+                                            {{ old('Actived', $employe->Actived) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="Actived">
+                                        Activer
+                                    </label>
+                                @else
+                                    {{-- Non Super Admin : disabled + hidden --}}
+                                    <input class="form-check-input" 
+                                            type="checkbox" 
+                                            id="Actived_display" 
+                                            {{ $employe->Actived ? 'checked' : '' }}
+                                            disabled>
+                                    <input type="hidden" name="Actived" value="{{ $employe->Actived ? '1' : '0' }}">
+                                    <label class="form-check-label" for="Actived_display">
+                                        Activer
                                         <small class="text-muted">(réservé aux super administrateurs)</small>
-                                    @endif
-                                </label>
+                                    </label>
+                                @endif
                                 @error('Actived')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? '' : 'd-block' }}">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>                               
                             
                     </div>
 
-                    @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
+                    {{-- Bouton submit pour TOUS LES UTILISATEURS (au moins pour modifier le Nom) --}}
+                    @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> Enregistrer les modifications
@@ -172,31 +243,39 @@
     @push('scripts')
     <script>
         // Aperçu de la nouvelle photo
-        document.getElementById('FaceEncodingFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('facePreview');
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.innerHTML = `
-                        <label class="d-block text-muted mb-1">Nouvelle photo :</label>
-                        <img src="${e.target.result}" 
-                             alt="Aperçu de la nouvelle photo" 
-                             style="max-width: 200px; max-height: 200px;" 
-                             class="img-thumbnail">
-                    `;
+        const faceInput = document.getElementById('FaceEncodingFile');
+        if (faceInput) {
+            faceInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const preview = document.getElementById('facePreview');
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.innerHTML = `
+                            <label class="d-block text-muted mb-1">Nouvelle photo :</label>
+                            <img src="${e.target.result}" 
+                                 alt="Aperçu de la nouvelle photo" 
+                                 style="max-width: 200px; max-height: 200px;" 
+                                 class="img-thumbnail">
+                        `;
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.innerHTML = '';
                 }
-                reader.readAsDataURL(file);
-            } else {
-                preview.innerHTML = '';
-            }
-        });
+            });
+        }
 
-        // Validation du PIN
-        document.getElementById('Pin').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
-        });
+        // Validation du PIN pour Super Admin
+        @if(Auth::user()->IsSuperAdmin)
+        const pinInput = document.getElementById('Pin');
+        if (pinInput) {
+            pinInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
+            });
+        }
+        @endif
     </script>
     @endpush
 </x-app-layout>

@@ -72,7 +72,7 @@
                     <div class="d-flex justify-content-end gap-2">
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-search me-1"></i>{{ __('Rechercher') }}
+                                <i class="bi bi-search me-1"></i>{{ __('Valider') }}
                             </button>
                             <a href="{{ route('jours-non-travailles.index') }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-clockwise me-1"></i>{{ __('Réinitialiser') }}

@@ -66,7 +66,7 @@
                     
                     <div class="d-flex justify-content-end gap-2">
                         <button type="submit" class="btn btn-primary">
-                            {{ __('Rechercher') }}
+                            {{ __('Valider') }}
                         </button>
                         <a href="{{ route('employes.index') }}" class="btn btn-secondary">
                             {{ __('Réinitialiser') }}
@@ -169,14 +169,15 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
+
+                                            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
+
                                             <a href="{{ route('employes.show', $employe->ID) }}" class="text-primary" title="Voir">
                                                 <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                                                 </svg>
                                             </a>
-
-                                            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
                                             
                                             <button type="button" class="btn btn-link text-danger p-0 border-0" 
                                                     onclick="setDeleteAction('{{ route('employes.destroy', $employe->ID) }}', '{{ $employe->Nom }}')" 
@@ -189,6 +190,18 @@
                                             </button>
 
                                             @endif
+
+                                            @if (auth()->user()->isSeller() )
+                                            
+                                            <a href="{{ route('employe.show.seller', $employe->ID) }}" title="Voir les détails">
+                                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </a>
+
+                                            @endif
+
                                         </div>
                                     </td>
                                 </tr>

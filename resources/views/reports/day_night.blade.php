@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-12 col-sm-6 col-md-4 d-flex align-items-end gap-2">
                             <button type="submit" class="btn btn-primary">
-                                {{ __('Rechercher') }}
+                                {{ __('Valider') }}
                             </button>
                             <a href="{{ route('reports.day-night') }}" class="btn btn-secondary">
                                 {{ __('Réinitialiser') }}

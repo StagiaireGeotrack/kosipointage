@@ -57,9 +57,8 @@ Route::middleware('auth')->group(function () {
     
     // ========== DASHBOARDS ==========
     // Dashboard pour Vendeurs uniquement
-    Route::get('/dashboard/seller', [AllDashboardController::class, 'dashboardSeller'])
-        ->name('dashboard.seller')
-        ->middleware('only.sellers');
+    Route::get('/dashboard/seller', [AllDashboardController::class, 'dashboardSeller'])->name('dashboard.seller')->middleware('only.sellers');
+    Route::get('/details-employe/{id}', [SellerController::class, 'show_employee'])->name('employe.show.seller')->middleware('only.sellers');
     
     // Dashboard pour Simple Admin uniquement
     Route::get('/dashboard/simple-admin', [AllDashboardController::class, 'dashboardSimpleAdmin'])

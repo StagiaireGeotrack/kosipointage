@@ -97,29 +97,44 @@ class EmployeController extends Controller
     
     public function update(EmployeRequest $request, $id)
     {
+        // Récupérer les données validées
         $data = $request->validated();
         
         // Vérifier que l'employé existe
         $employe = Employe::findOrFail($id);
         
-        // Convertir et COMPRESSER la nouvelle photo si présente
-        if ($request->hasFile('FaceEncodingFile')) {
-            $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
-            $data['HasFaceSetup'] = true;
-        } else {
-            // Ne pas modifier la photo si aucun nouveau fichier
-            unset($data['FaceEncodingPath']);
-            unset($data['HasFaceSetup']); // Ne pas modifier HasFaceSetup
-        }
-        
+        // ✅ Si l'utilisateur n'est PAS SuperAdmin
         if (!auth()->user()->IsSuperAdmin) {
-            // Conserver l'état actuel d'activation
-            $data['Actived'] = $employe->Actived;
+            // Ne mettre à jour QUE le Nom, garder tout le reste intact
+            $data = [
+                'Nom' => $data['Nom'],
+                // Tous les autres champs gardent leurs valeurs actuelles
+                'SiegeID' => $employe->SiegeID,
+                'BadgeID' => $employe->BadgeID,
+                'Pin' => $employe->Pin,
+                'HasBiometricSetup' => $employe->HasBiometricSetup,
+                'HasFaceSetup' => $employe->HasFaceSetup,
+                'FaceEncodingPath' => $employe->FaceEncodingPath,
+                'Actived' => $employe->Actived,
+            ];
+        } else {
+            // ✅ SuperAdmin : peut tout modifier
+            
+            // Convertir et COMPRESSER la nouvelle photo si présente
+            if ($request->hasFile('FaceEncodingFile')) {
+                $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
+                $data['HasFaceSetup'] = true;
+            } else {
+                // Ne pas modifier la photo si aucun nouveau fichier
+                unset($data['FaceEncodingPath']);
+                unset($data['HasFaceSetup']); // Ne pas modifier HasFaceSetup
+            }
         }
 
-        // Supprimer FaceEncodingFile
+        // Supprimer FaceEncodingFile du tableau de données
         unset($data['FaceEncodingFile']);
         
+        // Mise à jour
         $this->repository->update($id, $data);
         
         return redirect()->back()->with('success', __('Employé modifié avec succès'));

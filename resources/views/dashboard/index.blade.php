@@ -277,7 +277,7 @@
                     
                     <div class="align-self-end">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i> {{ __('Rechercher') }}
+                            <i class="bi bi-search"></i> {{ __('Valider') }}
                         </button>
                     </div>
                 </form>
