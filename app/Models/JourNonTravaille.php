@@ -26,6 +26,7 @@ class JourNonTravaille extends Model
         'Date' => 'date',
         'Recurrent' => 'boolean',
         'Actived' => 'boolean',
+        'created_at' => 'datetime'
     ];
     
     public function siege(): BelongsTo

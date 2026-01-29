@@ -1,4 +1,3 @@
-{{-- resources/views/layouts/app.blade.php --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -19,13 +18,13 @@
     <style>
         /* Compensation pour la navbar fixe */
         body {
-            padding-top: 90px; /* Ajustez cette valeur selon la hauteur de votre navbar */
+            padding-top: 90px;
         }
 
         /* Ajustement responsive */
         @media (max-width: 576px) {
             body {
-                padding-top: 80px; /* Légèrement moins sur mobile */
+                padding-top: 80px;
             }
         }
     </style>
@@ -80,13 +79,10 @@
         </svg>
     </button>
     
-    @stack('scripts')
-    
+    <!-- Scripts en bas AVANT @stack -->
     <script>
-        
         const scrollToTopBtn = document.getElementById('scrollToTop');
         
-        // Show button when user scrolls down 300px
         window.addEventListener('scroll', function() {
             if (window.pageYOffset > 50) {
                 scrollToTopBtn.classList.add('show');
@@ -95,26 +91,33 @@
             }
         });
         
-        // Smooth scroll to top when button is clicked
         scrollToTopBtn.addEventListener('click', function() {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
         });
+    </script>
 
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Convertir toutes les dates en timezone local du navigateur
-            document.querySelectorAll('.local-datetime').forEach(function(element) {
+            console.log('Conversion des dates démarrée');
+            
+            const elements = document.querySelectorAll('.local-datetime');
+            console.log('Éléments trouvés:', elements.length);
+            
+            elements.forEach(function(element) {
                 const utcDate = element.getAttribute('data-utc');
-                const format = element.getAttribute('data-format');
+                const format = element.getAttribute('data-format') || 'full';
+                
+                console.log('Date UTC:', utcDate);
                 
                 if (utcDate) {
                     const date = new Date(utcDate);
+                    console.log('Date parsée:', date.toString());
                     
                     let options;
                     if (format === 'short') {
-                        // Format court : "28 jan. 2026, 21:34"
                         options = {
                             year: 'numeric',
                             month: 'short',
@@ -123,7 +126,6 @@
                             minute: '2-digit'
                         };
                     } else if (format === 'date-only') {
-                        // Date seule : "Mercredi 28 janvier 2026"
                         options = {
                             weekday: 'long',
                             year: 'numeric',
@@ -131,7 +133,6 @@
                             day: 'numeric'
                         };
                     } else {
-                        // Format complet : "Mercredi 28 janvier 2026 - 21:34:15"
                         options = {
                             weekday: 'long',
                             year: 'numeric',
@@ -144,9 +145,10 @@
                     }
                     
                     const formatted = date.toLocaleDateString('fr-FR', options);
+                    console.log('Date formatée:', formatted);
                     
                     // Formater avec tirets pour le format complet
-                    if (format === 'full') {
+                    if (!format || format === 'full') {
                         const parts = formatted.split(' à ');
                         if (parts.length === 2) {
                             element.textContent = parts[0].charAt(0).toUpperCase() + parts[0].slice(1) + ' - ' + parts[1];
@@ -156,11 +158,17 @@
                     } else {
                         element.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
                     }
+                    
+                    console.log('Texte final:', element.textContent);
                 }
             });
+            
+            console.log('Conversion terminée');
         });
-
     </script>
+
+    <!-- @stack UNE SEULE FOIS à la fin -->
+    @stack('scripts')
     
 </body>
 </html>
