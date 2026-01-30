@@ -21,14 +21,14 @@ class EmployeRequest extends FormRequest
         $isUpdate = $this->method() === 'PUT' || $this->method() === 'PATCH';
         $employeId = $isUpdate ? $this->route('employe') : null;
 
-        // ✅ Si l'utilisateur n'est PAS SuperAdmin, il peut SEULEMENT modifier le Nom
-        if (!Auth::user()->IsSuperAdmin) {
+        // ✅ CORRECTION : Restriction "Nom uniquement" SEULEMENT pour UPDATE
+        if (!Auth::user()->IsSuperAdmin && $isUpdate) {
             return [
                 'Nom' => 'required|string|max:255',
             ];
         }
 
-        // ✅ Super Admin : toutes les règles de validation
+        // ✅ Pour CREATE ou SuperAdmin : toutes les règles
         $rules = [
             'Nom' => 'required|string|max:255',
             'HasBiometricSetup' => 'nullable|boolean',
@@ -68,7 +68,7 @@ class EmployeRequest extends FormRequest
                 Rule::unique('Employes', 'Pin')
                     ->where('SiegeID', $siegeId)
                     ->ignore($employeId, 'ID')
-                    ->whereNotNull('Pin') // Ignore les NULL pour permettre plusieurs employés sans PIN
+                    ->whereNotNull('Pin')
             ];
         } else {
             $rules['Pin'] = [
@@ -78,7 +78,7 @@ class EmployeRequest extends FormRequest
                 'regex:/^[0-9]{6}$/',
                 Rule::unique('Employes', 'Pin')
                     ->where('SiegeID', $siegeId)
-                    ->whereNotNull('Pin') // Ignore les NULL pour permettre plusieurs employés sans PIN
+                    ->whereNotNull('Pin')
             ];
         }
 
@@ -121,8 +121,10 @@ class EmployeRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // ✅ Ne préparer ces champs que pour les SuperAdmin
-        if (Auth::user()->IsSuperAdmin) {
+        $isUpdate = $this->method() === 'PUT' || $this->method() === 'PATCH';
+        
+        // ✅ Ne préparer ces champs que pour CREATE ou SuperAdmin
+        if (!$isUpdate || Auth::user()->IsSuperAdmin) {
             // Convertir les checkboxes en booléens
             $this->merge([
                 'HasBiometricSetup' => $this->has('HasBiometricSetup') ? true : false,
@@ -130,7 +132,7 @@ class EmployeRequest extends FormRequest
                 'Actived' => $this->has('Actived') ? true : false,
             ]);
             
-            // Convertir Pin vide en null pour éviter les problèmes de validation
+            // Convertir Pin vide en null
             if ($this->input('Pin') === '') {
                 $this->merge(['Pin' => null]);
             }
