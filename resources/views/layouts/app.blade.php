@@ -79,7 +79,7 @@
         </svg>
     </button>
     
-    <!-- Scripts en bas AVANT @stack -->
+    <!-- Scripts en bas AVANT -->
     <script>
         const scrollToTopBtn = document.getElementById('scrollToTop');
         
@@ -167,7 +167,7 @@
         });
     </script>
 
-    <!-- @stack UNE SEULE FOIS à la fin -->
+    <!-- stack UNE SEULE FOIS à la fin -->
     @stack('scripts')
     
 </body>
