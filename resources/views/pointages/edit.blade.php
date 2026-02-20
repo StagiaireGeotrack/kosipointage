@@ -40,12 +40,12 @@
                         <select id="company_id" name="company_id" class="form-select mt-1" required>
                             <option value="">{{ __('Sélectionnez un site ou établissement') }}</option>
                             @foreach($sites as $site)
-                                <option value="{{ $site->ID }}" {{ old('company_id') == $pointage->company_id ? 'selected' : '' }}>
+                                <option value="{{ $site->ID }}" {{ old('company_id',$pointage->company_id ) == $pointage->company_id ? 'selected' : '' }}>
                                     {{ $site->Nom }}
                                 </option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->get('employee_id')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('company_id')" class="mt-2" />
                     </div>
 
                     <!-- Employé -->
