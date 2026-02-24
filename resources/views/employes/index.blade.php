@@ -96,13 +96,10 @@
                                     {{ __('Badge ID') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Code Pin') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Siège') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Face image') }}
+                                    {{ __('Méthode') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Date de création') }}
@@ -120,21 +117,14 @@
                                 <tr>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
-                                            @if ($employe->HasFaceSetup)
-                                                <img src="{{ route('employes.face.thumbnail', $employe->ID) }}" alt="{{ $employe->Nom }}" class="rounded-circle me-3" style="height: 40px; width: 40px; object-fit: cover;">
-                                            @else
-                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="height: 40px; width: 40px;">
-                                                    <span class="small fw-semibold text-white">{{ substr($employe->Nom, 0, 1) }}</span>
-                                                </div>
-                                            @endif
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="height: 40px; width: 40px;">
+                                                <span class="small fw-semibold text-white">{{ substr($employe->Nom, 0, 1) }}</span>
+                                            </div>
                                             {{ $employe->Nom }}
                                         </div>
                                     </td>
                                     <td class="align-middle">
                                         {{ $employe->BadgeID }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ $employe->Pin }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $employe->siege->Nom }}
