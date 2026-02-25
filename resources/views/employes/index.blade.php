@@ -46,15 +46,6 @@
                         </div>
                         
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                            <x-input-label for="HasBiometricSetup" :value="__('Empreinte')" />
-                            <select id="HasBiometricSetup" name="HasBiometricSetup" class="form-select mt-1">
-                                <option value="">{{ __('Tous') }}</option>
-                                <option value="1" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '1' ? 'selected' : '' }}>{{ __('Oui') }}</option>
-                                <option value="0" {{ isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] == '0' ? 'selected' : '' }}>{{ __('Non') }}</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <x-input-label for="HasFaceSetup" :value="__('Face image')" />
                             <select id="HasFaceSetup" name="HasFaceSetup" class="form-select mt-1">
                                 <option value="">{{ __('Tous') }}</option>
@@ -131,14 +122,19 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
-                                            @if ($employe->HasBiometricSetup)
+                                            @if ($employe->BadgeID )
                                                 <span class="badge bg-info">
-                                                    {{ __('Empreinte') }}
+                                                    {{ __('Badge') }}
                                                 </span>
                                             @endif
                                             @if ($employe->HasFaceSetup)
                                                 <span class="badge bg-primary">
                                                     {{ __('Face image') }}
+                                                </span>
+                                            @endif
+                                            @if ($employe->Pin)
+                                                <span class="badge bg-secondary">
+                                                    {{ __('Code Pin') }}
                                                 </span>
                                             @endif
                                         </div>
@@ -176,6 +172,16 @@
                                                     title="Supprimer">
                                                 <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+
+                                            <button type="button" class="btn btn-link text-warning p-0 border-0"
+                                                onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#resetPinModal"
+                                                title="Réinitialiser le PIN">
+                                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path fill-rule="evenodd" d="M4 12a8 8 0 1116 0A8 8 0 014 12zm8-3a1 1 0 00-1 1v2H9a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2v-2a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                                 </svg>
                                             </button>
 

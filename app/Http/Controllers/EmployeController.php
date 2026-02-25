@@ -94,6 +94,15 @@ class EmployeController extends Controller
         
         return view('employes.edit', compact('employe', 'sieges'));
     }
+
+    public function resetCodePin($id)
+    {
+        $employe = $this->repository->findById($id) ;
+        $employe->Pin = null ;
+        $employe->save() ;
+        
+        return redirect()->back()->with('success', __('Code Pin réinitialisé avec succès'));
+    }    
     
     public function update(EmployeRequest $request, $id)
     {

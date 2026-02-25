@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/employes/{employe}', [EmployeController::class, 'show'])->name('employes.show');
         Route::get('/employes/{id}/face', [EmployeController::class, 'getFaceEncoding'])->name('employes.face');
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
+        Route::patch('employes/{id}/reset-pin', [EmployeController::class, 'resetCodePin'])->name('employes.reset-pin');
         
         // ========== POINTAGES : CRUD complet (Super Admin + Simple Admin) ==========
         Route::middleware('block.sellers')->group(function () {
