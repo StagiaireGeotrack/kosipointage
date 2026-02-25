@@ -71,7 +71,7 @@
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <!-- BadgeID - SEULEMENT SUPER ADMIN -->
                                 <div class="form-group mb-3">
                                     <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
@@ -100,41 +100,6 @@
                                         @endif
                                     </small>
                                     @error('BadgeID')
-                                        <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">                                
-                                <!-- Pin - SEULEMENT SUPER ADMIN -->
-                                <div class="form-group mb-3">
-                                    <label for="Pin">Code PIN</label>
-                                    @if(Auth::user()->IsSuperAdmin)
-                                        {{-- Super Admin : input MODIFIABLE --}}
-                                        <input type="text" 
-                                                class="form-control @error('Pin') is-invalid @enderror" 
-                                                id="Pin" 
-                                                name="Pin" 
-                                                value="{{ old('Pin', $employe->Pin) }}" 
-                                                maxlength="6"
-                                                pattern="[0-9]{6}"
-                                                placeholder="000000">
-                                    @else
-                                        {{-- Non Super Admin : disabled --}}
-                                        <input type="text" 
-                                                class="form-control" 
-                                                id="Pin" 
-                                                value="{{ $employe->Pin }}" 
-                                                maxlength="6"
-                                                placeholder="000000"
-                                                disabled>
-                                    @endif
-                                    <small class="form-text text-muted">
-                                        Code PIN à 6 chiffres
-                                        @if(!Auth::user()->IsSuperAdmin)
-                                            <span class="text-warning">(modification réservée aux super administrateurs)</span>
-                                        @endif
-                                    </small>
-                                    @error('Pin')
                                         <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
                                     @enderror
                                 </div>

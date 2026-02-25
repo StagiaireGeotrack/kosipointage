@@ -212,7 +212,7 @@
                     </table>
                 </div>
 
-                <!-- Modal de confirmation (à placer en dehors de la boucle) -->
+                <!-- Modal de confirmation Delete Employé -->
                 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -235,6 +235,30 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal de confirmation réinitialisation Pin Employé -->
+                <div class="modal fade" id="resetPinModal" tabindex="-1" aria-labelledby="resetPinModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resetPinModalLabel">{{ __('Réinitialisation du code PIN') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ __('Voulez-vous vraiment réinitialiser le code PIN de cet employé ?') }}</p>
+                                <p class="fw-bold" id="details_employee_pin"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+                                <form id="resetPinForm" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-warning">{{ __('Réinitialiser') }}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Pagination -->
                 <div class="mt-1">
@@ -247,10 +271,17 @@
     @push("scripts")
 
         <script>
-        function setDeleteAction(url, name) {
-            document.getElementById('deleteForm').action = url;
-            document.getElementById('details_employee').textContent = name;
-        }
+
+            function setDeleteAction(url, name) {
+                document.getElementById('deleteForm').action = url;
+                document.getElementById('details_employee').textContent = name;
+            }
+
+            function setResetPinAction(url, nom) {
+                document.getElementById('resetPinForm').action = url;
+                document.getElementById('details_employee_pin').textContent = nom;
+            }
+            
         </script>
         
     @endpush
