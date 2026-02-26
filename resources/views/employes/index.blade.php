@@ -76,9 +76,6 @@
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Badge ID') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Siège') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -105,9 +102,6 @@
                                             </div>
                                             {{ $employe->Nom }}
                                         </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ $employe->BadgeID }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $employe->siege->Nom }}

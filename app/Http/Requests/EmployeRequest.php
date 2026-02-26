@@ -32,13 +32,7 @@ class EmployeRequest extends FormRequest
                     'nullable',
                     'string',
                     'size:6',
-                    'regex:/^[0-9]{6}$/',
-                    Rule::unique('Employes', 'Pin')
-                        ->where(function ($query) use ($siegeId) {
-                            return $query->where('SiegeID', $siegeId)
-                                        ->whereNotNull('Pin');
-                        })
-                        ->ignore($employeId, 'ID')
+                    'regex:/^[0-9]{6}$/'
                 ],
             ];
         }
@@ -52,12 +46,7 @@ class EmployeRequest extends FormRequest
                     'nullable',
                     'string',
                     'size:6',
-                    'regex:/^[0-9]{6}$/',
-                    Rule::unique('Employes', 'Pin')
-                        ->where(function ($query) use ($siegeId) {
-                            return $query->where('SiegeID', $siegeId)
-                                        ->whereNotNull('Pin');
-                        })
+                    'regex:/^[0-9]{6}$/'
                 ],
             ];
         }
@@ -76,47 +65,22 @@ class EmployeRequest extends FormRequest
             $rules['BadgeID'] = [
                 'nullable',
                 'string',
-                'max:25',
-                Rule::unique('Employes', 'BadgeID')
-                    ->where('SiegeID', $siegeId)
-                    ->ignore($employeId, 'ID')
+                'max:25'
             ];
         } else {
             $rules['BadgeID'] = [
                 'required',
                 'string',
-                'max:25',
-                Rule::unique('Employes', 'BadgeID')
-                    ->where('SiegeID', $siegeId)
+                'max:25'
             ];
         }
 
-        if ($isUpdate) {
-            $rules['Pin'] = [
-                'nullable',
-                'string',
-                'size:6',
-                'regex:/^[0-9]{6}$/',
-                Rule::unique('Employes', 'Pin')
-                    ->where(function ($query) use ($siegeId) {
-                        return $query->where('SiegeID', $siegeId)
-                                    ->whereNotNull('Pin');
-                    })
-                    ->ignore($employeId, 'ID')
-            ];
-        } else {
-            $rules['Pin'] = [
-                'nullable',
-                'string',
-                'size:6',
-                'regex:/^[0-9]{6}$/',
-                Rule::unique('Employes', 'Pin')
-                    ->where(function ($query) use ($siegeId) {
-                        return $query->where('SiegeID', $siegeId)
-                                    ->whereNotNull('Pin');
-                    })
-            ];
-        }
+        $rules['Pin'] = [
+            'nullable',
+            'string',
+            'size:6',
+            'regex:/^[0-9]{6}$/'
+        ];
 
         return $rules;
     }

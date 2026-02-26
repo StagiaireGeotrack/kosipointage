@@ -52,17 +52,28 @@ class EmployeController extends Controller
     {
         $data = $request->validated();
         
-        // AJOUT : Générer un BadgeID automatique si non fourni (Simple Admin)
+        $siegeId = $data['SiegeID'];
+
         if (empty($data['BadgeID'])) {
             $data['BadgeID'] = $this->hashService->toHash(strtoupper(uniqid('EMP-')));
-        }else {
-            // Hasher le BadgeID soumis (SuperAdmin)
-            $data['BadgeID'] = $this->hashService->toHash($data['BadgeID']);
+        } else {
+            $hashedBadge = $this->hashService->toHash($data['BadgeID']);
+            if (Employe::where('SiegeID', $siegeId)->where('BadgeID', $hashedBadge)->exists()) {
+                return redirect()->back()
+                    ->withErrors(['BadgeID' => 'Ce Badge ID est déjà utilisé dans ce siège.'])
+                    ->withInput();
+            }
+            $data['BadgeID'] = $hashedBadge;
         }
 
-        // Hasher le Pin si fourni
         if (!empty($data['Pin'])) {
-            $data['Pin'] = $this->hashService->toHash($data['Pin']);
+            $hashedPin = $this->hashService->toHash($data['Pin']);
+            if (Employe::where('SiegeID', $siegeId)->where('Pin', $hashedPin)->whereNotNull('Pin')->exists()) {
+                return redirect()->back()
+                    ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                    ->withInput();
+            }
+            $data['Pin'] = $hashedPin;
         }
 
         // Convertir et COMPRESSER la photo en Base64 si présente
@@ -131,10 +142,20 @@ class EmployeController extends Controller
         if (!auth()->user()->IsSuperAdmin) {
 
             $newPin = $data['Pin'] ?? null;
-            if ( !empty($newPin) ) {
-                $newPin = $this->hashService->toHash($newPin);
+            if (!empty($newPin)) {
+                $hashedPin = $this->hashService->toHash($newPin);
+                if (Employe::where('SiegeID', $employe->SiegeID)
+                        ->where('Pin', $hashedPin)
+                        ->where('ID', '!=', $id)
+                        ->whereNotNull('Pin')
+                        ->exists()) {
+                    return redirect()->back()
+                        ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                        ->withInput();
+                }
+                $newPin = $hashedPin;
             } else {
-                $newPin = $employe->Pin; // déjà hashé en BDD, on ne retouche pas
+                $newPin = $employe->Pin;
             }
 
             // Ne mettre à jour QUE le Nom, garder tout le reste intact
@@ -151,15 +172,34 @@ class EmployeController extends Controller
         } else {
             // SuperAdmin : peut tout modifier
             if (empty($data['BadgeID'])) {
-                $data['BadgeID'] = $employe->BadgeID; // déjà hashé en BDD
+                $data['BadgeID'] = $employe->BadgeID;
             } else {
-                $data['BadgeID'] = $this->hashService->toHash($data['BadgeID']);
+                $hashedBadge = $this->hashService->toHash($data['BadgeID']);
+                if (Employe::where('SiegeID', $employe->SiegeID)
+                        ->where('BadgeID', $hashedBadge)
+                        ->where('ID', '!=', $id)
+                        ->exists()) {
+                    return redirect()->back()
+                        ->withErrors(['BadgeID' => 'Ce Badge ID est déjà utilisé dans ce siège.'])
+                        ->withInput();
+                }
+                $data['BadgeID'] = $hashedBadge;
             }
 
             if (!empty($data['Pin'])) {
-                $data['Pin'] = $this->hashService->toHash($data['Pin']);
+                $hashedPin = $this->hashService->toHash($data['Pin']);
+                if (Employe::where('SiegeID', $employe->SiegeID)
+                        ->where('Pin', $hashedPin)
+                        ->where('ID', '!=', $id)
+                        ->whereNotNull('Pin')
+                        ->exists()) {
+                    return redirect()->back()
+                        ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                        ->withInput();
+                }
+                $data['Pin'] = $hashedPin;
             } else {
-                $data['Pin'] = $employe->Pin; // déjà hashé en BDD
+                $data['Pin'] = $employe->Pin;
             }
             
             // Convertir et COMPRESSER la nouvelle photo si présente
