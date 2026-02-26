@@ -41,7 +41,7 @@ class EmployeRequest extends FormRequest
         // Règle d'unicité pour BadgeID dans le siège
         if ($isUpdate) {
             $rules['BadgeID'] = [
-                'required',
+                'nullable',
                 'string',
                 'max:25',
                 Rule::unique('Employes', 'BadgeID')

@@ -70,6 +70,7 @@
                             @enderror
                         </div>
                         
+                        @if( Auth::user()->IsSuperAdmin )
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BadgeID - SEULEMENT SUPER ADMIN -->
@@ -105,6 +106,27 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
+
+                        @if( Auth::user()->isSimpleAdmin )
+                        <div class="row">
+                            <div class="col-md-12">                                
+                                <!-- Pin - SEULEMENT SUPER ADMIN -->
+                                <div class="form-group mb-3">
+                                    <label for="Pin">Code PIN</label>
+                                    <input type="password" 
+                                        class="form-control @error('Pin') is-invalid @enderror" 
+                                        id="Pin" 
+                                        name="Pin" 
+                                        value="{{ old('Pin', $employe->Pin) }}" 
+                                        maxlength="6"
+                                        inputmode="numeric"
+                                        pattern="[0-9]{6}"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         
                         <!-- Photo de visage actuelle -->
                         @if($employe->FaceEncodingPath)
