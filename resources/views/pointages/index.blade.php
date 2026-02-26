@@ -41,7 +41,7 @@
                                 <option value="">{{ __('Tous') }}</option>
                                 @foreach($employes as $employe)
                                     <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
-                                        {{ $employe->Nom }} ({{ $employe->BadgeID }})
+                                        {{ $employe->Nom }}
                                     </option>
                                 @endforeach
                             </select>
@@ -121,9 +121,6 @@
                                     {{ __('Siège') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Face image') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Actions') }}
                                 </th>
                             </tr>
@@ -133,18 +130,10 @@
                                 <tr>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
-                                            @if ($pointage->employe->HasFaceSetup)
-                                                <img src="{{ route('employes.face.thumbnail', $pointage->employe->ID) }}" alt="{{ $pointage->employe->Nom }}" class="rounded-circle me-2" style="height: 32px; width: 32px; object-fit: cover;">
-                                            @else
                                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="height: 32px; width: 32px;">
-                                                <span class="small fw-semibold text-white">{{ substr($pointage->employe->Nom, 0, 1) }}</span>
-                                            </div>
-                                            @endif
-                                            <div>
-                                                <div class="fw-medium">{{ $pointage->employe->Nom }}</div>
-                                                <small class="text-muted">Badge: {{ $pointage->employe->BadgeID }}</small> / 
-                                                <small class="text-muted">Code PIN: {{ $pointage->employe->Pin }}</small>
-                                            </div>
+                                                <span class="small fw-semibold text-white">{{ substr($pointage->employe?->Nom, 0, 1) }}</span>
+                                            </div>                                            
+                                            <div class="fw-medium">{{ $pointage->employe?->Nom }}</div>
                                         </div>
                                     </td>                                    
                                     <td class="align-middle">
@@ -192,15 +181,6 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $pointage->siege->Nom }}
-                                    </td>
-                                    <td class="align-middle">
-                                        @if ($pointage->photo_path)
-                                            <a href="{{ route('pointages.photo', $pointage->ID) }}" target="_blank">
-                                                <img src="{{ route('pointages.photo.thumbnail', $pointage->ID) }}" alt="{{ __('Face image') }}" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;">
-                                            </a>
-                                        @else
-                                            <span class="text-muted">{{ __('Aucune image') }}</span>
-                                        @endif
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
