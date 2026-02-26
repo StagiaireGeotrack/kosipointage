@@ -22,7 +22,7 @@ class EmployeRequest extends FormRequest
         $employeId = $isUpdate ? $this->route('employe') : null;
 
         $employe = Employe::where("ID" , $employeId )->first() ;
-        $siegeId = $employe->SiegeID;
+        $siegeId = $this->input('SiegeID') ?? $employe->SiegeID;
 
         // ✅ Non-SuperAdmin en UPDATE : seul Nom + Pin validés
         if (!Auth::user()->IsSuperAdmin && $isUpdate) {

@@ -49,6 +49,11 @@ class EmployeController extends Controller
     {
         $data = $request->validated();
         
+        // ✅ AJOUT : Générer un BadgeID automatique si non fourni (Simple Admin)
+        if (empty($data['BadgeID'])) {
+            $data['BadgeID'] = strtoupper(uniqid('EMP-'));
+        }
+
         // Convertir et COMPRESSER la photo en Base64 si présente
         if ($request->hasFile('FaceEncodingFile')) {
             $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
@@ -59,7 +64,7 @@ class EmployeController extends Controller
         
         if (!auth()->user()->IsSuperAdmin) {
             $data['Actived'] = "0";
-            $data['HasBiometricSetup'] = false; // ✅ AJOUT : forcé false pour non-SuperAdmin
+            $data['HasBiometricSetup'] = false;
         }
 
         $data['CreatedAt'] = now();
@@ -126,6 +131,9 @@ class EmployeController extends Controller
                     ];
         } else {
             // ✅ SuperAdmin : peut tout modifier
+            if (empty($data['BadgeID'])) {
+                $data['BadgeID'] = $employe->BadgeID;
+            }
             
             // Convertir et COMPRESSER la nouvelle photo si présente
             if ($request->hasFile('FaceEncodingFile')) {

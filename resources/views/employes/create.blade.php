@@ -36,7 +36,7 @@
                         @if(Auth::user()->IsSuperAdmin)
                         <div class="form-group mb-3">
                             <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
-                            <input type="text" 
+                            <input type="password" 
                                     class="form-control @error('BadgeID') is-invalid @enderror" 
                                     id="BadgeID" 
                                     name="BadgeID" 
@@ -69,42 +69,22 @@
                         @if(Auth::user()->isSimpleAdmin())
                         <div class="form-group mb-3">
                             <label for="Pin">Code PIN</label>
-                            <input type="text" 
-                                    class="form-control @error('Pin') is-invalid @enderror" 
-                                    id="Pin" 
-                                    name="Pin" 
-                                    value="{{ old('Pin') }}" 
-                                    maxlength="6"
-                                    pattern="[0-9]{6}"
-                                    placeholder="000000">
+                            <input type="password" 
+                                            class="form-control @error('Pin') is-invalid @enderror" 
+                                            id="Pin" 
+                                            name="Pin" 
+                                            value="{{ old('Pin') }}" 
+                                            maxlength="6"
+                                            inputmode="numeric"
+                                            pattern="[0-9]{6}"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
                             <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
                         </div>
                         @endif
 
-                        <!-- HasBiometricSetup - SEULEMENT SUPER ADMIN -->
-                        <div class="form-group mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
-                                        type="checkbox" 
-                                        value="1" 
-                                        id="HasBiometricSetup" 
-                                        name="HasBiometricSetup" 
-                                        {{ old('HasBiometricSetup') ? 'checked' : '' }}
-                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
-                                <label class="form-check-label" for="HasBiometricSetup">
-                                    <i class="bi bi-fingerprint"></i> Empreinte digitale
-                                    @if(!Auth::user()->IsSuperAdmin)
-                                        <small class="text-muted">(réservé aux super administrateurs)</small>
-                                    @endif
-                                </label>
-                                <x-input-error :messages="$errors->get('HasBiometricSetup')" class="mt-2" />
-                            </div>
-                        </div>
-
                         <!-- Actived -->
-                        <div class="form-group mb-3">
-                            <hr>
+                        <div class="form-group my-3">
                             <div class="form-check">
                                 <input class="form-check-input @error('Actived') is-invalid @enderror" 
                                         type="checkbox" 

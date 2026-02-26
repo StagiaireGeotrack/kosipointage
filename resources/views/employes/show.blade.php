@@ -78,13 +78,12 @@
                                     <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
                                     @if(Auth::user()->IsSuperAdmin)
                                         {{-- Super Admin : input MODIFIABLE --}}
-                                        <input type="text" 
+                                        <input type="password" 
                                                 class="form-control @error('BadgeID') is-invalid @enderror" 
                                                 id="BadgeID" 
                                                 name="BadgeID" 
-                                                value="{{ old('BadgeID', $employe->BadgeID) }}" 
-                                                maxlength="25"
-                                                required>
+                                                value="{{ old('BadgeID') }}" 
+                                                maxlength="25">
                                     @else
                                         {{-- Non Super Admin : disabled --}}
                                         <input type="text" 
@@ -124,7 +123,7 @@
                                             inputmode="numeric"
                                             pattern="[0-9]{6}"
                                             oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                            <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
+                                        <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
                                     </div>
                                 </div>
                             </div>
