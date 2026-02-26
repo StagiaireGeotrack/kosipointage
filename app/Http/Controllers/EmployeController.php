@@ -8,6 +8,7 @@ use App\Models\EntrepriseSiege;
 use App\Http\Requests\EmployeRequest;
 use App\Repositories\EmployeRepository;
 use App\Services\ExportService;
+use App\Services\HashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -18,10 +19,12 @@ class EmployeController extends Controller
     
     public function __construct(
         EmployeRepository $repository,
-        ExportService $exportService
+        ExportService $exportService,
+        HashService $hashService   
     ) {
         $this->repository = $repository;
         $this->exportService = $exportService;
+        $this->hashService  = $hashService;
     }
     
     public function index(Request $request)
@@ -49,9 +52,17 @@ class EmployeController extends Controller
     {
         $data = $request->validated();
         
-        // ✅ AJOUT : Générer un BadgeID automatique si non fourni (Simple Admin)
+        // AJOUT : Générer un BadgeID automatique si non fourni (Simple Admin)
         if (empty($data['BadgeID'])) {
-            $data['BadgeID'] = strtoupper(uniqid('EMP-'));
+            $data['BadgeID'] = $this->hashService->toHash(strtoupper(uniqid('EMP-')));
+        }else {
+            // Hasher le BadgeID soumis (SuperAdmin)
+            $data['BadgeID'] = $this->hashService->toHash($data['BadgeID']);
+        }
+
+        // Hasher le Pin si fourni
+        if (!empty($data['Pin'])) {
+            $data['Pin'] = $this->hashService->toHash($data['Pin']);
         }
 
         // Convertir et COMPRESSER la photo en Base64 si présente
@@ -116,12 +127,20 @@ class EmployeController extends Controller
         // Vérifier que l'employé existe
         $employe = Employe::findOrFail($id);
         
-        // ✅ Si l'utilisateur n'est PAS SuperAdmin
+        // Si l'utilisateur n'est PAS SuperAdmin
         if (!auth()->user()->IsSuperAdmin) {
+
+            $newPin = $data['Pin'] ?? null;
+            if ( !empty($newPin) ) {
+                $newPin = $this->hashService->toHash($newPin);
+            } else {
+                $newPin = $employe->Pin; // déjà hashé en BDD, on ne retouche pas
+            }
+
             // Ne mettre à jour QUE le Nom, garder tout le reste intact
             $data = [
                         'Nom'               => $data['Nom'],
-                        'Pin'               => $data['Pin'] ?? $employe->Pin, // ✅ valeur soumise, fallback sur l'existante
+                        'Pin'               => $newPin, // valeur soumise, fallback sur l'existante
                         'SiegeID'           => $employe->SiegeID,
                         'BadgeID'           => $employe->BadgeID,
                         'HasBiometricSetup' => $employe->HasBiometricSetup,
@@ -130,9 +149,17 @@ class EmployeController extends Controller
                         'Actived'           => $employe->Actived,
                     ];
         } else {
-            // ✅ SuperAdmin : peut tout modifier
+            // SuperAdmin : peut tout modifier
             if (empty($data['BadgeID'])) {
-                $data['BadgeID'] = $employe->BadgeID;
+                $data['BadgeID'] = $employe->BadgeID; // déjà hashé en BDD
+            } else {
+                $data['BadgeID'] = $this->hashService->toHash($data['BadgeID']);
+            }
+
+            if (!empty($data['Pin'])) {
+                $data['Pin'] = $this->hashService->toHash($data['Pin']);
+            } else {
+                $data['Pin'] = $employe->Pin; // déjà hashé en BDD
             }
             
             // Convertir et COMPRESSER la nouvelle photo si présente
