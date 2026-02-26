@@ -108,24 +108,27 @@
                         </div>
                         @endif
 
-                        @if( Auth::user()->isSimpleAdmin )
-                        <div class="row">
-                            <div class="col-md-12">                                
-                                <!-- Pin - SEULEMENT SUPER ADMIN -->
-                                <div class="form-group mb-3">
-                                    <label for="Pin">Code PIN</label>
-                                    <input type="password" 
-                                        class="form-control @error('Pin') is-invalid @enderror" 
-                                        id="Pin" 
-                                        name="Pin" 
-                                        value="{{ old('Pin', $employe->Pin) }}" 
-                                        maxlength="6"
-                                        inputmode="numeric"
-                                        pattern="[0-9]{6}"
-                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        @if( Auth::user()->isSimpleAdmin() )
+                            @if(empty($employe->Pin))
+                            <div class="row">
+                                <div class="col-md-12">                                
+                                    <!-- Pin - SEULEMENT SUPER ADMIN -->
+                                    <div class="form-group mb-3">
+                                        <label for="Pin">Code PIN (6 chiffres)</label>
+                                        <input type="password" 
+                                            class="form-control @error('Pin') is-invalid @enderror" 
+                                            id="Pin" 
+                                            name="Pin" 
+                                            value="{{ old('Pin', $employe->Pin) }}" 
+                                            maxlength="6"
+                                            inputmode="numeric"
+                                            pattern="[0-9]{6}"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                            <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            @endif
                         @endif
                         
                         <!-- Photo de visage actuelle -->
@@ -139,48 +142,9 @@
                                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext fill=%22%23999%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EErreur%3C/text%3E%3C/svg%3E';">
                             </div>
                         @endif
-                        
-                        <!-- HasBiometricSetup - SEULEMENT SUPER ADMIN -->
-                        <div class="form-group mb-3">
-                            <div class="form-check">
-                                @if(Auth::user()->IsSuperAdmin)
-                                    {{-- Super Admin : checkbox MODIFIABLE --}}
-                                    <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
-                                            type="checkbox" 
-                                            value="1"
-                                            id="HasBiometricSetup" 
-                                            name="HasBiometricSetup"
-                                            {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}>
-                                @else
-                                    {{-- Non Super Admin : juste disabled --}}
-                                    <input class="form-check-input" 
-                                            type="checkbox" 
-                                            id="HasBiometricSetup" 
-                                            {{ $employe->HasBiometricSetup ? 'checked' : '' }}
-                                            disabled>
-                                @endif
-                                <label class="form-check-label" for="HasBiometricSetup">
-                                    <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
-                                    @if(!Auth::user()->IsSuperAdmin)
-                                        <small class="text-muted">(modification réservée aux super administrateurs)</small>
-                                    @endif
-                                </label>
-                                @error('HasBiometricSetup')
-                                    <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- HasFaceSetup (lecture seule, automatique) -->
-                        @if($employe->HasFaceSetup)
-                            <div class="alert alert-info m-2">
-                                <i class="bi bi-check-circle"></i> Reconnaissance faciale configurée
-                            </div>
-                        @endif
 
                         <!-- Actived - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
-                            <hr>
                             <div class="form-check">
                                 @if(Auth::user()->IsSuperAdmin)
                                     {{-- Super Admin peut modifier --}}
@@ -223,6 +187,46 @@
                     </div>
                     @endif
                 </form>
+
+                @if (auth()->user()->isSimpleAdmin())
+                    @if(!empty($employe->Pin))                
+                        <hr>
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-info"
+                                                                onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#resetPinModal"
+                                                                title="Réinitialiser le PIN">
+                                <i class="bi bi-save"></i> Réinitialiser le Code Pin
+                            </button>
+                        </div>
+                    @endif
+                @endif
+
+                <!-- Modal de confirmation réinitialisation Pin Employé -->
+                <div class="modal fade" id="resetPinModal" tabindex="-1" aria-labelledby="resetPinModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resetPinModalLabel">{{ __('Réinitialisation du code PIN') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ __('Voulez-vous vraiment réinitialiser le code PIN de cet employé ?') }}</p>
+                                <p class="fw-bold" id="details_employee_pin"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+                                <form id="resetPinForm" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-warning">{{ __('Réinitialiser') }}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -263,6 +267,12 @@
             });
         }
         @endif
+
+        function setResetPinAction(url, nom) {
+            document.getElementById('resetPinForm').action = url;
+            document.getElementById('details_employee_pin').textContent = nom;
+        }
+
     </script>
     @endpush
 </x-app-layout>

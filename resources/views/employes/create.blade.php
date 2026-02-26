@@ -32,7 +32,8 @@
                             <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
 
-                        <!-- BadgeID -->
+                        <!-- BadgeID - SEULEMENT SUPER ADMIN -->
+                        @if(Auth::user()->IsSuperAdmin)
                         <div class="form-group mb-3">
                             <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
                             <input type="text" 
@@ -44,6 +45,7 @@
                                     required>
                             <x-input-error :messages="$errors->get('BadgeID')" class="mt-2" />
                         </div>
+                        @endif
 
                         <!-- SiegeID -->
                         <div class="form-group mb-3">
@@ -63,7 +65,8 @@
                             <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                         </div>
 
-                        <!-- Pin -->
+                        <!-- Pin - SEULEMENT SIMPLE ADMIN -->
+                        @if(Auth::user()->isSimpleAdmin())
                         <div class="form-group mb-3">
                             <label for="Pin">Code PIN</label>
                             <input type="text" 
@@ -77,8 +80,9 @@
                             <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
                             <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
                         </div>
+                        @endif
 
-                        <!-- HasBiometricSetup -->
+                        <!-- HasBiometricSetup - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
                             <div class="form-check">
                                 <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
@@ -86,14 +90,18 @@
                                         value="1" 
                                         id="HasBiometricSetup" 
                                         name="HasBiometricSetup" 
-                                        {{ old('HasBiometricSetup') ? 'checked' : '' }}>
+                                        {{ old('HasBiometricSetup') ? 'checked' : '' }}
+                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
                                 <label class="form-check-label" for="HasBiometricSetup">
                                     <i class="bi bi-fingerprint"></i> Empreinte digitale
-                                </label>                                
+                                    @if(!Auth::user()->IsSuperAdmin)
+                                        <small class="text-muted">(réservé aux super administrateurs)</small>
+                                    @endif
+                                </label>
                                 <x-input-error :messages="$errors->get('HasBiometricSetup')" class="mt-2" />
                             </div>
-                        </div>                              
-                                                        
+                        </div>
+
                         <!-- Actived -->
                         <div class="form-group mb-3">
                             <hr>
@@ -103,7 +111,7 @@
                                         value="1" 
                                         id="Actived" 
                                         name="Actived" 
-                                        {{ old('Actived', $employe->Actived ?? '0') ? 'checked' : '' }}
+                                        {{ old('Actived') ? 'checked' : '' }}
                                         {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
                                 <label class="form-check-label" for="Actived">
                                     Activer
@@ -113,7 +121,7 @@
                                 </label>
                                 <x-input-error :messages="$errors->get('Actived')" class="mt-2" />
                             </div>
-                        </div
+                        </div>
                         
                     </div>
 
@@ -129,32 +137,13 @@
 
     @push('scripts')
     <script>
-        // Aperçu de la photo de visage
-        document.getElementById('FaceEncodingFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('facePreview');
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.innerHTML = `
-                        <label class="d-block text-muted mb-1">Aperçu :</label>
-                        <img src="${e.target.result}" 
-                             alt="Aperçu de la photo" 
-                             style="max-width: 200px; max-height: 200px;" 
-                             class="img-thumbnail">
-                    `;
-                }
-                reader.readAsDataURL(file);
-            } else {
-                preview.innerHTML = '';
-            }
-        });
-
-        // Validation du PIN (6 chiffres uniquement)
-        document.getElementById('Pin').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
-        });
+        // Validation du PIN (6 chiffres uniquement) - uniquement si le champ existe
+        const pinInput = document.getElementById('Pin');
+        if (pinInput) {
+            pinInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
+            });
+        }
     </script>
     @endpush
 </x-app-layout>

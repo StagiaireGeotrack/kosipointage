@@ -45,14 +45,6 @@
                             </select>
                         </div>
                         
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                            <x-input-label for="HasFaceSetup" :value="__('Face image')" />
-                            <select id="HasFaceSetup" name="HasFaceSetup" class="form-select mt-1">
-                                <option value="">{{ __('Tous') }}</option>
-                                <option value="1" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '1' ? 'selected' : '' }}>{{ __('Oui') }}</option>
-                                <option value="0" {{ isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] == '0' ? 'selected' : '' }}>{{ __('Non') }}</option>
-                            </select>
-                        </div>
                     </div>
                     
                     <div class="d-flex justify-content-end gap-2">
@@ -158,7 +150,7 @@
 
                                             @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
 
-                                                <a href="{{ route('employes.show', $employe->ID) }}" class="text-primary" title="Voir">
+                                                <a href="{{ route('employes.show', $employe->ID) }}" class="text-primary" title="Voir ou modifier">
                                                     <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
@@ -175,16 +167,18 @@
                                                     </svg>
                                                 </button>
 
-                                                @if( $employe->Pin )
-                                                    <button type="button" class="btn btn-link text-warning p-0 border-0"
-                                                        onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#resetPinModal"
-                                                        title="Réinitialiser le PIN">
-                                                        <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M17.65 6.35A7.96 7.96 0 0012 4C7.58 4 4.01 7.58 4.01 12S7.58 20 12 20c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                                                        </svg>
-                                                    </button>
+                                                @if( !empty($employe->Pin) )
+                                                    @if( auth()->user()->isSimpleAdmin() )
+                                                        <button type="button" class="btn btn-link text-warning p-0 border-0"
+                                                            onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#resetPinModal"
+                                                            title="Réinitialiser le Code PIN">
+                                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M17.65 6.35A7.96 7.96 0 0012 4C7.58 4 4.01 7.58 4.01 12S7.58 20 12 20c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                                                            </svg>
+                                                        </button>
+                                                    @endif
                                                 @endif
 
                                             @endif

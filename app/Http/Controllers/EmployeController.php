@@ -54,17 +54,16 @@ class EmployeController extends Controller
             $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
             $data['HasFaceSetup'] = true;
         } else {
-            $data['HasFaceSetup'] = false; // Explicitement false si pas de photo
+            $data['HasFaceSetup'] = false;
         }
         
         if (!auth()->user()->IsSuperAdmin) {
             $data['Actived'] = "0";
+            $data['HasBiometricSetup'] = false; // ✅ AJOUT : forcé false pour non-SuperAdmin
         }
 
-        // Ajouter la date de création (si pas géré automatiquement par Laravel)
         $data['CreatedAt'] = now();
         
-        // Supprimer FaceEncodingFile car ce n'est pas une colonne
         unset($data['FaceEncodingFile']);
         
         $employe = $this->repository->create($data);
@@ -116,16 +115,15 @@ class EmployeController extends Controller
         if (!auth()->user()->IsSuperAdmin) {
             // Ne mettre à jour QUE le Nom, garder tout le reste intact
             $data = [
-                'Nom' => $data['Nom'],
-                // Tous les autres champs gardent leurs valeurs actuelles
-                'SiegeID' => $employe->SiegeID,
-                'BadgeID' => $employe->BadgeID,
-                'Pin' => $employe->Pin,
-                'HasBiometricSetup' => $employe->HasBiometricSetup,
-                'HasFaceSetup' => $employe->HasFaceSetup,
-                'FaceEncodingPath' => $employe->FaceEncodingPath,
-                'Actived' => $employe->Actived,
-            ];
+                        'Nom'               => $data['Nom'],
+                        'Pin'               => $data['Pin'] ?? $employe->Pin, // ✅ valeur soumise, fallback sur l'existante
+                        'SiegeID'           => $employe->SiegeID,
+                        'BadgeID'           => $employe->BadgeID,
+                        'HasBiometricSetup' => $employe->HasBiometricSetup,
+                        'HasFaceSetup'      => $employe->HasFaceSetup,
+                        'FaceEncodingPath'  => $employe->FaceEncodingPath,
+                        'Actived'           => $employe->Actived,
+                    ];
         } else {
             // ✅ SuperAdmin : peut tout modifier
             
@@ -142,7 +140,7 @@ class EmployeController extends Controller
 
         // Supprimer FaceEncodingFile du tableau de données
         unset($data['FaceEncodingFile']);
-        
+
         // Mise à jour
         $this->repository->update($id, $data);
         
