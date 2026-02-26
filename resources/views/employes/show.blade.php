@@ -129,18 +129,6 @@
                             </div>
                             @endif
                         @endif
-                        
-                        <!-- Photo de visage actuelle -->
-                        @if($employe->FaceEncodingPath)
-                            <div class="form-group mb-3">
-                                <label class="d-block text-muted">Photo de visage actuelle :</label>
-                                <img src="{{ route('employes.face.thumbnail', $employe->ID) }}" 
-                                        alt="Photo {{ $employe->Nom }}" 
-                                        style="max-width: 200px; max-height: 200px;" 
-                                        class="img-thumbnail"
-                                        onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext fill=%22%23999%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EErreur%3C/text%3E%3C/svg%3E';">
-                            </div>
-                        @endif
 
                         <!-- Actived - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
