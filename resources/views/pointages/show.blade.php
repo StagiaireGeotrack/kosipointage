@@ -74,11 +74,6 @@
                                 </div>
                                 
                                 <div class="d-flex">
-                                    <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Badge ID') }}</div>
-                                    <div class="small text-dark" style="width: 66.67%;">{{ $pointage->employe->BadgeID }}</div>
-                                </div>
-                                
-                                <div class="d-flex">
                                     <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('Siège') }}</div>
                                     <div class="small text-dark" style="width: 66.67%;">{{ $pointage->siege->Nom }}</div>
                                 </div>
