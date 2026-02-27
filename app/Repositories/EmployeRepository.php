@@ -90,11 +90,7 @@ class EmployeRepository extends BaseRepository
         // Sélectionner et formater les données pour l'export
         return $query->orderBy('CreatedAt', 'asc')->get()->map(function ($employe) {
             return [
-                'ID' => $employe->ID,
                 'Nom' => $employe->Nom,
-                'Badge ID' => $employe->BadgeID,
-                'Empreinte Biométrique' => $employe->HasBiometricSetup ? __('Oui') : __('Non'),
-                'Image Faciale' => $employe->HasFaceSetup ? __('Oui') : __('Non'),
                 'Date de création' => ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
                 'Statut' => $employe->Actived ? __('Activé') : __('Désactivé'),
                 'Siège' => $employe->siege->Nom,
