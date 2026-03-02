@@ -91,7 +91,7 @@
                             <div class="col-md-12">
                                 <!-- BadgeID - SEULEMENT SUPER ADMIN -->
                                 <div class="form-group mb-3">
-                                    <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
+                                    <label for="BadgeID">Badge ID</label>
                                     @if(Auth::user()->IsSuperAdmin)
                                         {{-- Super Admin : input MODIFIABLE --}}
                                         <input type="password" 
