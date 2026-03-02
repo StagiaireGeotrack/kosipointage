@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Administration;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -32,12 +33,12 @@ class ProfileController extends Controller
             'Identifiant_email' => [
                 'required',
                 'email',
-                Rule::unique('administration')->ignore($id),
+                Rule::unique(Administration::class)->ignore($id),
             ],
         ],[
             'Identifiant_email.required' => "Le champ Identifiantou E-mail est obligatoire" ,
             'Identifiant_email.email' => "Le champ Identifiantou E-mail doit être un adresse E-mail" ,
-            'Identifiant_email.unique' => "L'Identifiantou E-mail est déjà utilisé" ,
+            'Identifiant_email.unique' => "L'Identifiant ou E-mail est déjà utilisé" ,
         ]);
 
         $administrateur = Auth::user() ;

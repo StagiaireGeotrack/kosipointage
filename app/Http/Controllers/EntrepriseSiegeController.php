@@ -178,7 +178,7 @@ class EntrepriseSiegeController extends Controller
             'Pays' => 'nullable|string|max:255',
             'Nom' => [
                 'required',
-                Rule::unique('entreprises_sieges', 'Nom')->ignore($id), 
+                Rule::unique(EntrepriseSiege::class , 'Nom')->ignore($id), 
             ],
             'Nom_Lieu_Ville' => 'required'
         ], [

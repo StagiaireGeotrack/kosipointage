@@ -32,7 +32,7 @@ class EmployeRequest extends FormRequest
                     'nullable',
                     'string',
                     'max:50',
-                    Rule::unique('Employes', 'num_mat')
+                    Rule::unique(Employe::class, 'num_mat')
                         ->where('SiegeID', $siegeId)
                         ->ignore($employeId, 'ID')
                         ->whereNotNull('num_mat')
@@ -55,7 +55,7 @@ class EmployeRequest extends FormRequest
                     'nullable',
                     'string',
                     'max:50',
-                    Rule::unique('Employes', 'num_mat')
+                    Rule::unique(Employe::class, 'num_mat')
                         ->where('SiegeID', $siegeId)
                         ->whereNotNull('num_mat')
                 ],
@@ -82,7 +82,7 @@ class EmployeRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:50',
-                Rule::unique('Employes', 'num_mat')
+                Rule::unique(Employe::class, 'num_mat')
                     ->where('SiegeID', $siegeId)
                     ->ignore($employeId, 'ID')
                     ->whereNotNull('num_mat')
@@ -91,7 +91,7 @@ class EmployeRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:50',
-                Rule::unique('Employes', 'num_mat')
+                Rule::unique(Employe::class, 'num_mat')
                     ->where('SiegeID', $siegeId)
                     ->whereNotNull('num_mat')
             ];
