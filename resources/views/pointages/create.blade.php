@@ -80,6 +80,7 @@
                             <option value="face" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'face' ? 'selected' : '' }}>{{ __('Face') }}</option>
                             <option value="pin" {{ isset($filters['auth_method']) && $filters['auth_method'] == 'pin' ? 'selected' : '' }}>{{ __('PIN') }}</option>
                         </select>
+                        <x-input-error :messages="$errors->get('auth_method')" class="mt-2" />
                     </div>
 
                     <!-- Timestamp -->

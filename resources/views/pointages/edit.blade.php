@@ -103,16 +103,6 @@
                         <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
                     </div>
                     
-                    <!-- Photo actuelle -->
-                    @if ($pointage->photo_path)
-                        <div class="mb-3">
-                            <x-input-label :value="__('Image actuelle')" />
-                            <div class="mt-2">
-                                <img src="{{ route('pointages.photo.thumbnail', $pointage->ID) }}" alt="{{ __('Image actuelle') }}" class="rounded" style="height: 96px; width: auto;">
-                            </div>
-                        </div>
-                    @endif
-                    
                     <!-- Nouvelle photo -->
                     <div class="mb-3">
                         <x-input-label for="photo" :value="__('Nouvelle image')" />
