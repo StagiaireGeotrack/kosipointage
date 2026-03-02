@@ -59,9 +59,10 @@
                             </div>
                             
                             <div class="d-flex flex-column gap-2">
+                                
                                 <div class="d-flex">
-                                    <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('ID') }}</div>
-                                    <div class="small text-dark" style="width: 66.67%;">{{ $pointage->ID }}</div>
+                                    <div class="small fw-medium text-secondary" style="width: 33.33%;">{{ __('N° Matricule') }}</div>
+                                    <div class="small text-dark" style="width: 66.67%;">{{ $pointage->employe->num_mat ?? "-" }}</div>
                                 </div>
                                 
                                 <div class="d-flex">

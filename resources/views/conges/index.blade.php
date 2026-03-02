@@ -84,6 +84,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('N° Matricule') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Employé') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -112,6 +115,9 @@
                         <tbody>
                             @forelse ($conges as $conge)
                                 <tr>
+                                    <td class="align-middle">
+                                        {{ $conge->employe->num_mat ?? "-" }}
+                                    </td>
                                     <td class="align-middle">
                                         {{ $conge->employe->Nom }}
                                     </td>

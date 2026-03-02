@@ -28,6 +28,15 @@ class EmployeRequest extends FormRequest
         if (!Auth::user()->IsSuperAdmin && $isUpdate) {
             return [
                 'Nom' => 'required|string|max:255',
+                'num_mat' => [
+                    'nullable',
+                    'string',
+                    'max:50',
+                    Rule::unique('Employes', 'num_mat')
+                        ->where('SiegeID', $siegeId)
+                        ->ignore($employeId, 'ID')
+                        ->whereNotNull('num_mat')
+                ],
                 'Pin' => [
                     'nullable',
                     'string',
@@ -42,6 +51,14 @@ class EmployeRequest extends FormRequest
             return [
                 'Nom'     => 'required|string|max:255',
                 'SiegeID' => 'required|exists:Entreprises_sieges,ID',
+                'num_mat' => [ 
+                    'nullable',
+                    'string',
+                    'max:50',
+                    Rule::unique('Employes', 'num_mat')
+                        ->where('SiegeID', $siegeId)
+                        ->whereNotNull('num_mat')
+                ],
                 'Pin'     => [
                     'nullable',
                     'string',
@@ -51,7 +68,6 @@ class EmployeRequest extends FormRequest
             ];
         }
 
-        // ✅ SuperAdmin : toutes les règles
         $rules = [
             'Nom'               => 'required|string|max:255',
             'HasBiometricSetup' => 'nullable|boolean',
@@ -60,6 +76,25 @@ class EmployeRequest extends FormRequest
             'SiegeID'           => 'required|exists:Entreprises_sieges,ID',
             'FaceEncodingFile'  => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5120',
         ];
+
+        $rules['num_mat'] = $isUpdate
+            ? [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('Employes', 'num_mat')
+                    ->where('SiegeID', $siegeId)
+                    ->ignore($employeId, 'ID')
+                    ->whereNotNull('num_mat')
+            ]
+            : [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('Employes', 'num_mat')
+                    ->where('SiegeID', $siegeId)
+                    ->whereNotNull('num_mat')
+            ];
 
         if ($isUpdate) {
             $rules['BadgeID'] = [
@@ -104,6 +139,10 @@ class EmployeRequest extends FormRequest
             'Pin.regex'                 => 'Le code PIN doit contenir uniquement des chiffres.',
             'Pin.unique'                => 'Ce code PIN est déjà utilisé dans ce siège.',
             'Pin.string'                => 'Le code PIN doit être une chaîne de caractères.',
+
+            'num_mat.unique' => 'Ce numéro matricule est déjà utilisé dans ce siège.',
+            'num_mat.string' => 'Le numéro matricule doit être une chaîne de caractères.',
+            'num_mat.max'    => 'Le numéro matricule ne peut pas dépasser :max caractères.',
             
             'Actived.boolean'           => 'Le statut actif doit être vrai ou faux.',
             

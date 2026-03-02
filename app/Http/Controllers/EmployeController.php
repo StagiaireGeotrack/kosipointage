@@ -89,6 +89,10 @@ class EmployeController extends Controller
             $data['HasBiometricSetup'] = false;
         }
 
+        if (empty($data['num_mat'])) {
+            $data['num_mat'] = null;
+        }
+
         $data['CreatedAt'] = now();
         
         unset($data['FaceEncodingFile']);
@@ -161,6 +165,7 @@ class EmployeController extends Controller
             // Ne mettre à jour QUE le Nom, garder tout le reste intact
             $data = [
                         'Nom'               => $data['Nom'],
+                        'num_mat'           => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
                         'Pin'               => $newPin, // valeur soumise, fallback sur l'existante
                         'SiegeID'           => $employe->SiegeID,
                         'BadgeID'           => $employe->BadgeID,
@@ -200,6 +205,10 @@ class EmployeController extends Controller
                 $data['Pin'] = $hashedPin;
             } else {
                 $data['Pin'] = $employe->Pin;
+            }
+
+            if (empty($data['num_mat'])) {
+                $data['num_mat'] = $employe->num_mat;
             }
             
             // Convertir et COMPRESSER la nouvelle photo si présente

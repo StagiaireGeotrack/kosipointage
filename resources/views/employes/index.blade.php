@@ -21,7 +21,7 @@
                     <div class="row g-3 mb-3">
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <x-input-label for="search" :value="__('Recherche')" />
-                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID ou Code PIN') }}" />
+                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou N° Matricule') }}" />
                         </div>
                         
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
@@ -73,6 +73,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('N° Matricule') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -95,6 +98,9 @@
                         <tbody>
                             @forelse ($employes as $employe)
                                 <tr>
+                                    <td class="align-middle">
+                                        {{ $employe->num_mat ?? "-"}}
+                                    </td>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
                                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="height: 40px; width: 40px;">

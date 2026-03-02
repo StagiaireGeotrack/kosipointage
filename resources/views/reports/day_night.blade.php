@@ -39,7 +39,7 @@
                                 <option value="">{{ __('Tous') }}</option>
                                 @foreach($employes as $employe)
                                     <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
-                                        {{ $employe->Nom }}
+                                        {{ $employe->num_mat ? "N° Matricule ". $employe->num_mat . " - " : "" }} {{ $employe->Nom }}
                                     </option>
                                 @endforeach
                             </select>
@@ -77,16 +77,19 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Date') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Siège') }}
+                                    {{ __('N° Matricule') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Employé') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Siège') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Type') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Heure d\'entrée') }}
@@ -109,24 +112,16 @@
                             @forelse ($rapports as $rapport)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ ucfirst(\Carbon\Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ $rapport->siege_nom }}
+                                        {{ $rapport->num_mat ?? "-" }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $rapport->employee_nom }}
                                     </td>
                                     <td class="align-middle">
-                                        @if ($rapport->type_travail == 'JOUR')
-                                            <span class="badge bg-warning text-dark">
-                                                {{ __('JOUR') }}
-                                            </span>
-                                        @else
-                                            <span class="badge bg-primary">
-                                                {{ __('NUIT') }}
-                                            </span>
-                                        @endif
+                                        {{ $rapport->siege_nom }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ ucfirst(\Carbon\Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')) }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $rapport->heure_entree }}
@@ -139,6 +134,17 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $rapport->total_heure_journee }}
+                                    </td>
+                                    <td class="align-middle">
+                                        @if ($rapport->type_travail == 'JOUR')
+                                            <span class="badge bg-warning text-dark">
+                                                {{ __('JOUR') }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-primary">
+                                                {{ __('NUIT') }}
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">

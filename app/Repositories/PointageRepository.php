@@ -21,8 +21,7 @@ class PointageRepository extends BaseRepository
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->whereHas('employe', function($q) use ($filters) {
                 $q->where('Nom', 'LIKE', "%{$filters['search']}%")
-                    ->orWhere('Pin', 'LIKE', "%{$filters['search']}%")
-                    ->orWhere('BadgeID', 'LIKE', "%{$filters['search']}%");
+                    ->orWhere('num_mat', 'LIKE', "%{$filters['search']}%");
             });
         }
         

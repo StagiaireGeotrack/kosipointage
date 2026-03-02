@@ -60,9 +60,6 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('ID') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -91,9 +88,6 @@
                         <tbody>
                             @forelse ($sieges as $siege)
                                 <tr>
-                                    <td class="align-middle">
-                                        {{ $siege->ID }}
-                                    </td>
                                     <td class="align-middle">
                                         {{ $siege->Nom }}
                                     </td>

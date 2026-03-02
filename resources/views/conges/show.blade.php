@@ -21,6 +21,12 @@
             <div class="card-body">
                 <div class="row g-4">
                     <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">{{ __('N° Matricule') }}</label>
+                            <p class="fs-5">{{ $conge->employe->num_mat ?? "-" }}</p>
+                        </div>
+                        
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary">{{ __('Employé(e)') }}</label>
                             <p class="fs-5">{{ $conge->employe->Nom }}</p>

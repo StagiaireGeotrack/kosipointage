@@ -54,7 +54,7 @@
                         <select id="employee_id" name="employee_id" class="form-select mt-1" required>
                             @foreach($employes as $employe)
                                 <option value="{{ $employe->ID }}" {{ old('employee_id', $pointage->employee_id) == $employe->ID ? 'selected' : '' }}>
-                                    {{ $employe->Nom }} ({{ $employe->BadgeID }})
+                                    {{ $employe->Nom }}
                                 </option>
                             @endforeach
                         </select>

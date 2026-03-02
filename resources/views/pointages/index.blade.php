@@ -20,7 +20,7 @@
                         
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="search" :value="__('Recherche')" />
-                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou Badge ID ou Code PIN') }}" />
+                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="$filters['search'] ?? ''" placeholder="{{ __('Nom ou N° Matricule') }}" />
                         </div>
                         
                         <div class="col-12 col-sm-6 col-md-4">
@@ -41,7 +41,7 @@
                                 <option value="">{{ __('Tous') }}</option>
                                 @foreach($employes as $employe)
                                     <option value="{{ $employe->ID }}" {{ isset($filters['employee_id']) && $filters['employee_id'] == $employe->ID ? 'selected' : '' }}>
-                                        {{ $employe->Nom }}
+                                        {{ $employe->num_mat ? "N° Matricule ". $employe->num_mat . " - " : "" }} {{ $employe->Nom }}
                                     </option>
                                 @endforeach
                             </select>
@@ -103,6 +103,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('N° Matricule') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Employé') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -127,7 +130,10 @@
                         </thead>
                         <tbody>
                             @forelse ($pointages as $pointage)
-                                <tr>
+                                <tr>                                    
+                                    <td class="align-middle">
+                                        {{ $pointage->employe->num_mat ?? "-" }}
+                                    </td>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
                                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="height: 32px; width: 32px;">

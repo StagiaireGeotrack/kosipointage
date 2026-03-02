@@ -20,8 +20,7 @@ class EmployeRepository extends BaseRepository
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->where(function($q) use ($filters) {
                 $q->where('Nom', 'LIKE', "%{$filters['search']}%")
-                  ->orWhere('BadgeID', 'LIKE', "%{$filters['search']}%")
-                  ->orWhere('Pin', 'LIKE', "%{$filters['search']}%");
+                  ->orWhere('num_mat', 'LIKE', "%{$filters['search']}%");
             });
         }
         
@@ -90,6 +89,7 @@ class EmployeRepository extends BaseRepository
         // Sélectionner et formater les données pour l'export
         return $query->orderBy('CreatedAt', 'asc')->get()->map(function ($employe) {
             return [
+                'N° Matricule' => $employe->num_mat ?? "-",
                 'Nom' => $employe->Nom,
                 'Date de création' => ucfirst($employe->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
                 'Statut' => $employe->Actived ? __('Activé') : __('Désactivé'),

@@ -32,10 +32,6 @@
                             <h3 class="fs-5 fw-medium text-dark mb-3">{{ __('Information générale') }}</h3>
                             <dl class="mb-0">
                                 <div class="bg-white p-3 rounded mb-2">
-                                    <dt class="small fw-medium text-secondary">{{ __('ID') }}</dt>
-                                    <dd class="mb-0 small text-dark">{{ $administrateur->ID }}</dd>
-                                </div>
-                                <div class="bg-white p-3 rounded mb-2">
                                     <dt class="small fw-medium text-secondary">{{ __('E-mail') }}</dt>
                                     <dd class="mb-0 small text-dark">{{ $administrateur->Identifiant_email }}</dd>
                                 </div>

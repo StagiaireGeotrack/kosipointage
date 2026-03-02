@@ -17,6 +17,13 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
+                    
+                    <!-- N° Mat -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">N° Matricule</label>
+                        <p class="fs-5">{{ $employe->num_mat }}</p>
+                    </div>
+
                     <!-- Nom -->
                     <div class="col-md-12 mb-3">
                         <label class="fw-bold text-muted">Nom</label>
@@ -70,7 +77,7 @@
 
                     <!-- Dates de création et modification -->
                     @if($employe->CreatedAt)
-                        <div class="col-md-12 my-3">
+                        <div class="col-md-12 mt-3">
                             <div class="row">
                                 @if($employe->CreatedAt)
                                     <div class="col-md-6">

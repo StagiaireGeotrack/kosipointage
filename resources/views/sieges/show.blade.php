@@ -48,10 +48,6 @@
                         </p>
                     </div>
                     <div class="col-12 col-md-6">
-                        <p class="small text-muted mb-1">{{ __('ID') }}</p>
-                        <p class="fw-medium mb-0">{{ $siege->ID }}</p>
-                    </div>
-                    <div class="col-12 col-md-6">
                         <p class="small text-muted mb-1">{{ __('Date de création') }}</p>
                         <p class="fw-medium mb-0"><x-local-date-time :datetime="$siege->CreatedAt"/></p>
                     </div>
@@ -170,6 +166,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('N° Matricule') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -192,6 +191,9 @@
                         <tbody>
                             @forelse ($employes as $employe)
                                 <tr>
+                                    <td class="align-middle">
+                                        {{ $employe->num_mat ?? "-" }}
+                                    </td>
                                     <td class="align-middle">
                                         {{ $employe->Nom }}
                                     </td>

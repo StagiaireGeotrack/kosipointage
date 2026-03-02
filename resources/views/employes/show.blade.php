@@ -1,9 +1,9 @@
-{{-- resources/views/employes/edit.blade.php --}}
+{{-- Modification --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Modifier l'employé : {{ $employe->Nom }}
+                Modifier l'employé : {{ $employe->num_mat ? "N° Matricule " . $employe->num_mat . " - " : "" }} {{ $employe->Nom }} 
             </h2>
             <a href="{{ route('employes.index') }}" class="btn btn-secondary btn-sm">
                 Retour à la liste
@@ -19,6 +19,22 @@
                     @method('PUT')
 
                     <div class="row">
+
+                        <!-- num_mat - Super Admin ET Simple Admin -->
+                        <div class="form-group mb-3">
+                            <label for="num_mat">Numéro matricule</label>
+                            <input type="text" 
+                                    class="form-control @error('num_mat') is-invalid @enderror" 
+                                    id="num_mat" 
+                                    name="num_mat" 
+                                    value="{{ old('num_mat', $employe->num_mat) }}" 
+                                    maxlength="50">
+                            @error('num_mat')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">Optionnel — unique par siège</small>
+                        </div>
+
                         <!-- Nom - TOUS LES UTILISATEURS PEUVENT MODIFIER -->
                         <div class="form-group mb-3">
                             <label for="Nom">Nom <span class="text-danger">*</span></label>

@@ -194,10 +194,8 @@ class CongeController extends Controller
             }
 
             return [
-                'ID' => $conge->ID,
-                'Employé(e) ID' => $conge->employe->ID,
-                'Employé(e) Nom' => $conge->employe->Nom,
-                'Siège ID' => $conge->siege->ID,
+                'N° Matricule' => $conge->employe->num_mat ?? "-",
+                'Employé(e) Nom' => $conge->employe?->Nom,
                 'Siège Nom' => $conge->siege->Nom,
                 'Date Début' => ucfirst($conge->date_debut ? $conge->date_debut->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
                 'Date Fin' => ucfirst($conge->date_fin ? $conge->date_fin->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),

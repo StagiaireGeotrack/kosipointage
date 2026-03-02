@@ -2,16 +2,16 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
-            <h6 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('Détails pointages: ' . $date->format('d/m/Y') . ' - Employé(e): ' . $employe->Nom ) }}
-            </h6>
-            <a href="{{ route('reports.index') }}" class="btn btn-secondary btn-sm">
-                Retour
-            </a>
+            <h5 class="fw-semibold fs-4 text-dark mb-0">
+                {{ __('Détails pointages: ' . $date->format('d/m/Y')) }}
+            </h5>
             <a href="{{ route('pointages.create') }}" class="btn btn-primary btn-sm">
                 {{ __('Nouveau pointage') }}
             </a>            
         </div>
+        <h6 class="fw-semibold fs-5 text-dark mt-2">
+            Employé(e): {{ $employe->num_mat ? "N° Matricule " . $employe->num_mat . " - " : "" }} {{ $employe->Nom }} 
+        </h6>
     </x-slot>
 
     <div class="p-2">
@@ -23,6 +23,9 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('N° Matricule') }}
+                                </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Employé') }}
                                 </th>
@@ -50,18 +53,10 @@
                             @forelse ($pointages as $pointage)
                                 <tr>
                                     <td class="align-middle">
-                                        <div class="d-flex align-items-center">
-                                            @if ($pointage->employe->HasFaceSetup)
-                                                <img src="{{ route('employes.face.thumbnail', $pointage->employe->ID) }}" alt="{{ $pointage->employe->Nom }}" class="rounded-circle me-2" style="height: 32px; width: 32px; object-fit: cover;">
-                                            @else
-                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="height: 32px; width: 32px;">
-                                                <span class="small fw-semibold text-white">{{ substr($pointage->employe->Nom, 0, 1) }}</span>
-                                            </div>
-                                            @endif
-                                            <div>
-                                                <div class="fw-medium">{{ $pointage->employe->Nom }}</div>
-                                            </div>
-                                        </div>
+                                        {{ $pointage->employe->num_mat ?? "-" }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ $pointage->employe->Nom }}
                                     </td>
                                     <td class="align-middle">
                                         {{ ucfirst($pointage->timestamp_->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}

@@ -17,6 +17,7 @@ class Employe extends Model
     protected $fillable = [
         'Nom',
         'BadgeID',
+        'num_mat',
         'HasBiometricSetup',
         'HasFaceSetup',
         'FaceEncodingPath',

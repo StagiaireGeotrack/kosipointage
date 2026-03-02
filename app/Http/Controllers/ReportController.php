@@ -211,11 +211,10 @@ class ReportController extends Controller
         // Mapper les données
         $data = $sortedResults->map(function ($rapport) use ($isDayNight) {
             $row = [
-                'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
-                'Siège ID' => $rapport->SiegeID,
-                'Siège Nom' => $rapport->siege_nom,
-                'Employé(e) ID' => $rapport->employee_id,
+                'N° Matricule' => $rapport->num_mat ?? "-",
                 'Employé(e) Nom' => $rapport->employee_nom,
+                'Siège Nom' => $rapport->siege_nom,
+                'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
             ];
             
             // Ajouter le type de travail uniquement pour les rapports jour/nuit
@@ -273,11 +272,10 @@ class ReportController extends Controller
         // Mapper les données
         $data = $sortedResults->map(function ($rapport) use ($isDayNight) {
             $row = [
-                'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
-                'Siège ID' => $rapport->SiegeID,
-                'Siège Nom' => $rapport->siege_nom,
-                'Employé(e) ID' => $rapport->employee_id,
+                'N° Matricule' => $rapport->num_mat,
                 'Employé(e) Nom' => $rapport->employee_nom,
+                'Siège Nom' => $rapport->siege_nom,
+                'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
             ];
             
             // Ajouter le type de travail uniquement pour les rapports jour/nuit

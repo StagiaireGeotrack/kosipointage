@@ -192,13 +192,13 @@
             <div class="col-12">
                 <div class="chart-card">
                     <h6 class="fw-bold mb-2 small">
-                        <i class="bi bi-award text-warning"></i> {{ __('Pointages ce mois)') }}
+                        <i class="bi bi-award text-warning"></i> {{ __('Pointages ce mois') }}
                     </h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center text-dark">#</th>
+                                    <th class="text-dark">{{ __('N° Matricule') }}</th>
                                     <th class="text-dark">{{ __('Employé') }}</th>
                                     <th class="text-center text-dark">{{ __('Pointages') }}</th>
                                     <th class="text-dark">{{ __('Progression') }}</th>
@@ -207,11 +207,7 @@
                             <tbody>
                                 @forelse($topEmployes as $index => $emp)
                                 <tr>
-                                    <td class="text-center">
-                                        <span class="badge {{ $index == 0 ? 'bg-warning' : ($index == 1 ? 'bg-secondary' : 'bg-info') }}">
-                                            {{ $index + 1 }}
-                                        </span>
-                                    </td>
+                                    <td class="fw-bold small">{{ $emp['num_mat'] }}</td>
                                     <td class="fw-bold small">{{ $emp['name'] }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-primary">{{ $emp['total'] }}</span>

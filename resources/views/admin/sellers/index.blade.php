@@ -65,7 +65,6 @@
                         <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-uppercase small fw-semibold text-secondary">{{ __('ID') }}</th>
                                     <th class="text-uppercase small fw-semibold text-secondary">{{ __('Email') }}</th>
                                     <th class="text-uppercase small fw-semibold text-secondary">{{ __('Nombre de Sièges') }}</th>
                                     <th class="text-uppercase small fw-semibold text-secondary">{{ __('Statut') }}</th>
@@ -75,7 +74,6 @@
                             <tbody>
                                 @foreach($sellers as $seller)
                                     <tr>
-                                        <td class="align-middle">{{ $seller->ID }}</td>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
                                                 <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="height: 32px; width: 32px;">

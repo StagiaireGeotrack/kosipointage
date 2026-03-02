@@ -26,9 +26,6 @@
                     </div>
                     <div class="card-body">
                         <dl class="row mb-0">
-                            <dt class="col-sm-4 text-uppercase small fw-semibold text-secondary">{{ __('ID') }} :</dt>
-                            <dd class="col-sm-8">{{ $seller->ID }}</dd>
-
                             <dt class="col-sm-4 text-uppercase small fw-semibold text-secondary">{{ __('Email') }} :</dt>
                             <dd class="col-sm-8">{{ $seller->Identifiant_email }}</dd>
 
@@ -43,7 +40,7 @@
 
                             <dt class="col-sm-4 text-uppercase small fw-semibold text-secondary">{{ __('Type') }} :</dt>
                             <dd class="col-sm-8">
-                                <span class="badge bg-info">{{ __('Vendeur (Super Admin Limité)') }}</span>
+                                <span class="badge bg-info">{{ __('Revendeur') }}</span>
                             </dd>
                         </dl>
                     </div>

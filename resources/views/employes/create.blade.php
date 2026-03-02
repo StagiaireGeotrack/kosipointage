@@ -18,7 +18,20 @@
                     @csrf
 
                     <div class="row">
-                        
+                    
+                        <!-- num_mat - Super Admin ET Simple Admin -->
+                        <div class="form-group mb-3">
+                            <label for="num_mat">Numéro matricule</label>
+                            <input type="text" 
+                                    class="form-control @error('num_mat') is-invalid @enderror" 
+                                    id="num_mat" 
+                                    name="num_mat" 
+                                    value="{{ old('num_mat') }}" 
+                                    maxlength="50">
+                            <x-input-error :messages="$errors->get('num_mat')" class="mt-2" />
+                            <small class="form-text text-muted">Optionnel — unique par siège</small>
+                        </div>
+
                         <!-- Nom -->
                         <div class="form-group mb-3">
                             <label for="Nom">Nom <span class="text-danger">*</span></label>

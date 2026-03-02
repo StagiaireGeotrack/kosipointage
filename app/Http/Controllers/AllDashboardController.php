@@ -291,7 +291,8 @@ class AllDashboardController extends Controller
             ->map(function($item) {
                 $employe = Employe::find($item->employee_id);
                 return [
-                    'name' => $employe ? ($employe->Nom . ' ' . $employe->Prenom) : 'Inconnu',
+                    'name' => $employe->Nom ?? 'Inconnu',
+                    'num_mat' => $employe->num_mat ?? '-',
                     'total' => $item->total_pointages
                 ];
             });
