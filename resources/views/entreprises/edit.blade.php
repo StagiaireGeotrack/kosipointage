@@ -74,7 +74,6 @@
                         
                         @if($entreprise->Logo)
                             <div class="mb-2">
-                                <label class="d-block text-muted">Logo actuel :</label>
                                 <img src="{{ route('entreprises.logo.thumbnail', $entreprise->ID) }}" alt="Logo {{ $entreprise->Nom }}" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
                             </div>
                         @endif
