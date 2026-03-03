@@ -36,9 +36,11 @@ class JourNonTravailleController extends Controller
     }
     
     public function create()
-    {
+    { 
+        $admin_connected = Auth()->user() ;
+        $siege_id = $admin_connected->SiegeID ?? null  ; 
         $sieges = EntrepriseSiege::all();
-        return view('jours-non-travailles.create', compact('sieges'));
+        return view('jours-non-travailles.create', compact('sieges' , 'siege_id'));
     }
     
     public function store(JourNonTravailleRequest $request)

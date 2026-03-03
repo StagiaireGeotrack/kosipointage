@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Pointages
+                Nouveau pointage
             </h2>
             <a href="{{ route('pointages.index') }}" class="btn btn-secondary btn-sm">
                 Retour à la liste
@@ -23,7 +23,7 @@
                         <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="loadEmployeesBySiege(this.value)" required>
                             <option value="">{{ __('Sélectionnez un siège') }}</option>
                             @foreach($sieges as $siege)
-                                <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
+                                <option value="{{ $siege->ID }}" {{ $siege_id == $siege->ID ? 'selected' : '' }}>
                                     {{ $siege->Nom }}
                                 </option>
                             @endforeach
@@ -93,14 +93,14 @@
                     <!-- Latitude -->
                     <div class="mb-3">
                         <x-input-label for="latitude" :value="__('Latitude')" />
-                        <x-text-input id="latitude" name="latitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('latitude', 0)" required />
+                        <x-text-input id="latitude" name="latitude" type="number" step="0.0001" class="form-control mt-1" :value="old('latitude', 0)" required />
                         <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
                     </div>
                     
                     <!-- Longitude -->
                     <div class="mb-3">
                         <x-input-label for="longitude" :value="__('Longitude')" />
-                        <x-text-input id="longitude" name="longitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('longitude', 0)" required />
+                        <x-text-input id="longitude" name="longitude" type="number" step="0.0001" class="form-control mt-1" :value="old('longitude', 0)" required />
                         <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
                     </div>
                 
@@ -141,8 +141,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
+                    document.getElementById('latitude').value = position.coords.latitude.toFixed(4);
+                    document.getElementById('longitude').value = position.coords.longitude.toFixed(4);
                 });
             }
         });

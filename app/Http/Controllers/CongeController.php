@@ -55,12 +55,15 @@ class CongeController extends Controller
     }
 
     public function create()
-    {
+    {         
+        $admin_connected = Auth()->user() ;
+        $siege_id = $admin_connected->SiegeID ?? null  ; 
+
         $sieges = EntrepriseSiege::all();
         $employes = Employe::orderBy('Nom')->get();
         $typesConge = ['CP', 'RTT', 'Maladie', 'Autres'];
         
-        return view('conges.create', compact('employes', 'typesConge', 'sieges'));
+        return view('conges.create', compact('employes', 'typesConge', 'sieges' , 'siege_id'));
     }
 
     public function store(Request $request)

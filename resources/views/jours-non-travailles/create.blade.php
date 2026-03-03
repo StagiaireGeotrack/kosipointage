@@ -53,7 +53,7 @@
                             <select id="SiegeID" name="SiegeID" class="form-select mt-1">
                                 <option value="">{{ __('National (tous les sièges)') }}</option>
                                 @foreach($sieges as $siege)
-                                    <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
+                                    <option value="{{ $siege->ID }}" {{ $siege_id == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
                                     </option>
                                 @endforeach

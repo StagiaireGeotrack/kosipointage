@@ -10,6 +10,7 @@ use App\Services\ExportService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\EntrepriseRequest;
 use App\Repositories\EntrepriseRepository;
+use Illuminate\Container\Attributes\Auth;
 
 class EntrepriseController extends Controller
 {
@@ -31,13 +32,15 @@ class EntrepriseController extends Controller
         $entreprises->appends($filters);
         $sieges = EntrepriseSiege::all();
         
-        return view('entreprises.index', compact('entreprises', 'sieges', 'filters'));
+        return view('entreprises.index', compact('entreprises', 'sieges', 'filters' ));
     }
     
     public function create()
     {
+        $admin_connected = Auth()->user() ;
+        $siege_id = $admin_connected->SiegeID ?? null  ; 
         $sieges = EntrepriseSiege::all();
-        return view('entreprises.create', compact('sieges'));
+        return view('entreprises.create', compact('sieges' , 'siege_id'));
     }
     
     public function store(EntrepriseRequest $request)

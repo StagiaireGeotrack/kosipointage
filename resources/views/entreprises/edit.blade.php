@@ -46,7 +46,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="Latitude">Latitude <span class="text-danger">*</span></label>
-                                <input type="number" step="0.00000001" class="form-control @error('Latitude') is-invalid @enderror" id="Latitude" name="Latitude" value="{{ old('Latitude', $entreprise->Latitude) }}" required>
+                                <input type="number" step="0.0001" class="form-control @error('Latitude') is-invalid @enderror" id="Latitude" name="Latitude" value="{{ old('Latitude', $entreprise->Latitude) }}" required>
                                 <small class="form-text text-muted">Valeur entre -90 et 90</small>
                                 <x-input-error :messages="$errors->get('Latitude')" class="mt-2" />
                             </div>
@@ -55,7 +55,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="Longitude">Longitude <span class="text-danger">*</span></label>
-                                <input type="number" step="0.00000001" class="form-control @error('Longitude') is-invalid @enderror" id="Longitude" name="Longitude" value="{{ old('Longitude', $entreprise->Longitude) }}" required>
+                                <input type="number" step="0.0001" class="form-control @error('Longitude') is-invalid @enderror" id="Longitude" name="Longitude" value="{{ old('Longitude', $entreprise->Longitude) }}" required>
                                 <small class="form-text text-muted">Valeur entre -180 et 180</small>
                                 <x-input-error :messages="$errors->get('Longitude')" class="mt-2" />
                             </div>
@@ -124,6 +124,15 @@
                 reader.readAsDataURL(file);
             } else {
                 preview.innerHTML = '';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude.toFixed(4);
+                    document.getElementById('longitude').value = position.coords.longitude.toFixed(4);
+                });
             }
         });
     </script>

@@ -69,8 +69,7 @@
                                     required>
                                 <option value="">{{ __('Sélectionnez un siège') }}</option>
                                 @foreach($sieges as $siege)
-                                    <option value="{{ $siege->ID }}" 
-                                            {{ old('SiegeID') == $siege->ID || (request()->has('SiegeID') && request()->SiegeID == $siege->ID) ? 'selected' : '' }}>
+                                    <option value="{{ $siege->ID }}" {{ $siege_id == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
                                     </option>
                                 @endforeach

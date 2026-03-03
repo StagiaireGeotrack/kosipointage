@@ -24,7 +24,7 @@
                             <select id="SiegeID" name="SiegeID" class="form-select mt-1" onchange="updateEmployeesList()">
                                 <option value="">{{ __('Tous') }}</option>
                                 @foreach($sieges as $siege)
-                                    <option value="{{ $siege->ID }}" {{ isset($filters['SiegeID']) && $filters['SiegeID'] == $siege->ID ? 'selected' : '' }}>
+                                    <option value="{{ $siege->ID }}" {{ $siege_id == $siege->ID ? 'selected' : '' }}>
                                         {{ $siege->Nom }}
                                     </option>
                                 @endforeach

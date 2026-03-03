@@ -45,7 +45,11 @@ class EmployeController extends Controller
     public function create()
     {
         $sieges = EntrepriseSiege::all();
-        return view('employes.create', compact('sieges'));
+        
+        $admin_connected = Auth()->user() ;
+        $siege_id = $admin_connected->SiegeID ?? null  ; 
+
+        return view('employes.create', compact('sieges' , 'siege_id'));
     }
     
     public function store(EmployeRequest $request)

@@ -92,22 +92,15 @@
                     <!-- Latitude -->
                     <div class="mb-3">
                         <x-input-label for="latitude" :value="__('Latitude')" />
-                        <x-text-input id="latitude" name="latitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('latitude', $pointage->latitude)" required />
+                        <x-text-input id="latitude" name="latitude" type="number" step="0.0001" class="form-control mt-1" :value="old('latitude', $pointage->latitude)" required />
                         <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
                     </div>
                     
                     <!-- Longitude -->
                     <div class="mb-3">
                         <x-input-label for="longitude" :value="__('Longitude')" />
-                        <x-text-input id="longitude" name="longitude" type="number" step="0.00000001" class="form-control mt-1" :value="old('longitude', $pointage->longitude)" required />
+                        <x-text-input id="longitude" name="longitude" type="number" step="0.0001" class="form-control mt-1" :value="old('longitude', $pointage->longitude)" required />
                         <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-                    </div>
-                    
-                    <!-- Nouvelle photo -->
-                    <div class="mb-3">
-                        <x-input-label for="photo" :value="__('Nouvelle image')" />
-                        <input id="photo" name="photo" type="file" accept="image/*" class="form-control mt-1" />
-                        <x-input-error :messages="$errors->get('photo')" class="mt-2" />
                     </div>
                     
                     <!-- Boutons de soumission -->
@@ -147,8 +140,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
+                    document.getElementById('latitude').value = position.coords.latitude.toFixed(4);
+                    document.getElementById('longitude').value = position.coords.longitude.toFixed(4);
                 });
             }
         });

@@ -21,13 +21,12 @@
                         <input type="text" class="form-control @error('Nom') is-invalid @enderror" id="Nom" name="Nom" value="{{ old('Nom') }}" required>
                         <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                     </div>
-                    
                     <div class="form-group mb-3">
                         <label for="SiegeID">Siège <span class="text-danger">*</span></label>
                         <select class="form-control @error('SiegeID') is-invalid @enderror" id="SiegeID" name="SiegeID" required>
                             <option value="">Sélectionner un siège</option>
                             @foreach($sieges as $siege)
-                                <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
+                                <option value="{{ $siege->ID }}" {{ $siege_id == $siege->ID ? 'selected' : '' }}>
                                     {{ $siege->Nom }}
                                 </option>
                             @endforeach
@@ -45,7 +44,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="Latitude">Latitude <span class="text-danger">*</span></label>
-                                <input type="number" step="0.00000001" class="form-control @error('Latitude') is-invalid @enderror" id="Latitude" name="Latitude" value="{{ old('Latitude') }}" required>
+                                <input type="number" step="0.0001" class="form-control @error('Latitude') is-invalid @enderror" id="Latitude" name="Latitude" value="{{ old('Latitude') }}" required>
                                 <small class="form-text text-muted">Valeur entre -90 et 90</small>
                                 <x-input-error :messages="$errors->get('Latitude')" class="mt-2" />
                             </div>
@@ -54,7 +53,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="Longitude">Longitude <span class="text-danger">*</span></label>
-                                <input type="number" step="0.00000001" class="form-control @error('Longitude') is-invalid @enderror" id="Longitude" name="Longitude" value="{{ old('Longitude') }}" required>
+                                <input type="number" step="0.0001" class="form-control @error('Longitude') is-invalid @enderror" id="Longitude" name="Longitude" value="{{ old('Longitude') }}" required>
                                 <small class="form-text text-muted">Valeur entre -180 et 180</small>
                                 <x-input-error :messages="$errors->get('Longitude')" class="mt-2" />
                             </div>
@@ -114,6 +113,15 @@
                 reader.readAsDataURL(file);
             } else {
                 preview.innerHTML = '';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude.toFixed(4);
+                    document.getElementById('longitude').value = position.coords.longitude.toFixed(4);
+                });
             }
         });
     </script>

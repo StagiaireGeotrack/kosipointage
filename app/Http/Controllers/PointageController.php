@@ -94,7 +94,10 @@ class PointageController extends Controller
     }
 
     public function create()
-    {
+    {        
+        $admin_connected = Auth()->user() ;
+        $siege_id = $admin_connected->SiegeID ?? null  ; 
+
         // Récupérer les sièges auxquels l'utilisateur a accès
         if (auth()->user()->IsSuperAdmin) {
             $sieges = EntrepriseSiege::all();
@@ -106,7 +109,7 @@ class PointageController extends Controller
             $sites = Entreprise::where('SiegeID', auth()->user()->SiegeID)->get();
         }
         
-        return view('pointages.create', compact('sieges', 'employes' , 'sites'));
+        return view('pointages.create', compact('sieges', 'employes' , 'sites' , 'siege_id'));
     }
     
     public function store(PointageRequest $request)
