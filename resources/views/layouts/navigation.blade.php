@@ -328,6 +328,13 @@
                         @endif
                     </button>
                     <ul class="dropdown-menu dropdown-menu-custom dropdown-menu-end" aria-labelledby="userDropdown">
+                        @can('superadmin')
+                        <li>
+                            <a class="dropdown-item" href="{{ route('activity-logs.index') }}">
+                                <i class="bi bi-journal-text"></i> {{ __('Logs d\'activité') }}
+                            </a>
+                        </li>
+                        @endcan
                         <li>
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                 <i class="bi bi-person"></i> {{ __('Identifiant') }}

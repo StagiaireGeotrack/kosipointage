@@ -12,6 +12,7 @@ use App\Traits\Loggable;
 class Employe extends Model
 {
     use Loggable;
+    public string $logLabelField = 'Nom';
 
     protected $table = 'Employes';
     protected $primaryKey = 'ID';

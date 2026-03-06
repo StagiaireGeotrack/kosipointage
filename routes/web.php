@@ -55,14 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_email', [ProfileController::class, 'update_Identifiant_email'])->name('profile.update_Identifiant_email');
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Logs d'activité (Super Admin uniquement)
-    Route::get('/activity-logs', [ActivityLogController::class, 'index'])
-        ->name('activity-logs.index')
-        ->middleware('can:superadmin');
-    Route::get('/activity-logs/export/csv', [ActivityLogController::class, 'exportCsv'])
-        ->name('activity-logs.export.csv')
-        ->middleware('can:superadmin');
     
     // ========== DASHBOARDS ==========
     // Dashboard pour Vendeurs uniquement
@@ -192,6 +184,10 @@ Route::middleware('auth')->group(function () {
     
     // ========== Routes accessibles uniquement aux VRAIS SuperAdmin ==========
     Route::middleware('can:superadmin')->group(function () {
+
+        // Logs d'activité (Super Admin uniquement)
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('/activity-logs/export/csv', [ActivityLogController::class, 'exportCsv'])->name('activity-logs.export.csv');
 
         // ========== CRUD des administrateurs ==========
         Route::get('/administrateurs', [AdministrationController::class, 'index'])->name('administrateurs.index');

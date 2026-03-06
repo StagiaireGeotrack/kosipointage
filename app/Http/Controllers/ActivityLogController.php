@@ -42,7 +42,7 @@ class ActivityLogController extends Controller
         $query = ActivityLog::query()->orderBy('created_at', 'desc');
         $this->applyFilters($query, $filters);
 
-        $logs       = $query->paginate(20)->withQueryString();
+        $logs       = $query->paginate(5)->withQueryString();
         $sieges     = EntrepriseSiege::withoutGlobalScope(SiegeScope::class)->get();
         $actions    = ActivityLog::select('action')->distinct()->orderBy('action')->pluck('action');
         $modelTypes = ActivityLog::select('model_type')->distinct()

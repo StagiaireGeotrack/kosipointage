@@ -10,6 +10,7 @@ use App\Traits\Loggable;
 class JourNonTravaille extends Model
 {
     use Loggable;
+    public string $logLabelField = 'Nom';
 
     protected $table = 'jours_non_travailles';
     protected $primaryKey = 'ID';

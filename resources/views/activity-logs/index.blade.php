@@ -84,17 +84,17 @@
 
                 {{-- Tableau --}}
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-sm align-middle">
-                        <thead class="table-dark">
+                    <table class="table table-hover table-sm align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <th>{{ __('Date / Heure') }}</th>
-                                <th>{{ __('Utilisateur') }}</th>
-                                <th>{{ __('Rôle') }}</th>
-                                <th>{{ __('Action') }}</th>
-                                <th>{{ __('Entité') }}</th>
-                                <th>{{ __('Détails') }}</th>
-                                <th>{{ __('IP') }}</th>
-                                <th>{{ __('Siège') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Date / Heure') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Utilisateur') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Rôle') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Action') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Entité') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Détails') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('IP') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Siège') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,9 +162,11 @@
                 </div>
 
                 {{-- Pagination --}}
+                @if($logs->hasPages())
                 <div class="mt-3">
-                    {{ $logs->links() }}
+                    {{ $logs->links("pagination.custom") }}
                 </div>
+                @endif
 
             </div>
         </div>

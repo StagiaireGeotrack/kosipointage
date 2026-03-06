@@ -11,6 +11,7 @@ use App\Traits\Loggable;
 class Entreprise extends Model
 {
     use Loggable;
+    public string $logLabelField = 'Nom';
 
     protected $table = 'Entreprises';
     protected $primaryKey = 'ID';

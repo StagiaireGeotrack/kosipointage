@@ -6,8 +6,6 @@ use App\Services\ActivityLogService;
 
 trait Loggable
 {
-    public string $logLabelField = 'Nom';
-
     public static function bootLoggable(): void
     {
         static::created(function ($model) {
