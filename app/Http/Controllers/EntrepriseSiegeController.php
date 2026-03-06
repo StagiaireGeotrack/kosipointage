@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\EntrepriseSiegeRequest;
 use App\Repositories\EntrepriseSiegeRepository;
+use App\Services\ActivityLogService;
 
 class EntrepriseSiegeController extends Controller
 {
@@ -228,6 +229,7 @@ class EntrepriseSiegeController extends Controller
         $filters = $request->only(['search', 'Actived']);
         $sieges = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_excel', modelType: 'EntrepriseSiege');
         return $this->exportService->exportToExcel($sieges, 'Sièges');
     }
     
@@ -236,6 +238,7 @@ class EntrepriseSiegeController extends Controller
         $filters = $request->only(['search', 'Actived']);
         $sieges = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_pdf', modelType: 'EntrepriseSiege');
         return $this->exportService->exportToPdf($sieges, 'Liste des sièges', 'exports.generic');
     }
 }
