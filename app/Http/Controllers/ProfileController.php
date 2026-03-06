@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
+use App\Services\ActivityLogService;
 
 class ProfileController extends Controller
 {
@@ -47,6 +48,13 @@ class ProfileController extends Controller
             "Identifiant_email" => $request->Identifiant_email
         ]);
 
+        ActivityLogService::log(
+            action: 'update_email',
+            modelType: 'Administration',
+            modelId: $administrateur->ID,
+            modelLabel: $administrateur->Identifiant_email,
+        );
+
         return back()->with('success', "L'Identifiant ou E-mail a été mise à jour avec succès !");
     }
 
@@ -76,6 +84,13 @@ class ProfileController extends Controller
             'Password_' => sha1($request->password)
         ]);
 
+        ActivityLogService::log(
+            action: 'update_password',
+            modelType: 'Administration',
+            modelId: $administrateur->ID,
+            modelLabel: $administrateur->Identifiant_email,
+        );
+
         return back()->with('success', 'Le mot de passe a été modifié avec succès !');
     }
 
@@ -90,6 +105,13 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        ActivityLogService::log(
+            action: 'delete_account',
+            modelType: 'Administration',
+            modelId: $user->ID,
+            modelLabel: $user->Identifiant_email,
+        );
 
         Auth::logout();
 
