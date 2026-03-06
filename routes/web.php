@@ -15,6 +15,7 @@ use App\Http\Controllers\EntrepriseSiegeController;
 use App\Http\Controllers\JourNonTravailleController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\AllDashboardController;
+use App\Http\Controllers\ActivityLogController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -54,6 +55,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_email', [ProfileController::class, 'update_Identifiant_email'])->name('profile.update_Identifiant_email');
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Logs d'activité (Super Admin uniquement)
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])
+        ->name('activity-logs.index')
+        ->middleware('can:superadmin');
+    Route::get('/activity-logs/export/csv', [ActivityLogController::class, 'exportCsv'])
+        ->name('activity-logs.export.csv')
+        ->middleware('can:superadmin');
     
     // ========== DASHBOARDS ==========
     // Dashboard pour Vendeurs uniquement
