@@ -65,7 +65,7 @@
                             </select>
                         </div>
                         <div class="col-12 col-sm-6 col-md-3 d-flex align-items-end gap-2">
-                            <button type="submit" class="btn btn-primary">{{ __('Filtrer') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Valider') }}</button>
                             <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary">
                                 {{ __('Réinitialiser') }}
                             </a>
