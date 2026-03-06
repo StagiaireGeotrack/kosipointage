@@ -11,6 +11,7 @@ use App\Services\ExportService;
 use App\Services\HashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Services\ActivityLogService;
 
 class EmployeController extends Controller
 {
@@ -250,9 +251,10 @@ class EmployeController extends Controller
         
         $employes = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_excel', modelType: 'Employe');
         return $this->exportService->exportToExcel($employes, __('Employés'));
     }
-    
+
     public function exportPdf(Request $request)
     {
         $filters = $request->only([
@@ -261,6 +263,7 @@ class EmployeController extends Controller
         
         $employes = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Employe');
         return $this->exportService->exportToPdf($employes, "Liste des employés", 'exports.generic');
     }
     
