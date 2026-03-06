@@ -4,11 +4,14 @@
 namespace App\Models;
 
 use App\Scopes\SiegeScope;
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Entreprise extends Model
 {
+    use Loggable;
+    
     protected $table = 'Entreprises';
     protected $primaryKey = 'ID';
     public $timestamps = false;
