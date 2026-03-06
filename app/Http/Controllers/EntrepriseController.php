@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use Illuminate\Support\Facades\Log;
+use App\Services\ActivityLogService;
 use App\Http\Requests\EntrepriseRequest;
 use App\Repositories\EntrepriseRepository;
 use Illuminate\Container\Attributes\Auth;
@@ -112,6 +113,7 @@ class EntrepriseController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'Actived']);
         $entreprises = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_excel', modelType: 'Entreprise');
         return $this->exportService->exportToExcel($entreprises, 'Entreprises');
     }
     
@@ -120,6 +122,7 @@ class EntrepriseController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'Actived']);
         $entreprises = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Entreprise');
         return $this->exportService->exportToPdf($entreprises, 'Liste des entreprises', 'exports.generic');
     }
     
