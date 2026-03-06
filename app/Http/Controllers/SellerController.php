@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Administration;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
+use App\Services\ActivityLogService;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -80,12 +81,14 @@ class SellerController extends Controller
     public function exportExcel(Request $request)
     {
         $data = $this->prepareExportData($request);
+        ActivityLogService::log(action: 'export_excel', modelType: 'Seller');
         return $this->exportService->exportToExcel($data, "Liste des revendeurs");
     }
 
     public function exportPdf(Request $request)
     {
         $data = $this->prepareExportData($request);
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Seller');
         return $this->exportService->exportToPdf($data, "Liste des revendeurs", 'exports.generic');
     }
 
@@ -162,6 +165,13 @@ class SellerController extends Controller
             }
 
             DB::commit();
+
+            ActivityLogService::log(
+                action: 'create',
+                modelType: 'Administration',
+                modelId: $seller->ID,
+                modelLabel: $seller->Identifiant_email,
+            );
 
             return redirect()->back()->with('success', 'Revendeur créé avec succès');
 
@@ -297,6 +307,13 @@ class SellerController extends Controller
 
             DB::commit();
 
+            ActivityLogService::log(
+                action: 'update',
+                modelType: 'Administration',
+                modelId: $seller->ID,
+                modelLabel: $seller->Identifiant_email,
+            );
+
             return redirect()->back()->with('success', 'Revendeur modifié avec succès');
 
         } catch (\Exception $e) {
@@ -328,6 +345,13 @@ class SellerController extends Controller
         DB::beginTransaction();
 
         try {
+            ActivityLogService::log(
+                action: 'delete',
+                modelType: 'Administration',
+                modelId: $seller->ID,
+                modelLabel: $seller->Identifiant_email,
+            );
+
             // La suppression des sièges associés se fera automatiquement grâce à ON DELETE CASCADE
             $seller->delete();
 
@@ -363,6 +387,13 @@ class SellerController extends Controller
         $seller->update([
             'Actived' => !$seller->Actived
         ]);
+
+        ActivityLogService::log(
+            action: 'toggle_active',
+            modelType: 'Administration',
+            modelId: $seller->ID,
+            modelLabel: $seller->Identifiant_email,
+        );
 
         $status = $seller->Actived ? 'activé' : 'désactivé';
 
