@@ -8,6 +8,7 @@ use App\Models\Employe;
 use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
@@ -236,6 +237,7 @@ class ReportController extends Controller
         $title = $isDayNight ? __('Rapport jour et nuit') : __('Rapport quotidien');
         
         // Exporter vers Excel
+        ActivityLogService::log(action: 'export_excel', modelType: 'Report');
         return $this->exportService->exportToExcel($data, $title);
     }
 
@@ -297,6 +299,7 @@ class ReportController extends Controller
         $title = $isDayNight ? 'Rapport jour et nuit' : 'Rapport quotidien';
         
         // Exporter vers PDF
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Report');
         return $this->exportService->exportToPdf($data, $title, 'exports.generic', [
             'filters' => $filters,
         ]);

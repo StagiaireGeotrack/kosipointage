@@ -7,6 +7,7 @@ use App\Http\Requests\JourNonTravailleRequest;
 use App\Models\EntrepriseSiege;
 use App\Repositories\JourNonTravailleRepository;
 use App\Services\ExportService;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
 class JourNonTravailleController extends Controller
@@ -82,6 +83,7 @@ class JourNonTravailleController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'Type', 'annee', 'Recurrent']);
         $joursNonTravailles = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_excel', modelType: 'JourNonTravaille');
         return $this->exportService->exportToExcel($joursNonTravailles, __('Jours non travaillés'));
     }
     
@@ -90,6 +92,7 @@ class JourNonTravailleController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'Type', 'annee', 'Recurrent']);
         $joursNonTravailles = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_pdf', modelType: 'JourNonTravaille');
         return $this->exportService->exportToPdf($joursNonTravailles, 'Liste des jours non travaillés', 'exports.generic');
     }
 }

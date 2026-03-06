@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use App\Services\JourOuvrableService;
+use App\Services\ActivityLogService;
 
 class CongeController extends Controller
 {
@@ -148,12 +149,14 @@ class CongeController extends Controller
     public function exportExcel(Request $request)
     {
         $data = $this->prepareExportData($request);
+        ActivityLogService::log(action: 'export_excel', modelType: 'Conge');
         return $this->exportService->exportToExcel($data, "Liste des congés");
     }
 
     public function exportPdf(Request $request)
     {
         $data = $this->prepareExportData($request);
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Conge');
         return $this->exportService->exportToPdf($data, "Liste des congés", 'exports.generic');
     }
 
