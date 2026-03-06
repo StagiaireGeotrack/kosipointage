@@ -11,6 +11,7 @@ use App\Models\Entreprise;
 use App\Repositories\PointageRepository;
 use App\Services\ExportService;
 use App\Services\FileStorageService;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -184,6 +185,7 @@ class PointageController extends Controller
         
         $pointages = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_excel', modelType: 'Pointage');
         return $this->exportService->exportToExcel($pointages, __('Pointages'));
     }
     
@@ -196,6 +198,7 @@ class PointageController extends Controller
         
         $pointages = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Pointage');
         return $this->exportService->exportToPdf($pointages, 'Pointages', 'exports.generic');
     }
     
