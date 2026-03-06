@@ -9,7 +9,6 @@ use App\Models\Administration;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use App\Services\ActivityLogService;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
@@ -353,7 +352,52 @@ class SellerController extends Controller
             );
 
             // La suppression des sièges associés se fera automatiquement grâce à ON DELETE CASCADE
-            $seller->delete();
+            Administration::where("ID" , $id)->update(["deleted" => true , "Actived" => false ]);
+            // $seller->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Revendeur supprimé avec succès');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return redirect()
+                ->back()
+                ->with('error', 'Erreur lors de la suppression du revendeur : ' . $e->getMessage());
+        }
+    }
+
+
+    public function reset($id)
+    {
+        if (!auth()->user()->isTrueSuperAdmin()) {            
+            $message = 'Accès réservé aux Administrateurs' ;
+            return view( '403' , compact('message') );
+        }
+
+        $seller = Administration::findOrFail($id);
+
+        // Vérifier que c'est bien un revendeur
+        if (!$seller->isSeller()) {
+            return redirect()
+                ->route('sellers.index')
+                ->with('error', 'Cet utilisateur n\'est pas un revendeur');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            ActivityLogService::log(
+                action: 'delete',
+                modelType: 'Administration',
+                modelId: $seller->ID,
+                modelLabel: $seller->Identifiant_email,
+            );
+
+            // La suppression des sièges associés se fera automatiquement grâce à ON DELETE CASCADE
+            Administration::where("ID" , $id)->update(["deleted" => false , "Actived" => true ]);
+            // $seller->delete();
 
             DB::commit();
 

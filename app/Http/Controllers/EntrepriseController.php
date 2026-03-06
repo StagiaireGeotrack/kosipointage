@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 use App\Services\ActivityLogService;
 use App\Http\Requests\EntrepriseRequest;
 use App\Repositories\EntrepriseRepository;
-use Illuminate\Container\Attributes\Auth;
 
 class EntrepriseController extends Controller
 {
@@ -104,7 +103,27 @@ class EntrepriseController extends Controller
     
     public function destroy($id)
     {
-        $this->repository->delete($id);
+        Entreprise::where("ID" , $id)->update(["deleted" => true , "Actived" => false ]);
+        
+        ActivityLogService::log(
+            action: 'delete',
+            modelType: 'Entreprise',
+            modelId: (int) $id,
+        );
+        // $this->repository->delete($id);
+        return redirect()->back()->with('success', __('Site ou établissement supprimé avec succès.'));
+    }
+
+    public function reset($id)
+    {
+        Entreprise::where("ID" , $id)->update(["deleted" => false , "Actived" => true ]);
+        
+        ActivityLogService::log(
+            action: 'reset',
+            modelType: 'Entreprise',
+            modelId: (int) $id,
+        );
+        // $this->repository->delete($id);
         return redirect()->back()->with('success', __('Site ou établissement supprimé avec succès.'));
     }
     

@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/sieges/{siege}', [EntrepriseSiegeController::class, 'update'])->name('sieges.update');
             Route::patch('/sieges/{siege}', [EntrepriseSiegeController::class, 'update']);
             Route::delete('/sieges/{siege}', [EntrepriseSiegeController::class, 'destroy'])->name('sieges.destroy');
+            Route::delete('/sieges/reset/{siege}', [EntrepriseSiegeController::class, 'reset'])->name('sieges.reset');
             Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
         });
         
@@ -95,6 +96,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/entreprises/{entreprise}', [EntrepriseController::class, 'update'])->name('entreprises.update');
             Route::patch('/entreprises/{entreprise}', [EntrepriseController::class, 'update']);
             Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
+            Route::delete('/entreprises/reset/{entreprise}', [EntrepriseController::class, 'reset'])->name('entreprises.reset');
         });
         
         // ========== ENTREPRISES : Consultation (Tous) ==========
@@ -114,6 +116,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/employes/{employe}', [EmployeController::class, 'update'])->name('employes.update');
             Route::patch('/employes/{employe}', [EmployeController::class, 'update']);
             Route::delete('/employes/{employe}', [EmployeController::class, 'destroy'])->name('employes.destroy');
+            Route::delete('/employes/reset/{employe}', [EmployeController::class, 'reset'])->name('employes.reset');
         });
         
         // ========== EMPLOYÉS : Consultation (Tous) ==========
@@ -200,6 +203,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/administrateurs/{administrateur}', [AdministrationController::class, 'update'])->name('administrateurs.update');
         Route::patch('/administrateurs/{administrateur}', [AdministrationController::class, 'update']);
         Route::delete('/administrateurs/{administrateur}', [AdministrationController::class, 'destroy'])->name('administrateurs.destroy');
+        Route::delete('/administrateurs/reset/{administrateur}', [AdministrationController::class, 'reset'])->name('administrateurs.reset');
 
         // ========== CRUD des vendeurs ==========
         Route::get('/sellers', [SellerController::class, 'index'])->name('sellers.index');
@@ -215,6 +219,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/sellers/{seller}', [SellerController::class, 'update'])->name('sellers.update');
         Route::patch('/sellers/{seller}', [SellerController::class, 'update']);
         Route::delete('/sellers/{seller}', [SellerController::class, 'destroy'])->name('sellers.destroy');
+        Route::delete('/sellers/reset/{seller}', [SellerController::class, 'reset'])->name('sellers.reset');
 
         // ========== Dashboard (SuperAdmin uniquement) ==========
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

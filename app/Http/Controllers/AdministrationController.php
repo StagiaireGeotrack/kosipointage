@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EntrepriseSiege;
 use App\Http\Requests\AdministrationRequest;
+use App\Models\Administration;
 use App\Repositories\AdministrationRepository;
 use App\Services\ExportService;
 use App\Services\ActivityLogService;
@@ -116,7 +117,8 @@ class AdministrationController extends Controller
             return redirect()->back()->with('error', __('Ce compte ne peut pas être supprimé'));
         }
         
-        $this->repository->delete($id);
+        Administration::where("ID" , $id)->update(["deleted" => true , "Actived" => false ]);
+        // $this->repository->delete($id);
 
         ActivityLogService::log(
             action: 'delete',
@@ -127,6 +129,25 @@ class AdministrationController extends Controller
         return redirect()->back()->with('success', __('Compte supprimé avec succès'));
     }
     
+    public function reset($id)
+    {
+        // Empêcher la suppression du compte courant
+        if ((int)$id === auth()->user()->ID) {
+            return redirect()->back()->with('error', __('Ce compte ne peut pas être supprimé'));
+        }
+        
+        Administration::where("ID" , $id)->update(["deleted" => false , "Actived" => true ]);
+        // $this->repository->delete($id);
+
+        ActivityLogService::log(
+            action: 'reset',
+            modelType: 'Administration',
+            modelId: (int) $id,
+        );
+
+        return redirect()->back()->with('success', __('Compte supprimé avec succès'));
+    }
+
     public function exportExcel(Request $request)
     {
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);

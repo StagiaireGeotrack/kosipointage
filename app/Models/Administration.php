@@ -29,6 +29,7 @@ class Administration extends Authenticatable
         'IsSeller',
         'SiegeID',
         'Actived',
+        'deleted',
     ];
 
     protected $hidden = [

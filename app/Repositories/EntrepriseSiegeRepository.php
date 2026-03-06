@@ -56,7 +56,12 @@ class EntrepriseSiegeRepository extends BaseRepository
         // Formater les données pour l'export
         return $query->orderBy('CreatedAt', 'asc')->get()->map(function ($siege) {
             $entreprisesCount = $siege->entreprises()->count();
+            $entreprisesActifs = $siege->entreprises()->where("Actived" , 1)->count();
+            $entreprisesInactifs = $siege->entreprises()->where("Actived" , 0)->count();
+
             $employesCount = $siege->employes()->count();
+            $employesActifs = $siege->employes()->where("Actived" , 1)->count();
+            $employesInactifs = $siege->employes()->where("Actived" , 0)->count();
             
             return [
                 'ID' => $siege->ID,
@@ -65,8 +70,8 @@ class EntrepriseSiegeRepository extends BaseRepository
                 'Nom Lieu ou Ville' => $siege->Nom_Lieu_Ville,
                 'Statut' => $siege->Actived ? __('Activé') : __('Désactivé'),
                 'Date de création' => ucfirst($siege->CreatedAt->isoFormat('dddd D MMMM YYYY - HH:mm:ss')),
-                'Nb sites ou établissements' => $entreprisesCount,
-                'Nb employés' => $employesCount,
+                'Nb sites ou établissements' => "Totals: " . $entreprisesCount . " - Actifs: " . $entreprisesActifs . " - Inactifs: " . $entreprisesInactifs,
+                'Nb employés' =>  "Totals: " . $employesCount . " - Actifs: " . $employesActifs . " - Inactifs: " . $employesInactifs,
             ];
         });
     }

@@ -238,7 +238,37 @@ class EmployeController extends Controller
     
     public function destroy($id)
     {
-        $this->repository->delete($id);
+        // $this->repository->delete($id);
+
+        $employe = $this->repository->findById($id) ;
+        $employe->deleted = true ;
+        $employe->Actived = false ;
+        $employe->save() ;
+
+        ActivityLogService::log(
+            action: 'delete',
+            modelType: 'Entreprise',
+            modelId: (int) $id,
+        );
+        
+        return redirect()->back()->with('success', __('Employé supprimé avec succès'));
+    }
+
+    public function reset($id)
+    {
+        // $this->repository->delete($id);
+
+        $employe = $this->repository->findById($id) ;
+        $employe->deleted = false ;
+        $employe->Actived = true ;
+        $employe->save() ;
+
+        
+        ActivityLogService::log(
+            action: 'reset',
+            modelType: 'Entreprise',
+            modelId: (int) $id,
+        );
         
         return redirect()->back()->with('success', __('Employé supprimé avec succès'));
     }

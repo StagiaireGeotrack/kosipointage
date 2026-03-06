@@ -27,6 +27,7 @@ class Employe extends Model
         'FaceEncodingPath',
         'Pin',
         'CreatedAt',
+        'deleted',
         'Actived',
         'SiegeID',
     ];

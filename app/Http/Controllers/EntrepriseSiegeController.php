@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\EntrepriseSiegeRequest;
+use App\Models\Administration;
+use App\Models\Employe;
+use App\Models\Entreprise;
 use App\Repositories\EntrepriseSiegeRepository;
 use App\Services\ActivityLogService;
 
@@ -34,6 +36,18 @@ class EntrepriseSiegeController extends Controller
         if ($user->isTrueSuperAdmin() || $user->isSeller()) {
             $filters = $request->only(['search', 'Actived', 'sort_by', 'sort_order']);
             $sieges = $this->repository->getFiltered($filters);
+
+            $sieges->through(function($siege) {
+                $siege->total_sites    = $siege->entreprises()->count();
+                $siege->sites_actifs   = $siege->entreprises()->where('Actived', 1)->count();
+                $siege->sites_inactifs = $siege->entreprises()->where('Actived', 0)->count();
+                
+                $siege->total_employes    = $siege->employes()->count();
+                $siege->employes_actifs   = $siege->employes()->where('Actived', 1)->count();
+                $siege->employes_inactifs = $siege->employes()->where('Actived', 0)->count();
+
+                return $siege;
+            });
             
             return view('sieges.index', compact('sieges', 'filters'));
         }
@@ -47,9 +61,21 @@ class EntrepriseSiegeController extends Controller
         $filters = $request->only(['search', 'Actived', 'sort_by', 'sort_order']);
         $sieges = $this->repository->getFiltered($filters);
 
+        $sieges->through(function($siege) {
+            $siege->total_sites    = $siege->entreprises()->count();
+            $siege->sites_actifs   = $siege->entreprises()->where('Actived', 1)->count();
+            $siege->sites_inactifs = $siege->entreprises()->where('Actived', 0)->count();
+
+            $siege->total_employes    = $siege->employes()->count();
+            $siege->employes_actifs   = $siege->employes()->where('Actived', 1)->count();
+            $siege->employes_inactifs = $siege->employes()->where('Actived', 0)->count();
+
+            return $siege;
+        });
+
         $sieges->appends($filters);
         
-        return view('sieges.index', compact('sieges', 'filters'));
+        return view('sieges.index', compact('sieges', 'filters' ));
     }
     
     public function create()
@@ -192,8 +218,8 @@ class EntrepriseSiegeController extends Controller
 
         $validated['Actived'] = $request->has('Actived') ? 1 : 0;
 
-        DB::table('Entreprises')->where('SiegeID', $id)->update(['Actived' => $validated['Actived']]);
-        DB::table('Employes')->where('SiegeID', $id)->update(['Actived' => $validated['Actived']]);
+        Entreprise::where('SiegeID', $id)->update(['Actived' => $validated['Actived']]);
+        Employe::where('SiegeID', $id)->update(['Actived' => $validated['Actived']]);
         
         $siege = EntrepriseSiege::findOrFail($id); 
         $siege->update($validated);
@@ -219,7 +245,48 @@ class EntrepriseSiegeController extends Controller
                 ->with('error', __('Vous n\'avez pas accès à ce siège'));
         }
         
-        $this->repository->delete($id);
+        $siege->deleted = true ;
+        $siege->Actived = false ;
+
+        Administration::where('SiegeID', $siege->ID)->update(['Actived' => false , 'deleted' => true]);
+        Entreprise::where('SiegeID', $siege->ID)->update(['Actived' => false , 'deleted' => true]);
+        Employe::where('SiegeID', $siege->ID)->update(['Actived' => false , 'deleted' => true]);
+
+        $siege->save() ;
+        
+        //$this->repository->delete($id);
+        
+        return redirect()->back()->with('success', __('Siège supprimé avec succès'));
+    }
+
+    public function reset($id)
+    {
+        $user = auth()->user();
+        
+        // Super Admin et Vendeur peuvent supprimer des sièges
+        if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à cette page'));
+        }
+        
+        $siege = $this->repository->findById($id);
+        
+        // Vérifier que le vendeur a accès à ce siège spécifique
+        if ($user->isSeller() && !$user->hasAccessToSiege($siege->ID)) {
+            return redirect()->route('sieges.index')
+                ->with('error', __('Vous n\'avez pas accès à ce siège'));
+        }
+        
+        $siege->deleted = false ;
+        $siege->Actived = true ;
+
+        Administration::where('SiegeID', $siege->ID)->update(['Actived' => true , 'deleted' => false]);
+        Entreprise::where('SiegeID', $siege->ID)->update(['Actived' => true , 'deleted' => false]);
+        Employe::where('SiegeID', $siege->ID)->update(['Actived' => true , 'deleted' => false]);
+
+        $siege->save() ;
+        
+        //$this->repository->delete($id);
         
         return redirect()->back()->with('success', __('Siège supprimé avec succès'));
     }

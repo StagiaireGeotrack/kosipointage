@@ -98,14 +98,12 @@
                                                 class="form-control @error('BadgeID') is-invalid @enderror" 
                                                 id="BadgeID" 
                                                 name="BadgeID" 
-                                                value="{{ old('BadgeID') }}" 
                                                 maxlength="25">
                                     @else
                                         {{-- Non Super Admin : disabled --}}
                                         <input type="text" 
                                                 class="form-control" 
                                                 id="BadgeID" 
-                                                value="{{ $employe->BadgeID }}" 
                                                 maxlength="25"
                                                 disabled>
                                     @endif
