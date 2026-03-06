@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\ActivityLogService;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -33,18 +34,33 @@ class AuthenticatedSessionController extends Controller
         $admin = Administration::where('Identifiant_email', $credentials['Identifiant_email'])->first();
         
         if (!$admin) {
+            ActivityLogService::log(
+                action: 'login_failed',
+                description: 'Identifiant introuvable',
+                userEmail: $credentials['Identifiant_email'],
+            );
             return back()->withErrors([
                 'email' => __('Cet identifiant ou e-mail est introuvable.'),
             ])->onlyInput('email');
         }
 
         if (isset($admin->Actived) && !$admin->Actived) {
+            ActivityLogService::log(
+                action: 'login_failed',
+                description: 'Compte désactivé',
+                userEmail: $credentials['Identifiant_email'],
+            );
             return back()->withErrors([
                 'actived' => __('Votre compte administrateur est désactivé.'),
             ])->onlyInput('email');
         }
 
         if ($admin->Password_ !== sha1($credentials['password'])) {
+            ActivityLogService::log(
+                action: 'login_failed',
+                description: 'Mot de passe incorrect',
+                userEmail: $credentials['Identifiant_email'],
+            );
             return back()->withErrors([
                 'password' => __('Le mot de passe saisi est incorrect.'),
             ])->onlyInput('email');

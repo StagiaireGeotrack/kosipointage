@@ -5,9 +5,13 @@ namespace App\Models;
 use App\Scopes\SiegeScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\Loggable;
 
 class Conge extends Model
 {
+    use Loggable;
+    public string $logLabelField = 'employee_id';
+
     protected $table = 'conges';
     public $timestamps = false;
     

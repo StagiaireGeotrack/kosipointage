@@ -3,12 +3,14 @@
 
 namespace App\Models;
 
-use App\Scopes\SiegeScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\Loggable;
 
 class JourNonTravaille extends Model
 {
+    use Loggable;
+
     protected $table = 'jours_non_travailles';
     protected $primaryKey = 'ID';
     

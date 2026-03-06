@@ -4,12 +4,12 @@
 namespace App\Models;
 
 use App\Scopes\SiegeScope;
-use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\Loggable;
 
 class EntrepriseSiege extends Model
-{    
+{
     use Loggable;
 
     protected $table = 'Entreprises_sieges';
