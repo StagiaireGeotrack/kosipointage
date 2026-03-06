@@ -7,6 +7,7 @@ use App\Models\EntrepriseSiege;
 use App\Http\Requests\AdministrationRequest;
 use App\Repositories\AdministrationRepository;
 use App\Services\ExportService;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
 class AdministrationController extends Controller
@@ -52,8 +53,15 @@ class AdministrationController extends Controller
         
         unset($data['password_confirmation']);
         
-        $this->repository->create($data);
-        
+        $administrateur = $this->repository->create($data);
+
+        ActivityLogService::log(
+            action: 'create',
+            modelType: 'Administration',
+            modelId: $administrateur->ID,
+            modelLabel: $administrateur->Identifiant_email,
+        );
+
         return redirect()->back()->with('success', __('Administrateur simple créé'));
     }
     
@@ -91,7 +99,13 @@ class AdministrationController extends Controller
         unset($data['password_confirmation']);
         
         $this->repository->update($id, $data);
-        
+
+        ActivityLogService::log(
+            action: 'update',
+            modelType: 'Administration',
+            modelId: (int) $id,
+        );
+
         return redirect()->back()->with('success', __('Compte modifié avec succès'));
     }
     
@@ -103,7 +117,13 @@ class AdministrationController extends Controller
         }
         
         $this->repository->delete($id);
-        
+
+        ActivityLogService::log(
+            action: 'delete',
+            modelType: 'Administration',
+            modelId: (int) $id,
+        );
+
         return redirect()->back()->with('success', __('Compte supprimé avec succès'));
     }
     
@@ -112,6 +132,7 @@ class AdministrationController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
         $administrateurs = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_excel', modelType: 'Administration');
         return $this->exportService->exportToExcel($administrateurs, __('Administrateurs'));
     }
     
@@ -120,6 +141,7 @@ class AdministrationController extends Controller
         $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
         $administrateurs = $this->repository->getAllForExport($filters);
         
+        ActivityLogService::log(action: 'export_pdf', modelType: 'Administration');
         return $this->exportService->exportToPdf($administrateurs, "Liste des administrateurs" , 'exports.generic' );
     }
 }
