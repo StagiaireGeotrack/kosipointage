@@ -312,6 +312,32 @@
                     </li>
                 @endif
 
+                {{-- Événements : Super Admin (lecture seule) et Simple Admin (correction) --}}
+                @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+                <li class="nav-item">
+                    <a href="{{ route('evenements.index') }}"
+                       class="nav-link {{ request()->routeIs('evenements.*') ? 'active-link' : '' }}">
+                        <i class="bi bi-exclamation-triangle"></i> {{ __('Événements') }}
+                        @if(auth()->user()->isSimpleAdmin())
+                            @php
+                                try {
+                                    $navErrCount = app(\App\Services\EventDetectionService::class)
+                                        ->countUnresolved(auth()->user()->SiegeID);
+                                } catch (\Throwable $e) {
+                                    $navErrCount = 0;
+                                }
+                            @endphp
+                            @if($navErrCount > 0)
+                                <span class="badge bg-danger rounded-pill"
+                                      style="font-size: 0.65rem; vertical-align: middle;">
+                                    {{ $navErrCount }}
+                                </span>
+                            @endif
+                        @endif
+                    </a>
+                </li>
+                @endif
+
             </ul>
 
             <!-- User Menu Dropdown -->
