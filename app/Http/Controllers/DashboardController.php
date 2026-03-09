@@ -156,9 +156,9 @@ class DashboardController extends Controller
             ->orderBy('period');
 
         if ($siegeFilter) {
-            // ⚠️ Remplace "Pointages.EmployeID" par le vrai nom de ta colonne
+            // ⚠️ Remplace "Pointages.employee_id" par le vrai nom de ta colonne
             // Pour trouver le bon nom : dd(DB::select('DESCRIBE Pointages'));
-            $query->join('Employes', 'Pointages.EmployeID', '=', 'Employes.ID')
+            $query->join('Employes', 'Pointages.employee_id', '=', 'Employes.ID')
                   ->where('Employes.SiegeID', $siegeFilter);
         }
 
@@ -198,14 +198,14 @@ class DashboardController extends Controller
             $inactiveEmployesQuery->where('SiegeID', $siegeFilter);
 
             // ⚠️ Chaque query est modifiée SÉPARÉMENT (le foreach ne fonctionne pas en PHP pour ça)
-            // ⚠️ Remplace "Pointages.EmployeID" par le vrai nom de ta colonne
-            $pointagesQuery->join('Employes', 'Pointages.EmployeID', '=', 'Employes.ID')
+            // ⚠️ Remplace "Pointages.employee_id" par le vrai nom de ta colonne
+            $pointagesQuery->join('Employes', 'Pointages.employee_id', '=', 'Employes.ID')
                            ->where('Employes.SiegeID', $siegeFilter);
 
-            $entriesQuery->join('Employes', 'Pointages.EmployeID', '=', 'Employes.ID')
+            $entriesQuery->join('Employes', 'Pointages.employee_id', '=', 'Employes.ID')
                          ->where('Employes.SiegeID', $siegeFilter);
 
-            $exitsQuery->join('Employes', 'Pointages.EmployeID', '=', 'Employes.ID')
+            $exitsQuery->join('Employes', 'Pointages.employee_id', '=', 'Employes.ID')
                        ->where('Employes.SiegeID', $siegeFilter);
         }
 

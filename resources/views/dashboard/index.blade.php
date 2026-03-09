@@ -292,6 +292,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> {{ __('Valider') }}
                         </button>
+                        <a href="{{ route('dashboard') }}" class="btn btn-secondary">Réinitialiser</a>
                     </div>
                 </form>
             </div>
@@ -314,11 +315,10 @@
                     <div class="card-body">
                         <div class="kpi-title">{{ __('Sites ou établissements') }}</div>
                         <div class="kpi-value">{{ $kpis['total_companies'] }}</div>
-                        @php
-                            $actifs = \App\Models\Entreprise::where('Actived', 1)->count();
-                            $inactifs = \App\Models\Entreprise::where('Actived', 0)->count();
-                        @endphp
-                        <div class="kpi-info">{{ $actifs }} {{ __('actifs') }} / {{ $inactifs }} {{ __('inactifs') }}</div>
+                        {{-- ✅ Utilise les valeurs du controller, pas de requête ici --}}
+                        <div class="kpi-info">
+                            {{ $kpis['active_companies'] }} {{ __('actifs') }} / {{ $kpis['inactive_companies'] }} {{ __('inactifs') }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -338,11 +338,10 @@
                     <div class="card-body">
                         <div class="kpi-title">{{ __('Employés') }}</div>
                         <div class="kpi-value">{{ $kpis['total_employees'] }}</div>
-                        @php
-                            $empActifs = \App\Models\Employe::where('Actived', 1)->count();
-                            $empInactifs = \App\Models\Employe::where('Actived', 0)->count();
-                        @endphp
-                        <div class="kpi-info">{{ $empActifs }} {{ __('actifs') }} / {{ $empInactifs }} {{ __('inactifs') }}</div>
+                        {{-- ✅ Utilise les valeurs du controller, pas de requête ici --}}
+                        <div class="kpi-info">
+                            {{ $kpis['active_employees'] }} {{ __('actifs') }} / {{ $kpis['inactive_employees'] }} {{ __('inactifs') }}
+                        </div>
                     </div>
                 </div>
             </div>
