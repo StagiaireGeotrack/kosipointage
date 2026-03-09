@@ -16,6 +16,7 @@ use App\Http\Controllers\JourNonTravailleController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\AllDashboardController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\EventPointageController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -182,6 +183,15 @@ Route::middleware('auth')->group(function () {
             Route::put('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'update'])->name('jours-non-travailles.update');
             Route::patch('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'update']);
             Route::delete('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'destroy'])->name('jours-non-travailles.destroy');
+        });
+
+        // ========== ÉVÉNEMENTS D'ERREUR POINTAGE ==========
+        // Accessible aux Simple Admin (correction) et Super Admin (lecture seule)
+        // Non accessible aux Vendeurs (block.sellers)
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/evenements', [EventPointageController::class, 'index'])->name('evenements.index');
+            Route::post('/evenements/acknowledge', [EventPointageController::class, 'acknowledge'])->name('evenements.acknowledge');
+            Route::delete('/evenements/acknowledge/{id}', [EventPointageController::class, 'removeAcknowledge'])->name('evenements.remove-acknowledge');
         });
     });
     
