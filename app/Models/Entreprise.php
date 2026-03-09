@@ -26,6 +26,7 @@ class Entreprise extends Model
         'RadiusInMeters',
         'CreatedAt',
         'Actived',
+        'deleted',
         'SiegeID',
     ];
     

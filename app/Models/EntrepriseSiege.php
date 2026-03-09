@@ -22,6 +22,7 @@ class EntrepriseSiege extends Model
         'Nom_Lieu_Ville',
         'Pays',
         'Actived',
+        'deleted'
     ];
     
     protected $casts = [

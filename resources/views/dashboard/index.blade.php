@@ -252,30 +252,43 @@
         <!-- Sélecteur de période stylisé -->
         <div class="card filter-card shadow-sm mb-2">
             <div class="card-body">
-                <form action="{{ route('dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-3">
-                    <div>
-                        <label for="period" class="form-label small mb-1">{{ __('Période') }}</label>
-                        <select id="period" name="period" class="form-select" onchange="toggleCustomDates()">
-                            <option value="day" {{ $period == 'day' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
-                            <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
-                            <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
-                            <option value="custom" {{ $period == 'custom' ? 'selected' : '' }}>{{ __('Entre deux dates') }}</option>
-                        </select>
-                    </div>
-                    
-                    <div id="customDates" class="d-flex gap-2 {{ $period !== 'custom' ? 'd-none' : '' }}">
-                        <div>
-                            <label for="start_date" class="form-label small mb-1">{{ __('Date de début') }}</label>
-                            <input type="date" id="start_date" name="start_date" value="{{ $startDate ? $startDate->format('Y-m-d') : '' }}" class="form-control">
+                <form action="{{ route('dashboard') }}" method="GET">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <label for="siege" class="form-label small mb-1">{{ __('Siège') }}</label>
+                                <select id="siege" name="siege" class="form-select">
+                                    <option value="">Séléctionner un siège</option>
+                                    @foreach($sieges_ as $siege)
+                                        <option value="{{ $siege->ID }}" {{ $siege_filter == $siege->ID ? 'selected' : '' }}>
+                                            {{ $siege->Nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div> 
                         </div>
-                        
-                        <div>
-                            <label for="end_date" class="form-label small mb-1">{{ __('Date de fin') }}</label>
-                            <input type="date" id="end_date" name="end_date" value="{{ $endDate ? $endDate->format('Y-m-d') : '' }}" class="form-control">
+                        <div class="col-md-4">                        
+                            <label for="period" class="form-label small mb-1">{{ __('Période') }}</label>
+                            <select id="period" name="period" class="form-select" onchange="toggleCustomDates()">
+                                <option value="day" {{ $period == 'day' ? 'selected' : '' }}>{{ __('Aujourd\'hui') }}</option>
+                                <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
+                                <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
+                                <option value="custom" {{ $period == 'custom' ? 'selected' : '' }}>{{ __('Entre deux dates') }}</option>
+                            </select>
+                        </div>
+                        <div id="customDates"  class="col-md-4 d-flex gap-2 {{ $period !== 'custom' ? 'd-none' : '' }}">
+                            <div>
+                                <label for="start_date" class="form-label small mb-1">{{ __('Date de début') }}</label>
+                                <input type="date" id="start_date" name="start_date" value="{{ $startDate ? $startDate->format('Y-m-d') : '' }}" class="form-control">
+                            </div>
+                            
+                            <div>
+                                <label for="end_date" class="form-label small mb-1">{{ __('Date de fin') }}</label>
+                                <input type="date" id="end_date" name="end_date" value="{{ $endDate ? $endDate->format('Y-m-d') : '' }}" class="form-control">
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="align-self-end">
+                    <div class="align-self-end mt-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> {{ __('Valider') }}
                         </button>
