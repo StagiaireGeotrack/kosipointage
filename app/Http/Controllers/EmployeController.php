@@ -240,6 +240,11 @@ class EmployeController extends Controller
     {
         // $this->repository->delete($id);
 
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+
         $employe = $this->repository->findById($id) ;
         $employe->deleted = true ;
         $employe->Actived = false ;
@@ -257,6 +262,11 @@ class EmployeController extends Controller
     public function reset($id)
     {
         // $this->repository->delete($id);
+        
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
 
         $employe = $this->repository->findById($id) ;
         $employe->deleted = false ;

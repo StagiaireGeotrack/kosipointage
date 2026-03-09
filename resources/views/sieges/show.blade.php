@@ -111,6 +111,11 @@
                                                 {{ __('Désactivé') }}
                                             </span>
                                         @endif
+                                        @if ($entreprise->deleted)
+                                            <span class="badge bg-danger mt-1">
+                                                {{ __('Supprimé') }}
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
@@ -172,12 +177,6 @@
                                     {{ __('Nom') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Code PIN') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
-                                    {{ __('Badge ID') }}
-                                </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Date de création') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -198,12 +197,6 @@
                                         {{ $employe->Nom }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $employe->Pin }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ $employe->BadgeID }}
-                                    </td>
-                                    <td class="align-middle">
                                         <x-local-date-time :datetime="$employe->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
@@ -214,6 +207,11 @@
                                         @else
                                             <span class="badge bg-danger">
                                                 {{ __('Désactivé') }}
+                                            </span>
+                                        @endif
+                                        @if ($employe->deleted)
+                                            <span class="badge bg-danger mt-1">
+                                                {{ __('Supprimé') }}
                                             </span>
                                         @endif
                                     </td>

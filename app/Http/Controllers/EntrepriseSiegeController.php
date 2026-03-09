@@ -229,7 +229,10 @@ class EntrepriseSiegeController extends Controller
     
     public function destroy($id)
     {
-        $user = auth()->user();
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
         
         // Super Admin et Vendeur peuvent supprimer des sièges
         if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {
@@ -261,7 +264,10 @@ class EntrepriseSiegeController extends Controller
 
     public function reset($id)
     {
-        $user = auth()->user();
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
         
         // Super Admin et Vendeur peuvent supprimer des sièges
         if (!$user->isTrueSuperAdmin() && !$user->isSeller()) {

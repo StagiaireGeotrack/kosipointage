@@ -103,6 +103,11 @@ class EntrepriseController extends Controller
     
     public function destroy($id)
     {
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+        
         Entreprise::where("ID" , $id)->update(["deleted" => true , "Actived" => false ]);
         
         ActivityLogService::log(
@@ -116,6 +121,11 @@ class EntrepriseController extends Controller
 
     public function reset($id)
     {
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+
         Entreprise::where("ID" , $id)->update(["deleted" => false , "Actived" => true ]);
         
         ActivityLogService::log(

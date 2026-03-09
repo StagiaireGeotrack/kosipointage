@@ -112,6 +112,11 @@ class AdministrationController extends Controller
     
     public function destroy($id)
     {
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+
         // Empêcher la suppression du compte courant
         if ((int)$id === auth()->user()->ID) {
             return redirect()->back()->with('error', __('Ce compte ne peut pas être supprimé'));
@@ -131,6 +136,11 @@ class AdministrationController extends Controller
     
     public function reset($id)
     {
+        $user = auth()->user();        
+        if ( !$user->isTrueSuperAdmin() ) {
+            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+        
         // Empêcher la suppression du compte courant
         if ((int)$id === auth()->user()->ID) {
             return redirect()->back()->with('error', __('Ce compte ne peut pas être supprimé'));
