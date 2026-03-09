@@ -235,7 +235,7 @@
                             </div>
                             <div class="modal-body">
                                 <p>{{ __('Voulez-vous vraiment réinitialiser cet administrateur ?') }}</p>
-                                <p class="fw-bold" id="details_admin"></p>
+                                <p class="fw-bold" id="admin_"></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
@@ -268,7 +268,7 @@
         
         function setResetAction(url, name) {
             document.getElementById('resetForm').action = url;
-            document.getElementById('details_admin').textContent = name;
+            document.getElementById('admin_').textContent = name;
         }
 
         </script>
