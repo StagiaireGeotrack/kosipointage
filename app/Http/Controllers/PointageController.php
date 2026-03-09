@@ -106,7 +106,9 @@ class PointageController extends Controller
             $sites = Entreprise::all();
         } else {
             $sieges = EntrepriseSiege::where('ID', auth()->user()->SiegeID)->get();
-            $employes = Employe::where('SiegeID', auth()->user()->SiegeID)->get();
+            $employes = Employe::where( 'SiegeID', auth()->user()->SiegeID )
+                                ->where( 'deleted' , 0 )
+                                ->get();
             $sites = Entreprise::where('SiegeID', auth()->user()->SiegeID)->get();
         }
         
@@ -141,6 +143,12 @@ class PointageController extends Controller
     public function edit($id)
     {
         $pointage = $this->repository->findById($id);
+        $employee = Employe::find($pointage->employee_id);
+
+        if( !$employee->Actived || $employee->deleted )
+        {
+            return redirect()->back()->with('error', __('Employé désactivé ou supprimé pour le moment'));
+        }
         
         // Récupérer les sièges auxquels l'utilisateur a accès
         if (auth()->user()->IsSuperAdmin) {
@@ -150,7 +158,9 @@ class PointageController extends Controller
             $sites = Entreprise::where('SiegeID', $pointage->SiegeID)->get();
         } else {
             $sieges = EntrepriseSiege::where('ID', auth()->user()->SiegeID)->get();
-            $employes = Employe::where('SiegeID', auth()->user()->SiegeID)->get();
+            $employes = Employe::where( 'SiegeID', auth()->user()->SiegeID )
+                                ->where( 'deleted' , 0 )
+                                ->get();
             $sites = Entreprise::where('SiegeID', auth()->user()->SiegeID)->get();
         }
         
