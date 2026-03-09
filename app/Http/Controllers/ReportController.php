@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use App\Services\ActivityLogService;
+use App\Services\EventDetectionService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
@@ -182,7 +183,16 @@ class ReportController extends Controller
     public function exportExcel(Request $request, string $type)
     {
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
-        
+
+        // Bloquer l'export si le Simple Admin a des erreurs non résolues
+        if (auth()->user()->isSimpleAdmin()) {
+            $count = app(EventDetectionService::class)->countUnresolved(auth()->user()->SiegeID);
+            if ($count > 0) {
+                return redirect()->route('evenements.index')
+                    ->with('error', "Vous avez {$count} événement(s) non résolu(s). Corrigez-les avant d'exporter les rapports.");
+            }
+        }
+
         // Filtres
         $filters = $this->getFilters($request);
         
@@ -244,6 +254,15 @@ class ReportController extends Controller
     public function exportPdf(Request $request, string $type)
     {
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+
+        // Bloquer l'export si le Simple Admin a des erreurs non résolues
+        if (auth()->user()->isSimpleAdmin()) {
+            $count = app(EventDetectionService::class)->countUnresolved(auth()->user()->SiegeID);
+            if ($count > 0) {
+                return redirect()->route('evenements.index')
+                    ->with('error', "Vous avez {$count} événement(s) non résolu(s). Corrigez-les avant d'exporter les rapports.");
+            }
+        }
 
         // Filtres
         $filters = $this->getFilters($request);
