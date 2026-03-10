@@ -182,7 +182,15 @@
 
                     <div class="card-body py-3">
 
-                        {{-- Tableau des pointages concernés --}}
+                        {{-- Légende séquence (doublons seulement) --}}
+                        @if(in_array($erreur->type, ['doublon_entree', 'doublon_sortie']))
+                        <div class="d-flex align-items-center gap-2 mb-2 small text-muted">
+                            <i class="bi bi-info-circle"></i>
+                            {{ __('Séquence complète du jour — les lignes en rouge sont des pointages consécutifs identiques (doublons à supprimer).') }}
+                        </div>
+                        @endif
+
+                        {{-- Tableau des pointages du jour (séquence complète) --}}
                         @if($erreur->pointages->count() > 0)
                         <div class="table-responsive mb-3">
                             <table class="table table-sm table-hover align-middle mb-0">
@@ -193,19 +201,22 @@
                                         <th class="small text-secondary text-uppercase">{{ __('Type') }}</th>
                                         <th class="small text-secondary text-uppercase">{{ __('Méthode') }}</th>
                                         <th class="small text-secondary text-uppercase">{{ __('GPS') }}</th>
-                                        @if(!$readOnly && in_array($erreur->type, ['doublon_entree', 'doublon_sortie']))
+                                        @if(!$readOnly)
                                             <th class="small text-secondary text-uppercase">{{ __('Action') }}</th>
                                         @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($erreur->pointages as $i => $p)
-                                    <tr class="{{ !$readOnly && in_array($erreur->type, ['doublon_entree', 'doublon_sortie']) && $i > 0 ? 'table-danger' : '' }}">
+                                    {{-- Surligner en rouge uniquement les doublons consécutifs --}}
+                                    <tr class="{{ $p->is_duplicate ? 'table-danger' : '' }}">
                                         <td class="text-muted small">{{ $i + 1 }}</td>
                                         <td>
                                             <strong>{{ \Carbon\Carbon::parse($p->timestamp_)->format('H:i:s') }}</strong>
-                                            @if(!$readOnly && in_array($erreur->type, ['doublon_entree', 'doublon_sortie']) && $i > 0)
-                                                <span class="badge bg-danger ms-1 small">{{ __('doublon') }}</span>
+                                            @if($p->is_duplicate)
+                                                <span class="badge bg-danger ms-1" style="font-size:0.65rem;">
+                                                    {{ __('doublon') }}
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
@@ -223,15 +234,16 @@
                                                 <span class="text-muted">—</span>
                                             @endif
                                         </td>
-                                        {{-- Bouton supprimer doublon --}}
-                                        @if(!$readOnly && in_array($erreur->type, ['doublon_entree', 'doublon_sortie']))
+                                        {{-- Bouton supprimer : visible sur tous les pointages du jour --}}
+                                        @if(!$readOnly)
                                         <td>
                                             <button type="button"
-                                                class="btn btn-sm btn-outline-danger"
+                                                class="btn btn-sm {{ $p->is_duplicate ? 'btn-danger' : 'btn-outline-danger' }}"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalDelete"
                                                 data-id="{{ $p->ID }}"
                                                 data-heure="{{ \Carbon\Carbon::parse($p->timestamp_)->format('H:i:s') }}"
+                                                data-type="{{ $p->type_ === 'entry' ? __('Entrée') : __('Sortie') }}"
                                                 data-employe="{{ $erreur->employee->Nom ?? '' }}">
                                                 <i class="bi bi-trash"></i>
                                                 <span class="d-none d-md-inline ms-1">{{ __('Supprimer') }}</span>
@@ -245,7 +257,7 @@
                         </div>
                         @else
                         <p class="text-muted small mb-2">
-                            <em>{{ __('Aucun pointage trouvé pour ce critère.') }}</em>
+                            <em>{{ __('Aucun pointage trouvé pour ce jour.') }}</em>
                         </p>
                         @endif
 
@@ -276,12 +288,12 @@
                             </div>
                             @endif
 
-                            {{-- Acknowledger (jour férié / weekend) --}}
-                            @if(in_array($erreur->type, ['pointage_jour_ferie', 'pointage_weekend']))
+                            {{-- Acknowledger (tous types) --}}
+                            @if(true)
                             <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
                                 <i class="bi bi-info-circle text-muted small"></i>
                                 <span class="text-muted small">
-                                    {{ __('Ce pointage est sur un jour non travaillé. S\'il est intentionnel (astreinte, heures sup), marquez-le.') }}
+                                    {{ __('Si cet événement est intentionnel ou déjà traité, vous pouvez le marquer comme tel.') }}
                                 </span>
                                 <div class="ms-auto d-flex gap-2">
                                     <button type="button"
@@ -469,9 +481,9 @@
                     <div class="modal-body">
 
                         <p class="mb-3">
-                            {{ __('Le pointage de') }} <strong id="ackEmployeNom"></strong>
+                            {{ __('L\'événement de') }} <strong id="ackEmployeNom"></strong>
                             {{ __('le') }} <strong id="ackDateDisplay"></strong>
-                            {{ __('sera considéré comme intentionnel (ex: astreinte, heures supplémentaires).') }}
+                            {{ __('sera marqué comme intentionnel et ne sera plus signalé.') }}
                         </p>
 
                         <input type="hidden" name="employee_id" id="ackEmployeeId">
@@ -491,7 +503,7 @@
 
                         <div class="alert alert-info small mb-0">
                             <i class="bi bi-info-circle me-1"></i>
-                            {{ __('Cet événement ne sera plus signalé. Vous pouvez annuler cette décision à tout moment depuis la liste.') }}
+                            {{ __('Cet événement ne sera plus signalé. Vous pouvez annuler cette décision depuis la liste.') }}
                         </div>
 
                     </div>

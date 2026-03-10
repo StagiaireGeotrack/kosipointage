@@ -12,7 +12,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('employee_id');
             $table->date('date');
-            $table->enum('error_type', ['pointage_jour_ferie', 'pointage_weekend']);
+            $table->enum('error_type', ['doublon_entree', 'doublon_sortie', 'manque_sortie', 'manque_entree', 'pointage_jour_ferie', 'pointage_weekend']);
             $table->unsignedInteger('SiegeID');
             $table->unsignedBigInteger('acknowledged_by');
             $table->dateTime('acknowledged_at');

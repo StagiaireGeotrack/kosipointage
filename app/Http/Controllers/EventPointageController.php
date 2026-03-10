@@ -73,7 +73,7 @@ class EventPointageController extends Controller
         $validated = $request->validate([
             'employee_id' => 'required|integer|exists:Employes,ID',
             'date'        => 'required|date',
-            'error_type'  => 'required|in:pointage_jour_ferie,pointage_weekend',
+            'error_type'  => 'required|in:doublon_entree,doublon_sortie,manque_sortie,manque_entree,pointage_jour_ferie,pointage_weekend',
             'note'        => 'nullable|string|max:500',
         ]);
 
