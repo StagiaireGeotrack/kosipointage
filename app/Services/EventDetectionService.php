@@ -39,8 +39,7 @@ class EventDetectionService
             ->get();
 
         foreach ($allDays as $day) {
-            $types     = explode(',', $day->sequence);
-            $isPastDay = Carbon::parse($day->date)->lt(Carbon::today());
+            $types = explode(',', $day->sequence);
 
             // ── Doublon : 2 types identiques consécutifs dans la séquence ──
             $hasDoublonEntree = false;
@@ -69,9 +68,9 @@ class EventDetectionService
                 ));
             }
 
-            // ── Manque de sortie (jours passés uniquement) ──
+            // ── Manque de sortie ──
             // Plus d'entrées que de sorties → au moins une sortie manque
-            if ($isPastDay && $day->entry_count > $day->exit_count) {
+            if ($day->entry_count > $day->exit_count) {
                 $errors->push($this->buildError(
                     'manque_sortie', 'Manque de sortie', 'warning', 'bi-box-arrow-right',
                     $day->employee_id, $day->date, $siegeId,
@@ -79,9 +78,9 @@ class EventDetectionService
                 ));
             }
 
-            // ── Manque d'entrée (jours passés uniquement) ──
+            // ── Manque d'entrée ──
             // Plus de sorties que d'entrées → au moins une entrée manque
-            if ($isPastDay && $day->exit_count > $day->entry_count) {
+            if ($day->exit_count > $day->entry_count) {
                 $errors->push($this->buildError(
                     'manque_entree', 'Manque d\'entrée', 'info', 'bi-box-arrow-in-right',
                     $day->employee_id, $day->date, $siegeId,
