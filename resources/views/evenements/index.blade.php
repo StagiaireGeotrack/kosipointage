@@ -273,12 +273,12 @@
                             </div>
                             @endif
 
-                            {{-- Acknowledger (tous types) --}}
-                            @if(true)
+                            {{-- Acknowledger (jour férié / weekend uniquement) --}}
+                            @if(in_array($erreur->type, ['pointage_jour_ferie', 'pointage_weekend']))
                             <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
                                 <i class="bi bi-info-circle text-muted small"></i>
                                 <span class="text-muted small">
-                                    {{ __('Si cet événement est intentionnel ou déjà traité, vous pouvez le marquer comme tel.') }}
+                                    {{ __('Ce pointage est sur un jour non travaillé. S\'il est intentionnel (astreinte, heures sup), marquez-le.') }}
                                 </span>
                                 <div class="ms-auto d-flex gap-2">
                                     <button type="button"
@@ -468,7 +468,7 @@
                         <p class="mb-3">
                             {{ __('L\'événement de') }} <strong id="ackEmployeNom"></strong>
                             {{ __('le') }} <strong id="ackDateDisplay"></strong>
-                            {{ __('sera marqué comme intentionnel et ne sera plus signalé.') }}
+                            {{ __('sera considéré comme intentionnel (ex: astreinte, heures supplémentaires).') }}
                         </p>
 
                         <input type="hidden" name="employee_id" id="ackEmployeeId">
@@ -488,7 +488,7 @@
 
                         <div class="alert alert-info small mb-0">
                             <i class="bi bi-info-circle me-1"></i>
-                            {{ __('Cet événement ne sera plus signalé. Vous pouvez annuler cette décision depuis la liste.') }}
+                            {{ __('Cet événement ne sera plus signalé. Vous pouvez annuler cette décision à tout moment depuis la liste.') }}
                         </div>
 
                     </div>
