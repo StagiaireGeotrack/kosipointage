@@ -97,8 +97,7 @@ class EventPointageController extends Controller
             modelLabel: "{$validated['error_type']} - employé #{$validated['employee_id']} - {$validated['date']}",
         );
 
-        return redirect()->route('evenements.index')
-            ->with('success', 'Événement marqué comme intentionnel.');
+        return redirect()->back()->with('success', __('Événement marqué comme intentionnel.'));
     }
 
     public function removeAcknowledge(int $id)
@@ -122,7 +121,6 @@ class EventPointageController extends Controller
 
         $exception->delete();
 
-        return redirect()->route('evenements.index')
-            ->with('success', 'Acknowledgment supprimé. L\'événement est de nouveau visible.');
+        return redirect()->back()->with('success', __('Acknowledgment supprimé. L\'événement est de nouveau visible.'));
     }
 }

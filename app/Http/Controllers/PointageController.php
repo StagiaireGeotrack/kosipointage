@@ -125,12 +125,19 @@ class PointageController extends Controller
         }
         
         $pointage = $this->repository->create($data);
-        
+
         // Traiter la photo si fournie
         if ($request->hasFile('photo')) {
             $this->fileService->storeInDatabase($request->file('photo'), 'photo_path', $pointage, 'ID');
         }
-        
+
+        ActivityLogService::log(
+            action: 'create',
+            modelType: 'Pointage',
+            modelId: $pointage->ID,
+            modelLabel: "Employé #{$pointage->employee_id} — {$pointage->type_} à " . \Carbon\Carbon::parse($pointage->timestamp_)->format('d/m/Y H:i'),
+        );
+
         return redirect()->back()->with('success', __('Pointage créé avec succès'));
     }
     
@@ -181,8 +188,17 @@ class PointageController extends Controller
     
     public function destroy($id)
     {
+        $pointage = $this->repository->findById($id);
+
+        ActivityLogService::log(
+            action: 'delete',
+            modelType: 'Pointage',
+            modelId: (int) $id,
+            modelLabel: "Employé #{$pointage->employee_id} — {$pointage->type_} à " . \Carbon\Carbon::parse($pointage->timestamp_)->format('d/m/Y H:i'),
+        );
+
         $this->repository->delete($id);
-        
+
         return redirect()->back()->with('success', __('Pointage supprimé avec succès'));
     }
     

@@ -3,11 +3,15 @@
 
 namespace App\Models;
 
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PointageEventException extends Model
 {
+    use Loggable;
+    public string $logLabelField = 'employee_id';
+    
     public $timestamps = false;
     protected $table = 'pointage_event_exceptions';
 
