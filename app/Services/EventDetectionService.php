@@ -94,7 +94,7 @@ class EventDetectionService
             ->merge($this->detectJourFerie($siegeId))
             ->merge($this->detectWeekend($siegeId));
 
-        return $errors->sortBy('date');
+        return $errors->sortByDesc('date');
     }
 
     /**
