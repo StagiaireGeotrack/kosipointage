@@ -32,6 +32,7 @@ class EventDetectionService
                 'employee_id',
                 DB::raw("DATE(timestamp_) as date"),
                 DB::raw("GROUP_CONCAT(type_ ORDER BY timestamp_ SEPARATOR ',') as sequence"),
+                DB::raw("GROUP_CONCAT(timestamp_ ORDER BY timestamp_ SEPARATOR ',') as timestamps"),
                 DB::raw("SUM(CASE WHEN type_ = 'entry' THEN 1 ELSE 0 END) as entry_count"),
                 DB::raw("SUM(CASE WHEN type_ = 'exit'  THEN 1 ELSE 0 END) as exit_count")
             )
@@ -39,18 +40,26 @@ class EventDetectionService
             ->get();
 
         foreach ($allDays as $day) {
-            $types = explode(',', $day->sequence);
+            $types      = explode(',', $day->sequence);
+            $timestamps = explode(',', $day->timestamps);
 
-            // ── Doublon : 2 types identiques consécutifs dans la séquence ──
+            // ── Doublon : 2 types identiques consécutifs ET écart ≤ 30 minutes ──
             $hasDoublonEntree = false;
             $hasDoublonSortie = false;
 
             for ($i = 1; $i < count($types); $i++) {
-                if ($types[$i] === 'entry' && $types[$i - 1] === 'entry') {
-                    $hasDoublonEntree = true;
-                }
-                if ($types[$i] === 'exit' && $types[$i - 1] === 'exit') {
-                    $hasDoublonSortie = true;
+                if ($types[$i] === $types[$i - 1]) {
+                    $t1      = Carbon::parse($timestamps[$i - 1]);
+                    $t2      = Carbon::parse($timestamps[$i]);
+                    $minutes = $t1->diffInMinutes($t2);
+
+                    if ($minutes <= 30) {
+                        if ($types[$i] === 'entry') {
+                            $hasDoublonEntree = true;
+                        } else {
+                            $hasDoublonSortie = true;
+                        }
+                    }
                 }
             }
 
@@ -190,14 +199,23 @@ class EventDetectionService
             ->orderBy('timestamp_')
             ->get();
 
-        // Marquer les doublons consécutifs (pour les surligner dans la vue)
-        $pointages = collect();
-        $prevType  = null;
+        // Marquer les doublons consécutifs ≤ 30 min (pour les surligner dans la vue)
+        $pointages    = collect();
+        $prevType     = null;
+        $prevPointage = null;
 
         foreach ($rawPointages as $p) {
-            $isDuplicate = ($prevType !== null && $p->type_ === $prevType);
+            $isDuplicate = false;
+
+            if ($prevType !== null && $p->type_ === $prevType) {
+                $t1          = Carbon::parse($prevPointage->timestamp_);
+                $t2          = Carbon::parse($p->timestamp_);
+                $isDuplicate = $t1->diffInMinutes($t2) <= 30;
+            }
+
             $pointages->push((object) array_merge((array) $p, ['is_duplicate' => $isDuplicate]));
-            $prevType = $p->type_;
+            $prevType     = $p->type_;
+            $prevPointage = $p;
         }
 
         return (object) [
