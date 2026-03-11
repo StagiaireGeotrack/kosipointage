@@ -1,5 +1,5 @@
 <span class="local-datetime" 
-      data-utc="{{ $datetime->utc()->toIso8601String() }}"
-      data-format="{{ $format ?? 'dddd D MMMM YYYY - HH:mm:ss' }}">
+      data-utc="{{ $datetime->utc()->toIso8601ZuluString() }}"
+      data-format="{{ $format ?? 'full' }}">
     {{ ucfirst($datetime->isoFormat('dddd D MMMM YYYY - HH:mm:ss')) }}
 </span>
