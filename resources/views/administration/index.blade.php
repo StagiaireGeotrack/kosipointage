@@ -116,7 +116,7 @@
                                         @endif
                                     </td>
                                     <td class="align-middle">
-                                        @if( $admin->created_at  )
+                                        @if( $admin->created_at  )                                        
                                             <x-local-date-time :datetime="$admin->created_at"/>
                                         @endif
                                     </td>                                        

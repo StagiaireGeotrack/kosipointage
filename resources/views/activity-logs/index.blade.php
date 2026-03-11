@@ -101,7 +101,7 @@
                             @forelse ($logs as $log)
                                 <tr>
                                     <td class="text-nowrap">
-                                        {{ $log->created_at->format('d/m/Y H:i:s') }}
+                                        <x-local-date-time :datetime="$log->created_at"/>
                                     </td>
                                     <td>{{ $log->user_email }}</td>
                                     <td>

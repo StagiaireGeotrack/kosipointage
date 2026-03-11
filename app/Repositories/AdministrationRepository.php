@@ -32,10 +32,7 @@ class AdministrationRepository extends BaseRepository
             $query->where('IsSuperAdmin', $filters['IsSuperAdmin']);
         }
         
-        // Tri
-        $sortBy = $filters['sort_by'] ?? 'Identifiant_email';
-        $sortOrder = $filters['sort_order'] ?? 'asc';
-        $query->orderBy($sortBy, $sortOrder);
+        $query->orderBy("created_at", "desc");
         
         // Inclure la relation siège
         $query->with('siege');
