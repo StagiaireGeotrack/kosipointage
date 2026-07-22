@@ -19,7 +19,7 @@ class SellerController extends Controller
         $this->exportService = $exportService;
     }
 
-    // Afficher la liste des vendeurs
+    // Afficher la liste des revendeurs 
     public function index(Request $request)
     {
         // Vérifier que l'utilisateur connecté est un vrai Super Admin ou un Vendeur (pas Manager)
