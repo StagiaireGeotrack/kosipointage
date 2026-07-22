@@ -41,6 +41,7 @@
                     </div>
 
                     <!-- IsSuperAdmin -->
+                    @if(auth()->user()->isTrueSuperAdmin())
                     <div class="mb-3">
                         <div class="form-check">
                             <input id="IsSuperAdmin" type="checkbox" name="IsSuperAdmin" value="1" 
@@ -52,6 +53,28 @@
                         </div>
                         <x-input-error :messages="$errors->get('IsSuperAdmin')" class="mt-2" />
                     </div>
+                    @endif
+
+                    <!-- IsManager -->
+                    @if(auth()->user()->isTrueSuperAdmin())
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="IsManager" type="checkbox" name="IsManager" value="1" 
+                                {{ old('IsManager', $administrateur->IsManager) ? 'checked' : '' }} 
+                                class="form-check-input">
+                            <label for="IsManager" class="form-check-label">{{ __('Est un Manager (hérite des droits mais ne peut créer ses pairs)') }}</label>
+                        </div>
+                        <x-input-error :messages="$errors->get('IsManager')" class="mt-2" />
+                    </div>
+                    @elseif(auth()->user()->isSimpleAdmin())
+                    <!-- Champ visuel pour le simple admin -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="IsManager" type="checkbox" name="IsManager" value="1" checked disabled class="form-check-input">
+                            <label for="IsManager" class="form-check-label">{{ __('Est un Manager Admin Simple (création obligatoire)') }}</label>
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- SiegeID -->
                     <div class="mb-3" id="siege-field" style="display: {{ old('IsSuperAdmin', $administrateur->IsSuperAdmin) ? 'none' : 'block' }};">
@@ -95,7 +118,8 @@
     @push('scripts')
     <script>
         function toggleAdminFields() {
-            const isSuperAdmin = document.getElementById('IsSuperAdmin').checked;
+            const isSuperAdminEl = document.getElementById('IsSuperAdmin');
+            const isSuperAdmin = isSuperAdminEl ? isSuperAdminEl.checked : {{ $administrateur->IsSuperAdmin ? 'true' : 'false' }};
             const siegeField = document.getElementById('siege-field');
             const activedField = document.getElementById('actived-field');
             const siegeSelect = document.getElementById('SiegeID');

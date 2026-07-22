@@ -16,7 +16,9 @@ class EventPointageController extends Controller
 
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user     = auth()->user();
+        $dateFrom = $request->input('date_from');
+        $dateTo   = $request->input('date_to');
 
         // Super Admin → lecture seule, tous les sièges avec filtre optionnel
         if ($user->isTrueSuperAdmin()) {
@@ -32,6 +34,14 @@ class EventPointageController extends Controller
                 }
             }
 
+            // Filtrer par plage de dates si fournie
+            if ($dateFrom && $dateTo) {
+                $erreurs = $erreurs->filter(
+                    fn($e) => $e->date->between(\Carbon\Carbon::parse($dateFrom)->startOfDay(),
+                                                \Carbon\Carbon::parse($dateTo)->endOfDay())
+                )->values();
+            }
+
             return view('evenements.index', [
                 'erreurs'    => $erreurs,
                 'sieges'     => $sieges,
@@ -40,6 +50,8 @@ class EventPointageController extends Controller
                 'totalCount' => $erreurs->count(),
                 'filterType' => $request->input('filter_type'),
                 'sites'      => collect(),
+                'dateFrom'   => $dateFrom,
+                'dateTo'     => $dateTo,
             ]);
         }
 
@@ -47,6 +59,14 @@ class EventPointageController extends Controller
         if ($user->isSimpleAdmin()) {
             $erreurs = $this->detector->detect($user->SiegeID);
             $sites   = Entreprise::where('SiegeID', $user->SiegeID)->where('Actived', 1)->get();
+
+            // Filtrer par plage de dates si fournie
+            if ($dateFrom && $dateTo) {
+                $erreurs = $erreurs->filter(
+                    fn($e) => $e->date->between(\Carbon\Carbon::parse($dateFrom)->startOfDay(),
+                                                \Carbon\Carbon::parse($dateTo)->endOfDay())
+                )->values();
+            }
 
             return view('evenements.index', [
                 'erreurs'    => $erreurs,
@@ -56,6 +76,8 @@ class EventPointageController extends Controller
                 'totalCount' => $erreurs->count(),
                 'filterType' => $request->input('filter_type'),
                 'sites'      => $sites,
+                'dateFrom'   => $dateFrom,
+                'dateTo'     => $dateTo,
             ]);
         }
 

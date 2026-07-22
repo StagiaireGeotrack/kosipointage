@@ -282,6 +282,40 @@ class EmployeController extends Controller
         
         return redirect()->back()->with('success', __('Employé supprimé avec succès'));
     }
+
+    /**
+     * Assigne ou met à jour l'accès web d'un employé
+     */
+    public function assignWebAccess(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required|email|max:255|unique:Employes,email,' . $id . ',ID',
+            'password' => 'nullable|min:6',
+        ], [
+            'email.required' => 'L\'adresse email est obligatoire.',
+            'email.email' => 'L\'adresse email doit être valide.',
+            'email.unique' => 'Cette adresse email est déjà utilisée par un autre employé.',
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+        ]);
+
+        $employe = Employe::findOrFail($id);
+        $employe->email = $request->email;
+
+        // On ne met à jour le mot de passe que s'il est fourni
+        if ($request->filled('password')) {
+            $employe->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $employe->save();
+
+        ActivityLogService::log(
+            action: 'assign_web_access',
+            modelType: 'Employe',
+            modelId: (int) $id,
+        );
+
+        return redirect()->back()->with('success', __('Accès Web assigné avec succès à ' . $employe->Nom));
+    }
     
     public function exportExcel(Request $request)
     {

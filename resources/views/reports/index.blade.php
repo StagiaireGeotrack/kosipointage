@@ -84,7 +84,7 @@
                     <div class="col-12 col-md-6">
                         <div class="card h-100 shadow-sm border">
                             <div class="card-body p-3">
-                                <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (JOUR) sans les jours de congés') }}</h4>
+                                <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (JOUR)') }}</h4>
                                 <a href="{{ route('reports.daily') }}" class="btn btn-primary text-uppercase small fw-semibold">
                                     {{ __('Voir') }}
                                 </a>
@@ -96,7 +96,7 @@
                     <div class="col-12 col-md-6">
                         <div class="card h-100 shadow-sm border">
                             <div class="card-body p-3">
-                                <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (JOUR et NUIT) sans les jours de congés') }}</h4>
+                                <h4 class="fs-5 fw-semibold mb-2">{{ __('Rapports (JOUR et NUIT)') }}</h4>
                                 <a href="{{ route('reports.day-night') }}" class="btn btn-primary text-uppercase small fw-semibold">
                                     {{ __('Voir') }}
                                 </a>

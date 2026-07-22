@@ -40,6 +40,27 @@
                         <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="form-control mt-1" />
                     </div>
 
+                    <!-- IsManager -->
+                    @if(auth()->user()->isTrueSuperAdmin())
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="IsManager" type="checkbox" name="IsManager" value="1" 
+                                {{ old('IsManager', $seller->IsManager) ? 'checked' : '' }} 
+                                class="form-check-input">
+                            <label for="IsManager" class="form-check-label">{{ __('Est un Manager (hérite des droits mais ne peut créer ses pairs)') }}</label>
+                        </div>
+                        <x-input-error :messages="$errors->get('IsManager')" class="mt-2" />
+                    </div>
+                    @elseif(auth()->user()->isSeller())
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="IsManager" type="checkbox" name="IsManager" value="1" 
+                                checked disabled class="form-check-input">
+                            <label for="IsManager" class="form-check-label">{{ __('Est un Manager Vendeur (création obligatoire)') }}</label>
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Sièges -->
                     <div class="mb-3">
                         <x-input-label for="sieges" :value="__('Sièges associés')" />

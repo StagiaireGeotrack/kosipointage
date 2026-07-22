@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     
-                    <div class="d-flex justify-content-end gap-2">
+                    <div class="d-flex justify-content-end gap-2 flex-wrap flex-sm-nowrap">
                         <button type="submit" class="btn btn-primary">
                             {{ __('Valider') }}
                         </button>
@@ -88,7 +88,7 @@
                 </form>
                 
                 <!-- Exports -->
-                <div class="d-flex justify-content-end mb-3 gap-2">
+                <div class="d-flex justify-content-end mb-3 gap-2 flex-wrap flex-sm-nowrap">
                     <a href="{{ route('pointages.export.excel', request()->query()) }}" class="btn btn-success">
                         {{ __('Exporter en EXCEL') }}
                     </a>
@@ -108,7 +108,7 @@
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Employé') }}
                                 </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
                                     {{ __('Site ou établissement') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -117,10 +117,10 @@
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Type') }}
                                 </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
                                     {{ __('Méthode') }}
                                 </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-lg-table-cell">
                                     {{ __('Siège') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -142,7 +142,7 @@
                                             <div class="fw-medium">{{ $pointage->employe?->Nom }}</div>
                                         </div>
                                     </td>                                    
-                                    <td class="align-middle">
+                                    <td class="align-middle d-none d-md-table-cell">
                                         {{ $pointage->company?->Nom }}
                                     </td>
                                     <td class="align-middle">
@@ -159,7 +159,7 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle d-none d-md-table-cell">
                                         @switch($pointage->auth_method)
                                             @case('rfid')
                                                 <span class="badge bg-info">
@@ -185,7 +185,7 @@
                                                 {{ $pointage->auth_method }}
                                         @endswitch
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle d-none d-lg-table-cell">
                                         {{ $pointage->siege->Nom }}
                                     </td>
                                     <td class="align-middle">

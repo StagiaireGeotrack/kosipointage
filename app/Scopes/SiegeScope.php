@@ -20,6 +20,15 @@ class SiegeScope implements Scope
         
         $admin = Auth::user();
         
+        // Si l'utilisateur est un employé (connecté via le portail)
+        if ($admin instanceof \App\Models\Employe) {
+            $table = $model->getTable();
+            if (\Illuminate\Support\Facades\Schema::hasColumn($table, 'SiegeID')) {
+                $builder->where($table . '.SiegeID', $admin->SiegeID);
+            }
+            return;
+        }
+        
         // Si c'est un vrai Super Admin (pas un vendeur), pas de restriction
         if ($admin->isTrueSuperAdmin()) {
             return;

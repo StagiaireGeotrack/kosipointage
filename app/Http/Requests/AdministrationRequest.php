@@ -12,11 +12,13 @@ class AdministrationRequest extends FormRequest
 {
     // Variable pour stocker si la checkbox était présente dans le formulaire original
     private $originalHasIsSuperAdmin = false;
+    private $originalHasIsManager = false;
     private $originalHasActived = false;
 
     public function authorize(): bool
     {
-        return Gate::allows('superadmin');
+        $user = auth()->user();
+        return $user && ($user->isTrueSuperAdmin() || $user->isManagerSuperAdmin() || $user->isSimpleAdmin());
     }
 
     public function rules(): array
@@ -42,6 +44,7 @@ class AdministrationRequest extends FormRequest
         $rules = [
             'Identifiant_email' => 'required|email|max:255|unique:administration,Identifiant_email',
             'IsSuperAdmin' => 'nullable|boolean',
+            'IsManager' => 'nullable|boolean',
             'Actived' => 'nullable|boolean',
         ];
         
@@ -92,11 +95,25 @@ class AdministrationRequest extends FormRequest
     {        
         // 🎯 STOCKER l'état ORIGINAL avant toute modification
         $this->originalHasIsSuperAdmin = $this->has('IsSuperAdmin');
+        $this->originalHasIsManager = $this->has('IsManager');
         $this->originalHasActived = $this->has('Actived');
         
+        // Sécurité Manager : Un Manager Super Admin ne peut pas attribuer le rôle Super Admin
+        if (auth()->check() && auth()->user()->isManagerSuperAdmin()) {
+            $this->originalHasIsSuperAdmin = false;
+        }
+
+        // Sécurité Admin Simple : Forcer la création de Manager Admin Simple et bloquer l'élévation
+        if (auth()->check() && auth()->user()->isSimpleAdmin() && !auth()->user()->isManagerSimpleAdmin()) {
+            $this->originalHasIsSuperAdmin = false;
+            $this->originalHasIsManager = true; // Force Manager
+            $this->merge(['SiegeID' => auth()->user()->SiegeID]); // Force le siège de l'admin
+        }
+
         // Convertir les checkboxes en 1/0
         $this->merge([
             'IsSuperAdmin' => $this->originalHasIsSuperAdmin ? 1 : 0,
+            'IsManager' => $this->originalHasIsManager ? 1 : 0,
             'Actived' => $this->originalHasActived ? 1 : 0,
         ]);
         

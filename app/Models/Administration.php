@@ -27,6 +27,7 @@ class Administration extends Authenticatable
         'Password_',
         'IsSuperAdmin',
         'IsSeller',
+        'IsManager',
         'SiegeID',
         'Actived',
         'deleted',
@@ -40,6 +41,7 @@ class Administration extends Authenticatable
     protected $casts = [
         'IsSuperAdmin' => 'boolean',
         'IsSeller' => 'boolean',
+        'IsManager' => 'boolean',
         'Actived' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
@@ -72,16 +74,34 @@ class Administration extends Authenticatable
         return $this->IsSeller == 1 && $this->IsSuperAdmin == 1;
     }
 
+    // Vérifie si l'utilisateur est un Manager Vendeur
+    public function isManagerSeller(): bool
+    {
+        return $this->IsSeller == 1 && $this->IsSuperAdmin == 1 && $this->IsManager == 1;
+    }
+
     // Vérifie si l'utilisateur est un vrai Super Admin (pas un vendeur)
     public function isTrueSuperAdmin(): bool
     {
         return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
     }
 
+    // Vérifie si l'utilisateur est un Manager Super Admin
+    public function isManagerSuperAdmin(): bool
+    {
+        return $this->IsSuperAdmin == 1 && $this->IsSeller == 0 && $this->IsManager == 1;
+    }
+
     // Vérifie si l'utilisateur est un Simple Admin
     public function isSimpleAdmin(): bool
     {
         return $this->IsSuperAdmin == 0 && $this->IsSeller == 0;
+    }
+
+    // Vérifie si l'utilisateur est un Manager Simple Admin
+    public function isManagerSimpleAdmin(): bool
+    {
+        return $this->IsSuperAdmin == 0 && $this->IsSeller == 0 && $this->IsManager == 1;
     }
 
     public function getEmailForPasswordReset()

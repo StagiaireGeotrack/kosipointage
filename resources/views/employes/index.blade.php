@@ -47,7 +47,7 @@
                         
                     </div>
                     
-                    <div class="d-flex justify-content-end gap-2">
+                    <div class="d-flex justify-content-end gap-2 flex-wrap flex-sm-nowrap">
                         <button type="submit" class="btn btn-primary">
                             {{ __('Valider') }}
                         </button>
@@ -58,7 +58,7 @@
                 </form>
                 
                 <!-- Exports -->
-                <div class="d-flex justify-content-end mb-3 gap-2">
+                <div class="d-flex justify-content-end mb-3 gap-2 flex-wrap flex-sm-nowrap">
                     <a href="{{ route('employes.export.excel', request()->query()) }}" class="btn btn-success">
                         {{ __('Export en EXCEL') }}
                     </a>
@@ -78,13 +78,13 @@
                                 <th class="text-uppercase small fw-semibold text-secondary">
                                     {{ __('Nom') }}
                                 </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
                                     {{ __('Siège') }}
                                 </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
                                     {{ __('Méthode') }}
                                 </th>
-                                <th class="text-uppercase small fw-semibold text-secondary">
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-lg-table-cell">
                                     {{ __('Date de création') }}
                                 </th>
                                 <th class="text-uppercase small fw-semibold text-secondary">
@@ -109,10 +109,10 @@
                                             {{ $employe->Nom }}
                                         </div>
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle d-none d-md-table-cell">
                                         {{ $employe->siege->Nom }}
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle d-none d-md-table-cell">
                                         <div class="d-flex gap-2">
                                             @if ($employe->BadgeID )
                                                 <span class="badge bg-info">
@@ -129,9 +129,14 @@
                                                     {{ __('Code Pin') }}
                                                 </span>
                                             @endif
+                                            @if ($employe->email)
+                                                <span class="badge bg-dark" title="{{ $employe->email }}">
+                                                    {{ __('Accès Web') }}
+                                                </span>
+                                            @endif
                                         </div>
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle d-none d-lg-table-cell">
                                         <x-local-date-time :datetime="$employe->CreatedAt"/>
                                     </td>
                                     <td class="align-middle">
@@ -154,6 +159,30 @@
                                         <div class="d-flex gap-2">
 
                                             @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
+                                                
+                                                <!-- Bouton Assigner Accès Web -->
+                                                <button type="button" class="btn btn-link {{ $employe->email ? 'text-success' : 'text-info' }} p-0 border-0"
+                                                        onclick="setAssignWebAccessAction('{{ route('employes.assign-web-access', $employe->ID) }}', '{{ addslashes($employe->Nom) }}', '{{ $employe->email ?? '' }}', {{ $employe->email ? 'true' : 'false' }})"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#assignWebAccessModal"
+                                                        title="{{ $employe->email ? __('Modifier l\'accès Web') : __('Créer un accès Web') }}">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-2.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                                                        <path fill-rule="evenodd" d="M11.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7m0 1a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>
+                                                    </svg>
+                                                </button>
+
+                                                @if (auth()->user()->isTrueSuperAdmin())
+                                                <form action="{{ route('impersonate.employe', $employe->ID) }}" method="POST" class="d-inline" title="Se connecter en tant que">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-link text-info p-0 border-0 m-0">
+                                                        <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                                                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                @endif
 
                                                 <a href="{{ route('employes.show', $employe->ID) }}" class="text-primary" title="Voir ou modifier">
                                                     <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -298,6 +327,39 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal Assigner Accès Web -->
+                <div class="modal fade" id="assignWebAccessModal" tabindex="-1" aria-labelledby="assignWebAccessModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="assignWebAccessModalLabel">{{ __('Gérer l\'accès Web') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="assignWebAccessForm" method="POST">
+                                @csrf
+                                <div class="modal-body">
+                                    <p>{{ __('Configurez l\'accès au portail pour :') }} <strong id="assignWebAccess_employee_name"></strong></p>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="assign_email" class="form-label">{{ __('Adresse e-mail') }} <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="assign_email" name="email" required>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="assign_password" class="form-label">{{ __('Mot de passe') }}</label>
+                                        <input type="password" class="form-control" id="assign_password" name="password" minlength="6">
+                                        <small class="text-muted" id="password_help_text">{{ __('Laissez vide si vous ne souhaitez pas le modifier. (Minimum 6 caractères)') }}</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+                                    <button type="submit" class="btn btn-primary">{{ __('Sauvegarder') }}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Pagination -->
                 <div class="mt-1">
@@ -324,6 +386,21 @@
             function setResetPinAction(url, nom) {
                 document.getElementById('resetPinForm').action = url;
                 document.getElementById('details_employee_pin').textContent = nom;
+            }
+
+            function setAssignWebAccessAction(url, nom, email, isEdit) {
+                document.getElementById('assignWebAccessForm').action = url;
+                document.getElementById('assignWebAccess_employee_name').textContent = nom;
+                document.getElementById('assign_email').value = email;
+                document.getElementById('assign_password').value = '';
+                
+                if (isEdit) {
+                    document.getElementById('assignWebAccessModalLabel').textContent = "Modifier l'accès Web";
+                    document.getElementById('password_help_text').textContent = "Laissez vide si vous ne souhaitez pas modifier le mot de passe actuel. (Minimum 6 caractères)";
+                } else {
+                    document.getElementById('assignWebAccessModalLabel').textContent = "Créer un accès Web";
+                    document.getElementById('password_help_text').textContent = "Veuillez définir un mot de passe pour cette première assignation. (Minimum 6 caractères)";
+                }
             }
             
         </script>

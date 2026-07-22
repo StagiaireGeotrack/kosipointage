@@ -1,0 +1,586 @@
+================================================================================
+        GUIDE COMPLET DE DÉPLOIEMENT - KOSI-TIME (KOSI-POINTAGE)
+================================================================================
+
+📋 INFORMATIONS DU PROJET
+================================================================================
+Nom du projet       : Kosi Time (admin-kosi-pointage)
+Domaine             : kosi-time.run-telemat.com
+Chemin serveur      : /var/www/admin-kosi-pointage
+Port Apache2        : 8081
+Base de données     : admin_kosi
+DB User             : eight_sharp_userr
+DB Password         : Eight_ggggSharp@974
+Stack               : Laravel + Blade
+Type                : Application traditionnelle (sans Inertia/Vue)
+
+
+================================================================================
+PARTIE 1 : INSTALLATION DES PRÉREQUIS (À FAIRE UNE SEULE FOIS)
+================================================================================
+
+# Mise à jour du système
+sudo apt update && sudo apt upgrade -y
+
+# Installation de PHP 8.3 et extensions nécessaires
+sudo apt install -y php8.3 php8.3-fpm php8.3-mysql php8.3-mbstring php8.3-xml php8.3-bcmath php8.3-curl php8.3-zip php8.3-gd
+
+# Installation de Composer
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+composer --version
+
+# Installation de Node.js 20.x
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v
+npm -v
+
+# Installation d'Apache2
+sudo apt install -y apache2
+sudo systemctl enable apache2
+
+# Installation de Nginx
+sudo apt install -y nginx
+sudo systemctl enable nginx
+
+# Installation de Certbot pour SSL
+sudo apt install -y certbot python3-certbot-nginx
+
+
+================================================================================
+PARTIE 2 : PRÉPARATION DU PROJET
+================================================================================
+
+# Créer le dossier du projet
+sudo mkdir -p /var/www/admin-kosi-pointage
+cd /var/www/admin-kosi-pointage
+
+# NOTE : Uploader les fichiers via FileZilla
+# - Hôte : IP du VPS
+# - Utilisateur : root
+# - Port : 22
+# - Protocole : SFTP
+# 
+# Fichiers à uploader :
+# ✅ Tous les fichiers du projet
+# ❌ SAUF : vendor/, node_modules/, .env
+# ✅ Inclure : composer.json, package.json, .env.example
+
+
+================================================================================
+PARTIE 3 : CONFIGURATION DE L'ENVIRONNEMENT
+================================================================================
+
+cd /var/www/admin-kosi-pointage
+
+# Copier le fichier d'environnement
+cp .env.example .env
+
+# Éditer le fichier .env
+nano .env
+
+# ----------- CONTENU DU .ENV -----------
+APP_NAME="Kosi Time"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://kosi-time.run-telemat.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=admin_kosi
+DB_USERNAME=eight_sharp_userr
+DB_PASSWORD=Eight_ggggSharp@974
+# ----------------------------------------
+
+# Sauvegarder : CTRL + X, puis Y, puis Entrée
+
+
+================================================================================
+PARTIE 4 : INSTALLATION DES DÉPENDANCES
+================================================================================
+
+cd /var/www/admin-kosi-pointage
+
+# Installer les dépendances PHP
+composer install --optimize-autoloader --no-dev
+
+# Installer les dépendances JavaScript
+npm install
+
+# Générer la clé d'application Laravel
+php artisan key:generate
+
+# Lancer les migrations de base de données
+php artisan migrate --force
+
+# Builder les assets (CSS, JavaScript)
+npm run build
+
+# Vérifier que le build est réussi
+ls -la public/build/manifest.json
+
+
+================================================================================
+PARTIE 5 : CONFIGURATION DES PERMISSIONS
+================================================================================
+
+sudo chown -R www-data:www-data /var/www/admin-kosi-pointage
+sudo chmod -R 755 /var/www/admin-kosi-pointage
+sudo chmod -R 775 /var/www/admin-kosi-pointage/storage
+sudo chmod -R 775 /var/www/admin-kosi-pointage/bootstrap/cache
+
+
+================================================================================
+PARTIE 6 : OPTIMISATION LARAVEL
+================================================================================
+
+cd /var/www/admin-kosi-pointage
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
+
+
+================================================================================
+PARTIE 7 : CONFIGURATION APACHE2 (PORT 8081)
+================================================================================
+
+# Éditer le fichier ports.conf
+sudo nano /etc/apache2/ports.conf
+
+# Ajouter cette ligne (si pas déjà présente)
+Listen 8081
+
+# Sauvegarder et quitter
+
+
+# Créer le fichier de configuration du VirtualHost
+sudo nano /etc/apache2/sites-available/kosi-time.conf
+
+# ----------- CONTENU DU FICHIER -----------
+<VirtualHost *:8081>
+    ServerName kosi-time.run-telemat.com
+    DocumentRoot /var/www/admin-kosi-pointage/public
+
+    <Directory /var/www/admin-kosi-pointage>
+        AllowOverride All
+    </Directory>
+
+    <Directory /var/www/admin-kosi-pointage/public>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/kosi-time-error.log
+    CustomLog ${APACHE_LOG_DIR}/kosi-time-access.log combined
+</VirtualHost>
+# ------------------------------------------
+
+# Sauvegarder et quitter
+
+
+# Activer le site et le module rewrite
+sudo a2ensite kosi-time.conf
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+
+# Tester qu'Apache2 répond sur le port 8081
+curl -I http://localhost:8081
+
+
+================================================================================
+PARTIE 8 : CONFIGURATION NGINX (REVERSE PROXY + SSL)
+================================================================================
+
+# Créer le fichier de configuration Nginx
+sudo nano /etc/nginx/sites-available/kosi-time
+
+# ----------- CONTENU DU FICHIER -----------
+# Redirection HTTP vers HTTPS
+server {
+    listen 80;
+    server_name kosi-time.run-telemat.com;
+    return 301 https://$host$request_uri;
+}
+
+# Configuration HTTPS
+server {
+    listen 443 ssl http2;
+    server_name kosi-time.run-telemat.com;
+
+    # Certificats SSL (seront générés par Certbot)
+    ssl_certificate /etc/letsencrypt/live/kosi-time.run-telemat.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kosi-time.run-telemat.com/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # Logs
+    access_log /var/log/nginx/kosi-time-access.log;
+    error_log /var/log/nginx/kosi-time-error.log;
+
+    # Proxy vers Apache2 port 8081
+    location / {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_http_version 1.1;
+        
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+        
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+# ------------------------------------------
+
+# Sauvegarder et quitter
+
+
+# Créer un lien symbolique pour activer le site
+sudo ln -s /etc/nginx/sites-available/kosi-time /etc/nginx/sites-enabled/
+
+# Tester la configuration Nginx
+sudo nginx -t
+
+# Redémarrer Nginx
+sudo systemctl restart nginx
+
+
+================================================================================
+PARTIE 9 : INSTALLATION DU CERTIFICAT SSL
+================================================================================
+
+# Installer le certificat SSL avec Certbot
+sudo certbot --nginx -d kosi-time.run-telemat.com
+
+# Suivre les instructions à l'écran
+# Accepter la redirection HTTPS automatique
+
+# Vérifier que le certificat est bien installé
+sudo certbot certificates
+
+
+================================================================================
+PARTIE 10 : FORCER HTTPS DANS LARAVEL
+================================================================================
+
+# Éditer AppServiceProvider.php
+nano /var/www/admin-kosi-pointage/app/Providers/AppServiceProvider.php
+
+# Modifier la méthode boot() pour ajouter ceci :
+# ----------- CONTENU À AJOUTER -----------
+public function boot(): void
+{
+    // Forcer HTTPS en production
+    if ($this->app->environment('production')) {
+        \Illuminate\Support\Facades\URL::forceScheme('https');
+    }
+}
+# -----------------------------------------
+
+# Sauvegarder et quitter
+
+
+# Éditer TrustProxies.php
+nano /var/www/admin-kosi-pointage/app/Http/Middleware/TrustProxies.php
+
+# Modifier pour avoir :
+# ----------- CONTENU À MODIFIER -----------
+protected $proxies = '*';
+
+protected $headers =
+    Request::HEADER_X_FORWARDED_FOR |
+    Request::HEADER_X_FORWARDED_HOST |
+    Request::HEADER_X_FORWARDED_PORT |
+    Request::HEADER_X_FORWARDED_PROTO |
+    Request::HEADER_X_FORWARDED_AWS_ELB;
+# ------------------------------------------
+
+# Sauvegarder et quitter
+
+
+# Vider les caches et redémarrer
+cd /var/www/admin-kosi-pointage
+php artisan optimize:clear
+php artisan config:cache
+php artisan view:cache
+sudo systemctl restart apache2
+
+
+================================================================================
+PARTIE 11 : TESTS FINAUX
+================================================================================
+
+# Test Apache2 sur port 8081
+curl -I http://localhost:8081
+# Doit retourner : HTTP/1.1 200 OK
+
+# Test redirection HTTP vers HTTPS
+curl -I http://kosi-time.run-telemat.com
+# Doit retourner : HTTP/1.1 301 Moved Permanently
+# Location: https://kosi-time.run-telemat.com/
+
+# Test HTTPS final
+curl -I https://kosi-time.run-telemat.com
+# Doit retourner : HTTP/2 200
+
+# Test dans le navigateur
+# Ouvrir : https://kosi-time.run-telemat.com
+# ✅ Le site doit s'afficher correctement avec le cadenas vert
+
+
+================================================================================
+PARTIE 12 : WORKFLOW DE MAINTENANCE (APRÈS MODIFICATIONS)
+================================================================================
+
+cd /var/www/admin-kosi-pointage
+
+# --- MODIFICATION DE VIEWS (.blade.php) ---
+php artisan view:clear
+php artisan view:cache
+sudo systemctl restart apache2
+
+# --- MODIFICATION DE ROUTES (web.php, api.php) ---
+php artisan route:clear
+php artisan route:cache
+sudo systemctl restart apache2
+
+# --- MODIFICATION DU .ENV ---
+php artisan config:clear
+php artisan config:cache
+sudo systemctl restart apache2
+
+# --- MODIFICATION DE CODE PHP (Controllers, Models) ---
+php artisan cache:clear
+sudo systemctl restart apache2
+
+# --- TOUT VIDER (EN CAS DE DOUTE) ---
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+sudo systemctl restart apache2
+
+
+================================================================================
+PARTIE 13 : SCRIPT DE DÉPLOIEMENT AUTOMATIQUE
+================================================================================
+
+# Créer le script de déploiement
+nano /var/www/admin-kosi-pointage/deploy.sh
+
+# ----------- CONTENU DU SCRIPT -----------
+#!/bin/bash
+
+cd /var/www/admin-kosi-pointage
+
+echo "🚀 Déploiement Kosi Time..."
+
+# Pull du code (si vous utilisez Git)
+# git pull origin main
+
+# Installer les dépendances
+echo "📥 Installation des dépendances..."
+composer install --no-dev --optimize-autoloader
+npm install
+
+# Build des assets
+echo "🔨 Build des assets..."
+npm run build
+
+# Migrations
+echo "🗄️ Migrations de la base de données..."
+php artisan migrate --force
+
+# Vider les caches
+echo "🧹 Vidage des caches..."
+php artisan optimize:clear
+
+# Reconstruire les caches
+echo "⚡ Reconstruction des caches..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Permissions
+echo "🔐 Configuration des permissions..."
+sudo chown -R www-data:www-data /var/www/admin-kosi-pointage
+sudo chmod -R 775 storage bootstrap/cache
+
+# Redémarrer Apache2
+echo "🔄 Redémarrage d'Apache2..."
+sudo systemctl restart apache2
+
+echo "✅ Déploiement terminé avec succès !"
+# -----------------------------------------
+
+# Sauvegarder et quitter
+
+
+# Rendre le script exécutable
+chmod +x /var/www/admin-kosi-pointage/deploy.sh
+
+# Utilisation :
+# ./deploy.sh
+
+
+================================================================================
+PARTIE 14 : TROUBLESHOOTING
+================================================================================
+
+# --- ERREUR 500 ---
+# Activer le debug temporairement
+nano /var/www/admin-kosi-pointage/.env
+# Changer : APP_DEBUG=true
+
+# Voir les logs
+tail -50 /var/www/admin-kosi-pointage/storage/logs/laravel.log
+tail -50 /var/log/apache2/kosi-time-error.log
+
+# Résoudre le problème, puis désactiver le debug
+# Changer : APP_DEBUG=false
+
+
+# --- PAGE BLANCHE ---
+# Vérifier que le manifest existe
+ls -la /var/www/admin-kosi-pointage/public/build/manifest.json
+
+# Supprimer le fichier hot (si existe)
+rm -f /var/www/admin-kosi-pointage/public/hot
+
+# Rebuild
+cd /var/www/admin-kosi-pointage
+rm -rf public/build
+npm run build
+php artisan optimize:clear
+php artisan config:cache
+php artisan view:cache
+sudo systemctl restart apache2
+
+
+# --- MIXED CONTENT (HTTP/HTTPS) ---
+# Vérifier AppServiceProvider.php (forceScheme HTTPS)
+# Vérifier TrustProxies.php ($proxies = '*')
+# Vérifier .env (APP_URL doit être HTTPS)
+
+cd /var/www/admin-kosi-pointage
+npm run build
+php artisan optimize:clear
+php artisan config:cache
+php artisan view:cache
+sudo systemctl restart apache2
+
+
+# --- PERMISSIONS ---
+sudo chown -R www-data:www-data /var/www/admin-kosi-pointage
+sudo chmod -R 755 /var/www/admin-kosi-pointage
+sudo chmod -R 775 /var/www/admin-kosi-pointage/storage
+sudo chmod -R 775 /var/www/admin-kosi-pointage/bootstrap/cache
+
+
+================================================================================
+PARTIE 15 : COMMANDES UTILES
+================================================================================
+
+# Voir les logs Laravel en temps réel
+tail -f /var/www/admin-kosi-pointage/storage/logs/laravel.log
+
+# Voir les logs Apache2 en temps réel
+tail -f /var/log/apache2/kosi-time-error.log
+
+# Voir les logs Nginx en temps réel
+tail -f /var/log/nginx/error.log
+
+# Vérifier l'état d'Apache2
+sudo systemctl status apache2
+
+# Vérifier l'état de Nginx
+sudo systemctl status nginx
+
+# Redémarrer Apache2
+sudo systemctl restart apache2
+
+# Redémarrer Nginx
+sudo systemctl restart nginx
+
+# Vérifier les ports en écoute
+sudo ss -ltnp | grep ':808'
+
+# Tester la configuration Nginx
+sudo nginx -t
+
+# Renouveler le certificat SSL (manuel)
+sudo certbot renew
+
+# Voir tous les certificats SSL
+sudo certbot certificates
+
+
+================================================================================
+CHECKLIST FINALE
+================================================================================
+
+✅ Prérequis installés (PHP, Composer, Node.js, Apache2, Nginx)
+✅ Projet uploadé via FileZilla
+✅ .env configuré avec APP_URL HTTPS
+✅ Dépendances installées (composer + npm)
+✅ npm run build réussi
+✅ manifest.json existe dans public/build/
+✅ Pas de fichier public/hot
+✅ Migrations exécutées
+✅ AppServiceProvider.php force HTTPS
+✅ TrustProxies.php configuré avec $proxies = '*'
+✅ Apache2 VirtualHost configuré (port 8081)
+✅ Nginx reverse proxy configuré
+✅ Certificat SSL installé
+✅ Permissions correctes (www-data:www-data)
+✅ Caches Laravel vidés et reconstruits
+✅ Test curl http://localhost:8081 → 200 OK
+✅ Test curl https://kosi-time.run-telemat.com → 200 OK
+✅ Test navigateur → Site accessible en HTTPS
+
+
+================================================================================
+NOTES IMPORTANTES
+================================================================================
+
+1. Linux est SENSIBLE À LA CASSE
+   ✅ Correct : Controller.php
+   ❌ Incorrect : controller.php
+
+2. Toujours utiliser npm run build en production
+   ❌ Jamais npm run dev en production
+
+3. APP_DEBUG=false OBLIGATOIRE en production
+
+4. Le renouvellement SSL est AUTOMATIQUE avec Certbot
+
+5. Faire des backups réguliers de la base de données
+
+6. Surveiller les logs régulièrement
+
+7. Tester après chaque modification
+
+
+================================================================================
+CONTACTS ET SUPPORT
+================================================================================
+
+En cas de problème :
+- Vérifier les logs : storage/logs/laravel.log
+- Vérifier les logs Apache2 : /var/log/apache2/kosi-time-error.log
+- Vérifier les logs Nginx : /var/log/nginx/error.log
+
+
+================================================================================
+FIN DU GUIDE - KOSI-TIME
+Site accessible sur : https://kosi-time.run-telemat.com
+================================================================================

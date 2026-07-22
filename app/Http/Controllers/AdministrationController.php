@@ -26,14 +26,31 @@ class AdministrationController extends Controller
     
     public function index(Request $request)
     {
-        $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin', 'sort_by', 'sort_order']);
+        $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin', 'role', 'sort_by', 'sort_order']);
+        
+        // Sécurité Admin Simple : Forcer les filtres pour ne voir que ses Managers
+        if (auth()->check() && auth()->user()->isSimpleAdmin()) {
+            $filters['SiegeID'] = auth()->user()->SiegeID;
+            $filters['role'] = 'manager_simple_admin';
+            $filters['IsSuperAdmin'] = 0;
+        }
+
         $administrateurs = $this->repository->getFiltered($filters);
 
         $administrateurs->appends($filters);
 
         $sieges = EntrepriseSiege::all(); // Pour le filtre par siège
         
-        return view('administration.index', compact('administrateurs', 'sieges', 'filters'));
+        $pageTitle = __('Administrateurs');
+        if (isset($filters['role'])) {
+            if ($filters['role'] === 'manager_super_admin') {
+                $pageTitle = __('Gestion des Managers Super Admin');
+            } elseif ($filters['role'] === 'manager_simple_admin') {
+                $pageTitle = __('Gestion des Managers Admin Simple');
+            }
+        }
+        
+        return view('administration.index', compact('administrateurs', 'sieges', 'filters', 'pageTitle'));
     }
     
     public function create()
@@ -82,12 +99,42 @@ class AdministrationController extends Controller
             return redirect()->route('profile.edit')
                 ->with('error', __('Ce compte ne peut pas être modifié'));
         }
+
+        // Sécurité Manager : Interdit de modifier un pair ou supérieur
+        if (auth()->user()->isManagerSuperAdmin() && $administrateur->isTrueSuperAdmin()) {
+            return redirect()->route('administrateurs.index')
+                ->with('error', __('Vous n\'êtes pas autorisé à modifier un administrateur supérieur ou de même niveau.'));
+        }
+
+        // Sécurité Admin Simple : Ne peut modifier que ses propres Managers
+        if (auth()->user()->isSimpleAdmin()) {
+            if (!$administrateur->isManagerSimpleAdmin() || $administrateur->SiegeID !== auth()->user()->SiegeID) {
+                return redirect()->route('administrateurs.index')
+                    ->with('error', __('Vous n\'êtes pas autorisé à modifier ce compte.'));
+            }
+        }
         
         return view('administration.edit', compact('administrateur', 'sieges'));
     }
     
     public function update(AdministrationRequest $request, $id)
     {
+        $administrateur = $this->repository->findById($id);
+        
+        // Sécurité Manager : Interdit de modifier un pair ou supérieur
+        if (auth()->user()->isManagerSuperAdmin() && $administrateur->isTrueSuperAdmin()) {
+            return redirect()->route('administrateurs.index')
+                ->with('error', __('Vous n\'êtes pas autorisé à modifier un administrateur supérieur ou de même niveau.'));
+        }
+
+        // Sécurité Admin Simple : Ne peut modifier que ses propres Managers
+        if (auth()->user()->isSimpleAdmin()) {
+            if (!$administrateur->isManagerSimpleAdmin() || $administrateur->SiegeID !== auth()->user()->SiegeID) {
+                return redirect()->route('administrateurs.index')
+                    ->with('error', __('Vous n\'êtes pas autorisé à modifier ce compte.'));
+            }
+        }
+
         $data = $request->validated();
         
         // Transformer password en Password_ si présent
@@ -113,8 +160,22 @@ class AdministrationController extends Controller
     public function destroy($id)
     {
         $user = auth()->user();        
-        if ( !$user->isTrueSuperAdmin() ) {
+        if ( !$user->isTrueSuperAdmin() && !$user->isManagerSuperAdmin() && !$user->isSimpleAdmin() ) {
             return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+
+        $administrateur = Administration::findOrFail($id);
+        
+        // Sécurité Manager : Interdit de supprimer un pair ou supérieur
+        if ($user->isManagerSuperAdmin() && $administrateur->isTrueSuperAdmin()) {
+            return redirect()->back()->with('error', __('Vous n\'êtes pas autorisé à supprimer un administrateur supérieur ou de même niveau.'));
+        }
+
+        // Sécurité Admin Simple : Ne peut supprimer que ses propres Managers
+        if ($user->isSimpleAdmin()) {
+            if (!$administrateur->isManagerSimpleAdmin() || $administrateur->SiegeID !== $user->SiegeID) {
+                return redirect()->back()->with('error', __('Vous n\'êtes pas autorisé à supprimer ce compte.'));
+            }
         }
 
         // Empêcher la suppression du compte courant
@@ -137,8 +198,22 @@ class AdministrationController extends Controller
     public function reset($id)
     {
         $user = auth()->user();        
-        if ( !$user->isTrueSuperAdmin() ) {
+        if ( !$user->isTrueSuperAdmin() && !$user->isManagerSuperAdmin() && !$user->isSimpleAdmin() ) {
             return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+        }
+
+        $administrateur = Administration::findOrFail($id);
+        
+        // Sécurité Manager : Interdit de réinitialiser un pair ou supérieur
+        if ($user->isManagerSuperAdmin() && $administrateur->isTrueSuperAdmin()) {
+            return redirect()->back()->with('error', __('Vous n\'êtes pas autorisé à réinitialiser un administrateur supérieur ou de même niveau.'));
+        }
+
+        // Sécurité Admin Simple : Ne peut réinitialiser que ses propres Managers
+        if ($user->isSimpleAdmin()) {
+            if (!$administrateur->isManagerSimpleAdmin() || $administrateur->SiegeID !== $user->SiegeID) {
+                return redirect()->back()->with('error', __('Vous n\'êtes pas autorisé à réinitialiser ce compte.'));
+            }
         }
         
         // Empêcher la suppression du compte courant
@@ -160,7 +235,12 @@ class AdministrationController extends Controller
 
     public function exportExcel(Request $request)
     {
-        $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
+        $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin', 'role']);
+        if (auth()->check() && auth()->user()->isSimpleAdmin()) {
+            $filters['SiegeID'] = auth()->user()->SiegeID;
+            $filters['role'] = 'manager_simple_admin';
+            $filters['IsSuperAdmin'] = 0;
+        }
         $administrateurs = $this->repository->getAllForExport($filters);
         
         ActivityLogService::log(action: 'export_excel', modelType: 'Administration');
@@ -169,7 +249,12 @@ class AdministrationController extends Controller
     
     public function exportPdf(Request $request)
     {
-        $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin']);
+        $filters = $request->only(['search', 'SiegeID', 'IsSuperAdmin', 'role']);
+        if (auth()->check() && auth()->user()->isSimpleAdmin()) {
+            $filters['SiegeID'] = auth()->user()->SiegeID;
+            $filters['role'] = 'manager_simple_admin';
+            $filters['IsSuperAdmin'] = 0;
+        }
         $administrateurs = $this->repository->getAllForExport($filters);
         
         ActivityLogService::log(action: 'export_pdf', modelType: 'Administration');

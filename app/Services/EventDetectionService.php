@@ -32,6 +32,7 @@ class EventDetectionService
                 'employee_id',
                 DB::raw("DATE(timestamp_) as date"),
                 DB::raw("GROUP_CONCAT(type_ ORDER BY timestamp_ SEPARATOR ',') as sequence"),
+                DB::raw("GROUP_CONCAT(timestamp_ ORDER BY timestamp_ SEPARATOR ',') as timestamps"),
                 DB::raw("SUM(CASE WHEN type_ = 'entry' THEN 1 ELSE 0 END) as entry_count"),
                 DB::raw("SUM(CASE WHEN type_ = 'exit'  THEN 1 ELSE 0 END) as exit_count")
             )
@@ -39,18 +40,26 @@ class EventDetectionService
             ->get();
 
         foreach ($allDays as $day) {
-            $types = explode(',', $day->sequence);
+            $types      = explode(',', $day->sequence);
+            $timestamps = explode(',', $day->timestamps);
 
-            // ── Doublon : 2 types identiques consécutifs dans la séquence ──
+            // ── Doublon : 2 types identiques consécutifs ET écart ≤ 30 minutes ──
             $hasDoublonEntree = false;
             $hasDoublonSortie = false;
 
             for ($i = 1; $i < count($types); $i++) {
-                if ($types[$i] === 'entry' && $types[$i - 1] === 'entry') {
-                    $hasDoublonEntree = true;
-                }
-                if ($types[$i] === 'exit' && $types[$i - 1] === 'exit') {
-                    $hasDoublonSortie = true;
+                if ($types[$i] === $types[$i - 1]) {
+                    $t1      = Carbon::parse($timestamps[$i - 1]);
+                    $t2      = Carbon::parse($timestamps[$i]);
+                    $minutes = $t1->diffInMinutes($t2);
+
+                    if ($minutes <= 30) {
+                        if ($types[$i] === 'entry') {
+                            $hasDoublonEntree = true;
+                        } else {
+                            $hasDoublonSortie = true;
+                        }
+                    }
                 }
             }
 
@@ -103,6 +112,90 @@ class EventDetectionService
     public function countUnresolved(int $siegeId): int
     {
         return $this->detect($siegeId)->count();
+    }
+
+    /**
+     * Compte les erreurs non résolues DANS UNE PLAGE DE DATES.
+     * Réplique la logique de detect() mais filtrée et optimisée (sans buildError).
+     * Utilisé pour le blocage d'export par période.
+     * Si siegeId est null → vérifie TOUS les sièges (SuperAdmin sans filtre).
+     */
+    public function countUnresolvedInRange(?int $siegeId, string $dateFrom, string $dateTo): int
+    {
+        $count = 0;
+
+        // ── 1. Doublons & asymétries (même logique que detect()) ──
+        $allDays = DB::table('Pointages')
+            ->when($siegeId, fn($q) => $q->where('SiegeID', $siegeId))
+            ->whereBetween(DB::raw('DATE(timestamp_)'), [$dateFrom, $dateTo])
+            ->select(
+                'employee_id',
+                DB::raw("DATE(timestamp_) as date"),
+                DB::raw("GROUP_CONCAT(type_ ORDER BY timestamp_ SEPARATOR ',') as sequence"),
+                DB::raw("GROUP_CONCAT(timestamp_ ORDER BY timestamp_ SEPARATOR ',') as timestamps"),
+                DB::raw("SUM(CASE WHEN type_ = 'entry' THEN 1 ELSE 0 END) as entry_count"),
+                DB::raw("SUM(CASE WHEN type_ = 'exit'  THEN 1 ELSE 0 END) as exit_count")
+            )
+            ->groupBy('employee_id', DB::raw('DATE(timestamp_)'))
+            ->get();
+
+        foreach ($allDays as $day) {
+            $types      = explode(',', $day->sequence);
+            $timestamps = explode(',', $day->timestamps);
+
+            $hasDoublonEntree = false;
+            $hasDoublonSortie = false;
+
+            for ($i = 1; $i < count($types); $i++) {
+                if ($types[$i] === $types[$i - 1]) {
+                    $t1 = Carbon::parse($timestamps[$i - 1]);
+                    $t2 = Carbon::parse($timestamps[$i]);
+                    if ($t1->diffInMinutes($t2) <= 30) {
+                        if ($types[$i] === 'entry') $hasDoublonEntree = true;
+                        else $hasDoublonSortie = true;
+                    }
+                }
+            }
+
+            if ($hasDoublonEntree)                        $count++; // doublon_entree
+            if ($hasDoublonSortie)                        $count++; // doublon_sortie
+            if ($day->entry_count > $day->exit_count)     $count++; // manque_sortie
+            if ($day->exit_count  > $day->entry_count)    $count++; // manque_entree
+        }
+
+        // ── 2. Jours fériés dans la plage (non acquittés) ──
+        $count += DB::table('Pointages as p')
+            ->join('jours_non_travailles as j', function ($join) use ($siegeId) {
+                $join->whereRaw('DATE(p.timestamp_) = j.Date')
+                     ->when($siegeId, fn($j2) => $j2->where('j.SiegeID', $siegeId))
+                     ->where('j.Actived', 1);
+            })
+            ->when($siegeId, fn($q) => $q->where('p.SiegeID', $siegeId))
+            ->whereBetween(DB::raw('DATE(p.timestamp_)'), [$dateFrom, $dateTo])
+            ->whereNotExists(function ($q) {
+                $q->from('pointage_event_exceptions as e')
+                  ->whereColumn('e.employee_id', 'p.employee_id')
+                  ->whereRaw('e.date = DATE(p.timestamp_)')
+                  ->where('e.error_type', 'pointage_jour_ferie');
+            })
+            ->groupBy('p.employee_id', DB::raw('DATE(p.timestamp_)'), 'j.Nom')
+            ->count();
+
+        // ── 3. Weekends dans la plage (non acquittés) ──
+        $count += DB::table('Pointages as p')
+            ->when($siegeId, fn($q) => $q->where('p.SiegeID', $siegeId))
+            ->whereRaw('DAYOFWEEK(p.timestamp_) IN (1, 7)')
+            ->whereBetween(DB::raw('DATE(p.timestamp_)'), [$dateFrom, $dateTo])
+            ->whereNotExists(function ($q) {
+                $q->from('pointage_event_exceptions as e')
+                  ->whereColumn('e.employee_id', 'p.employee_id')
+                  ->whereRaw('e.date = DATE(p.timestamp_)')
+                  ->where('e.error_type', 'pointage_weekend');
+            })
+            ->groupBy('p.employee_id', DB::raw('DATE(p.timestamp_)'))
+            ->count();
+
+        return $count;
     }
 
     // ─── JOUR FÉRIÉ ───────────────────────────────────────────────────────────
@@ -190,14 +283,23 @@ class EventDetectionService
             ->orderBy('timestamp_')
             ->get();
 
-        // Marquer les doublons consécutifs (pour les surligner dans la vue)
-        $pointages = collect();
-        $prevType  = null;
+        // Marquer les doublons consécutifs ≤ 30 min (pour les surligner dans la vue)
+        $pointages    = collect();
+        $prevType     = null;
+        $prevPointage = null;
 
         foreach ($rawPointages as $p) {
-            $isDuplicate = ($prevType !== null && $p->type_ === $prevType);
+            $isDuplicate = false;
+
+            if ($prevType !== null && $p->type_ === $prevType) {
+                $t1          = Carbon::parse($prevPointage->timestamp_);
+                $t2          = Carbon::parse($p->timestamp_);
+                $isDuplicate = $t1->diffInMinutes($t2) <= 30;
+            }
+
             $pointages->push((object) array_merge((array) $p, ['is_duplicate' => $isDuplicate]));
-            $prevType = $p->type_;
+            $prevType     = $p->type_;
+            $prevPointage = $p;
         }
 
         return (object) [

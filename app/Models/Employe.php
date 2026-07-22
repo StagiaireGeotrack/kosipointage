@@ -4,12 +4,12 @@
 namespace App\Models;
 
 use App\Scopes\SiegeScope;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Loggable;
 
-class Employe extends Model
+class Employe extends Authenticatable
 {
     use Loggable;
     public string $logLabelField = 'Nom';
@@ -30,6 +30,14 @@ class Employe extends Model
         'deleted',
         'Actived',
         'SiegeID',
+        'email',
+        'telephone',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
     
     protected $casts = [

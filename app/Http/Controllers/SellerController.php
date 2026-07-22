@@ -22,9 +22,9 @@ class SellerController extends Controller
     // Afficher la liste des vendeurs
     public function index(Request $request)
     {
-        // Vérifier que l'utilisateur connecté est un vrai Super Admin
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs';
+        // Vérifier que l'utilisateur connecté est un vrai Super Admin ou un Vendeur (pas Manager)
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
             return view('403', compact('message'));
         }
 
@@ -43,12 +43,35 @@ class SellerController extends Controller
             $query->where('Actived', $request->status);
         }
 
+        // Filtre par rôle
+        if ($request->has('role') && $request->role !== '') {
+            if ($request->role === 'manager_seller') {
+                $query->where('IsManager', 1);
+            } elseif ($request->role === 'seller') {
+                $query->where('IsManager', 0);
+            }
+        }
+        
+        // Sécurité Vendeur : Un vendeur ne voit que les managers vendeurs liés à ses sièges
+        if (auth()->user()->isSeller()) {
+            $query->where('IsManager', 1);
+            $accessibleSieges = auth()->user()->getSiegeIdsAccessibles();
+            $query->whereHas('sellerSieges', function($q) use ($accessibleSieges) {
+                $q->whereIn('Entreprises_sieges.ID', $accessibleSieges);
+            });
+        }
+
         // Récupérer les vendeurs avec pagination
         $sellers = $query->orderBy('Identifiant_email')
             ->paginate(5)
             ->appends($request->except('page')); // Maintenir les paramètres dans la pagination
 
-        return view('admin.sellers.index', compact('sellers'));
+        $pageTitle = __('Gestion des Revendeurs');
+        if ($request->has('role') && $request->role === 'manager_seller') {
+            $pageTitle = __('Gestion des Managers Vendeurs');
+        }
+
+        return view('admin.sellers.index', compact('sellers', 'pageTitle'));
     }
 
     public function prepareExportData(Request $request) 
@@ -65,10 +88,20 @@ class SellerController extends Controller
             $query->where('Actived', $request->status);
         }
 
+        if ($request->has('role') && $request->role !== '') {
+            if ($request->role === 'manager_seller') {
+                $query->where('IsManager', 1);
+            } elseif ($request->role === 'seller') {
+                $query->where('IsManager', 0);
+            }
+        }
+
         $data = $query->orderBy('Identifiant_email')->get()->map( function ($revender) {
+            $type = $revender->IsManager ? __('Manager Vendeur') : __('Vendeur');
             return [
                 "ID" => $revender->ID ,
                 "Email" => $revender->Identifiant_email ,
+                "Type" => $type,
                 "Nombre de Sièges" => $revender->sellerSieges->count() ,
                 "Statut" => $revender->Actived ? __('Activé') : __('Désactivé') 
             ] ;
@@ -91,21 +124,26 @@ class SellerController extends Controller
         return $this->exportService->exportToPdf($data, "Liste des revendeurs", 'exports.generic');
     }
 
-    // Afficher le formulaire de création d'un revendeur
     public function create()
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs';
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
             return view('403', compact('message'));
         }
 
-        // Récupérer uniquement les sièges qui ne sont PAS déjà associés à un vendeur
-        $sieges = EntrepriseSiege::whereNotIn('ID', function($query) {
-            $query->select('SiegeID')
-                  ->from('seller_sieges');
-        })
-        ->orderBy('Nom')
-        ->get();
+        if (auth()->user()->isSeller()) {
+            // Un vendeur ne peut assigner que ses propres sièges
+            $accessibleSieges = auth()->user()->getSiegeIdsAccessibles();
+            $sieges = EntrepriseSiege::whereIn('ID', $accessibleSieges)->orderBy('Nom')->get();
+        } else {
+            // Récupérer uniquement les sièges qui ne sont PAS déjà associés à un vendeur
+            $sieges = EntrepriseSiege::whereNotIn('ID', function($query) {
+                $query->select('SiegeID')
+                      ->from('seller_sieges');
+            })
+            ->orderBy('Nom')
+            ->get();
+        }
 
         return view('admin.sellers.create', compact('sieges'));
     }
@@ -113,8 +151,8 @@ class SellerController extends Controller
     // Enregistrer un nouveau revendeur
     public function store(Request $request)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            abort(403, 'Accès réservé aux Administrateurs');
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            abort(403, 'Accès réservé aux Administrateurs et Vendeurs principaux');
         }
 
         $validated = $request->validate([
@@ -122,6 +160,7 @@ class SellerController extends Controller
             'password' => 'required|min:8|confirmed',
             'sieges' => 'required|array|min:1',
             'sieges.*' => 'exists:Entreprises_sieges,ID',
+            'IsManager' => 'nullable|boolean',
         ], [
             'email.required' => 'L\'adresse email est obligatoire',
             'email.email' => 'L\'adresse email doit être valide',
@@ -132,16 +171,30 @@ class SellerController extends Controller
             'sieges.required' => 'Vous devez sélectionner au moins un siège',
             'sieges.min' => 'Vous devez sélectionner au moins un siège',
         ]);
+        
+        $isManager = $request->has('IsManager') ? 1 : 0;
+        
+        // Sécurité Vendeur : Forcer la création de Manager
+        if (auth()->user()->isSeller()) {
+            $isManager = 1;
+            // Vérifier que les sièges choisis appartiennent bien au vendeur
+            $accessibleSieges = auth()->user()->getSiegeIdsAccessibles();
+            foreach ($validated['sieges'] as $siegeId) {
+                if (!in_array($siegeId, $accessibleSieges)) {
+                    return back()->withErrors(['sieges' => 'Vous ne pouvez assigner que vos propres sièges.'])->withInput();
+                }
+            }
+        } else {
+            // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un autre vendeur (seulement pour Super Admin)
+            $alreadyAssigned = DB::table('seller_sieges')
+                ->whereIn('SiegeID', $validated['sieges'])
+                ->exists();
 
-        // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un autre vendeur
-        $alreadyAssigned = DB::table('seller_sieges')
-            ->whereIn('SiegeID', $validated['sieges'])
-            ->exists();
-
-        if ($alreadyAssigned) {
-            return back()
-                ->withErrors(['sieges' => 'Un ou plusieurs sièges sont déjà associés à un autre vendeur'])
-                ->withInput();
+            if ($alreadyAssigned) {
+                return back()
+                    ->withErrors(['sieges' => 'Un ou plusieurs sièges sont déjà associés à un autre vendeur'])
+                    ->withInput();
+            }
         }
 
         DB::beginTransaction();
@@ -152,6 +205,7 @@ class SellerController extends Controller
                 'Password_' => sha1($validated['password']),
                 'IsSuperAdmin' => 1,
                 'IsSeller' => 1,
+                'IsManager' => $isManager,
                 'Actived' => 1,
             ]);
 
@@ -185,9 +239,9 @@ class SellerController extends Controller
     // Afficher les détails d'un revendeur
     public function show($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
+            return view('403', compact('message'));
         }
 
         $seller = Administration::with('sellerSieges')->findOrFail($id);
@@ -202,11 +256,10 @@ class SellerController extends Controller
         return view('admin.sellers.show', compact('seller'));
     }
 
-    // Afficher le formulaire d'édition d'un revendeur
     public function edit($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs';
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
             return view('403', compact('message'));
         }
 
@@ -215,28 +268,38 @@ class SellerController extends Controller
             ->where('IsSuperAdmin', 1)
             ->with('sellerSieges')
             ->firstOrFail();
+            
+        // Sécurité Vendeur : Le vendeur ne peut éditer que ses propres managers
+        if (auth()->user()->isSeller()) {
+            if (!$seller->isManagerSeller()) {
+                return redirect()->route('sellers.index')->with('error', 'Vous n\'êtes pas autorisé à modifier ce compte.');
+            }
+        }
 
         // Sièges actuellement associés au vendeur
         $currentSiegeIds = $seller->sellerSieges->pluck('ID')->toArray();
 
-        // Sièges disponibles : 
-        // - Soit pas encore associés à aucun vendeur
-        // - Soit déjà associés au vendeur actuel
-        $sieges = EntrepriseSiege::where(function($query) use ($id) {
-            // Sièges non associés
-            $query->whereNotIn('ID', function($subQuery) {
-                $subQuery->select('SiegeID')
-                         ->from('seller_sieges');
+        if (auth()->user()->isSeller()) {
+            $accessibleSieges = auth()->user()->getSiegeIdsAccessibles();
+            $sieges = EntrepriseSiege::whereIn('ID', $accessibleSieges)->orderBy('Nom')->get();
+        } else {
+            // Sièges disponibles (Super Admin)
+            $sieges = EntrepriseSiege::where(function($query) use ($id) {
+                // Sièges non associés
+                $query->whereNotIn('ID', function($subQuery) {
+                    $subQuery->select('SiegeID')
+                             ->from('seller_sieges');
+                })
+                // OU sièges associés au vendeur actuel
+                ->orWhereIn('ID', function($subQuery) use ($id) {
+                    $subQuery->select('SiegeID')
+                             ->from('seller_sieges')
+                             ->where('SellerID', $id);
+                });
             })
-            // OU sièges associés au vendeur actuel
-            ->orWhereIn('ID', function($subQuery) use ($id) {
-                $subQuery->select('SiegeID')
-                         ->from('seller_sieges')
-                         ->where('SellerID', $id);
-            });
-        })
-        ->orderBy('Nom')
-        ->get();
+            ->orderBy('Nom')
+            ->get();
+        }
 
         return view('admin.sellers.edit', compact('seller', 'sieges', 'currentSiegeIds'));
     }
@@ -244,9 +307,9 @@ class SellerController extends Controller
     // Mettre à jour un revendeur
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
+            return view('403', compact('message'));
         }
 
         $seller = Administration::where('ID', $id)
@@ -259,6 +322,7 @@ class SellerController extends Controller
             'password' => 'nullable|min:8|confirmed',
             'sieges' => 'required|array|min:1',
             'sieges.*' => 'exists:Entreprises_sieges,ID',
+            'IsManager' => 'nullable|boolean',
         ], [
             'email.required' => 'L\'adresse email est obligatoire',
             'email.email' => 'L\'adresse email doit être valide',
@@ -269,22 +333,41 @@ class SellerController extends Controller
             'sieges.min' => 'Vous devez sélectionner au moins un siège',
         ]);
 
-        // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un AUTRE vendeur
-        $alreadyAssigned = DB::table('seller_sieges')
-            ->whereIn('SiegeID', $validated['sieges'])
-            ->where('SellerID', '!=', $id)
-            ->exists();
+        // Sécurité Vendeur : Forcer la création de Manager
+        $isManager = $request->has('IsManager') ? 1 : 0;
+        
+        if (auth()->user()->isSeller()) {
+            if (!$seller->isManagerSeller()) {
+                return redirect()->route('sellers.index')->with('error', 'Vous n\'êtes pas autorisé à modifier ce compte.');
+            }
+            $isManager = 1;
+            
+            // Vérifier que les sièges choisis appartiennent bien au vendeur
+            $accessibleSieges = auth()->user()->getSiegeIdsAccessibles();
+            foreach ($validated['sieges'] as $siegeId) {
+                if (!in_array($siegeId, $accessibleSieges)) {
+                    return back()->withErrors(['sieges' => 'Vous ne pouvez assigner que vos propres sièges.'])->withInput();
+                }
+            }
+        } else {
+            // Vérifier que les sièges sélectionnés ne sont pas déjà associés à un AUTRE vendeur
+            $alreadyAssigned = DB::table('seller_sieges')
+                ->whereIn('SiegeID', $validated['sieges'])
+                ->where('SellerID', '!=', $id)
+                ->exists();
 
-        if ($alreadyAssigned) {
-            return back()
-                ->withErrors(['sieges' => 'Un ou plusieurs sièges sont déjà associés à un autre vendeur'])
-                ->withInput();
+            if ($alreadyAssigned) {
+                return back()
+                    ->withErrors(['sieges' => 'Un ou plusieurs sièges sont déjà associés à un autre vendeur'])
+                    ->withInput();
+            }
         }
 
         DB::beginTransaction();
         try {
-            // Mettre à jour l'email
+            // Mettre à jour l'email et IsManager
             $seller->Identifiant_email = $validated['email'];
+            $seller->IsManager = $isManager;
 
             // Mettre à jour le mot de passe si fourni
             if (!empty($validated['password'])) {
@@ -324,12 +407,11 @@ class SellerController extends Controller
     }
 
 
-    // Supprimer un revendeur
     public function destroy($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {            
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
+            return view('403', compact('message'));
         }
 
         $seller = Administration::findOrFail($id);
@@ -339,6 +421,11 @@ class SellerController extends Controller
             return redirect()
                 ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un revendeur');
+        }
+
+        // Sécurité Vendeur
+        if (auth()->user()->isSeller() && !$seller->isManagerSeller()) {
+            return redirect()->route('sellers.index')->with('error', 'Vous n\'êtes pas autorisé à supprimer ce compte.');
         }
 
         DB::beginTransaction();
@@ -371,9 +458,9 @@ class SellerController extends Controller
 
     public function reset($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {            
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
+            return view('403', compact('message'));
         }
 
         $seller = Administration::findOrFail($id);
@@ -383,6 +470,11 @@ class SellerController extends Controller
             return redirect()
                 ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un revendeur');
+        }
+        
+        // Sécurité Vendeur
+        if (auth()->user()->isSeller() && !$seller->isManagerSeller()) {
+            return redirect()->route('sellers.index')->with('error', 'Vous n\'êtes pas autorisé à réinitialiser ce compte.');
         }
 
         DB::beginTransaction();
@@ -412,12 +504,11 @@ class SellerController extends Controller
         }
     }
 
-    // Activer/Désactiver un revendeur
     public function toggleActive($id)
     {
-        if (!auth()->user()->isTrueSuperAdmin()) {            
-            $message = 'Accès réservé aux Administrateurs' ;
-            return view( '403' , compact('message') );
+        if (!auth()->user()->isTrueSuperAdmin() && (!auth()->user()->isSeller() || auth()->user()->isManagerSeller())) {
+            $message = 'Accès réservé aux Administrateurs et Vendeurs principaux';
+            return view('403', compact('message'));
         }
 
         $seller = Administration::findOrFail($id);
@@ -426,6 +517,11 @@ class SellerController extends Controller
             return redirect()
                 ->route('sellers.index')
                 ->with('error', 'Cet utilisateur n\'est pas un revendeur');
+        }
+
+        // Sécurité Vendeur
+        if (auth()->user()->isSeller() && !$seller->isManagerSeller()) {
+            return redirect()->route('sellers.index')->with('error', 'Vous n\'êtes pas autorisé à modifier ce compte.');
         }
 
         $seller->update([

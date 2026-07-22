@@ -3,7 +3,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                {{ __('Gestion des Revendeurs') }}
+                {{ $pageTitle ?? __('Gestion des Revendeurs') }}
             </h2>
             <a href="{{ route('sellers.create') }}" class="btn btn-primary">
                 {{ __('Nouveau revendeur') }}
@@ -23,6 +23,15 @@
                             <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="request('search')" placeholder="{{ __('Email du revendeur') }}" />
                         </div>
                         
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <x-input-label for="role" :value="__('Type')" />
+                            <select id="role" name="role" class="form-select mt-1">
+                                <option value="">{{ __('Tous') }}</option>
+                                <option value="seller" {{ request('role') == 'seller' ? 'selected' : '' }}>{{ __('Vendeur') }}</option>
+                                <option value="manager_seller" {{ request('role') == 'manager_seller' ? 'selected' : '' }}>{{ __('Manager Vendeur') }}</option>
+                            </select>
+                        </div>
+
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="status" :value="__('Statut')" />
                             <select id="status" name="status" class="form-select mt-1">
@@ -81,6 +90,11 @@
                                                 </div>
                                                 <div>
                                                     <div class="fw-medium">{{ $seller->Identifiant_email }}</div>
+                                                    @if($seller->IsManager)
+                                                        <span class="badge bg-success bg-opacity-75 mt-1">{{ __('Manager Vendeur') }}</span>
+                                                    @else
+                                                        <span class="badge bg-success mt-1">{{ __('Vendeur') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>
@@ -107,6 +121,19 @@
                                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                                                     </svg>
                                                 </a>
+                                                
+                                                @if(auth()->user()->isTrueSuperAdmin() && auth()->id() !== $seller->ID)
+                                                <form action="{{ route('impersonate', $seller->ID) }}" method="POST" class="d-inline" title="Se connecter en tant que">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-link text-info p-0 border-0 m-0">
+                                                        <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                                                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                @endif
+
                                                 <a href="{{ route('sellers.edit', $seller->ID) }}" class="text-warning" title="{{ __('Modifier') }}">
                                                     <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />

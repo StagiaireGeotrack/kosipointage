@@ -212,7 +212,18 @@ class PointageController extends Controller
         $pointages = $this->repository->getAllForExport($filters);
         
         ActivityLogService::log(action: 'export_excel', modelType: 'Pointage');
-        return $this->exportService->exportToExcel($pointages, __('Pointages'));
+
+        // Si un employé est sélectionné → export simple (comportement existant)
+        if (!empty($filters['employee_id'])) {
+            return $this->exportService->exportToExcel($pointages, __('Pointages'));
+        }
+
+        // Sinon → ZIP avec un fichier Excel par employé
+        $grouped = $pointages->groupBy('Employé(e)')
+            ->map(fn($items) => $items->values()->all())
+            ->all();
+
+        return $this->exportService->exportToExcelZip($grouped, __('Pointages'));
     }
     
     public function exportPdf(Request $request)
@@ -225,7 +236,18 @@ class PointageController extends Controller
         $pointages = $this->repository->getAllForExport($filters);
         
         ActivityLogService::log(action: 'export_pdf', modelType: 'Pointage');
-        return $this->exportService->exportToPdf($pointages, 'Pointages', 'exports.generic');
+
+        // Si un employé est sélectionné → export simple (comportement existant)
+        if (!empty($filters['employee_id'])) {
+            return $this->exportService->exportToPdf($pointages, 'Pointages', 'exports.generic');
+        }
+
+        // Sinon → ZIP avec un fichier PDF par employé
+        $grouped = $pointages->groupBy('Employé(e)')
+            ->map(fn($items) => $items->values()->all())
+            ->all();
+
+        return $this->exportService->exportToPdfZip($grouped, 'Pointages', 'exports.generic');
     }
     
     public function getPhoto($id)

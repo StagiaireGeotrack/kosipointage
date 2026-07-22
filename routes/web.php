@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CongeController;
+use App\Http\Controllers\CongeValidationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\ProfileController;
@@ -20,6 +21,34 @@ use App\Http\Controllers\EventPointageController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
+
+// ========== AUTHENTIFICATION EMPLOYÉ ==========
+Route::middleware('guest:employe')->group(function () {
+    Route::get('/portail/login', [\App\Http\Controllers\Auth\EmployeAuthController::class, 'create'])->name('employe.login');
+    Route::post('/portail/login', [\App\Http\Controllers\Auth\EmployeAuthController::class, 'store']);
+});
+
+Route::middleware('auth:employe')->group(function () {
+    Route::post('/portail/logout', [\App\Http\Controllers\Auth\EmployeAuthController::class, 'destroy'])->name('employe.logout');
+    
+    // Dashboard Employé
+    Route::get('/portail', [\App\Http\Controllers\EmployePortalController::class, 'index'])->name('employe.dashboard');
+
+    // Profil Employé
+    Route::get('/portail/profil', [\App\Http\Controllers\EmployePortalController::class, 'editProfile'])->name('employe.profile');
+    Route::patch('/portail/profil', [\App\Http\Controllers\EmployePortalController::class, 'updateProfile'])->name('employe.profile.update');
+
+    // Lecture seule: Pointages et Rapports
+    Route::get('/portail/pointages', [\App\Http\Controllers\EmployePortalController::class, 'pointages'])->name('employe.pointages');
+    Route::get('/portail/rapports', [\App\Http\Controllers\EmployePortalController::class, 'rapports'])->name('employe.rapports');
+
+    // Congés (CRUD restreint)
+    Route::get('/portail/conges', [\App\Http\Controllers\EmployeCongeController::class, 'index'])->name('employe.conges.index');
+    Route::get('/portail/conges/nouvelle-demande', [\App\Http\Controllers\EmployeCongeController::class, 'create'])->name('employe.conges.create');
+    Route::post('/portail/conges', [\App\Http\Controllers\EmployeCongeController::class, 'store'])->name('employe.conges.store');
+    Route::delete('/portail/conges/{id}', [\App\Http\Controllers\EmployeCongeController::class, 'destroy'])->name('employe.conges.destroy');
+});
+
 
 // Route d'accueil et langue
 Route::get('/', function () 
@@ -111,6 +140,7 @@ Route::middleware('auth')->group(function () {
         // ========== EMPLOYÉS : CRUD (Super Admin + Simple Admin) ==========
         // ⚠️ CRITIQUE : Ces routes doivent être AVANT les routes de consultation
         Route::middleware('block.sellers')->group(function () {
+            Route::post('/employes/{employe}/assign-web-access', [EmployeController::class, 'assignWebAccess'])->name('employes.assign-web-access');
             Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
             Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
             Route::get('/employes/{employe}/edit', [EmployeController::class, 'edit'])->name('employes.edit');
@@ -170,7 +200,14 @@ Route::middleware('auth')->group(function () {
             Route::patch('/conges/{conge}', [CongeController::class, 'update']);
             Route::delete('/conges/{conge}', [CongeController::class, 'destroy'])->name('conges.destroy');
         });
-        
+
+        // ========== VALIDATION CONGÉS : Simple Admin uniquement ==========
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/conge-validations',             [CongeValidationController::class, 'index'])->name('conge-validations.index');
+            Route::post('/conge-validations/{id}/approve', [CongeValidationController::class, 'approve'])->name('conge-validations.approve');
+            Route::post('/conge-validations/{id}/reject',  [CongeValidationController::class, 'reject'])->name('conge-validations.reject');
+        });
+
         // ========== JOURS NON TRAVAILLÉS : CRUD complet (Super Admin + Simple Admin) ==========
         Route::middleware('block.sellers')->group(function () {
             Route::get('/jours-non-travailles', [JourNonTravailleController::class, 'index'])->name('jours-non-travailles.index');
@@ -195,14 +232,8 @@ Route::middleware('auth')->group(function () {
         });
     });
     
-    // ========== Routes accessibles uniquement aux VRAIS SuperAdmin ==========
-    Route::middleware('can:superadmin')->group(function () {
-
-        // Logs d'activité (Super Admin uniquement)
-        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
-        Route::get('/activity-logs/export/csv', [ActivityLogController::class, 'exportCsv'])->name('activity-logs.export.csv');
-
-        // ========== CRUD des administrateurs ==========
+    // ========== CRUD des administrateurs (Super Admin + Simple Admin pour les managers) ==========
+    Route::middleware('block.sellers')->group(function () {
         Route::get('/administrateurs', [AdministrationController::class, 'index'])->name('administrateurs.index');
         Route::get('/administrateurs/create', [AdministrationController::class, 'create'])->name('administrateurs.create');
         Route::post('/administrateurs', [AdministrationController::class, 'store'])->name('administrateurs.store');
@@ -214,8 +245,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/administrateurs/{administrateur}', [AdministrationController::class, 'update']);
         Route::delete('/administrateurs/{administrateur}', [AdministrationController::class, 'destroy'])->name('administrateurs.destroy');
         Route::delete('/administrateurs/reset/{administrateur}', [AdministrationController::class, 'reset'])->name('administrateurs.reset');
+    });
 
-        // ========== CRUD des vendeurs ==========
+    // ========== CRUD des vendeurs (Super Admin + Vendeurs pour les managers) ==========
+    Route::middleware('block.simple.admin.sieges')->group(function () {
         Route::get('/sellers', [SellerController::class, 'index'])->name('sellers.index');
         Route::get('/sellers/create', [SellerController::class, 'create'])->name('sellers.create');
         Route::post('/sellers', [SellerController::class, 'store'])->name('sellers.store');
@@ -230,10 +263,25 @@ Route::middleware('auth')->group(function () {
         Route::patch('/sellers/{seller}', [SellerController::class, 'update']);
         Route::delete('/sellers/{seller}', [SellerController::class, 'destroy'])->name('sellers.destroy');
         Route::delete('/sellers/reset/{seller}', [SellerController::class, 'reset'])->name('sellers.reset');
+    });
+
+    // ========== Routes accessibles uniquement aux VRAIS SuperAdmin ==========
+    Route::middleware('can:superadmin')->group(function () {
+        // Logs d'activité (Super Admin uniquement)
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('/activity-logs/export/csv', [ActivityLogController::class, 'exportCsv'])->name('activity-logs.export.csv');
+
+        // Impersonation (Se connecter en tant que)
+        Route::post('/impersonate/{id}', [\App\Http\Controllers\ImpersonateController::class, 'impersonate'])->name('impersonate');
+        Route::post('/impersonate-employe/{id}', [\App\Http\Controllers\ImpersonateController::class, 'impersonateEmploye'])->name('impersonate.employe');
 
         // ========== Dashboard (SuperAdmin uniquement) ==========
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
+
+    // ========== Route pour quitter l'impersonation (accessible à l'utilisateur impersonifié) ==========
+    Route::post('/impersonate-leave', [\App\Http\Controllers\ImpersonateController::class, 'leave'])->name('impersonate.leave');
+    Route::post('/impersonate-employe-leave', [\App\Http\Controllers\ImpersonateController::class, 'leaveEmploye'])->name('impersonate.employe.leave');
 });
 
 Route::fallback(function () {

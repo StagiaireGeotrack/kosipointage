@@ -32,5 +32,12 @@
                 {{ __('Connexion') }}
             </x-primary-button>
         </div>
+
+        <div class="mt-4 text-center pt-3 border-top">
+            <p class="text-muted small mb-2">{{ __('Vous êtes un employé ?') }}</p>
+            <a href="{{ route('employe.login') }}" class="btn btn-outline-secondary btn-sm w-100">
+                <i class="bi bi-person-badge me-1"></i> {{ __('Se connecter à l\'espace Employé') }}
+            </a>
+        </div>
     </form>
 </x-guest-layout>

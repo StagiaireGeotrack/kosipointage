@@ -55,7 +55,7 @@
 
                         {{-- Filtre siège (Super Admin uniquement) --}}
                         @if($readOnly && $sieges->count() > 0)
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-3">
                             <label class="form-label fw-semibold">{{ __('Siège') }}</label>
                             <select name="SiegeID" class="form-select">
                                 <option value="">{{ __('Tous les sièges') }}</option>
@@ -68,8 +68,26 @@
                         </div>
                         @endif
 
+                        {{-- Date de début --}}
+                        <div class="col-12 col-sm-6 col-md-{{ $readOnly ? '2' : '3' }}">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-calendar-event me-1"></i>{{ __('Date début') }}
+                            </label>
+                            <input type="date" name="date_from" class="form-control"
+                                   value="{{ $dateFrom ?? '' }}">
+                        </div>
+
+                        {{-- Date de fin --}}
+                        <div class="col-12 col-sm-6 col-md-{{ $readOnly ? '2' : '3' }}">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-calendar-check me-1"></i>{{ __('Date fin') }}
+                            </label>
+                            <input type="date" name="date_to" class="form-control"
+                                   value="{{ $dateTo ?? '' }}">
+                        </div>
+
                         {{-- Filtre par type d'erreur --}}
-                        <div class="col-12 col-md-{{ $readOnly ? '4' : '6' }}">
+                        <div class="col-12 col-md-{{ $readOnly ? '3' : '4' }}">
                             <label class="form-label fw-semibold">{{ __('Type d\'événement') }}</label>
                             <select name="filter_type" class="form-select">
                                 <option value="">{{ __('Tous les types') }}</option>
@@ -82,7 +100,7 @@
                             </select>
                         </div>
 
-                        <div class="col-12 col-md-{{ $readOnly ? '4' : '6' }} d-flex align-items-end gap-2">
+                        <div class="col-12 col-md-{{ $readOnly ? '2' : '2' }} d-flex align-items-end gap-2">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-funnel me-1"></i>{{ __('Filtrer') }}
                             </button>
@@ -505,8 +523,205 @@
         </div>
     </div>
 
+    {{-- ═══════════════════════════════════════════════════════════════════════ --}}
+    {{-- BOUTON AIDE FLOTTANT CLIGNOTANT                                         --}}
+    {{-- ═══════════════════════════════════════════════════════════════════════ --}}
+    <button type="button"
+        id="btnAideEvenements"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAideEvenements"
+        title="{{ __('Aide — fonctionnalités des événements') }}"
+        style="
+            position: fixed;
+            top: 6rem;
+            right: 1.25rem;
+            z-index: 1045;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            border: none;
+            background: #0dcaf0;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,.25);
+            padding: 0;
+        ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+        </svg>
+    </button>
+
+    {{-- ═══════════════════════════════════════════════════════════════════════ --}}
+    {{-- MODAL AIDE FONCTIONNALITÉS ÉVÉNEMENTS                                   --}}
+    {{-- ═══════════════════════════════════════════════════════════════════════ --}}
+    <div class="modal fade" id="modalAideEvenements" tabindex="-1" aria-labelledby="modalAideLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-info bg-opacity-10 border-bottom">
+                    <h5 class="modal-title fw-semibold" id="modalAideLabel">
+                        <i class="bi bi-question-circle-fill text-info me-2"></i>
+                        {{ __('Guide — Événements de pointage') }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pb-2">
+
+                    <p class="text-muted small mb-4">
+                        {{ __('Cette page détecte automatiquement les anomalies sur les pointages. Chaque événement correspond à une situation à corriger ou à valider avant de pouvoir exporter vos rapports.') }}
+                    </p>
+
+                    {{-- Types d'événements --}}
+                    <h6 class="fw-bold mb-3 border-bottom pb-2">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+                        {{ __('Types d\'événements détectés') }}
+                    </h6>
+
+                    <div class="row g-2 mb-4">
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-start gap-2 p-2 rounded border bg-danger bg-opacity-5 h-100">
+                                <i class="bi bi-arrow-down-circle-fill text-danger fs-5 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <div class="fw-semibold text-danger small">{{ __('Doublon d\'entrée') }}</div>
+                                    <div class="text-muted" style="font-size:.8rem;">
+                                        {{ __('Deux entrées consécutives enregistrées à moins de 30 minutes d\'intervalle. La seconde est probablement une erreur.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-start gap-2 p-2 rounded border bg-warning bg-opacity-5 h-100">
+                                <i class="bi bi-arrow-up-circle-fill text-warning fs-5 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <div class="fw-semibold text-warning small">{{ __('Doublon de sortie') }}</div>
+                                    <div class="text-muted" style="font-size:.8rem;">
+                                        {{ __('Deux sorties consécutives enregistrées à moins de 30 minutes d\'intervalle. La seconde est probablement une erreur.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-start gap-2 p-2 rounded border bg-warning bg-opacity-5 h-100">
+                                <i class="bi bi-box-arrow-right text-warning fs-5 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <div class="fw-semibold text-warning small">{{ __('Manque de sortie') }}</div>
+                                    <div class="text-muted" style="font-size:.8rem;">
+                                        {{ __('Plus d\'entrées que de sorties sur la journée — au moins une sortie n\'a pas été enregistrée.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-start gap-2 p-2 rounded border bg-info bg-opacity-5 h-100">
+                                <i class="bi bi-box-arrow-in-right text-info fs-5 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <div class="fw-semibold text-info small">{{ __('Manque d\'entrée') }}</div>
+                                    <div class="text-muted" style="font-size:.8rem;">
+                                        {{ __('Plus de sorties que d\'entrées sur la journée — au moins une entrée n\'a pas été enregistrée.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-start gap-2 p-2 rounded border bg-secondary bg-opacity-5 h-100">
+                                <i class="bi bi-calendar-x-fill text-secondary fs-5 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <div class="fw-semibold text-secondary small">{{ __('Pointage jour férié') }}</div>
+                                    <div class="text-muted" style="font-size:.8rem;">
+                                        {{ __('Un pointage a été enregistré un jour défini comme non travaillé dans le calendrier du siège.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-start gap-2 p-2 rounded border bg-secondary bg-opacity-5 h-100">
+                                <i class="bi bi-calendar2-week-fill text-secondary fs-5 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <div class="fw-semibold text-secondary small">{{ __('Pointage weekend') }}</div>
+                                    <div class="text-muted" style="font-size:.8rem;">
+                                        {{ __('Un pointage a été enregistré un samedi ou un dimanche.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Actions disponibles --}}
+                    @if(!$readOnly)
+                    <h6 class="fw-bold mb-3 border-bottom pb-2">
+                        <i class="bi bi-tools text-primary me-1"></i>
+                        {{ __('Actions de correction') }}
+                    </h6>
+                    <ul class="list-unstyled mb-4">
+                        <li class="d-flex align-items-start gap-2 mb-3">
+                            <span class="badge bg-danger mt-1 flex-shrink-0"><i class="bi bi-trash"></i></span>
+                            <div>
+                                <div class="fw-semibold small">{{ __('Supprimer un doublon') }}</div>
+                                <div class="text-muted" style="font-size:.8rem;">
+                                    {{ __('Les lignes surlignées en rouge sont les pointages en doublon. Cliquez sur « Supprimer » pour retirer le pointage erroné. Action irréversible.') }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-start gap-2 mb-3">
+                            <span class="badge bg-primary mt-1 flex-shrink-0"><i class="bi bi-plus-circle"></i></span>
+                            <div>
+                                <div class="fw-semibold small">{{ __('Ajouter un pointage manquant') }}</div>
+                                <div class="text-muted" style="font-size:.8rem;">
+                                    {{ __('Pour les manques d\'entrée ou de sortie, cliquez sur « Ajouter une entrée / sortie » pour saisir manuellement le pointage oublié.') }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                            <span class="badge bg-success mt-1 flex-shrink-0"><i class="bi bi-check-circle"></i></span>
+                            <div>
+                                <div class="fw-semibold small">{{ __('Marquer comme intentionnel') }}</div>
+                                <div class="text-muted" style="font-size:.8rem;">
+                                    {{ __('Pour les pointages en jour férié ou weekend (ex: astreinte, heures sup), marquez-les « Intentionnel » avec une note. Ils disparaîtront de la liste.') }}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    @else
+                    <div class="alert alert-secondary small py-2 mb-4">
+                        <i class="bi bi-eye me-1"></i>
+                        {{ __('En lecture seule (Super Admin) : vous consultez les événements de tous les sièges. Seuls les Admins de siège peuvent les corriger.') }}
+                    </div>
+                    @endif
+
+                    <div class="alert alert-warning small py-2 mb-0">
+                        <i class="bi bi-lock-fill me-1"></i>
+                        <strong>{{ __('Exports bloqués') }}</strong> —
+                        {{ __('Tant qu\'il reste des événements non résolus, les exports de rapports sont désactivés. Résolvez-les tous pour débloquer.') }}
+                    </div>
+
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                        {{ __('Fermer') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
     <script>
+    // ── Bouton aide clignotant (permanent) ──────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('btnAideEvenements');
+        if (!btn) return;
+
+        var on = true;
+        setInterval(function () {
+            on = !on;
+            btn.style.backgroundColor = on ? '#0dcaf0' : '#ffffff';
+            btn.style.color           = on ? '#ffffff' : '#0dcaf0';
+        }, 400);
+    });
+
     // ── Modal Supprimer doublon ──────────────────────────────────────────────
     const modalDelete = document.getElementById('modalDelete');
     if (modalDelete) {

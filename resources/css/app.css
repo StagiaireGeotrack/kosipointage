@@ -1,6 +1,26 @@
 /* resources/css/app.css */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+/* ---- UTILITAIRES RESPONSIVITÉ (directive_02) ---- */
+/* Textes longs : retour à la ligne forcé */
+.text-break-word {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Titre de page responsive */
+.page-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+@media (min-width: 768px) {
+    .page-title { font-size: 1.25rem; }
+}
+@media (min-width: 992px) {
+    .page-title { font-size: 1.4rem; }
+}
+
 hr {
     border: none;
     height: 2px;
@@ -53,6 +73,12 @@ hr {
 #scrollToTop svg {
     width: 24px;
     height: 24px;
+}
+
+/* Fix global : empêcher le texte des boutons de se casser verticalement */
+.btn {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important; /* empêche les boutons de se comprimer dans un flex */
 }
 
 /* Bouton Primary (principal) */
@@ -826,4 +852,296 @@ legend {
 .form-control[readonly] {
     background-color: #f9fafb;
     border-color: #d1d5db;
+}
+
+/* ============================================
+   LAYOUT SIDEBAR — KOSI-TIME
+   ============================================ */
+
+/* Corps principal */
+.app-body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background: #f3f4f6;
+}
+
+/* Wrapper flex horizontal */
+.app-wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ---- SIDEBAR ---- */
+.app-sidebar {
+    width: 256px;
+    min-width: 256px;
+    height: 100vh;
+    background: linear-gradient(180deg, #3F52A4 0%, #2d3c7a 100%);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1050;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Brand / Logo */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    text-decoration: none;
+    flex-shrink: 0;
+    padding: 0.4rem;
+}
+
+/* Navigation : prend uniquement la hauteur de son contenu */
+.sidebar-nav {
+    flex: 0 0 auto;
+    overflow-y: auto;
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+/* Liens */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar-link:hover {
+    background: rgba(255,255,255,0.18);
+    color: white;
+    text-decoration: none;
+}
+.sidebar-link.active {
+    background: rgba(255,255,255,0.22);
+    color: white;
+    font-weight: 600;
+}
+.sidebar-link i {
+    font-size: 1.05rem;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Pied de sidebar */
+.sidebar-footer {
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding: 0.6rem;
+    flex-shrink: 0;
+    margin-top: auto;
+}
+.sidebar-user-email {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 0.5rem;
+    padding: 0 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.9);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.sidebar-logout-btn:hover {
+    background: rgba(255,255,255,0.18);
+    color: white;
+}
+
+/* ---- COLONNE DROITE ---- */
+.app-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ---- TOPBAR ---- */
+.app-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 1.25rem;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    flex-shrink: 0;
+    z-index: 100;
+}
+/* Ancien toggle (conservé pour compatibilité) */
+.sidebar-toggle-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+}
+.sidebar-toggle-btn:hover { color: #3F52A4; }
+
+/* ---- HAMBURGER BUTTON (visible sur TOUS les écrans) ---- */
+.hamburger-btn {
+    display: flex; /* visible partout : mobile, tablette, desktop */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: #3F52A4;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+.hamburger-btn:hover {
+    background: #2d3c7a;
+}
+.hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2.5px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Sidebar : transition fluide pour collapse/expand */
+.app-sidebar {
+    transition: width 0.28s ease, min-width 0.28s ease;
+}
+
+/* Desktop (>= 992px) : collapse de la sidebar via classe .collapsed */
+@media (min-width: 992px) {
+    .app-sidebar.collapsed {
+        width: 0 !important;
+        min-width: 0 !important;
+        overflow: hidden;
+        padding: 0 !important;
+    }
+}
+
+.topbar-role-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    color: white;
+}
+
+/* ---- CONTENU PRINCIPAL ---- */
+.app-content {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1.25rem 1.5rem;
+}
+
+/* ---- RESPONSIVE MOBILE & TABLETTE ---- */
+
+/* Tablette (768px - 991px) : sidebar overlay, hamburger visible */
+@media (max-width: 991px) and (min-width: 768px) {
+    .topbar-spacer {
+        display: none;
+    }
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        width: 240px;
+        min-width: 240px;
+        transition: transform 0.28s ease;
+    }
+    .app-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+    }
+    .app-content {
+        padding: 1rem 1.25rem;
+    }
+}
+
+/* Mobile (< 768px) : sidebar masquée, hamburger visible */
+@media (max-width: 767px) {
+    .hamburger-btn {
+        display: flex;
+    }
+    .topbar-spacer {
+        display: none;
+    }
+    .app-body {
+        overflow: auto;
+    }
+    .app-wrapper {
+        overflow: auto;
+        height: auto;
+        min-height: 100vh;
+    }
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        width: 240px;
+        min-width: 240px;
+    }
+    .app-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+    }
+    .app-main {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+    .app-content {
+        padding: 0.875rem;
+        overflow-y: visible;
+    }
+    .app-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+    }
 }

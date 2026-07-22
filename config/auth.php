@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'administration',
         ],
+        'employe' => [
+            'driver' => 'session',
+            'provider' => 'employes',
+        ],
     ],
 
     /*
@@ -61,8 +65,12 @@ return [
 
     'providers' => [
         'administration' => [
-            'driver' => 'sha1hash',
+            'driver' => 'sha1hash', // Custom driver pour les admins
             'model' => App\Models\Administration::class,
+        ],
+        'employes' => [
+            'driver' => 'eloquent', // Driver natif Laravel pour les employés
+            'model' => App\Models\Employe::class,
         ],
     ],
 

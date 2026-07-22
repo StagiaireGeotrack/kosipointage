@@ -4,16 +4,22 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Conge;
 use App\Models\Employe;
+use App\Models\JourNonTravaille;
+use App\Exports\ReportMultiSheetExport;
 use Illuminate\Http\Request;
 use App\Models\EntrepriseSiege;
 use App\Services\ExportService;
 use App\Services\ActivityLogService;
 use App\Services\EventDetectionService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
@@ -79,6 +85,26 @@ class ReportController extends Controller
         $nomMois = \Carbon\Carbon::createFromDate($request->annee, $request->mois, 1)
             ->locale('fr')
             ->translatedFormat('F');
+
+        // ── Vérification des événements non résolus AVANT l'appel API ──
+        $dateFrom = Carbon::createFromDate($request->annee, $request->mois, 1)->format('Y-m-d');
+        $dateTo   = Carbon::createFromDate($request->annee, $request->mois, 1)->endOfMonth()->format('Y-m-d');
+
+        $count = app(EventDetectionService::class)->countUnresolvedInRange(
+            (int) $request->SiegeID,
+            $dateFrom,
+            $dateTo
+        );
+
+        if ($count > 0) {
+            $nomMoisFormate = ucfirst($nomMois);
+            return redirect()->back()->with('error',
+                "Impossible d'envoyer le rapport.<br>" .
+                "Vous avez <strong>{$count} événement(s) non résolu(s)</strong> sur <strong>{$siege->Nom}</strong> " .
+                "pour le mois de <strong>{$nomMoisFormate} {$request->annee}</strong>.<br>" .
+                "Corrigez-les sur la page des événements avant de générer ce rapport."
+            );
+        }
 
         try {
             $response = Http::timeout(30)->withHeaders([
@@ -184,13 +210,29 @@ class ReportController extends Controller
     {
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
 
-        // Bloquer l'export si le Simple Admin a des erreurs non résolues
-        if (auth()->user()->isSimpleAdmin()) {
-            $count = app(EventDetectionService::class)->countUnresolved(auth()->user()->SiegeID);
-            if ($count > 0) {
-                return redirect()->route('evenements.index')
-                    ->with('error', "Vous avez {$count} événement(s) non résolu(s). Corrigez-les avant d'exporter les rapports.");
-            }
+        // Bloquer l'export pour TOUS les utilisateurs : dates obligatoires + vérification des événements
+        $dateFrom = $request->input('date_from');
+        $dateTo   = $request->input('date_to');
+
+        // Exiger obligatoirement une plage de dates
+        if (empty($dateFrom) || empty($dateTo)) {
+            return redirect()->back()
+                ->with('error', 'Veuillez spécifier une date de début et une date de fin avant d\'exporter les rapports.');
+        }
+
+        // Déterminer le siège à vérifier : filtre de la requête en priorité, sinon siège de l'utilisateur
+        // null = SuperAdmin sans filtre → vérification sur tous les sièges
+        $checkSiegeId = $request->input('SiegeID') ? (int) $request->input('SiegeID')
+                      : (auth()->user()->SiegeID ? (int) auth()->user()->SiegeID : null);
+
+        $count = app(EventDetectionService::class)->countUnresolvedInRange(
+            $checkSiegeId,
+            $dateFrom,
+            $dateTo
+        );
+        if ($count > 0) {
+            return redirect()->route('evenements.index')
+                ->with('error', "Vous avez {$count} événement(s) non résolu(s) entre le {$dateFrom} et le {$dateTo}. Corrigez-les avant d'exporter les rapports.");
         }
 
         // Filtres
@@ -246,22 +288,51 @@ class ReportController extends Controller
         // Déterminer le titre du rapport
         $title = $isDayNight ? __('Rapport jour et nuit') : __('Rapport quotidien');
         
-        // Exporter vers Excel
+        // Exporter
         ActivityLogService::log(action: 'export_excel', modelType: 'Report');
-        return $this->exportService->exportToExcel($data, $title);
+
+        // Si un employé est sélectionné → 1 XLSX multi-onglets
+        if (!empty($filters['employee_id'])) {
+            $sheets = $this->buildEmployeeSheets(
+                $data, $sortedResults,
+                (int) $filters['employee_id'], $checkSiegeId,
+                $dateFrom, $dateTo, $isDayNight
+            );
+            $export = new ReportMultiSheetExport(...$sheets);
+            return Excel::download($export, $title . '_' . Carbon::now()->format('Y-m-d') . '.xlsx');
+        }
+
+        // Sinon → ZIP : 1 XLSX multi-onglets par employé
+        return $this->buildMultiSheetZip($sortedResults, $checkSiegeId, $dateFrom, $dateTo, $isDayNight, $title);
     }
 
     public function exportPdf(Request $request, string $type)
     {
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
 
-        // Bloquer l'export si le Simple Admin a des erreurs non résolues
-        if (auth()->user()->isSimpleAdmin()) {
-            $count = app(EventDetectionService::class)->countUnresolved(auth()->user()->SiegeID);
-            if ($count > 0) {
-                return redirect()->route('evenements.index')
-                    ->with('error', "Vous avez {$count} événement(s) non résolu(s). Corrigez-les avant d'exporter les rapports.");
-            }
+        // Bloquer l'export pour TOUS les utilisateurs : dates obligatoires + vérification des événements
+        $dateFrom = $request->input('date_from');
+        $dateTo   = $request->input('date_to');
+
+        // Exiger obligatoirement une plage de dates
+        if (empty($dateFrom) || empty($dateTo)) {
+            return redirect()->back()
+                ->with('error', 'Veuillez spécifier une date de début et une date de fin avant d\'exporter les rapports.');
+        }
+
+        // Déterminer le siège à vérifier : filtre de la requête en priorité, sinon siège de l'utilisateur
+        // null = SuperAdmin sans filtre → vérification sur tous les sièges
+        $checkSiegeId = $request->input('SiegeID') ? (int) $request->input('SiegeID')
+                      : (auth()->user()->SiegeID ? (int) auth()->user()->SiegeID : null);
+
+        $count = app(EventDetectionService::class)->countUnresolvedInRange(
+            $checkSiegeId,
+            $dateFrom,
+            $dateTo
+        );
+        if ($count > 0) {
+            return redirect()->route('evenements.index')
+                ->with('error', "Vous avez {$count} événement(s) non résolu(s) entre le {$dateFrom} et le {$dateTo}. Corrigez-les avant d'exporter les rapports.");
         }
 
         // Filtres
@@ -317,13 +388,259 @@ class ReportController extends Controller
         // Déterminer le titre du rapport
         $title = $isDayNight ? 'Rapport jour et nuit' : 'Rapport quotidien';
         
-        // Exporter vers PDF
+        // Exporter
         ActivityLogService::log(action: 'export_pdf', modelType: 'Report');
-        return $this->exportService->exportToPdf($data, $title, 'exports.generic', [
-            'filters' => $filters,
-        ]);
+
+        // Si un employé est sélectionné → 1 PDF multi-sections
+        if (!empty($filters['employee_id'])) {
+            $sheets = $this->buildEmployeeSheets(
+                $data, $sortedResults,
+                (int) $filters['employee_id'], $checkSiegeId,
+                $dateFrom, $dateTo, $isDayNight
+            );
+            $viewData = [
+                'title'    => $title,
+                'date'     => Carbon::now()->isoFormat('dddd D MMMM YYYY - HH:mm:ss'),
+                'user'     => auth()->user()->Identifiant_email,
+                'filters'  => $filters,
+                'rapport'  => $sheets[0],
+                'conges'   => $sheets[1],
+                'feries'   => $sheets[2],
+                'absences' => $sheets[3],
+            ];
+            $pdf = Pdf::loadView('exports.rapport_complet', $viewData)->setPaper('a4', 'landscape');
+            return $pdf->download($title . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.pdf');
+        }
+
+        // Sinon → ZIP : 1 PDF multi-sections par employé
+        return $this->buildMultiSectionPdfZip($sortedResults, $checkSiegeId, $dateFrom, $dateTo, $isDayNight, $title, $filters);
     }
     
+    // ─────────────────────────────────────────────────────────────────
+    // Méthodes privées : construction des onglets / sections
+    // ─────────────────────────────────────────────────────────────────
+
+    /**
+     * Construit les 4 collections de données pour un employé donné.
+     * Retourne [rapport, conges, feries, absences] (Collections).
+     */
+    private function buildEmployeeSheets(
+        Collection $rapportData,
+        Collection $rawResults,
+        int $employeeId,
+        ?int $siegeId,
+        string $dateFrom,
+        string $dateTo,
+        bool $isDayNight
+    ): array {
+        // ── Congés ──────────────────────────────────────────────────
+        $congesModels = Conge::withoutGlobalScopes()
+            ->with(['employe', 'siege'])
+            ->where('employee_id', $employeeId)
+            ->where('date_debut', '<=', $dateTo)
+            ->where('date_fin',   '>=', $dateFrom)
+            ->orderBy('date_debut')
+            ->get();
+
+        $congesData = $congesModels->map(fn($c) => [
+            'N° Matricule'  => $c->employe?->num_mat ?? '-',
+            'Employé(e) Nom'=> $c->employe?->Nom,
+            'Siège Nom'     => $c->siege?->Nom,
+            'Date Début'    => ucfirst($c->date_debut->isoFormat('dddd D MMMM YYYY')),
+            'Date Fin'      => ucfirst($c->date_fin->isoFormat('dddd D MMMM YYYY')),
+            'Type Congé'    => $c->type_conge,
+            'Commentaire'   => $c->commentaire ?? '',
+        ]);
+
+        // ── Jours fériés / non travaillés ──────────────────────────
+        $feriesModels = JourNonTravaille::actif()
+            ->periode($dateFrom, $dateTo)
+            ->where(fn($q) => $q->whereNull('SiegeID')->orWhere('SiegeID', $siegeId))
+            ->orderBy('Date')
+            ->get();
+
+        $feriesData = $feriesModels->map(fn($j) => [
+            'Date'        => ucfirst($j->Date->isoFormat('dddd D MMMM YYYY')),
+            'Nom'         => $j->Nom,
+            'Type'        => $j->Type,
+            'Description' => $j->Description ?? '',
+            'Siège'       => $j->siege?->Nom ?? 'National',
+        ]);
+
+        // ── Absences ────────────────────────────────────────────────
+        $absencesData = $this->calculateAbsences(
+            $rawResults, $congesModels, $feriesModels, $dateFrom, $dateTo
+        );
+
+        return [$rapportData, $congesData, $feriesData, $absencesData];
+    }
+
+    /**
+     * Calcule les jours ouvrables (lun-ven) d'absence pour un employé.
+     */
+    private function calculateAbsences(
+        Collection $rawResults,
+        Collection $congesModels,
+        Collection $feriesModels,
+        string $dateFrom,
+        string $dateTo
+    ): Collection {
+        // Infos employé issues du premier résultat
+        $first      = $rawResults->first();
+        $nom        = $first?->employee_nom ?? '';
+        $matricule  = $first?->num_mat ?? '-';
+        $siegeNom   = $first?->siege_nom ?? '';
+
+        // 1. Tous les jours ouvrables (lun-ven) de la période
+        $workingDays = collect();
+        $cursor = Carbon::parse($dateFrom);
+        $end    = Carbon::parse($dateTo);
+        while ($cursor->lte($end)) {
+            if (!$cursor->isWeekend()) {
+                $workingDays->push($cursor->format('Y-m-d'));
+            }
+            $cursor->addDay();
+        }
+
+        // 2. Jours avec pointage (date_reel brute depuis rawResults)
+        $pointageDays = $rawResults
+            ->pluck('date_reel')
+            ->map(fn($d) => Carbon::parse($d)->format('Y-m-d'))
+            ->unique();
+
+        // 3. Jours couverts par congés (expansion des plages)
+        $congeDays = collect();
+        foreach ($congesModels as $c) {
+            $s = Carbon::parse($c->date_debut);
+            $e = Carbon::parse($c->date_fin);
+            while ($s->lte($e)) {
+                $congeDays->push($s->format('Y-m-d'));
+                $s->addDay();
+            }
+        }
+        $congeDays = $congeDays->unique();
+
+        // 4. Jours fériés
+        $ferieDays = $feriesModels
+            ->pluck('Date')
+            ->map(fn($d) => Carbon::parse($d)->format('Y-m-d'))
+            ->unique();
+
+        // 5. Absences = jours ouvrables non couverts
+        return $workingDays
+            ->filter(fn($day) =>
+                !$pointageDays->contains($day) &&
+                !$congeDays->contains($day) &&
+                !$ferieDays->contains($day)
+            )
+            ->map(fn($day) => [
+                'N° Matricule'  => $matricule,
+                'Employé(e) Nom'=> $nom,
+                'Siège Nom'     => $siegeNom,
+                'Date Absence'  => ucfirst(Carbon::parse($day)->isoFormat('dddd D MMMM YYYY')),
+            ])
+            ->values();
+    }
+
+    /**
+     * Génère un ZIP de fichiers Excel multi-onglets (1 par employé).
+     */
+    private function buildMultiSheetZip(
+        Collection $sortedResults,
+        ?int $siegeId,
+        string $dateFrom,
+        string $dateTo,
+        bool $isDayNight,
+        string $title
+    ): \Symfony\Component\HttpFoundation\BinaryFileResponse {
+        $zipPath = sys_get_temp_dir() . '/report_' . time() . rand(100, 999) . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($sortedResults->groupBy('employee_id') as $empId => $empRaw) {
+            // Reconstruire les données rapport pour cet employé
+            $empData = $empRaw->map(fn($r) => $this->mapRapportRow($r, $isDayNight))->values();
+            $empSiegeId = $empRaw->first()?->SiegeID ? (int)$empRaw->first()->SiegeID : $siegeId;
+
+            $sheets  = $this->buildEmployeeSheets($empData, $empRaw, (int)$empId, $empSiegeId, $dateFrom, $dateTo, $isDayNight);
+            $export  = new ReportMultiSheetExport(...$sheets);
+            $content = Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX);
+
+            $safe = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $empRaw->first()?->employee_nom ?? $empId);
+            $zip->addFromString($safe . '.xlsx', $content);
+        }
+
+        $zip->close();
+        return response()->download($zipPath, $title . '_' . Carbon::now()->format('Y-m-d') . '.zip')
+            ->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Génère un ZIP de fichiers PDF multi-sections (1 par employé).
+     */
+    private function buildMultiSectionPdfZip(
+        Collection $sortedResults,
+        ?int $siegeId,
+        string $dateFrom,
+        string $dateTo,
+        bool $isDayNight,
+        string $title,
+        array $filters
+    ): \Symfony\Component\HttpFoundation\BinaryFileResponse {
+        $zipPath = sys_get_temp_dir() . '/report_pdf_' . time() . rand(100, 999) . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($sortedResults->groupBy('employee_id') as $empId => $empRaw) {
+            $empData    = $empRaw->map(fn($r) => $this->mapRapportRow($r, $isDayNight))->values();
+            $empSiegeId = $empRaw->first()?->SiegeID ? (int)$empRaw->first()->SiegeID : $siegeId;
+
+            $sheets = $this->buildEmployeeSheets($empData, $empRaw, (int)$empId, $empSiegeId, $dateFrom, $dateTo, $isDayNight);
+
+            $viewData = [
+                'title'    => $title,
+                'date'     => Carbon::now()->isoFormat('dddd D MMMM YYYY - HH:mm:ss'),
+                'user'     => auth()->user()->Identifiant_email,
+                'filters'  => $filters,
+                'rapport'  => $sheets[0],
+                'conges'   => $sheets[1],
+                'feries'   => $sheets[2],
+                'absences' => $sheets[3],
+            ];
+
+            $pdf  = Pdf::loadView('exports.rapport_complet', $viewData)->setPaper('a4', 'landscape');
+            $safe = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $empRaw->first()?->employee_nom ?? $empId);
+            $zip->addFromString($safe . '.pdf', $pdf->output());
+        }
+
+        $zip->close();
+        return response()->download($zipPath, $title . '_' . Carbon::now()->format('Y-m-d') . '.zip')
+            ->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Mapper un résultat DB brut en ligne de rapport (réutilisé dans ZIP).
+     */
+    private function mapRapportRow(object $rapport, bool $isDayNight): array
+    {
+        $row = [
+            'N° Matricule'  => $rapport->num_mat ?? '-',
+            'Employé(e) Nom'=> $rapport->employee_nom,
+            'Siège Nom'     => $rapport->siege_nom,
+            'Date pointage' => ucfirst(Carbon::parse($rapport->date_reel)->isoFormat('dddd D MMMM YYYY')),
+        ];
+        if ($isDayNight) {
+            $row['Type travail'] = $rapport->type_travail;
+        }
+        $row += [
+            'Heure Entrée'    => $rapport->heure_entree,
+            'Pause Déjeuner'  => $rapport->pause_dejeuner,
+            'Heure Sortie'    => $rapport->heure_sortie,
+            'Total Heure'     => $rapport->total_heure_journee,
+        ];
+        return $row;
+    }
+
     private function getFilters(Request $request)
     {
         return $request->only([

@@ -28,7 +28,28 @@ class AdministrationRepository extends BaseRepository
         }
         
         // Filtre par type d'administrateur
-        if (isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] !== '') {
+        if (isset($filters['role']) && $filters['role'] !== '') {
+            switch ($filters['role']) {
+                case 'super_admin':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 0)->where('IsManager', 0);
+                    break;
+                case 'manager_super_admin':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 0)->where('IsManager', 1);
+                    break;
+                case 'seller':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 1)->where('IsManager', 0);
+                    break;
+                case 'manager_seller':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 1)->where('IsManager', 1);
+                    break;
+                case 'simple_admin':
+                    $query->where('IsSuperAdmin', 0)->where('IsManager', 0);
+                    break;
+                case 'manager_simple_admin':
+                    $query->where('IsSuperAdmin', 0)->where('IsManager', 1);
+                    break;
+            }
+        } elseif (isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] !== '') {
             $query->where('IsSuperAdmin', $filters['IsSuperAdmin']);
         }
         
@@ -53,7 +74,28 @@ class AdministrationRepository extends BaseRepository
             $query->where('SiegeID', $filters['SiegeID']);
         }
         
-        if (isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] !== '') {
+        if (isset($filters['role']) && $filters['role'] !== '') {
+            switch ($filters['role']) {
+                case 'super_admin':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 0)->where('IsManager', 0);
+                    break;
+                case 'manager_super_admin':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 0)->where('IsManager', 1);
+                    break;
+                case 'seller':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 1)->where('IsManager', 0);
+                    break;
+                case 'manager_seller':
+                    $query->where('IsSuperAdmin', 1)->where('IsSeller', 1)->where('IsManager', 1);
+                    break;
+                case 'simple_admin':
+                    $query->where('IsSuperAdmin', 0)->where('IsManager', 0);
+                    break;
+                case 'manager_simple_admin':
+                    $query->where('IsSuperAdmin', 0)->where('IsManager', 1);
+                    break;
+            }
+        } elseif (isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] !== '') {
             $query->where('IsSuperAdmin', $filters['IsSuperAdmin']);
         }
         
@@ -62,10 +104,17 @@ class AdministrationRepository extends BaseRepository
         
         // Sélectionner et formater les données pour l'export
         return $query->orderBy('created_at', 'asc')->get()->map(function ($admin) {
+            $type = __('Administrateur simple');
+            if ($admin->isTrueSuperAdmin() && !$admin->isManagerSuperAdmin()) $type = __('Super Administrateur');
+            elseif ($admin->isManagerSuperAdmin()) $type = __('Manager Super Administrateur');
+            elseif ($admin->isManagerSeller()) $type = __('Manager Vendeur');
+            elseif ($admin->isSeller()) $type = __('Vendeur');
+            elseif ($admin->isManagerSimpleAdmin()) $type = __('Manager Administrateur simple');
+
             return [
                 'ID' => $admin->ID,
                 'E-mail' => $admin->Identifiant_email,
-                'Type' => $admin->IsSuperAdmin ? __('Super Administrateur') : __('Simpe Administrateur'),
+                'Type' => $type,
                 'Siège' => $admin->SiegeID ? $admin->siege->Nom : __(''),
                 'Date de création' => ucfirst($admin->created_at ? $admin->created_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
                 'Dernière mise à jour' => ucfirst($admin->updated_at ? $admin->updated_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),

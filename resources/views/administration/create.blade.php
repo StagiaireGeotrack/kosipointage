@@ -39,6 +39,7 @@
                     </div>
 
                     <!-- IsSuperAdmin -->
+                    @if(auth()->user()->isTrueSuperAdmin())
                     <div class="mb-3">
                         <div class="form-check">
                             <input id="IsSuperAdmin" type="checkbox" name="IsSuperAdmin" value="1" 
@@ -49,8 +50,31 @@
                         </div>
                         <x-input-error :messages="$errors->get('IsSuperAdmin')" class="mt-2" />
                     </div>
+                    @endif
+
+                    <!-- IsManager -->
+                    @if(auth()->user()->isTrueSuperAdmin())
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="IsManager" type="checkbox" name="IsManager" value="1" 
+                                {{ old('IsManager') ? 'checked' : '' }} 
+                                class="form-check-input">
+                            <label for="IsManager" class="form-check-label">{{ __('Est un Manager (hérite des droits mais ne peut créer ses pairs)') }}</label>
+                        </div>
+                        <x-input-error :messages="$errors->get('IsManager')" class="mt-2" />
+                    </div>
+                    @elseif(auth()->user()->isSimpleAdmin())
+                    <!-- Champ caché forcé pour le simple admin, juste pour l'affichage visuel ou la compréhension, sinon on met juste hidden -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="IsManager" type="checkbox" name="IsManager" value="1" checked disabled class="form-check-input">
+                            <label for="IsManager" class="form-check-label">{{ __('Est un Manager Admin Simple (création obligatoire)') }}</label>
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- SiegeID -->
+                    @if(auth()->user()->isTrueSuperAdmin())
                     <div class="mb-3" id="siege-field" style="display: {{ old('IsSuperAdmin') ? 'none' : 'block' }};">
                         <x-input-label for="SiegeID" :value="__('Siège')" />
                         <select id="SiegeID" name="SiegeID" class="form-select mt-1">
@@ -63,6 +87,16 @@
                         </select>
                         <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                     </div>
+                    @elseif(auth()->user()->isSimpleAdmin())
+                    <div class="mb-3" id="siege-field">
+                        <x-input-label for="SiegeID" :value="__('Siège (Auto-assigné)')" />
+                        <select id="SiegeID" name="SiegeID" class="form-select mt-1" disabled>
+                            <option value="{{ auth()->user()->SiegeID }}" selected>
+                                {{ auth()->user()->siege->Nom ?? 'Votre Siège' }}
+                            </option>
+                        </select>
+                    </div>
+                    @endif
 
                     <!-- Actived (pour les administrateurs simples uniquement) -->
                     <div class="mb-3" id="actived-field" style="display: {{ old('IsSuperAdmin') ? 'none' : 'block' }};">
@@ -88,7 +122,8 @@
     @push('scripts')
     <script>
         function toggleAdminFields() {
-            const isSuperAdmin = document.getElementById('IsSuperAdmin').checked;
+            const isSuperAdminEl = document.getElementById('IsSuperAdmin');
+            const isSuperAdmin = isSuperAdminEl ? isSuperAdminEl.checked : false;
             const siegeField = document.getElementById('siege-field');
             const activedField = document.getElementById('actived-field');
             const siegeSelect = document.getElementById('SiegeID');
