@@ -10,15 +10,19 @@ return new class extends Migration
     {
         Schema::create('admin_roles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('admin_id');
+            
+            // Correction : unsignedBigInteger pour matcher la clé primaire ID de "administration"
+            $table->unsignedBigInteger('admin_id');
             $table->enum('role', ['superadmin', 'company_admin', 'rh', 'manager', 'direction']);
-            $table->unsignedInteger('company_id')->nullable(); // null = global (superadmin)
+            $table->unsignedBigInteger('company_id')->nullable(); // null = global (superadmin)
             $table->boolean('is_active')->default(true);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
+            // Contrainte de clé étrangère
             $table->foreign('admin_id')->references('ID')->on('administration')->onDelete('cascade');
 
+            // Index
             $table->index(['admin_id', 'is_active']);
             $table->index(['company_id', 'role', 'is_active']);
         });

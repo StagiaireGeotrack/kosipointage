@@ -19,6 +19,7 @@ use App\Http\Controllers\AllDashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EventPointageController;
 use App\Http\Controllers\LeaveSettingsController; // <-- 1. AJOUTE CET IMPORT EN HAUT
+use App\Http\Controllers\LeaveTypeController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -290,6 +291,27 @@ Route::prefix('admin')->group(function () {
         Route::get('/conges/settings', [LeaveSettingsController::class, 'index'])->name('conges.settings');
     });
 });
+
+
+
+// Si ton auth web ne marche pas encore, enlève ->middleware(['auth']) temporairement
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    
+    // Page interface
+    Route::get('/leave-types', [LeaveTypeController::class, 'page'])->name('admin.leave-types');
+
+    // API JSON
+    Route::get('/leave-types/api', [LeaveTypeController::class, 'index']);
+    Route::post('/leave-types/api', [LeaveTypeController::class, 'store']);
+    Route::get('/leave-types/api/{id}', [LeaveTypeController::class, 'show']);
+    Route::put('/leave-types/api/{id}', [LeaveTypeController::class, 'update']);
+    Route::delete('/leave-types/api/{id}', [LeaveTypeController::class, 'destroy']);
+    
+});
+    
+
+
+
 Route::fallback(function () {
     return redirect()->route('sieges.index');
 });
