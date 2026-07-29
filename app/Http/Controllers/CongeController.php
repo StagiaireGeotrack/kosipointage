@@ -67,6 +67,7 @@ class CongeController extends Controller
         return view('conges.create', compact('employes', 'typesConge', 'sieges' , 'siege_id'));
     }
 
+    
     public function store(Request $request)
     {
         $validated = $request->validate([

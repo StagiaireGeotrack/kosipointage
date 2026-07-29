@@ -18,6 +18,7 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\AllDashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EventPointageController;
+use App\Http\Controllers\LeaveSettingsController; // <-- 1. AJOUTE CET IMPORT EN HAUT
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -284,6 +285,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/impersonate-employe-leave', [\App\Http\Controllers\ImpersonateController::class, 'leaveEmploye'])->name('impersonate.employe.leave');
 });
 
+Route::prefix('admin')->group(function () {
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/conges/settings', [LeaveSettingsController::class, 'index'])->name('conges.settings');
+    });
+});
 Route::fallback(function () {
     return redirect()->route('sieges.index');
 });

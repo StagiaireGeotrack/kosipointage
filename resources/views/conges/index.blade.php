@@ -8,6 +8,9 @@
             <a href="{{ route('conges.create') }}" class="btn btn-primary">
                 {{ __('Nouveau congé') }}
             </a>
+            <a href="{{ route('conges.settings') }}" class="btn btn-outline-primary">
+    ⚙️ Paramètres
+</a>
         </div>
     </x-slot>
 
