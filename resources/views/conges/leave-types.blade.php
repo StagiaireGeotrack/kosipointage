@@ -44,7 +44,26 @@
 <div class="container">
     <h1>🛠️ Paramétrage — Types de Congés</h1>
     <p class="subtitle">Gérez ici tous les types de congés de votre siège. Aucun code à modifier.</p>
-
+{{-- Bandeau siège : sélecteur pour Super Admin, affichage fixe pour Simple Admin --}}
+<div style="background:#dbeafe;color:#1e40af;padding:12px 16px;border-radius:8px;margin-bottom:20px;font-size:14px; display:flex; align-items:center; justify-content:space-between;">
+    <div>
+        🏢 <strong>Siège actuel :</strong> {{ $selectedSiegeName }} (ID: {{ $selectedSiegeId }})
+    </div>
+    
+    @if(auth()->user()->isTrueSuperAdmin() && $sieges)
+    <form method="POST" action="{{ route('admin.select-siege') }}" style="display:flex; align-items:center; gap:8px; margin:0;">
+        @csrf
+        <label style="font-size:13px; font-weight:600;">Changer :</label>
+        <select name="siege_id" onchange="this.form.submit()" style="padding:6px 10px; border-radius:6px; border:1px solid #93c5fd; background:white; color:#1e40af; font-size:13px; cursor:pointer;">
+            @foreach($sieges as $s)
+                <option value="{{ $s->ID }}" {{ $selectedSiegeId == $s->ID ? 'selected' : '' }}>
+                    {{ $s->Nom }}
+                </option>
+            @endforeach
+        </select>
+    </form>
+    @endif
+</div>
     <div class="toolbar">
         <div>
             <span id="countBadge" style="background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">Chargement...</span>
@@ -162,6 +181,7 @@
             </div>
         </form>
     </div>
+    
 </div>
 
 <script>

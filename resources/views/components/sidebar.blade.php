@@ -144,6 +144,18 @@
         </a>
         @endif
 
+        {{-- Paramètres congés : Super Admin et Simple Admin --}}
+        @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+        <a href="{{ route('admin.leave-types') }}"
+           class="sidebar-link {{ request()->routeIs('admin.leave-types') ? 'active' : '' }}">
+            <i class="bi bi-sliders"></i>
+            <span>{{ __('Paramètres congés') }}</span>
+        </a>
+        @endif
+
+
+
+
         <a href="{{ route('jours-non-travailles.index') }}"
            class="sidebar-link {{ request()->routeIs('jours-non-travailles.*') ? 'active' : '' }}">
             <i class="bi bi-calendar-event"></i>

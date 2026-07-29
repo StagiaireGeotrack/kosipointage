@@ -16,25 +16,40 @@ class LeaveTypeController extends Controller
      */
  private function companyId(): int
 {
-    // Ton guard par défaut est 'web' → model Administration → champ SiegeID
     $user = auth()->user();
 
+    // SUPER ADMIN : lit la session d'abord (c'est là que le sélecteur écrit)
+    if ($user && $user->isTrueSuperAdmin()) {
+        return (int) session('admin_selected_siege_id', $user->SiegeID ?? 1);
+    }
+
+    // SIMPLE ADMIN : son SiegeID en base
     if ($user && isset($user->SiegeID)) {
         return (int) $user->SiegeID;
     }
 
-    // Fallback DEV uniquement — si tu testes sans être connecté
-    // TODO: supprimer en production
     return 1;
 }
 
     // Affiche la page admin
-    public function page()
-    {
-        return view('conges.leave-types');
+  public function page()
+{
+    $sieges = null;
+    $selectedSiegeId = session('admin_selected_siege_id', auth()->user()->SiegeID ?? 1);
+    $selectedSiegeName = null;
 
+    // Si Super Admin, on récupère tous les sièges pour le sélecteur
+    if (auth()->user() && auth()->user()->isTrueSuperAdmin()) {
+        $sieges = \App\Models\EntrepriseSiege::orderBy('Nom')->get();
+        $selectedSiegeName = $sieges->firstWhere('ID', $selectedSiegeId)?->Nom ?? 'Siège ' . $selectedSiegeId;
+    } else {
+        // Simple Admin : on récupère juste le nom de son siège
+        $siege = \App\Models\EntrepriseSiege::find($selectedSiegeId);
+        $selectedSiegeName = $siege?->Nom ?? 'Siège ' . $selectedSiegeId;
     }
 
+    return view('conges.leave-types', compact('sieges', 'selectedSiegeId', 'selectedSiegeName'));
+}
     // LISTE (JSON)
     public function index()
     {
