@@ -7,7 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/css/conges-settings.css',
+                'resources/js/conges-settings.js',
             ],
             refresh: true,
         }),

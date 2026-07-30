@@ -1,228 +1,374 @@
-/* ==========================================
-   1. BASE & CONTAINER
-   ========================================== */
-.settings-container {
-    padding: 1rem;
-    max-width: 1400px;
-    margin: 0 auto;
+/* ===== Page paramétrage congés ===== */
+.leave-types-page {
+    padding: 0;
 }
 
-.settings-header {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-}
-
-.settings-title {
-    font-weight: 600;
-    font-size: 1.25rem;
-    color: #212529;
-    margin-bottom: 0;
-}
-
-/* ==========================================
-   2. FILTRE SIÈGE
-   ========================================== */
-.siege-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.375rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+.leave-types-page .subtitle {
+    color: #6b7280;
     margin-bottom: 1.5rem;
+    font-size: 14px;
 }
 
-.siege-card-body {
-    padding: 1rem;
-}
-
-.siege-form-row {
+/* --- Bandeau siège --- */
+.siege-banner {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: stretch;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.siege-label {
-    font-weight: 700;
-    margin-bottom: 0;
+.siege-banner .siege-select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #93c5fd;
+    background: white;
+    color: #1e40af;
+    font-size: 13px;
+    cursor: pointer;
+    min-width: 180px;
 }
 
-.siege-select {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.375rem;
-    background-color: #fff;
-}
-
-/* ==========================================
-   3. GRID & CARDS
-   ========================================== */
-.settings-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-}
-
-.settings-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.375rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.settings-card-header {
-    background-color: #f8f9fa;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+/* --- Toolbar --- */
+.toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-.settings-card-title {
-    margin-bottom: 0;
-    font-weight: 700;
-    font-size: 1rem;
-}
-
-.settings-card-body {
-    padding: 0;
-    overflow-x: auto; /* Permet le scroll horizontal sur petit écran */
-}
-
-/* ==========================================
-   4. DATA TABLES
-   ========================================== */
-.settings-table {
-    width: 100%;
-    margin-bottom: 0;
-    border-collapse: collapse;
-    white-space: nowrap; /* Évite les retours à la ligne cassés */
-}
-
-.settings-table th, 
-.settings-table td {
-    padding: 0.75rem;
-    vertical-align: middle;
-    border-bottom: 1px solid #dee2e6;
-    text-align: left;
-}
-
-.settings-table tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-}
-
-.empty-cell {
-    text-align: center;
-    padding: 1.5rem 0;
-    color: #6c757d;
-}
-
-/* ==========================================
-   5. BADGES & BOUTONS
-   ========================================== */
-.btn-action-primary {
-    background-color: #0d6efd;
-    color: #fff;
-    border: none;
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
+.badge-count {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
     white-space: nowrap;
 }
 
-.btn-action-secondary {
-    background-color: #6c757d;
-    color: #fff;
-    border: none;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.25rem;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 0.875rem;
+/* --- Tableau --- */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.btn-action-danger {
-    background-color: transparent;
-    color: #dc3545;
-    border: 1px solid #dc3545;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8125rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
+.table-custom {
+    width: 100%;
+    min-width: 600px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: collapse;
 }
 
-.btn-action-danger:hover {
-    background-color: #dc3545;
-    color: #fff;
+.table-custom th,
+.table-custom td {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
+.table-custom th {
+    background: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-custom td {
+    border-bottom: 1px solid #f3f4f6;
+    color: #4b5563;
+}
+
+.table-custom tr:hover td {
+    background: #f9fafb;
+}
+
+.table-custom .empty {
+    text-align: center;
+    padding: 40px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* --- Badges & pastilles --- */
 .badge-status {
-    padding: 0.35em 0.65em;
-    font-size: 0.75em;
-    font-weight: 700;
-    color: #fff;
-    border-radius: 0.25rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
     display: inline-block;
+    white-space: nowrap;
 }
 
-.badge-success { background-color: #198754; }
-.badge-info { background-color: #0dcaf0; color: #000; }
-.badge-secondary { background-color: #6c757d; }
-
-.color-preview {
+.color-dot {
     display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 0.25rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
     vertical-align: middle;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-right: 6px;
+    border: 1px solid #e5e7eb;
+    flex-shrink: 0;
 }
 
-.code-block {
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.875em;
-    color: #d63384;
+/* --- Actions --- */
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
-/* ==========================================
-   6. MEDIA QUERIES (RESPONSIVE DESIGN)
-   ========================================== */
+/* --- Modal --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
 
-/* Écrans moyens (Tablettes - à partir de 576px) */
-@media (min-width: 576px) {
-    .settings-header {
-        flex-direction: row;
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-card {
+    background: white;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 10px;
+    padding: 24px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+
+.modal-card h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #111827;
+}
+
+/* --- Formulaire --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+}
+
+.form-error {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* ============================================
+   RESPONSIVE — TABLETTE (max-width: 768px)
+   ============================================ */
+@media (max-width: 768px) {
+    .leave-types-page {
+        padding: 0 8px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar .btn,
+    .toolbar .badge-count {
+        width: 100%;
+        text-align: center;
+    }
+
+    .modal-card {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   RESPONSIVE — MOBILE (max-width: 640px)
+   ============================================ */
+@media (max-width: 640px) {
+    .leave-types-page .subtitle {
+        font-size: 13px;
+    }
+
+    /* Bandeau siège en colonne */
+    .siege-banner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .siege-banner .siege-select {
+        width: 100%;
+    }
+
+    /* Tableau transformé en cartes */
+    .table-responsive-wrapper {
+        box-shadow: none;
+        overflow-x: visible;
+    }
+
+    .table-custom,
+    .table-custom thead,
+    .table-custom tbody,
+    .table-custom th,
+    .table-custom td,
+    .table-custom tr {
+        display: block;
+        width: 100%;
+        min-width: auto;
+    }
+
+    .table-custom thead {
+        display: none;
+    }
+
+    .table-custom tr {
+        margin-bottom: 16px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        border: 1px solid #f3f4f6;
+        padding: 16px;
+    }
+
+    .table-custom td {
+        display: flex;
         justify-content: space-between;
         align-items: center;
-    }
-    
-    .siege-form-row {
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .siege-select {
-        width: auto;
-        min-width: 300px;
-    }
-}
-
-/* Grands écrans (Ordinateurs - à partir de 992px) */
-@media (min-width: 992px) {
-    .settings-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 colonnes côte à côte */
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 14px;
+        white-space: normal;
     }
 
-    .settings-card-title {
-        font-size: 1.1rem;
+    .table-custom td:last-child {
+        border-bottom: none;
+    }
+
+    .table-custom td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #374151;
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .table-custom .empty {
+        display: block;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .table-custom .empty::before {
+        content: none;
+    }
+
+    /* Actions en ligne */
+    .actions {
+        justify-content: flex-end;
+    }
+
+    /* Formulaire en colonne */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    /* Modale pleine largeur */
+    .modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .modal-card {
+        border-radius: 16px 16px 0 0;
+        max-height: 85vh;
+        padding: 20px 16px;
+    }
+
+    .modal-card h2 {
+        font-size: 16px;
     }
 }
