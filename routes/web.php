@@ -328,6 +328,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     })->name('admin.select-siege');
 });
 
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+
+    Route::resource('leave-types', LeaveTypeController::class);
+});
+Route::post('/admin/leave-policies/api', [LeavePolicyController::class, 'store'])
+    ->name('leave-policies.store');
+    Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);
 
 Route::fallback(function () {
     return redirect()->route('sieges.index');

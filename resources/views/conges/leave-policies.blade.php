@@ -6,11 +6,11 @@
                 Paramétrage — Règles de Congés par Siège
             </h2>
             {{-- Seul le super admin peut ajouter un type au catalogue global --}}
-            @if(auth()->user()->isTrueSuperAdmin())
-                <button class="btn btn-outline-primary" onclick="openTypeModal()">
-                    + Nouveau type global
-                </button>
-            @endif
+           @if(auth()->user()->isTrueSuperAdmin())
+    <a href="{{ route('leave-types.create') }}" class="btn btn-outline-primary">
+        + Nouveau type global
+    </a>
+@endif
         </div>
     </x-slot>
 

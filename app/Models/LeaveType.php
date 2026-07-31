@@ -26,4 +26,9 @@ class LeaveType extends Model
     {
         return $this->hasMany(LeavePolicy::class);
     }
+    public function leavePolicies(): HasMany
+    {
+        return $this->hasMany(LeavePolicy::class);
+    }
+
 }

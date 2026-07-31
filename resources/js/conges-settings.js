@@ -7,7 +7,9 @@ import '../css/conges-settings.css';
     'use strict';
 
     const API_URL = '/admin/leave-policies/api';
-    let policies = [];
+    let items = []; // {leave_type, policy, configured}
+    let currentMode = 'edit'; // 'edit' ou 'create'
+    let currentLeaveTypeId = null;
 
     /* ---------- Chargement ---------- */
     async function loadPolicies() {
@@ -17,7 +19,7 @@ import '../css/conges-settings.css';
         try {
             const res = await fetch(API_URL);
             if (!res.ok) throw new Error('HTTP ' + res.status);
-            policies = await res.json();
+            items = await res.json();
             renderTable();
         } catch (e) {
             console.error(e);
@@ -39,44 +41,70 @@ import '../css/conges-settings.css';
         const badge = document.getElementById('countBadge');
         if (!tbody) return;
 
-        const count = policies.length;
+        const configuredCount = items.filter(i => i.configured).length;
+        const totalCount = items.length;
+
         if (badge) {
-            badge.textContent = count + ' type' + (count > 1 ? 's' : '') + ' configuré' + (count > 1 ? 's' : '');
+            badge.textContent = `${configuredCount} / ${totalCount} type(s) configuré(s)`;
         }
 
-        if (count === 0) {
+        if (totalCount === 0) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="5" class="empty">
-                        Aucun type de congé configuré pour ce siège.
+                        Aucun type de congé global disponible.
                     </td>
                 </tr>`;
             return;
         }
 
-        tbody.innerHTML = policies.map(p => {
-            const t = p.leave_type || {};
-            const r = p.rules || {};
-            return `
-            <tr>
-                <td>
-                    <span class="color-dot" style="background:${escapeHtml(t.color)}"></span>
-                    ${escapeHtml(t.name)}
-                </td>
-                <td><code>${escapeHtml(t.code)}</code></td>
-                <td>${rulesSummary(r)}</td>
-                <td>
-                    <button class="badge-status" 
-                            style="background:${p.is_active ? '#d1fae5' : '#fee2e2'};color:${p.is_active ? '#065f46' : '#991b1b'};border:none;cursor:pointer;"
-                            onclick="window.togglePolicy(${p.id}, ${p.is_active ? 0 : 1})">
-                        ${p.is_active ? 'Actif' : 'Inactif'}
-                    </button>
-                </td>
-                <td class="actions">
-                    <button class="btn btn-secondary btn-sm" onclick="window.editPolicy(${p.id})">⚙️ Règles</button>
-                </td>
-            </tr>
-        `}).join('');
+        tbody.innerHTML = items.map(item => {
+            const t = item.leave_type || {};
+
+            if (item.configured) {
+                const p = item.policy;
+                const r = p.rules || {};
+                return `
+                <tr>
+                    <td>
+                        <span class="color-dot" style="background:${escapeHtml(t.color)}"></span>
+                        ${escapeHtml(t.name)}
+                    </td>
+                    <td><code>${escapeHtml(t.code)}</code></td>
+                    <td>${rulesSummary(r)}</td>
+                    <td>
+                        <button class="badge-status" 
+                                style="background:${p.is_active ? '#d1fae5' : '#fee2e2'};color:${p.is_active ? '#065f46' : '#991b1b'};border:none;cursor:pointer;"
+                                onclick="window.togglePolicy(${p.id}, ${p.is_active ? 0 : 1})">
+                            ${p.is_active ? 'Actif' : 'Inactif'}
+                        </button>
+                    </td>
+                    <td class="actions">
+                        <button class="btn btn-secondary btn-sm" onclick="window.editPolicy(${p.id})">⚙️ Modifier</button>
+                    </td>
+                </tr>`;
+            } else {
+                return `
+                <tr style="background:#fffbeb;">
+                    <td>
+                        <span class="color-dot" style="background:${escapeHtml(t.color)};opacity:0.5;"></span>
+                        ${escapeHtml(t.name)}
+                    </td>
+                    <td><code>${escapeHtml(t.code)}</code></td>
+                    <td>
+                        <span class="badge" style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:12px;">
+                            Non configuré
+                        </span>
+                    </td>
+                    <td>-</td>
+                    <td class="actions">
+                        <button class="btn btn-success btn-sm" onclick="window.configureType(${t.id})">
+                            ➕ Configurer
+                        </button>
+                    </td>
+                </tr>`;
+            }
+        }).join('');
     }
 
     function rulesSummary(r) {
@@ -100,54 +128,81 @@ import '../css/conges-settings.css';
         return div.innerHTML;
     }
 
-    /* ---------- Modal ---------- */
-    function openModal(id) {
+    /* ---------- Modal : Édition ---------- */
+    function openEditModal(policyId) {
+        currentMode = 'edit';
+        currentLeaveTypeId = null;
+
         const modal = document.getElementById('modal');
         const formErrors = document.getElementById('formErrors');
         const modalTitle = document.getElementById('modalTitle');
 
         if (formErrors) formErrors.innerHTML = '';
-        document.getElementById('policyId').value = id || '';
+        document.getElementById('policyId').value = policyId;
 
-        if (modalTitle) {
-            modalTitle.textContent = 'Modifier les règles';
-        }
+        if (modalTitle) modalTitle.textContent = 'Modifier les règles';
 
-        const p = policies.find(x => x.id === id);
-        if (!p) return;
+        const item = items.find(i => i.policy && i.policy.id === policyId);
+        if (!item) return;
 
-        const t = p.leave_type || {};
+        const t = item.leave_type || {};
+        const p = item.policy;
         const r = p.rules || {};
 
-        // Infos type global (lecture seule)
-        setVal('typeName', t.name);
-        setVal('typeCode', t.code);
-        setVal('typeColor', t.color);
-
-        // Règles modifiables
-        setVal('min_notice_days', r.min_notice_days ?? 15);
-        setVal('max_per_year', r.max_per_year ?? 25);
-        setVal('max_consecutive_days', r.max_consecutive_days ?? 24);
-        setVal('max_carryover_days', r.max_carryover_days ?? 5);
-        setVal('min_duration_days', r.min_duration_days ?? 0.5);
-        setVal('requires_approval_from', r.requires_approval_from ?? 'manager_then_rh');
-        setVal('allow_half_day', r.allow_half_day ? '1' : '0');
-        setVal('exclude_weekends', r.exclude_weekends ? '1' : '0');
-        setVal('exclude_holidays', r.exclude_holidays ? '1' : '0');
-        setVal('deducts_balance', r.deducts_balance ? '1' : '0');
-        setVal('approval_required', r.approval_required ? '1' : '0');
-        setVal('requires_attachment', r.requires_attachment ?? 'never');
-        setVal('attachment_threshold', r.attachment_threshold ?? 0);
-        setVal('allow_negative_balance', r.allow_negative_balance ? '1' : '0');
-        setVal('negative_limit', r.negative_limit ?? 0);
-        setVal('is_active', p.is_active ? '1' : '0');
-
+        fillModal(t, r, p.is_active);
         if (modal) modal.classList.add('active');
+    }
+
+    /* ---------- Modal : Création ---------- */
+    function openCreateModal(leaveTypeId) {
+        currentMode = 'create';
+        currentLeaveTypeId = leaveTypeId;
+
+        const modal = document.getElementById('modal');
+        const formErrors = document.getElementById('formErrors');
+        const modalTitle = document.getElementById('modalTitle');
+
+        if (formErrors) formErrors.innerHTML = '';
+        document.getElementById('policyId').value = '';
+
+        if (modalTitle) modalTitle.textContent = 'Configurer les règles';
+
+        const item = items.find(i => i.leave_type.id === leaveTypeId);
+        if (!item) return;
+
+        // Valeurs par défaut
+        fillModal(item.leave_type, {}, true);
+        if (modal) modal.classList.add('active');
+    }
+
+    function fillModal(type, rules, isActive) {
+        setVal('typeName', type.name);
+        setVal('typeCode', type.code);
+        setVal('typeColor', type.color || '#3B82F6');
+
+        setVal('min_notice_days', rules.min_notice_days ?? 15);
+        setVal('max_per_year', rules.max_per_year ?? 25);
+        setVal('max_consecutive_days', rules.max_consecutive_days ?? 24);
+        setVal('max_carryover_days', rules.max_carryover_days ?? 5);
+        setVal('min_duration_days', rules.min_duration_days ?? 0.5);
+        setVal('requires_approval_from', rules.requires_approval_from ?? 'manager_then_rh');
+        setVal('allow_half_day', (rules.allow_half_day ?? true) ? '1' : '0');
+        setVal('exclude_weekends', (rules.exclude_weekends ?? true) ? '1' : '0');
+        setVal('exclude_holidays', (rules.exclude_holidays ?? true) ? '1' : '0');
+        setVal('deducts_balance', (rules.deducts_balance ?? true) ? '1' : '0');
+        setVal('approval_required', (rules.approval_required ?? true) ? '1' : '0');
+        setVal('requires_attachment', rules.requires_attachment ?? 'never');
+        setVal('attachment_threshold', rules.attachment_threshold ?? 0);
+        setVal('allow_negative_balance', (rules.allow_negative_balance ?? false) ? '1' : '0');
+        setVal('negative_limit', rules.negative_limit ?? 0);
+        setVal('is_active', isActive ? '1' : '0');
     }
 
     function closeModal() {
         const modal = document.getElementById('modal');
         if (modal) modal.classList.remove('active');
+        currentMode = 'edit';
+        currentLeaveTypeId = null;
     }
 
     function setVal(id, value) {
@@ -157,8 +212,8 @@ import '../css/conges-settings.css';
 
     /* ---------- Sauvegarde ---------- */
     async function savePolicy() {
-        const id = document.getElementById('policyId').value;
-        if (!id) return;
+        const policyId = document.getElementById('policyId').value;
+        const formErrors = document.getElementById('formErrors');
 
         const payload = {
             rules: {
@@ -181,9 +236,23 @@ import '../css/conges-settings.css';
             is_active: document.getElementById('is_active').value === '1',
         };
 
+        let url, method;
+
+        if (currentMode === 'edit' && policyId) {
+            url = `${API_URL}/${policyId}`;
+            method = 'PUT';
+        } else if (currentMode === 'create' && currentLeaveTypeId) {
+            url = API_URL;
+            method = 'POST';
+            payload.leave_type_id = currentLeaveTypeId;
+        } else {
+            if (formErrors) formErrors.innerHTML = '<div class="form-error">Erreur interne.</div>';
+            return;
+        }
+
         try {
-            const res = await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
+            const res = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': window.csrfToken || '',
@@ -196,20 +265,21 @@ import '../css/conges-settings.css';
                 const data = await res.json().catch(() => ({}));
                 if (data.errors) {
                     const errors = Object.values(data.errors).flat();
-                    document.getElementById('formErrors').innerHTML = errors
-                        .map(e => `<div class="form-error">• ${escapeHtml(e)}</div>`)
-                        .join('');
+                    if (formErrors) {
+                        formErrors.innerHTML = errors
+                            .map(e => `<div class="form-error">• ${escapeHtml(e)}</div>`)
+                            .join('');
+                    }
                     return;
                 }
-                throw new Error('Erreur serveur');
+                throw new Error(data.message || 'Erreur serveur');
             }
 
             closeModal();
             loadPolicies();
         } catch (e) {
-            const errBox = document.getElementById('formErrors');
-            if (errBox) {
-                errBox.innerHTML = `<div class="form-error">Erreur réseau ou serveur.</div>`;
+            if (formErrors) {
+                formErrors.innerHTML = `<div class="form-error">${escapeHtml(e.message)}</div>`;
             }
         }
     }
@@ -245,7 +315,8 @@ import '../css/conges-settings.css';
     });
 
     // Exposer globalement
-    window.editPolicy = openModal;
+    window.editPolicy = openEditModal;
+    window.configureType = openCreateModal;
     window.closeModal = closeModal;
     window.savePolicy = savePolicy;
     window.togglePolicy = togglePolicy;

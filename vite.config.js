@@ -8,6 +8,8 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/conges-settings.js',
+                'resources/css/conges-settings.css',
+
             ],
             refresh: true,
         }),

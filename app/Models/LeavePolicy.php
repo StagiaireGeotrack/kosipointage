@@ -32,8 +32,12 @@ class LeavePolicy extends Model
     {
         return $this->belongsTo(LeaveType::class, 'leave_type_id');
     }
+
+
+    
     protected $casts = [
     'rules' => 'array',
     'is_active' => 'boolean',
 ];
+
 }
