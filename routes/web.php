@@ -335,6 +335,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 Route::post('/admin/leave-policies/api', [LeavePolicyController::class, 'store'])
     ->name('leave-policies.store');
     Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);
+    Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive']);
 
 Route::fallback(function () {
     return redirect()->route('sieges.index');

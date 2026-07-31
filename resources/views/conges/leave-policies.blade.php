@@ -2,9 +2,9 @@
     {{-- Titre de page --}}
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 font-weight-bold text-dark mb-0">
+            <h3 class="h4 font-weight-bold text-dark mb-0">
                 Paramétrage — Règles de Congés par Siège
-            </h2>
+            </h3>
             {{-- Seul le super admin peut ajouter un type au catalogue global --}}
            @if(auth()->user()->isTrueSuperAdmin())
     <a href="{{ route('leave-types.create') }}" class="btn btn-outline-primary">
@@ -18,14 +18,12 @@
     @vite(['resources/js/conges-settings.js'])
     <script>
         window.csrfToken = "{{ csrf_token() }}";
+        window.companyId = {{ $selectedSiegeId }};
     </script>
 @endpush
 
     <div class="container-fluid p-0">
-        <p class="subtitle">
-            Configurez ici les règles de chaque type de congé pour votre siège. 
-            Les types (CP, RTT...) sont partagés, mais les règles sont privées à ce siège.
-        </p>
+        
 
         {{-- Bandeau siège --}}
         <div class="siege-banner">
