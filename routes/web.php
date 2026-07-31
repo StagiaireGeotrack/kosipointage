@@ -19,6 +19,8 @@ use App\Http\Controllers\AllDashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EventPointageController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\LeavePolicyController;
+
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -308,6 +310,23 @@ Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
     Session::put('admin_selected_siege_id', $request->siege_id);
     return back();
 })->name('admin.select-siege');
+   
+
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    
+    Route::get('/leave-policies', [LeavePolicyController::class, 'page'])
+        ->name('admin.leave-policies');
+    
+    Route::get('/leave-policies/api', [LeavePolicyController::class, 'index']);
+    Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);
+    Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive']);
+    
+    Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
+        session(['admin_selected_siege_id' => $request->input('siege_id')]);
+        return back();
+    })->name('admin.select-siege');
+});
 
 
 Route::fallback(function () {

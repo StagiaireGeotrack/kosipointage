@@ -2,42 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LeaveType extends Model
 {
-    use HasFactory;
-
-    protected $table = 'leave_types';
-
     protected $fillable = [
-        'company_id',
         'name',
         'code',
         'color',
         'unit',
-        'deducts_balance',
-        'requires_attachment',
-        'attachment_threshold',
-        'approval_required',
-        'allow_negative_balance',
-        'negative_limit',
-        'visibility_level',
         'is_active',
     ];
 
     protected $casts = [
-        'deducts_balance' => 'boolean',
-        'approval_required' => 'boolean',
-        'allow_negative_balance' => 'boolean',
         'is_active' => 'boolean',
-        'negative_limit' => 'decimal:2',
     ];
 
-    // Scope pour filtrer par siège (isolation multi-siège)
-    public function scopeForCompany($query, $companyId)
+    /**
+     * Les règles par siège pour ce type de congé
+     */
+    public function policies(): HasMany
     {
-        return $query->where('company_id', $companyId);
+        return $this->hasMany(LeavePolicy::class);
     }
 }
