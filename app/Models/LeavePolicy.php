@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LeavePolicy extends Model
 {
@@ -20,12 +22,19 @@ class LeavePolicy extends Model
         'is_active' => 'boolean',
     ];
 
-    public function leaveType()
+    /**
+     * Le type de congé global lié
+     */
+    public function leaveType(): BelongsTo
     {
         return $this->belongsTo(LeaveType::class, 'leave_type_id');
     }
-    public function values()
-{
-    return $this->hasMany(PolicyValue::class, 'leave_policy_id');
-}
+
+    /**
+     * Les valeurs des champs dynamiques (policy_values)
+     */
+    public function values(): HasMany
+    {
+        return $this->hasMany(PolicyValue::class, 'leave_policy_id');
+    }
 }

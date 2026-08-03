@@ -175,6 +175,8 @@ import '../css/conges-settings.css';
             return;
         }
 
+        ruleFields.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+
         ruleFields.forEach(field => {
             const val = values[field.field_key] !== undefined ? values[field.field_key] : (field.default_value ?? '');
             const required = (field.validation?.required) ? ' *' : '';
