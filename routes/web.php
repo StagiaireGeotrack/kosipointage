@@ -20,6 +20,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EventPointageController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LeavePolicyController;
+    use App\Http\Controllers\RuleFieldController;
 
 
 // Authentification (Breeze)
@@ -336,6 +337,18 @@ Route::post('/admin/leave-policies/api', [LeavePolicyController::class, 'store']
     ->name('leave-policies.store');
     Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);
     Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive']);
+
+
+
+// ... tes routes leave-policies existantes ...
+
+// Rule Fields (configuration des champs dynamiques)
+Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])->name('leave-types.rule-fields');
+Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])->name('leave-types.rule-fields.store');
+Route::post('/leave-types/{leaveType}/rule-fields/seed-defaults', [RuleFieldController::class, 'seedDefaults'])->name('leave-types.rule-fields.seed');
+Route::post('/leave-types/{leaveType}/rule-fields/reorder', [RuleFieldController::class, 'reorder'])->name('leave-types.rule-fields.reorder');
+Route::put('/rule-fields/{ruleField}', [RuleFieldController::class, 'update'])->name('rule-fields.update');
+Route::delete('/rule-fields/{ruleField}', [RuleFieldController::class, 'destroy'])->name('rule-fields.destroy');
 
 Route::fallback(function () {
     return redirect()->route('sieges.index');

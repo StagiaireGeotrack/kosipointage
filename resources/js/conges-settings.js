@@ -1,5 +1,5 @@
 /**
- * Gestion des policies de congés par siège
+ * Gestion des policies de congés par siège — FORMULAIRE DYNAMIQUE
  */
 import '../css/conges-settings.css';
 
@@ -8,8 +8,7 @@ import '../css/conges-settings.css';
 
     const API_URL = '/admin/leave-policies/api';
     let items = [];
-    let currentMode = 'edit';   // 'edit' ou 'create'
-    let currentLeaveTypeId = null;
+    let currentMode = 'edit'; // 'edit' ou 'create'
 
     /* ---------- Chargement ---------- */
     async function loadPolicies() {
@@ -48,21 +47,19 @@ import '../css/conges-settings.css';
             const t = item.leave_type || {};
 
             if (item.configured) {
-                const p = item.policy;
-                const r = p.rules || {};
                 return `
                 <tr data-idx="${idx}">
                     <td><span class="color-dot" style="background:${esc(t.color)}"></span> ${esc(t.name)}</td>
                     <td><code>${esc(t.code)}</code></td>
-                    <td>${summary(r)}</td>
+                    <td>${summary(item)}</td>
                     <td>
-                        <button class="badge-status" style="background:${p.is_active?'#d1fae5':'#fee2e2'};color:${p.is_active?'#065f46':'#991b1b'};border:none;cursor:pointer;"
-                            data-action="toggle" data-policy-id="${p.id}">
-                            ${p.is_active ? 'Actif' : 'Inactif'}
+                        <button class="badge-status" style="background:${item.policy.is_active?'#d1fae5':'#fee2e2'};color:${item.policy.is_active?'#065f46':'#991b1b'};border:none;cursor:pointer;"
+                            data-action="toggle" data-policy-id="${item.policy.id}">
+                            ${item.policy.is_active ? 'Actif' : 'Inactif'}
                         </button>
                     </td>
                     <td class="actions">
-                        <button class="btn btn-secondary btn-sm" data-action="edit" data-policy-id="${p.id}"> Modifier</button>
+                        <button class="btn btn-secondary btn-sm" data-action="edit" data-policy-id="${item.policy.id}">Modifier</button>
                     </td>
                 </tr>`;
             } else {
@@ -70,30 +67,36 @@ import '../css/conges-settings.css';
                 <tr data-idx="${idx}" style="background:#fffbeb;">
                     <td><span class="color-dot" style="background:${esc(t.color)};opacity:0.5;"></span> ${esc(t.name)}</td>
                     <td><code>${esc(t.code)}</code></td>
-                    <td><span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:12px;">Non configuré</span></td>
+                    <td>${summary(item)}</td>
                     <td>-</td>
                     <td class="actions">
-                       <button class="btn btn-sm" style="background-color: #dda4c4; color: white; border-color: #e3cae0;" data-action="configure" data-leave-type-id="${t.id}">
-    ➕ Configurer
-</button>
+                        <button class="btn btn-sm" style="background-color: #dda4c4; color: white; border-color: #e3cae0;" data-action="configure" data-leave-type-id="${t.id}">
+                            ➕ Configurer
+                        </button>
                     </td>
                 </tr>`;
             }
         }).join('');
     }
 
-    function summary(r) {
-        const parts = [];
-        if (r.max_per_year) parts.push(`${r.max_per_year}j/an`);
-        if (r.min_notice_days) parts.push(`${r.min_notice_days}j préavis`);
-        if (r.requires_approval_from) {
-            const m = { manager: 'Manager', rh: 'RH', direction: 'Direction', manager_then_rh: 'Mgr→RH' };
-            parts.push(m[r.requires_approval_from] || r.requires_approval_from);
+    function summary(item) {
+        if (!item.configured) {
+            return '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:12px;">Non configuré</span>';
         }
-        if (r.allow_half_day) parts.push('½j autorisée');
-        if (r.exclude_weekends) parts.push('hors WE');
-        if (r.deducts_balance) parts.push('décompte solde');
-        return parts.join(' · ') || '—';
+        const values = item.policy_values || {};
+        const fields = item.rule_fields || [];
+        const parts = [];
+
+        fields.slice(0, 4).forEach(f => {
+            const v = values[f.field_key];
+            if (v !== undefined && v !== null && v !== '') {
+                let display = v;
+                if (f.field_type === 'boolean') display = (v == '1' || v === true) ? 'Oui' : 'Non';
+                parts.push(`<span style="white-space:nowrap;">${esc(f.label)}: <strong>${esc(display)}</strong></span>`);
+            }
+        });
+
+        return parts.join(' · ') || '<span style="color:#64748b;font-size:12px;">Configuré</span>';
     }
 
     function esc(text) {
@@ -103,7 +106,7 @@ import '../css/conges-settings.css';
         return d.innerHTML;
     }
 
-    /* ---------- Délégation clic sur le tableau ---------- */
+    /* ---------- Délégation clic ---------- */
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('button');
         if (!btn) return;
@@ -123,69 +126,112 @@ import '../css/conges-settings.css';
         }
     });
 
-    /* ---------- Modal Édition ---------- */
-    function openEditModal(policyId) {
-        currentMode = 'edit';
-        currentLeaveTypeId = null;
-
-        const item = items.find(i => i.policy && i.policy.id == policyId);
-        if (!item) { console.error('Policy non trouvée:', policyId); return; }
-
-        const t = item.leave_type;
-        const p = item.policy;
-        const r = p.rules || {};
-
-        document.getElementById('modalTitle').textContent = 'Modifier les règles';
-        document.getElementById('policyId').value = policyId;
-
-        fillFields(t, r, p.is_active);
-        showModal();
-    }
-
-    /* ---------- Modal Création ---------- */
+    /* ---------- Modals ---------- */
     function openCreateModal(leaveTypeId) {
         currentMode = 'create';
-        currentLeaveTypeId = leaveTypeId;
-
         const item = items.find(i => i.leave_type.id == leaveTypeId);
         if (!item) { console.error('Type non trouvé:', leaveTypeId); return; }
 
-        const t = item.leave_type;
-
         document.getElementById('modalTitle').textContent = 'Configurer les règles';
-        document.getElementById('policyId').value = ''; // ← VIDE = nouveau
+        document.getElementById('policyId').value = '';
+        document.getElementById('leaveTypeId').value = leaveTypeId;
 
-        // Valeurs par défaut pour un nouveau type
-        fillFields(t, {}, true);
+        setTypeInfo(item.leave_type);
+        buildDynamicForm(item.rule_fields, item.default_values);
+        document.getElementById('is_active').value = '1';
+
         showModal();
     }
 
-    function fillFields(type, rules, isActive) {
-        set('typeName', type.name);
-        set('typeCode', type.code);
-        set('typeColor', type.color || '#3B82F6');
+    function openEditModal(policyId) {
+        currentMode = 'edit';
+        const item = items.find(i => i.policy && i.policy.id == policyId);
+        if (!item) { console.error('Policy non trouvée:', policyId); return; }
 
-        set('min_notice_days',        rules.min_notice_days        ?? 15);
-        set('max_per_year',           rules.max_per_year           ?? 25);
-        set('max_consecutive_days',   rules.max_consecutive_days   ?? 24);
-        set('max_carryover_days',     rules.max_carryover_days     ?? 5);
-        set('min_duration_days',      rules.min_duration_days      ?? 0.5);
-        set('requires_approval_from', rules.requires_approval_from ?? 'manager_then_rh');
-        set('allow_half_day',         (rules.allow_half_day         ?? true) ? '1' : '0');
-        set('exclude_weekends',       (rules.exclude_weekends       ?? true) ? '1' : '0');
-        set('exclude_holidays',       (rules.exclude_holidays       ?? true) ? '1' : '0');
-        set('deducts_balance',        (rules.deducts_balance        ?? true) ? '1' : '0');
-        set('approval_required',      (rules.approval_required      ?? true) ? '1' : '0');
-        set('requires_attachment',    rules.requires_attachment    ?? 'never');
-        set('attachment_threshold',   rules.attachment_threshold   ?? 0);
-        set('allow_negative_balance', (rules.allow_negative_balance ?? false) ? '1' : '0');
-        set('negative_limit',         rules.negative_limit         ?? 0);
-        set('is_active',              isActive ? '1' : '0');
+        document.getElementById('modalTitle').textContent = 'Modifier les règles';
+        document.getElementById('policyId').value = policyId;
+        document.getElementById('leaveTypeId').value = '';
+
+        setTypeInfo(item.leave_type);
+        buildDynamicForm(item.rule_fields, item.policy_values);
+        document.getElementById('is_active').value = item.policy.is_active ? '1' : '0';
+
+        showModal();
     }
 
-    function set(id, val) {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
+    function setTypeInfo(type) {
+        document.getElementById('typeName').value = type.name;
+        document.getElementById('typeCode').value = type.code;
+        document.getElementById('typeColor').value = type.color || '#3B82F6';
+    }
+
+    /* ---------- Construction formulaire dynamique ---------- */
+    function buildDynamicForm(ruleFields, values) {
+        const container = document.getElementById('dynamicFormContainer');
+        container.innerHTML = '';
+
+        if (!ruleFields || ruleFields.length === 0) {
+            container.innerHTML = '<p style="grid-column: 1/-1; color: #94a3b8; text-align: center; padding: 2rem;">Ce type n\'a pas encore de champs configurés. Ajoutez-en dans le catalogue des types.</p>';
+            return;
+        }
+
+        ruleFields.forEach(field => {
+            const val = values[field.field_key] !== undefined ? values[field.field_key] : (field.default_value ?? '');
+            const required = (field.validation?.required) ? ' *' : '';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'form-group';
+            wrapper.setAttribute('data-field-key', field.field_key);
+
+            let inputHtml = '';
+
+            switch (field.field_type) {
+                case 'number': {
+                    const step = field.validation?.step || 'any';
+                    const min = field.validation?.min !== undefined ? `min="${field.validation.min}"` : '';
+                    const max = field.validation?.max !== undefined ? `max="${field.validation.max}"` : '';
+                    inputHtml = `<input type="number" id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control" value="${esc(val)}" step="${step}" ${min} ${max}>`;
+                    break;
+                }
+                case 'boolean':
+                    inputHtml = `<select id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control">
+                        <option value="1" ${val == '1' || val === true ? 'selected' : ''}>Oui</option>
+                        <option value="0" ${val == '0' || val === false ? 'selected' : ''}>Non</option>
+                    </select>`;
+                    break;
+                case 'select': {
+                    const options = (field.options || []).map(opt =>
+                        `<option value="${esc(opt.value)}" ${val == opt.value ? 'selected' : ''}>${esc(opt.label)}</option>`
+                    ).join('');
+                    inputHtml = `<select id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control">${options}</select>`;
+                    break;
+                }
+                case 'text':
+                    inputHtml = `<input type="text" id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control" value="${esc(val)}">`;
+                    break;
+                case 'formula':
+                    inputHtml = `<textarea id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control" rows="2" readonly>${esc(val)}</textarea><small style="color:#94a3b8; display:block; margin-top:4px;">Formule de calcul (lecture seule)</small>`;
+                    break;
+                default:
+                    inputHtml = `<input type="text" id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control" value="${esc(val)}">`;
+            }
+
+            let hint = '';
+            if (field.validation?.min !== undefined || field.validation?.max !== undefined) {
+                hint = `<small style="color:#94a3b8; display:block; margin-top:4px;">`;
+                if (field.validation.min !== undefined) hint += `Min: ${field.validation.min}`;
+                if (field.validation.max !== undefined) hint += ` / Max: ${field.validation.max}`;
+                hint += `</small>`;
+            }
+
+            wrapper.innerHTML = `
+                <label for="rf_${field.field_key}">${esc(field.label)}${required}</label>
+                ${inputHtml}
+                ${hint}
+            `;
+
+            container.appendChild(wrapper);
+        });
     }
 
     function showModal() {
@@ -196,34 +242,32 @@ import '../css/conges-settings.css';
     function closeModal() {
         document.getElementById('modal').classList.remove('active');
         currentMode = 'edit';
-        currentLeaveTypeId = null;
     }
 
     /* ---------- Sauvegarde ---------- */
     async function savePolicy() {
         const policyId = document.getElementById('policyId').value;
+        const leaveTypeId = document.getElementById('leaveTypeId').value;
         const errBox = document.getElementById('formErrors');
         errBox.innerHTML = '';
 
+        // Récupère toutes les values du formulaire dynamique
+        const values = {};
+        const container = document.getElementById('dynamicFormContainer');
+        const inputs = container.querySelectorAll('[name^="values["]');
+
+        inputs.forEach(input => {
+            const match = input.name.match(/values\[(.+)\]/);
+            if (match) {
+                let v = input.value;
+                if (v === '') v = null;
+                values[match[1]] = v;
+            }
+        });
+
         const payload = {
-            rules: {
-                min_notice_days:        parseInt(get('min_notice_days')) || 0,
-                max_per_year:           parseInt(get('max_per_year')) || null,
-                max_consecutive_days:   parseInt(get('max_consecutive_days')) || null,
-                max_carryover_days:     parseInt(get('max_carryover_days')) || 0,
-                min_duration_days:      parseFloat(get('min_duration_days')) || 0.5,
-                requires_approval_from: get('requires_approval_from'),
-                allow_half_day:         get('allow_half_day') === '1',
-                exclude_weekends:       get('exclude_weekends') === '1',
-                exclude_holidays:       get('exclude_holidays') === '1',
-                deducts_balance:        get('deducts_balance') === '1',
-                approval_required:      get('approval_required') === '1',
-                requires_attachment:    get('requires_attachment'),
-                attachment_threshold:   parseFloat(get('attachment_threshold')) || 0,
-                allow_negative_balance: get('allow_negative_balance') === '1',
-                negative_limit:         parseFloat(get('negative_limit')) || 0,
-            },
-            is_active: get('is_active') === '1',
+            is_active: document.getElementById('is_active').value === '1',
+            values: values
         };
 
         let url, method;
@@ -231,16 +275,10 @@ import '../css/conges-settings.css';
         if (currentMode === 'edit' && policyId) {
             url = `${API_URL}/${policyId}`;
             method = 'PUT';
-            console.log('Mode ÉDITION, PUT vers', url);
-        } else if (currentMode === 'create' && currentLeaveTypeId) {
+        } else {
             url = API_URL;
             method = 'POST';
-            payload.leave_type_id = currentLeaveTypeId;
-            console.log('Mode CRÉATION, POST vers', url, 'leave_type_id:', currentLeaveTypeId);
-        } else {
-            errBox.innerHTML = '<div class="form-error">Erreur interne : mode inconnu</div>';
-            console.error('Mode invalide:', currentMode, 'policyId:', policyId, 'leaveTypeId:', currentLeaveTypeId);
-            return;
+            payload.leave_type_id = parseInt(leaveTypeId);
         }
 
         try {
@@ -259,9 +297,9 @@ import '../css/conges-settings.css';
             if (!res.ok) {
                 if (data.errors) {
                     const msgs = Object.values(data.errors).flat();
-                    errBox.innerHTML = msgs.map(m => `<div class="form-error">• ${esc(m)}</div>`).join('');
+                    errBox.innerHTML = msgs.map(m => `<div style="margin-bottom:4px;">• ${esc(m)}</div>`).join('');
                 } else {
-                    errBox.innerHTML = `<div class="form-error">${esc(data.message || 'Erreur serveur')}</div>`;
+                    errBox.innerHTML = `<div>${esc(data.message || 'Erreur serveur')}</div>`;
                 }
                 return;
             }
@@ -270,16 +308,11 @@ import '../css/conges-settings.css';
             loadPolicies();
 
         } catch (e) {
-            errBox.innerHTML = `<div class="form-error">Erreur réseau : ${esc(e.message)}</div>`;
+            errBox.innerHTML = `<div>Erreur réseau : ${esc(e.message)}</div>`;
         }
     }
 
-    function get(id) {
-        const el = document.getElementById(id);
-        return el ? el.value : '';
-    }
-
-    /* ---------- Toggle actif/inactif ---------- */
+    /* ---------- Toggle ---------- */
     async function togglePolicy(id) {
         try {
             const res = await fetch(`${API_URL}/${id}/toggle`, {
@@ -300,7 +333,6 @@ import '../css/conges-settings.css';
     document.addEventListener('DOMContentLoaded', () => {
         loadPolicies();
 
-        // Fermer modal en cliquant sur l'overlay
         document.getElementById('modal').addEventListener('click', function (e) {
             if (e.target === this) closeModal();
         });

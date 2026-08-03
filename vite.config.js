@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/conges-settings.js',
                 'resources/css/conges-settings.css',
+                'resources/js/rule-fields.js',
 
             ],
             refresh: true,

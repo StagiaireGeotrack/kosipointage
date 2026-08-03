@@ -30,5 +30,8 @@ class LeaveType extends Model
     {
         return $this->hasMany(LeavePolicy::class);
     }
-
+public function ruleFields()
+{
+    return $this->hasMany(RuleField::class)->orderBy('sort_order');
+}
 }

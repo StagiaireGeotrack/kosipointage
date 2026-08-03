@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\LeavePolicy;
 use App\Models\LeaveType;
+use App\Models\PolicyValue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LeavePolicyController extends Controller
 {
@@ -37,20 +39,39 @@ class LeavePolicyController extends Controller
     }
 
     /**
-     * Retourne TOUS les types globaux actifs, fusionnés avec les policies du siège
+     * LISTE : types globaux + rule_fields + policies du siège avec leurs values
      */
     public function index()
     {
         $companyId = $this->companyId();
 
-        $types = LeaveType::where('is_active', true)->orderBy('name')->get();
+        $types = LeaveType::where('is_active', true)
+            ->with('ruleFields')
+            ->orderBy('name')
+            ->get();
 
-        $existingPolicies = LeavePolicy::where('company_id', $companyId)
+        $policies = LeavePolicy::where('company_id', $companyId)
+            ->with(['values' => fn($q) => $q->with('ruleField')])
             ->get()
             ->keyBy('leave_type_id');
 
-        $items = $types->map(function ($type) use ($existingPolicies) {
-            $policy = $existingPolicies->get($type->id);
+        $items = $types->map(function ($type) use ($policies) {
+            $policy = $policies->get($type->id);
+
+            // Valeurs par défaut depuis les rule_fields
+            $defaultValues = [];
+            foreach ($type->ruleFields as $rf) {
+                $defaultValues[$rf->field_key] = $rf->default_value ?? '';
+            }
+
+            // Valeurs actuellement enregistrées dans la policy
+            $policyValues = [];
+            if ($policy) {
+                foreach ($policy->values as $pv) {
+                    $policyValues[$pv->ruleField->field_key] = $pv->value;
+                }
+            }
+
             return [
                 'leave_type' => [
                     'id'          => $type->id,
@@ -59,14 +80,23 @@ class LeavePolicyController extends Controller
                     'color'       => $type->color,
                     'description' => $type->description,
                 ],
-                'policy'     => $policy ? [
-                    'id'            => $policy->id,
-                    'company_id'    => $policy->company_id,
-                    'leave_type_id' => $policy->leave_type_id,
-                    'rules'         => $policy->rules,
-                    'is_active'     => $policy->is_active,
+                'rule_fields'    => $type->ruleFields->map(fn($rf) => [
+                    'id'            => $rf->id,
+                    'field_key'     => $rf->field_key,
+                    'field_type'    => $rf->field_type,
+                    'label'         => $rf->label,
+                    'default_value' => $rf->default_value,
+                    'options'       => $rf->options,
+                    'validation'    => $rf->validation,
+                    'sort_order'    => $rf->sort_order,
+                ]),
+                'policy'         => $policy ? [
+                    'id'        => $policy->id,
+                    'is_active' => $policy->is_active,
                 ] : null,
-                'configured' => !is_null($policy),
+                'policy_values'  => $policyValues,
+                'default_values' => $defaultValues,
+                'configured'     => !is_null($policy),
             ];
         });
 
@@ -74,34 +104,17 @@ class LeavePolicyController extends Controller
     }
 
     /**
-     * CRÉER une policy par défaut pour ce siège
+     * CRÉER une policy + pré-remplir avec les default_value des rule_fields
      */
     public function store(Request $request)
     {
         $companyId = $this->companyId();
 
         $validated = $request->validate([
-            'leave_type_id'                => 'required|exists:leave_types,id',
-            'rules'                        => 'nullable|array',
-            'rules.min_notice_days'        => 'nullable|integer|min:0',
-            'rules.max_per_year'           => 'nullable|integer|min:0',
-            'rules.max_consecutive_days'   => 'nullable|integer|min:0',
-            'rules.max_carryover_days'     => 'nullable|integer|min:0',
-            'rules.min_duration_days'      => 'nullable|numeric|min:0',
-            'rules.requires_approval_from' => 'nullable|in:manager,rh,direction,manager_then_rh',
-            'rules.allow_half_day'         => 'nullable|boolean',
-            'rules.exclude_weekends'       => 'nullable|boolean',
-            'rules.exclude_holidays'       => 'nullable|boolean',
-            'rules.deducts_balance'        => 'nullable|boolean',
-            'rules.approval_required'      => 'nullable|boolean',
-            'rules.requires_attachment'    => 'nullable|in:never,always,from_duration',
-            'rules.attachment_threshold'   => 'nullable|numeric|min:0',
-            'rules.allow_negative_balance' => 'nullable|boolean',
-            'rules.negative_limit'         => 'nullable|numeric|min:0',
-            'is_active'                    => 'boolean',
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'is_active'     => 'boolean',
         ]);
 
-        // Vérifie doublon
         $exists = LeavePolicy::where('company_id', $companyId)
             ->where('leave_type_id', $validated['leave_type_id'])
             ->exists();
@@ -110,28 +123,26 @@ class LeavePolicyController extends Controller
             return response()->json(['message' => 'Cette règle existe déjà.'], 409);
         }
 
-        $policy = LeavePolicy::create([
-            'company_id'    => $companyId,
-            'leave_type_id' => $validated['leave_type_id'],
-            'rules'         => array_merge([
-                'min_notice_days'        => 15,
-                'max_per_year'           => 25,
-                'max_consecutive_days'   => 24,
-                'max_carryover_days'     => 5,
-                'min_duration_days'      => 0.5,
-                'requires_approval_from' => 'manager_then_rh',
-                'allow_half_day'         => true,
-                'exclude_weekends'       => true,
-                'exclude_holidays'       => true,
-                'deducts_balance'        => true,
-                'approval_required'      => true,
-                'requires_attachment'    => 'never',
-                'attachment_threshold'   => 0,
-                'allow_negative_balance' => false,
-                'negative_limit'         => 0,
-            ], $validated['rules'] ?? []),
-            'is_active'     => $validated['is_active'] ?? true,
-        ]);
+        $type = LeaveType::with('ruleFields')->findOrFail($validated['leave_type_id']);
+
+        $policy = DB::transaction(function () use ($companyId, $type, $validated) {
+            $policy = LeavePolicy::create([
+                'company_id'    => $companyId,
+                'leave_type_id' => $type->id,
+                'rules'         => null,
+                'is_active'     => $validated['is_active'] ?? true,
+            ]);
+
+            foreach ($type->ruleFields as $rf) {
+                PolicyValue::create([
+                    'leave_policy_id' => $policy->id,
+                    'rule_field_id'   => $rf->id,
+                    'value'           => $rf->default_value ?? '',
+                ]);
+            }
+
+            return $policy;
+        });
 
         return response()->json([
             'message' => 'Règle créée avec succès.',
@@ -139,41 +150,65 @@ class LeavePolicyController extends Controller
         ], 201);
     }
 
+    /**
+     * METTRE À JOUR les valeurs d'une policy (formulaire dynamique)
+     */
     public function update(Request $request, $id)
     {
         $companyId = $this->companyId();
-        $policy = LeavePolicy::where('company_id', $companyId)->findOrFail($id);
 
-        $validated = $request->validate([
-            'rules' => 'sometimes|array',
-            'rules.min_notice_days' => 'nullable|integer|min:0',
-            'rules.max_per_year' => 'nullable|integer|min:0',
-            'rules.max_consecutive_days' => 'nullable|integer|min:0',
-            'rules.max_carryover_days' => 'nullable|integer|min:0',
-            'rules.min_duration_days' => 'nullable|numeric|min:0',
-            'rules.requires_approval_from' => 'nullable|in:manager,rh,direction,manager_then_rh',
-            'rules.allow_half_day' => 'nullable|boolean',
-            'rules.exclude_weekends' => 'nullable|boolean',
-            'rules.exclude_holidays' => 'nullable|boolean',
-            'rules.deducts_balance' => 'nullable|boolean',
-            'rules.approval_required' => 'nullable|boolean',
-            'rules.requires_attachment' => 'nullable|in:never,always,from_duration',
-            'rules.attachment_threshold' => 'nullable|numeric|min:0',
-            'rules.allow_negative_balance' => 'nullable|boolean',
-            'rules.negative_limit' => 'nullable|numeric|min:0',
-            'is_active' => 'boolean',
-        ]);
+        $policy = LeavePolicy::where('company_id', $companyId)
+            ->with('leaveType.ruleFields')
+            ->findOrFail($id);
 
-        $currentRules = $policy->rules ?? [];
-        if (isset($validated['rules'])) {
-            $validated['rules'] = array_merge($currentRules, $validated['rules']);
+        $ruleFields = $policy->leaveType->ruleFields->keyBy('field_key');
+
+        // Construction dynamique des règles de validation
+        $rules = ['is_active' => 'boolean'];
+        foreach ($ruleFields as $key => $rf) {
+            $fieldRules = [];
+            $val = $rf->validation ?? [];
+
+            if ($rf->field_type === 'number') {
+                $fieldRules[] = 'numeric';
+                if (isset($val['min'])) $fieldRules[] = 'min:' . $val['min'];
+                if (isset($val['max'])) $fieldRules[] = 'max:' . $val['max'];
+            } elseif ($rf->field_type === 'boolean') {
+                $fieldRules[] = 'boolean';
+            } elseif ($rf->field_type === 'select') {
+                $allowed = collect($rf->options ?? [])->pluck('value')->implode(',');
+                $fieldRules[] = 'in:' . $allowed;
+            }
+
+            if ($val['required'] ?? false) {
+                $fieldRules[] = 'required';
+            } else {
+                $fieldRules[] = 'nullable';
+            }
+
+            $rules["values.$key"] = $fieldRules;
         }
 
-        $policy->update($validated);
+        $validated = $request->validate($rules);
+
+        DB::transaction(function () use ($policy, $ruleFields, $validated, $request) {
+            if (isset($validated['is_active'])) {
+                $policy->update(['is_active' => $validated['is_active']]);
+            }
+
+            $incoming = $request->input('values', []);
+            foreach ($ruleFields as $key => $rf) {
+                $raw = $incoming[$key] ?? ($rf->field_type === 'boolean' ? '0' : '');
+                PolicyValue::updateOrCreate(
+                    ['leave_policy_id' => $policy->id, 'rule_field_id' => $rf->id],
+                    ['value' => (string) $raw]
+                );
+            }
+        });
 
         return response()->json([
             'message' => 'Règles mises à jour.',
-            'policy' => $policy->fresh()->load('leaveType')
+            'policy'  => $policy->fresh()->load('values.ruleField')
         ]);
     }
 
@@ -185,7 +220,7 @@ class LeavePolicyController extends Controller
 
         return response()->json([
             'message' => $policy->is_active ? 'Type activé.' : 'Type désactivé.',
-            'policy' => $policy->load('leaveType')
+            'policy'  => $policy->load('leaveType')
         ]);
     }
 }

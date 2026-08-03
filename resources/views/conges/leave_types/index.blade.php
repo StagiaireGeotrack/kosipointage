@@ -26,6 +26,7 @@
                         <a href="{{ route('leave-types.create') }}" class="ca-btn ca-btn-primary">
                             Nouveau type
                         </a>
+                        
                     </div>
 
                     <div class="ca-table-wrap">
@@ -61,14 +62,18 @@
                                             <span class="ca-badge ca-badge-gray">Inactif</span>
                                         @endif
                                     </td>
+                                    
                                     <td class="ca-actions">
-                                        <a href="{{ route('leave-types.edit', $type) }}" style="color: #4f46e5; font-size: 0.8125rem; font-weight: 500; text-decoration: none; margin-right: 1rem;">Modifier</a>
-                                        <form action="{{ route('leave-types.destroy', $type) }}" method="POST" style="display:inline;" onsubmit="return confirm('Confirmer la suppression de ce type global ?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="ca-btn-delete">Supprimer</button>
-                                        </form>
-                                    </td>
+    <a href="{{ route('leave-types.rule-fields', $type) }}" style="color: #059669; font-size: 0.8125rem; font-weight: 500; text-decoration: none; margin-right: 1rem;">
+        Champs
+    </a>
+    <a href="{{ route('leave-types.edit', $type) }}" style="color: #4f46e5; font-size: 0.8125rem; font-weight: 500; text-decoration: none; margin-right: 1rem;">Modifier</a>
+    <form action="{{ route('leave-types.destroy', $type) }}" method="POST" style="display:inline;" onsubmit="return confirm('Confirmer la suppression de ce type global ?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="ca-btn-delete">Supprimer</button>
+    </form>
+</td>
                                 </tr>
                                 @empty
                                 <tr>
