@@ -10,6 +10,8 @@ export default defineConfig({
                 'resources/js/conges-settings.js',
                 'resources/css/conges-settings.css',
                 'resources/js/rule-fields.js',
+                'resources/js/calculation-rules.js',
+
 
             ],
             refresh: true,

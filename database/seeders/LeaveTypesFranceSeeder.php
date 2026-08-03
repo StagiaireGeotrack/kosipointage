@@ -153,4 +153,6 @@ class LeaveTypesFranceSeeder extends Seeder
             ['value' => 'from_duration', 'label' => 'A partir d\'une duree'],
         ];
     }
+
+    
 }

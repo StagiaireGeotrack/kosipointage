@@ -145,8 +145,8 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-primary" onclick="editField({{ $field['id'] }})">✏️</button>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteField({{ $field['id'] }})">🗑️</button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="editField({{ $field['id'] }})">Modifier</button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteField({{ $field['id'] }})">Supprimer</button>
                                     </div>
                                 </div>
                             @empty

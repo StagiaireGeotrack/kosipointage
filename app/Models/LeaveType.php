@@ -34,4 +34,8 @@ public function ruleFields()
 {
     return $this->hasMany(RuleField::class)->orderBy('sort_order');
 }
+public function calculationRules()
+{
+    return $this->hasMany(CalculationRule::class)->orderBy('sort_order');
+}
 }

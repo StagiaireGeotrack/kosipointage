@@ -20,7 +20,9 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EventPointageController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LeavePolicyController;
-    use App\Http\Controllers\RuleFieldController;
+use App\Http\Controllers\RuleFieldController;
+use App\Http\Controllers\CalculationRuleController;
+
 
 
 // Authentification (Breeze)
@@ -358,6 +360,20 @@ Route::get('/leave-policies/page', [LeavePolicyController::class, 'page'])->name
     Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update'])->name('leave-policies.api.update');
     Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive'])->name('leave-policies.api.toggle');
 
+// Dans ton groupe admin/conges
+Route::get('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'index'])->name('leave-types.calculations');
+Route::post('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'store'])->name('leave-types.calculations.store');
+Route::put('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'update'])->name('calculation-rules.update');
+Route::delete('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'destroy'])->name('calculation-rules.destroy');
+Route::post('/calculation-rules/test', [CalculationRuleController::class, 'testFormula'])->name('calculation-rules.test');
+
+
+
+
+
+
+// API calcul solde
+Route::get('/leave-policies/{policyId}/calculate', [LeaveBalanceController::class, 'calculate'])->name('leave-policies.calculate');
 
 Route::fallback(function () {
     return redirect()->route('sieges.index');

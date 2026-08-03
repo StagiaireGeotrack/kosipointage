@@ -67,6 +67,9 @@
     <a href="{{ route('leave-types.rule-fields', $type) }}" style="color: #059669; font-size: 0.8125rem; font-weight: 500; text-decoration: none; margin-right: 1rem;">
         Champs
     </a>
+    <a href="{{ route('leave-types.calculations', $type) }}" style="color: #7c3aed; font-size: 0.8125rem; font-weight: 500; text-decoration: none; margin-right: 1rem;">
+    Calculs
+</a>
     <a href="{{ route('leave-types.edit', $type) }}" style="color: #4f46e5; font-size: 0.8125rem; font-weight: 500; text-decoration: none; margin-right: 1rem;">Modifier</a>
     <form action="{{ route('leave-types.destroy', $type) }}" method="POST" style="display:inline;" onsubmit="return confirm('Confirmer la suppression de ce type global ?');">
         @csrf
