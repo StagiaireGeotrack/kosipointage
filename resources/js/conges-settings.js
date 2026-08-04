@@ -71,7 +71,7 @@ import '../css/conges-settings.css';
                     <td>-</td>
                     <td class="actions">
                         <button class="btn btn-sm" style="background-color: #dda4c4; color: white; border-color: #e3cae0;" data-action="configure" data-leave-type-id="${t.id}">
-                            ➕ Configurer
+                            Configurer
                         </button>
                     </td>
                 </tr>`;

@@ -15,13 +15,15 @@
    @push('scripts')
     {{-- 1. D'ABORD les variables globales --}}
     <script>
-        window.csrfToken = "{{ csrf_token() }}";
-        window.leaveTypeId = {{ $leaveType->id }};
-        window.apiUrl = "{{ route('leave-types.calculations', $leaveType) }}";
-        window.testUrl = "{{ route('calculation-rules.test') }}";
-        window.rules = @json($rules);
-        window.variables = @json($variables);
-    </script>
+    window.csrfToken = "{{ csrf_token() }}";
+    window.leaveTypeId = {{ $leaveType->id }};
+    window.apiUrl = "{{ route('leave-types.calculations.store', $leaveType) }}";
+    window.updateUrl = "{{ route('calculation-rules.update', ':id') }}";
+    window.destroyUrl = "{{ route('calculation-rules.destroy', ':id') }}";
+    window.testUrl = "{{ route('calculation-rules.test') }}";
+    window.rules = @json($rules);
+    window.variables = @json($variables);
+</script>
 
     {{-- 2. ENSUITE le fichier JS qui les utilise --}}
     @vite(['resources/js/calculation-rules.js'])

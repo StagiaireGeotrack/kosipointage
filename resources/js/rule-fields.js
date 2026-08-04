@@ -117,7 +117,7 @@
         errBox.innerHTML = '';
 
         const url = editingId
-            ? `/admin/rule-fields/${editingId}`
+            ? window.updateUrl.replace('__ID__', editingId)
             : window.apiUrl;
         const method = editingId ? 'PUT' : 'POST';
 
@@ -144,7 +144,6 @@
                 return;
             }
 
-            // Recharge la page pour simplicité (ou met à jour le DOM)
             window.location.reload();
 
         } catch (e) {
@@ -201,7 +200,7 @@
         if (!confirm('Supprimer ce champ ? Les valeurs déjà saisies dans les policies seront perdues.')) return;
 
         try {
-            const res = await fetch(`/admin/rule-fields/${id}`, {
+            const res = await fetch(window.deleteUrl.replace('__ID__', id), {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': window.csrfToken,
@@ -212,7 +211,8 @@
             if (res.ok) {
                 window.location.reload();
             } else {
-                alert('Erreur lors de la suppression.');
+                const data = await res.json();
+                alert(data.message || 'Erreur lors de la suppression.');
             }
         } catch (e) {
             alert('Erreur réseau.');

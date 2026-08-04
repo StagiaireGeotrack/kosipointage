@@ -22,11 +22,18 @@
             return;
         }
 
-        const url = editingId ? `/admin/calculation-rules/${editingId}` : window.apiUrl;
-        const method = editingId ? 'PUT' : 'POST';
+        const isEditing = !!editingId;
+        const url = isEditing
+            ? window.updateUrl.replace(':id', editingId)
+            : window.apiUrl;
+
+        // SPOOFING : on envoie toujours en POST
+        if (isEditing) {
+            payload._method = 'PUT';
+        }
 
         fetch(url, {
-            method: method,
+            method: 'POST', // toujours POST
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': window.csrfToken,
@@ -74,10 +81,20 @@
 
     function deleteRule(id) {
         if (!confirm('Supprimer cette formule ?')) return;
-        fetch(`/admin/calculation-rules/${id}`, {
-            method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': window.csrfToken, 'Accept': 'application/json' }
-        }).then(() => window.location.reload());
+
+        const url = window.destroyUrl.replace(':id', id);
+
+        fetch(url, {
+            method: 'POST', // toujours POST avec _method
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': window.csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ _method: 'DELETE' })
+        })
+        .then(() => window.location.reload())
+        .catch(e => alert('Erreur réseau: ' + e.message));
     }
 
     function testFormula() {
@@ -126,6 +143,7 @@
         .then(data => {
             const box = document.getElementById('testResult');
             box.style.display = 'block';
+            box.classList.remove('d-none');
             if (data.success) {
                 box.className = 'alert alert-success mt-3';
                 box.innerHTML = `<strong>Résultat :</strong> <code>${data.result}</code>`;
@@ -144,6 +162,7 @@
     function showError(msg) {
         const box = document.getElementById('formErrors');
         box.innerHTML = msg;
+        box.classList.remove('d-none');
         box.style.display = 'block';
     }
 

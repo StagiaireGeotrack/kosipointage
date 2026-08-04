@@ -345,20 +345,31 @@ Route::post('/admin/leave-policies/api', [LeavePolicyController::class, 'store']
 // ... tes routes leave-policies existantes ...
 
 // Rule Fields (configuration des champs dynamiques)
-Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])->name('leave-types.rule-fields');
-Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])->name('leave-types.rule-fields.store');
-Route::post('/leave-types/{leaveType}/rule-fields/seed-defaults', [RuleFieldController::class, 'seedDefaults'])->name('leave-types.rule-fields.seed');
-Route::post('/leave-types/{leaveType}/rule-fields/reorder', [RuleFieldController::class, 'reorder'])->name('leave-types.rule-fields.reorder');
-Route::put('/rule-fields/{ruleField}', [RuleFieldController::class, 'update'])->name('rule-fields.update');
-Route::delete('/rule-fields/{ruleField}', [RuleFieldController::class, 'destroy'])->name('rule-fields.destroy');
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    
+    // --- vos routes existantes ---
+    Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])
+        ->name('leave-types.rule-fields');
+    Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])
+        ->name('leave-types.rule-fields.store');
+    Route::post('/leave-types/{leaveType}/rule-fields/seed-defaults', [RuleFieldController::class, 'seedDefaults'])
+        ->name('leave-types.rule-fields.seed');
+    Route::post('/leave-types/{leaveType}/rule-fields/reorder', [RuleFieldController::class, 'reorder'])
+        ->name('leave-types.rule-fields.reorder');
 
+    // --- celles-ci doivent être DANS le même groupe ---
+    Route::put('/rule-fields/{ruleField}', [RuleFieldController::class, 'update'])
+        ->name('rule-fields.update');
+    Route::delete('/rule-fields/{ruleField}', [RuleFieldController::class, 'destroy'])
+        ->name('rule-fields.destroy');
 
-
-Route::get('/leave-policies/page', [LeavePolicyController::class, 'page'])->name('leave-policies.page');
+    // --- leave-policies (pour info) ---
+    Route::get('/leave-policies/page', [LeavePolicyController::class, 'page'])->name('leave-policies.page');
     Route::get('/leave-policies/api', [LeavePolicyController::class, 'index'])->name('leave-policies.api.index');
     Route::post('/leave-policies/api', [LeavePolicyController::class, 'store'])->name('leave-policies.api.store');
     Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update'])->name('leave-policies.api.update');
     Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive'])->name('leave-policies.api.toggle');
+});
 
 // Dans ton groupe admin/conges
 Route::get('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'index'])->name('leave-types.calculations');
