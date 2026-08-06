@@ -75,6 +75,9 @@ class EmployeRequest extends FormRequest
             'Actived'           => 'nullable|boolean',
             'SiegeID'           => 'required|exists:Entreprises_sieges,ID',
             'FaceEncodingFile'  => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5120',
+            'hire_date'       => 'required|date',
+'department_name' => 'nullable|string|max:255',
+'job_title'       => 'nullable|string|max:255',
         ];
 
         $rules['num_mat'] = $isUpdate

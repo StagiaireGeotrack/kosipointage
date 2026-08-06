@@ -49,6 +49,45 @@
                             @enderror
                         </div>
 
+                        <!-- Département -->
+                        <div class="form-group mb-3">
+                            <label for="department_name">Département</label>
+                            <input type="text" 
+                                    class="form-control @error('department_name') is-invalid @enderror" 
+                                    id="department_name" 
+                                    name="department_name" 
+                                    value="{{ old('department_name', optional($employe->meta)->department_name) }}">
+                            @error('department_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Poste -->
+                        <div class="form-group mb-3">
+                            <label for="job_title">Poste</label>
+                            <input type="text" 
+                                    class="form-control @error('job_title') is-invalid @enderror" 
+                                    id="job_title" 
+                                    name="job_title" 
+                                    value="{{ old('job_title', optional($employe->meta)->job_title) }}">
+                            @error('job_title')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Date d'embauche -->
+                        <div class="form-group mb-3">
+                            <label for="hire_date">Date d'embauche</label>
+                            <input type="date" 
+                                    class="form-control @error('hire_date') is-invalid @enderror" 
+                                    id="hire_date" 
+                                    name="hire_date" 
+                                    value="{{ old('hire_date', optional($employe->meta)->hire_date?->format('Y-m-d')) }}">
+                            @error('hire_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <!-- SiegeID - SEULEMENT SUPER ADMIN -->
                         <div class="form-group mb-3">
                             <label for="SiegeID">Siège <span class="text-danger">*</span></label>

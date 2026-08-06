@@ -22,6 +22,7 @@ class RuleField extends Model
     protected $casts = [
         'options'    => 'array',
         'validation' => 'array',
+        'default_value' => 'array',
         'conditions' => 'array',
     ];
 

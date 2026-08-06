@@ -115,45 +115,68 @@
             <span>{{ __('Rapport') }}</span>
         </a>
 
-        <a href="{{ route('conges.index') }}"
-           class="sidebar-link {{ request()->routeIs('conges.*') ? 'active' : '' }}">
-            <i class="bi bi-calendar-x"></i>
-            <span>{{ __('Congé') }}</span>
-        </a>
+        @php
+    $isCongeOpen = request()->routeIs('conges.*') 
+                || request()->routeIs('conge-validations.*') 
+                || request()->routeIs('admin.leave-policies');
 
-        {{-- Validation congé : Super Admin et Simple Admin --}}
-        @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+    $pendingCount = 0;
+    try {
+        if (auth()->check() && auth()->user()->isTrueSuperAdmin()) {
+            $pendingCount = (int) \App\Models\CongeValidation::where('status', 'en_cours')->count();
+        } elseif (auth()->check() && auth()->user()->isSimpleAdmin()) {
+            $pendingCount = (int) \App\Models\CongeValidation::where('SiegeID', auth()->user()->SiegeID)
+                ->where('status', 'en_cours')
+                ->count();
+        }
+    } catch (\Throwable $e) {
+        $pendingCount = 0;
+    }
+@endphp
+
+{{-- Groupe Congés --}}
+<details class="sidebar-group" {{ $isCongeOpen ? 'open' : '' }}>
+    <summary class="sidebar-link sidebar-group-title {{ $isCongeOpen ? 'active' : '' }}">
+        <i class="bi bi-calendar-x"></i>
+        <span>{{ __('Congés') }}</span>
+        @if($pendingCount > 0)
+            <span class="badge bg-warning text-dark rounded-pill ms-auto me-2" style="font-size:0.65rem;">
+                {{ $pendingCount }}
+            </span>
+        @endif
+        <i class="bi bi-chevron-down small chevron"></i>
+    </summary>
+
+    {{-- Lien 1 : Liste --}}
+    <a href="{{ route('conges.index') }}"
+       class="sidebar-link sidebar-sub {{ request()->routeIs('conges.index') ? 'active' : '' }}">
+        <i class="bi bi-list-ul"></i>
+        <span>{{ __('Liste des congés') }}</span>
+    </a>
+
+    {{-- Lien 2 : Validation (admin) --}}
+    @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
         <a href="{{ route('conge-validations.index') }}"
-           class="sidebar-link {{ request()->routeIs('conge-validations.*') ? 'active' : '' }}">
+           class="sidebar-link sidebar-sub {{ request()->routeIs('conge-validations.*') ? 'active' : '' }}">
             <i class="bi bi-patch-check"></i>
             <span>{{ __('Validation congé') }}</span>
-            @php
-                try {
-                    $navCongeCount = auth()->user()->isTrueSuperAdmin()
-                        ? \App\Models\CongeValidation::where('status', 'en_cours')->count()
-                        : \App\Models\CongeValidation::where('SiegeID', auth()->user()->SiegeID)->where('status', 'en_cours')->count();
-                } catch (\Throwable $e) {
-                    $navCongeCount = 0;
-                }
-            @endphp
-            @if($navCongeCount > 0)
+            @if($pendingCount > 0)
                 <span class="badge bg-warning text-dark rounded-pill ms-auto" style="font-size:0.65rem;">
-                    {{ $navCongeCount }}
+                    {{ $pendingCount }}
                 </span>
             @endif
         </a>
-        @endif
+    @endif
 
-        {{-- Paramètres congés : Super Admin et Simple Admin --}}
-      
-
-@if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
-    <a href="{{ route('admin.leave-policies') }}"
-       class="sidebar-link {{ request()->routeIs('admin.leave-policies') ? 'active' : '' }}">
-        <i class="bi bi-sliders"></i>
-        <span>{{ __('Paramètres congés') }}</span>
-    </a>
-@endif
+    {{-- Lien 3 : Paramètres (admin) --}}
+    @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+        <a href="{{ route('admin.leave-policies') }}"
+           class="sidebar-link sidebar-sub {{ request()->routeIs('admin.leave-policies') ? 'active' : '' }}">
+            <i class="bi bi-sliders"></i>
+            <span>{{ __('Paramètres congés') }}</span>
+        </a>
+    @endif
+</details>
 
 
         <a href="{{ route('jours-non-travailles.index') }}"

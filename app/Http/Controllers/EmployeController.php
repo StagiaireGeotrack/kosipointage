@@ -36,6 +36,8 @@ class EmployeController extends Controller
         ]);
         
         $employes = $this->repository->getFiltered($filters);
+            $employes->load('meta');          // ← AJOUTER CECI
+
         $employes->appends($filters);
 
         $sieges = EntrepriseSiege::all();
@@ -98,18 +100,36 @@ class EmployeController extends Controller
             $data['num_mat'] = null;
         }
 
-        $data['CreatedAt'] = now();
+                $data['CreatedAt'] = now();
         
         unset($data['FaceEncodingFile']);
         
+        // ← Créer l'employé (sans les champs meta)
         $employe = $this->repository->create($data);
+        
+        // ← Enregistrer les infos manquantes dans employee_meta
+                // ← Enregistrer les infos manquantes dans employee_meta
+        \App\Models\EmployeeMeta::create([
+            'employee_id'       => $employe->ID,
+            'hire_date'         => $request->input('hire_date'),
+            'department_name'   => $request->input('department_name'),
+            'job_title'         => $request->input('job_title'),
+            'employment_status' => 'active',
+            'company_id'        => $employe->SiegeID,
+        ]);
         
         return redirect()->back()->with('success', __('Employé créé avec succès'));
     }
     
+
+
+
+    
     public function show($id)
     {
         $employe = $this->repository->findById($id);
+            $employe->load('meta');  // ← AJOUTER CETTE LIGNE
+
         $pointages = $employe->pointages()->latest('timestamp_')->paginate(5);
         $sieges = EntrepriseSiege::all();
         
@@ -119,6 +139,8 @@ class EmployeController extends Controller
     public function edit($id)
     {
         $employe = $this->repository->findById($id);
+            $employe->load('meta');        // ← AJOUTE CETTE LIGNE ICI
+
         $sieges = EntrepriseSiege::all();
 
         $user = auth()->user();
@@ -139,102 +161,122 @@ class EmployeController extends Controller
         return redirect()->back()->with('success', __('Code Pin réinitialisé avec succès'));
     }    
     
-    public function update(EmployeRequest $request, $id)
-    {
-        // Récupérer les données validées
-        $data = $request->validated();
-        
-        // Vérifier que l'employé existe
-        $employe = Employe::findOrFail($id);
-        
-        // Si l'utilisateur n'est PAS SuperAdmin
-        if (!auth()->user()->IsSuperAdmin) {
+   public function update(EmployeRequest $request, $id)
+{
+    // ← 1. RÉCUPÉRER LES VALEURS META AVANT TOUT
+    // (car $data est réassigné plus bas pour les non-superadmins)
+    $metaHireDate       = $request->input('hire_date');
+    $metaDepartment     = $request->input('department_name');
+    $metaJobTitle       = $request->input('job_title');
 
-            $newPin = $data['Pin'] ?? null;
-            if (!empty($newPin)) {
-                $hashedPin = $this->hashService->toHash($newPin);
-                if (Employe::where('SiegeID', $employe->SiegeID)
-                        ->where('Pin', $hashedPin)
-                        ->where('ID', '!=', $id)
-                        ->whereNotNull('Pin')
-                        ->exists()) {
-                    return redirect()->back()
-                        ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
-                        ->withInput();
-                }
-                $newPin = $hashedPin;
-            } else {
-                $newPin = $employe->Pin;
+    // Récupérer les données validées
+    $data = $request->validated();
+    
+    // Vérifier que l'employé existe
+    $employe = Employe::findOrFail($id);
+    
+    // Si l'utilisateur n'est PAS SuperAdmin
+    if (!auth()->user()->IsSuperAdmin) {
+
+        $newPin = $data['Pin'] ?? null;
+        if (!empty($newPin)) {
+            $hashedPin = $this->hashService->toHash($newPin);
+            if (Employe::where('SiegeID', $employe->SiegeID)
+                    ->where('Pin', $hashedPin)
+                    ->where('ID', '!=', $id)
+                    ->whereNotNull('Pin')
+                    ->exists()) {
+                return redirect()->back()
+                    ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                    ->withInput();
             }
-
-            // Ne mettre à jour QUE le Nom, garder tout le reste intact
-            $data = [
-                        'Nom'               => $data['Nom'],
-                        'num_mat'           => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
-                        'Pin'               => $newPin, // valeur soumise, fallback sur l'existante
-                        'SiegeID'           => $employe->SiegeID,
-                        'BadgeID'           => $employe->BadgeID,
-                        'HasBiometricSetup' => $employe->HasBiometricSetup,
-                        'HasFaceSetup'      => $employe->HasFaceSetup,
-                        'FaceEncodingPath'  => $employe->FaceEncodingPath,
-                        'Actived'           => $employe->Actived,
-                    ];
+            $newPin = $hashedPin;
         } else {
-            // SuperAdmin : peut tout modifier
-            if (empty($data['BadgeID'])) {
-                $data['BadgeID'] = $employe->BadgeID;
-            } else {
-                $hashedBadge = $this->hashService->toHash($data['BadgeID']);
-                if (Employe::where('SiegeID', $employe->SiegeID)
-                        ->where('BadgeID', $hashedBadge)
-                        ->where('ID', '!=', $id)
-                        ->exists()) {
-                    return redirect()->back()
-                        ->withErrors(['BadgeID' => 'Ce Badge ID est déjà utilisé dans ce siège.'])
-                        ->withInput();
-                }
-                $data['BadgeID'] = $hashedBadge;
-            }
-
-            if (!empty($data['Pin'])) {
-                $hashedPin = $this->hashService->toHash($data['Pin']);
-                if (Employe::where('SiegeID', $employe->SiegeID)
-                        ->where('Pin', $hashedPin)
-                        ->where('ID', '!=', $id)
-                        ->whereNotNull('Pin')
-                        ->exists()) {
-                    return redirect()->back()
-                        ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
-                        ->withInput();
-                }
-                $data['Pin'] = $hashedPin;
-            } else {
-                $data['Pin'] = $employe->Pin;
-            }
-
-            if (empty($data['num_mat'])) {
-                $data['num_mat'] = $employe->num_mat;
-            }
-            
-            // Convertir et COMPRESSER la nouvelle photo si présente
-            if ($request->hasFile('FaceEncodingFile')) {
-                $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
-                $data['HasFaceSetup'] = true;
-            } else {
-                // Ne pas modifier la photo si aucun nouveau fichier
-                unset($data['FaceEncodingPath']);
-                unset($data['HasFaceSetup']); // Ne pas modifier HasFaceSetup
-            }
+            $newPin = $employe->Pin;
         }
 
-        // Supprimer FaceEncodingFile du tableau de données
-        unset($data['FaceEncodingFile']);
+        // Ne mettre à jour QUE le Nom, garder tout le reste intact
+        $data = [
+                    'Nom'               => $data['Nom'],
+                    'num_mat'           => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
+                    'Pin'               => $newPin,
+                    'SiegeID'           => $employe->SiegeID,
+                    'BadgeID'           => $employe->BadgeID,
+                    'HasBiometricSetup' => $employe->HasBiometricSetup,
+                    'HasFaceSetup'      => $employe->HasFaceSetup,
+                    'FaceEncodingPath'  => $employe->FaceEncodingPath,
+                    'Actived'           => $employe->Actived,
+                ];
+    } else {
+        // SuperAdmin : peut tout modifier
+        if (empty($data['BadgeID'])) {
+            $data['BadgeID'] = $employe->BadgeID;
+        } else {
+            $hashedBadge = $this->hashService->toHash($data['BadgeID']);
+            if (Employe::where('SiegeID', $employe->SiegeID)
+                    ->where('BadgeID', $hashedBadge)
+                    ->where('ID', '!=', $id)
+                    ->exists()) {
+                return redirect()->back()
+                    ->withErrors(['BadgeID' => 'Ce Badge ID est déjà utilisé dans ce siège.'])
+                    ->withInput();
+            }
+            $data['BadgeID'] = $hashedBadge;
+        }
 
-        // Mise à jour
-        $this->repository->update($id, $data);
+        if (!empty($data['Pin'])) {
+            $hashedPin = $this->hashService->toHash($data['Pin']);
+            if (Employe::where('SiegeID', $employe->SiegeID)
+                    ->where('Pin', $hashedPin)
+                    ->where('ID', '!=', $id)
+                    ->whereNotNull('Pin')
+                    ->exists()) {
+                return redirect()->back()
+                    ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                    ->withInput();
+            }
+            $data['Pin'] = $hashedPin;
+        } else {
+            $data['Pin'] = $employe->Pin;
+        }
+
+        if (empty($data['num_mat'])) {
+            $data['num_mat'] = $employe->num_mat;
+        }
         
-        return redirect()->back()->with('success', __('Employé modifié avec succès'));
+        // Convertir et COMPRESSER la nouvelle photo si présente
+        if ($request->hasFile('FaceEncodingFile')) {
+            $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
+            $data['HasFaceSetup'] = true;
+        } else {
+            unset($data['FaceEncodingPath']);
+            unset($data['HasFaceSetup']);
+        }
     }
+
+    // Supprimer FaceEncodingFile du tableau de données
+    unset($data['FaceEncodingFile']);
+
+    // ← 2. RETIRER LES CHAMPS META DE $data (ils ne sont pas dans la table employes)
+    unset($data['hire_date'], $data['department_name'], $data['job_title']);
+
+    // Mise à jour
+    $this->repository->update($id, $data);
+    
+           // ← 3. METTRE À JOUR OU CRÉER LES MÉTADONNÉES DANS employee_meta
+        \App\Models\EmployeeMeta::updateOrCreate(
+            ['employee_id' => $employe->ID],
+            [
+                'hire_date'         => $metaHireDate,
+                'department_name'   => $metaDepartment,
+                'job_title'         => $metaJobTitle,
+                'employment_status' => 'active',
+                'company_id'        => $employe->SiegeID,
+            ]
+        );
+    
+    return redirect()->back()->with('success', __('Employé modifié avec succès'));
+}
     
     public function destroy($id)
     {

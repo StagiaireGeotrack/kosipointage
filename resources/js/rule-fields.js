@@ -9,7 +9,8 @@
         initSortable();
 
         document.getElementById('field_type').addEventListener('change', function () {
-            document.getElementById('optionsBlock').style.display = this.value === 'select' ? 'block' : 'none';
+            const showOptions = ['select', 'checkbox'].includes(this.value);
+            document.getElementById('optionsBlock').style.display = showOptions ? 'block' : 'none';
         });
     });
 
@@ -81,8 +82,8 @@
             validation:    null,
         };
 
-        // Options pour select
-        if (payload.field_type === 'select') {
+        // Options pour select & checkbox
+        if (['select', 'checkbox'].includes(payload.field_type)) {
             try {
                 payload.options = JSON.parse(document.getElementById('options').value || '[]');
             } catch {
@@ -164,8 +165,11 @@
         document.getElementById('label').value = field.label;
         document.getElementById('default_value').value = field.default_value || '';
 
-        if (field.options) {
-            document.getElementById('options').value = JSON.stringify(field.options, null, 2);
+        // Affiche le bloc options pour select & checkbox
+        if (['select', 'checkbox'].includes(field.field_type)) {
+            document.getElementById('options').value = field.options
+                ? JSON.stringify(field.options, null, 2)
+                : '[]';
             document.getElementById('optionsBlock').style.display = 'block';
         } else {
             document.getElementById('options').value = '[]';
@@ -177,6 +181,11 @@
             document.getElementById('val_max').value = field.validation.max ?? '';
             document.getElementById('val_step').value = field.validation.step ?? '';
             document.getElementById('val_required').checked = field.validation.required ?? false;
+        } else {
+            document.getElementById('val_min').value = '';
+            document.getElementById('val_max').value = '';
+            document.getElementById('val_step').value = '';
+            document.getElementById('val_required').checked = false;
         }
 
         document.getElementById('formTitle').textContent = 'Modifier le champ';

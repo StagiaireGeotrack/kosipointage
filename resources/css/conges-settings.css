@@ -372,3 +372,36 @@
         font-size: 16px;
     }
 }
+/* Réduire toutes les checkboxes à un petit carré */
+.form-check-input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    min-width: 1.1em;
+    border-radius: 0.2em;
+    margin-top: 0;
+    cursor: pointer;
+}
+
+/* Aligner proprement label + checkbox sans espace perdu */
+.form-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+    padding-left: 0; /* si Bootstrap 5 */
+}
+
+.form-check-label {
+    cursor: pointer;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+/* Espace à gauche des checkboxes */
+.form-check {
+    padding-left: 0.5rem;  /* ou 0.75rem pour plus d'espace */
+}
+
+/* Ou si tu préfères sur l'input directement */
+.form-check-input[type="checkbox"] {
+    margin-left: 0.3rem;
+}

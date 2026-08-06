@@ -89,9 +89,10 @@ import '../css/conges-settings.css';
 
         fields.slice(0, 4).forEach(f => {
             const v = values[f.field_key];
-            if (v !== undefined && v !== null && v !== '') {
+            if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0)) {
                 let display = v;
                 if (f.field_type === 'boolean') display = (v == '1' || v === true) ? 'Oui' : 'Non';
+                else if (f.field_type === 'checkbox') display = Array.isArray(v) ? v.join(', ') : v;
                 parts.push(`<span style="white-space:nowrap;">${esc(f.label)}: <strong>${esc(display)}</strong></span>`);
             }
         });
@@ -100,9 +101,10 @@ import '../css/conges-settings.css';
     }
 
     function esc(text) {
-        if (!text) return '';
+        if (text === null || text === undefined) return '';
+        if (Array.isArray(text)) return text.map(t => String(t)).join(', ');
         const d = document.createElement('div');
-        d.textContent = text;
+        d.textContent = String(text);
         return d.innerHTML;
     }
 
@@ -208,6 +210,29 @@ import '../css/conges-settings.css';
                     inputHtml = `<select id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control">${options}</select>`;
                     break;
                 }
+                case 'checkbox': {
+                    const checkedVals = Array.isArray(val) ? val : (val ? [String(val)] : []);
+                    let chkHtml = `<div class="row g-2" style="grid-column: 1/-1;">`;
+                    (field.options || []).forEach((opt, idx) => {
+                        const isChecked = checkedVals.includes(opt.value) ? 'checked' : '';
+                        chkHtml += `
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                        name="values[${field.field_key}][]"
+                                        value="${esc(opt.value)}"
+                                        id="chk_${field.field_key}_${idx}"
+                                        ${isChecked}>
+                                    <label class="form-check-label" for="chk_${field.field_key}_${idx}">
+                                        ${esc(opt.label)}
+                                    </label>
+                                </div>
+                            </div>`;
+                    });
+                    chkHtml += `</div>`;
+                    inputHtml = chkHtml;
+                    break;
+                }
                 case 'text':
                     inputHtml = `<input type="text" id="rf_${field.field_key}" name="values[${field.field_key}]" class="form-control" value="${esc(val)}">`;
                     break;
@@ -256,16 +281,28 @@ import '../css/conges-settings.css';
         // Récupère toutes les values du formulaire dynamique
         const values = {};
         const container = document.getElementById('dynamicFormContainer');
-        const inputs = container.querySelectorAll('[name^="values["]');
 
-        inputs.forEach(input => {
-            const match = input.name.match(/values\[(.+)\]/);
+        // Inputs normaux (text, number, select, textarea)
+        container.querySelectorAll('input[name^="values["]:not([type="checkbox"]), select[name^="values["], textarea[name^="values["]').forEach(input => {
+            const match = input.name.match(/values\[([^\]]+)\]/);
             if (match) {
                 let v = input.value;
                 if (v === '') v = null;
                 values[match[1]] = v;
             }
         });
+
+        // Checkboxes (regroupées par clé en tableau)
+        const checkboxGroups = {};
+        container.querySelectorAll('input[type="checkbox"][name^="values["]').forEach(input => {
+            const match = input.name.match(/values\[([^\]]+)\]/);
+            if (match && input.checked) {
+                const key = match[1];
+                if (!checkboxGroups[key]) checkboxGroups[key] = [];
+                checkboxGroups[key].push(input.value);
+            }
+        });
+        Object.assign(values, checkboxGroups);
 
         const payload = {
             is_active: document.getElementById('is_active').value === '1',

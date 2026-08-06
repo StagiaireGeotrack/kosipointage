@@ -32,6 +32,39 @@
                             <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
 
+                        <!-- Département -->
+                        <div class="form-group mb-3">
+                            <label for="department_name">Département</label>
+                            <input type="text" 
+                                    class="form-control @error('department_name') is-invalid @enderror" 
+                                    id="department_name" 
+                                    name="department_name" 
+                                    value="{{ old('department_name', optional($employe->meta)->department_name) }}">
+                            <x-input-error :messages="$errors->get('department_name')" class="mt-2" />
+                        </div>
+
+                        <!-- Poste -->
+                        <div class="form-group mb-3">
+                            <label for="job_title">Poste</label>
+                            <input type="text" 
+                                    class="form-control @error('job_title') is-invalid @enderror" 
+                                    id="job_title" 
+                                    name="job_title" 
+                                    value="{{ old('job_title', optional($employe->meta)->job_title) }}">
+                            <x-input-error :messages="$errors->get('job_title')" class="mt-2" />
+                        </div>
+
+                        <!-- Date d'embauche -->
+                        <div class="form-group mb-3">
+                            <label for="hire_date">Date d'embauche</label>
+                            <input type="date" 
+                                    class="form-control @error('hire_date') is-invalid @enderror" 
+                                    id="hire_date" 
+                                    name="hire_date" 
+                                    value="{{ old('hire_date', optional($employe->meta)->hire_date?->format('Y-m-d')) }}">
+                            <x-input-error :messages="$errors->get('hire_date')" class="mt-2" />
+                        </div>
+
                         <!-- BadgeID -->
                         <div class="form-group mb-3">
                             <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>

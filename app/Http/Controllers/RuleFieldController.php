@@ -34,9 +34,8 @@ class RuleFieldController extends Controller
     {
         $validated = $request->validate([
             'field_key'     => 'required|string|max:50|regex:/^[a-z0-9_]+$/|unique:rule_fields,field_key,NULL,id,leave_type_id,' . $leaveType->id,
-            'field_type'    => 'required|in:number,boolean,select,text,formula',
+            'field_type'    => 'required|in:number,boolean,select,checkbox,text,formula',
             'label'         => 'required|string|max:255',
-            'default_value' => 'nullable|string|max:1000',
             'options'       => 'nullable|array',
             'options.*.value' => 'required_with:options|string',
             'options.*.label' => 'required_with:options|string',
@@ -53,7 +52,10 @@ class RuleFieldController extends Controller
             'field_key'     => $validated['field_key'],
             'field_type'    => $validated['field_type'],
             'label'         => $validated['label'],
-            'default_value' => $validated['default_value'] ?? null,
+            'default_value' => $this->parseDefaultValue(
+                $request->input('default_value'),
+                $validated['field_type']
+            ),
             'options'       => $validated['options'] ?? null,
             'validation'    => $validated['validation'] ?? null,
             'sort_order'    => $maxOrder + 1,
@@ -81,7 +83,6 @@ class RuleFieldController extends Controller
     {
         $validated = $request->validate([
             'label'         => 'required|string|max:255',
-            'default_value' => 'nullable|string|max:1000',
             'options'       => 'nullable|array',
             'options.*.value' => 'required_with:options|string',
             'options.*.label' => 'required_with:options|string',
@@ -94,7 +95,10 @@ class RuleFieldController extends Controller
 
         $ruleField->update([
             'label'         => $validated['label'],
-            'default_value' => $validated['default_value'] ?? null,
+            'default_value' => $this->parseDefaultValue(
+                $request->input('default_value'),
+                $ruleField->field_type
+            ),
             'options'       => $validated['options'] ?? null,
             'validation'    => $validated['validation'] ?? null,
         ]);
@@ -179,5 +183,24 @@ class RuleFieldController extends Controller
             'message' => '15 champs par défaut créés.',
             'count'   => 15
         ]);
+    }
+
+    /**
+     * Parse la valeur par défaut selon le type de champ.
+     */
+    private function parseDefaultValue($value, string $fieldType)
+    {
+        if (is_null($value) || $value === '' || $value === 'null') {
+            return null;
+        }
+
+        // Checkbox : attend un tableau JSON ["value1", "value2"]
+        if ($fieldType === 'checkbox') {
+            $decoded = json_decode($value, true);
+            return is_array($decoded) ? $decoded : null;
+        }
+
+        // Les autres types : string simple
+        return (string) $value;
     }
 }

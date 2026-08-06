@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Loggable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employe extends Authenticatable
 {
@@ -56,6 +57,10 @@ class Employe extends Authenticatable
     {
         return $this->hasMany(Pointage::class, 'employee_id', 'ID');
     }
+    public function meta(): HasOne
+{
+    return $this->hasOne(\App\Models\EmployeeMeta::class, 'employee_id', 'ID');
+}
 
     protected static function boot()
     {

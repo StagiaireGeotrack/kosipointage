@@ -46,6 +46,7 @@
                                     <option value="number">Nombre</option>
                                     <option value="boolean">Oui / Non</option>
                                     <option value="select">Liste déroulante</option>
+                                    <option value="checkbox">Case(s) à cocher</option>
                                     <option value="text">Texte libre</option>
                                     <option value="formula">Formule (lecture seule)</option>
                                 </select>
@@ -61,10 +62,10 @@
                                 <input type="text" id="default_value" class="form-control" placeholder="ex: 25">
                             </div>
 
-                            {{-- Options pour select --}}
+                            {{-- Options pour select & checkbox --}}
                             <div class="mb-3" id="optionsBlock" style="display:none;">
                                 <label class="form-label fw-bold">Options <small class="text-muted">(JSON)</small></label>
-                                <textarea id="options" class="form-control font-monospace" rows="4" placeholder='[{"value":"manager","label":"Manager"}]'>[]</textarea>
+                                <textarea id="options" class="form-control font-monospace" rows="4" placeholder='[{"value":"opt1","label":"Option 1"}]'>[]</textarea>
                             </div>
 
                             {{-- Validation --}}
@@ -85,9 +86,9 @@
                                             <input type="text" id="val_step" class="form-control form-control-sm" placeholder="any">
                                         </div>
                                         <div class="col-12 col-sm-6 d-flex align-items-end pt-2 pt-sm-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="val_required">
-                                                <label class="form-check-label small" for="val_required">Obligatoire</label>
+                                            <div class="form-check d-flex align-items-center gap-2 m-0">
+                                                <input class="form-check-input m-0 p-0" type="checkbox" id="val_required" style="width: 1.1em; height: 1.1em; min-width: 1.1em; border-radius: 0.2em; cursor: pointer;">
+                                                <label class="form-check-label small mb-0" for="val_required" style="cursor: pointer;">Obligatoire</label>
                                             </div>
                                         </div>
                                     </div>
@@ -132,20 +133,33 @@
                                         <div class="flex-grow-1 overflow-hidden">
                                             <div class="d-flex flex-wrap align-items-center gap-2">
                                                 <code class="bg-light px-2 py-1 rounded text-break">{{ $field['field_key'] }}</code>
-                                                <span class="badge bg-{{ $field['field_type'] === 'number' ? 'primary' : ($field['field_type'] === 'boolean' ? 'success' : ($field['field_type'] === 'select' ? 'info' : 'secondary')) }}">
+                                                <span class="badge bg-{{
+                                                    $field['field_type'] === 'number' ? 'primary' :
+                                                    ($field['field_type'] === 'boolean' ? 'success' :
+                                                    ($field['field_type'] === 'checkbox' ? 'warning' :
+                                                    ($field['field_type'] === 'select' ? 'info' : 'secondary')))
+                                                }}">
                                                     {{ $field['field_type'] }}
                                                 </span>
                                                 <strong class="text-break">{{ $field['label'] }}</strong>
                                             </div>
-                                            <div class="small text-muted mt-1 text-break">
-                                                Défaut: <code>{{ $field['default_value'] ?? '—' }}</code>
-                                                @if($field['validation'])
-                                                    · Validation: {{ json_encode($field['validation']) }}
-                                                @endif
-                                                @if($field['options'])
-                                                    · Options: {{ count($field['options']) }} choix
-                                                @endif
-                                            </div>
+                                           <div class="small text-muted mt-1 text-break">
+    Défaut: <code>
+        @if(is_array($field['default_value']))
+            {{ json_encode($field['default_value']) }}
+        @elseif(is_null($field['default_value']))
+            —
+        @else
+            {{ $field['default_value'] }}
+        @endif
+    </code>
+    @if($field['validation'])
+        · Validation: {{ json_encode($field['validation']) }}
+    @endif
+    @if($field['options'])
+        · Options: {{ count($field['options']) }} choix
+    @endif
+</div>
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2 w-100 w-sm-auto justify-content-end pt-2 pt-sm-0 border-top border-sm-0">

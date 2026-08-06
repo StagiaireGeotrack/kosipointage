@@ -191,7 +191,7 @@
                                                 aria-label="Modifier {{ $rule['name'] }}"
                                                 title="Modifier"
                                             >
-                                                ✏️
+                                                Modifier
                                             </button>
                                             <button
                                                 type="button"
@@ -200,7 +200,7 @@
                                                 aria-label="Supprimer {{ $rule['name'] }}"
                                                 title="Supprimer"
                                             >
-                                                🗑️
+                                                Supprimer
                                             </button>
                                         </div>
                                     </div>

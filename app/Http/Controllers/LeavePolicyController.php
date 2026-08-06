@@ -68,7 +68,13 @@ class LeavePolicyController extends Controller
             $policyValues = [];
             if ($policy) {
                 foreach ($policy->values as $pv) {
-                    $policyValues[$pv->ruleField->field_key] = $pv->value;
+                    $val = $pv->value;
+                    // Décoder JSON pour checkbox
+                    if ($pv->ruleField->field_type === 'checkbox') {
+                        $decoded = json_decode($val, true);
+                        $val = is_array($decoded) ? $decoded : [];
+                    }
+                    $policyValues[$pv->ruleField->field_key] = $val;
                 }
             }
 
@@ -134,10 +140,16 @@ class LeavePolicyController extends Controller
             ]);
 
             foreach ($type->ruleFields as $rf) {
+                $value = $rf->default_value ?? '';
+                // Encoder en JSON si checkbox (array)
+                if ($rf->field_type === 'checkbox' && is_array($value)) {
+                    $value = json_encode($value);
+                }
+
                 PolicyValue::create([
                     'leave_policy_id' => $policy->id,
                     'rule_field_id'   => $rf->id,
-                    'value'           => $rf->default_value ?? '',
+                    'value'           => (string) $value,
                 ]);
             }
 
@@ -178,6 +190,10 @@ class LeavePolicyController extends Controller
             } elseif ($rf->field_type === 'select') {
                 $allowed = collect($rf->options ?? [])->pluck('value')->implode(',');
                 $fieldRules[] = 'in:' . $allowed;
+            } elseif ($rf->field_type === 'checkbox') {
+                $fieldRules[] = 'array';
+                $fieldRules[] = 'nullable';
+                $rules["values.$key.*"] = 'in:' . collect($rf->options ?? [])->pluck('value')->implode(',');
             }
 
             if ($val['required'] ?? false) {
@@ -198,10 +214,18 @@ class LeavePolicyController extends Controller
 
             $incoming = $request->input('values', []);
             foreach ($ruleFields as $key => $rf) {
-                $raw = $incoming[$key] ?? ($rf->field_type === 'boolean' ? '0' : '');
+                // Gestion spécifique checkbox (tableau → JSON)
+                if ($rf->field_type === 'checkbox') {
+                    $raw = $incoming[$key] ?? [];
+                    $value = json_encode(array_values($raw));
+                } else {
+                    $raw = $incoming[$key] ?? ($rf->field_type === 'boolean' ? '0' : '');
+                    $value = (string) $raw;
+                }
+
                 PolicyValue::updateOrCreate(
                     ['leave_policy_id' => $policy->id, 'rule_field_id' => $rf->id],
-                    ['value' => (string) $raw]
+                    ['value' => $value]
                 );
             }
         });

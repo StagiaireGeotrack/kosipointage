@@ -1145,3 +1145,51 @@ legend {
         z-index: 200;
     }
 }
+/* Groupe sidebar natif */
+.sidebar-group {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-group > summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+}
+.sidebar-group > summary::-webkit-details-marker {
+    display: none; /* masque la flèche native */
+}
+
+/* Titre du groupe */
+.sidebar-group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.sidebar-group-title .chevron {
+    transition: transform 0.2s ease;
+    font-size: 0.7rem;
+    margin-left: auto;
+}
+.sidebar-group[open] .sidebar-group-title .chevron {
+    transform: rotate(180deg);
+}
+
+/* Sous-liens indentés */
+.sidebar-sub {
+    padding-left: 2.2rem !important;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    border-left: 2px solid transparent;
+}
+.sidebar-sub.active {
+    border-left-color: var(--sidebar-active-color, #4d0dfd);
+    background: rgba(13, 110, 253, 0.05);
+    opacity: 1;
+    font-weight: 500;
+}
+
+/* Quand un sous-lien est actif, on garde le titre actif aussi */
+.sidebar-group:has(.sidebar-sub.active) .sidebar-group-title {
+    background: rgba(13, 110, 253, 0.08);
+}

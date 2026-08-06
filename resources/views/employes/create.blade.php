@@ -44,6 +44,40 @@
                                     autofocus>
                             <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
+                        <!-- Date d'embauche (CRITIQUE pour les congés) -->
+<div class="form-group mb-3">
+    <label for="hire_date">Date d'embauche <span class="text-danger">*</span></label>
+    <input type="date" 
+           class="form-control @error('hire_date') is-invalid @enderror" 
+           id="hire_date" 
+           name="hire_date" 
+           value="{{ old('hire_date') }}" 
+           required>
+    <x-input-error :messages="$errors->get('hire_date')" class="mt-2" />
+    <small class="form-text text-muted">Nécessaire pour le calcul des droits de congés</small>
+</div>
+
+<!-- Département / Service -->
+<div class="form-group mb-3">
+    <label for="department_name">Département / Service</label>
+    <input type="text" 
+           class="form-control @error('department_name') is-invalid @enderror" 
+           id="department_name" 
+           name="department_name" 
+           value="{{ old('department_name') }}">
+    <x-input-error :messages="$errors->get('department_name')" class="mt-2" />
+</div>
+
+<!-- Poste / Fonction -->
+<div class="form-group mb-3">
+    <label for="job_title">Poste / Fonction</label>
+    <input type="text" 
+           class="form-control @error('job_title') is-invalid @enderror" 
+           id="job_title" 
+           name="job_title" 
+           value="{{ old('job_title') }}">
+    <x-input-error :messages="$errors->get('job_title')" class="mt-2" />
+</div>
 
                         <!-- BadgeID - SEULEMENT SUPER ADMIN -->
                         @if(Auth::user()->IsSuperAdmin)
