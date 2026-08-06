@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EntrepriseSiege;
 use App\Models\LeaveType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class LeaveTypeController extends Controller
 {
+    private function isSuperAdmin(): bool
+    {
+        $user = auth()->user();
+        return $user instanceof \App\Models\Administration && ($user->IsSuperAdmin || is_null($user->SiegeID));
+    }
+
     public function index()
     {
         $leaveTypes = LeaveType::orderBy('name')->paginate(20);
@@ -15,19 +23,47 @@ class LeaveTypeController extends Controller
 
     public function create()
     {
-        return view('conges.leave_types.create');
+        $companies = $this->isSuperAdmin() 
+            ? EntrepriseSiege::orderBy('Nom')->get() 
+            : collect();
+
+        return view('conges.leave_types.create', compact('companies'));
     }
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $this->isSuperAdmin();
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:leave_types,name',
-            'code' => 'required|string|max:50|unique:leave_types,code',
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user) {
+                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
+                    // Si vide ou null, on force null pour l'unicité
+                    $query->where('company_id', $companyId ?: null);
+                })
+            ],
+            'code' => [
+                'required', 'string', 'max:50',
+                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user) {
+                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
+                    $query->where('company_id', $companyId ?: null);
+                })
+            ],
             'description' => 'nullable|string|max:1000',
             'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
             'is_active' => 'boolean',
         ]);
 
+        // Détermine company_id
+        if ($isSuperAdmin) {
+            $validated['company_id'] = $request->filled('company_id') ? $request->company_id : null;
+        } else {
+            $validated['company_id'] = $user->SiegeID;
+        }
+
+        $validated['created_by'] = $user->id;
         $validated['is_active'] = $request->boolean('is_active', true);
 
         LeaveType::create($validated);
@@ -38,18 +74,43 @@ class LeaveTypeController extends Controller
 
     public function edit(LeaveType $leaveType)
     {
-        return view('conges.leave_types.edit', compact('leaveType'));
+        $companies = $this->isSuperAdmin() 
+            ? EntrepriseSiege::orderBy('Nom')->get() 
+            : collect();
+
+        return view('conges.leave_types.edit', compact('leaveType', 'companies'));
     }
 
     public function update(Request $request, LeaveType $leaveType)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $this->isSuperAdmin();
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:leave_types,name,' . $leaveType->id,
-            'code' => 'required|string|max:50|unique:leave_types,code,' . $leaveType->id,
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user, $leaveType) {
+                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
+                    $query->where('company_id', $companyId ?: null);
+                })->ignore($leaveType->id)
+            ],
+            'code' => [
+                'required', 'string', 'max:50',
+                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user, $leaveType) {
+                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
+                    $query->where('company_id', $companyId ?: null);
+                })->ignore($leaveType->id)
+            ],
             'description' => 'nullable|string|max:1000',
             'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
             'is_active' => 'boolean',
         ]);
+
+        if ($isSuperAdmin) {
+            $validated['company_id'] = $request->filled('company_id') ? $request->company_id : null;
+        } else {
+            $validated['company_id'] = $user->SiegeID;
+        }
 
         $validated['is_active'] = $request->boolean('is_active', true);
 

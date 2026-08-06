@@ -21,6 +21,30 @@
                 <form action="{{ route('leave-types.update', $leaveType) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    @php
+    $user = auth()->user();
+    $isSuperAdmin = $user instanceof \App\Models\Administration && ($user->IsSuperAdmin || is_null($user->SiegeID));
+@endphp
+
+@if($isSuperAdmin)
+<div class="ca-form-group mb-4">
+    <label for="company_id" class="ca-form-label">Visibilité du type</label>
+    <select name="company_id" id="company_id" 
+            class="ca-form-input @error('company_id') is-invalid @enderror">
+        <option value="" {{ is_null($leaveType->company_id) ? 'selected' : '' }}>
+            🌍 Global (tous les sièges)
+        </option>
+        @foreach($companies as $company)
+            <option value="{{ $company->ID }}" {{ $leaveType->company_id == $company->ID ? 'selected' : '' }}>
+                🔒 {{ $company->Nom }} uniquement
+            </option>
+        @endforeach
+    </select>
+    @error('company_id')
+        <p class="ca-form-error">{{ $message }}</p>
+    @enderror
+</div>
+@endif
 
                     <div class="ca-form-group">
                         <label for="code" class="ca-form-label">Code identifiant *</label>

@@ -19,7 +19,33 @@
                 
                 <form action="{{ route('leave-types.store') }}" method="POST">
                     @csrf
+@php
+    $user = auth()->user();
+    $isSuperAdmin = $user instanceof \App\Models\Administration && ($user->IsSuperAdmin || is_null($user->SiegeID));
+@endphp
 
+@if($isSuperAdmin)
+<div class="ca-form-group mb-4">
+    <label for="company_id" class="ca-form-label text-sm font-medium">Visibilité du type</label>
+    <select name="company_id" id="company_id" 
+            class="ca-form-input w-full mt-1 @error('company_id') is-invalid @enderror">
+        <option value="">🌍 Global (tous les sièges)</option>
+        @foreach($companies as $company)
+            <option value="{{ $company->ID }}" {{ old('company_id') == $company->ID ? 'selected' : '' }}>
+                🔒 {{ $company->Nom }} uniquement
+            </option>
+        @endforeach
+    </select>
+    <p class="ca-form-hint text-xs text-gray-500 mt-1">
+        Laissez vide pour un type visible par tout le monde.
+    </p>
+    @error('company_id')
+        <p class="ca-form-error text-xs text-red-500 mt-1">{{ $message }}</p>
+    @enderror
+</div>
+@else
+    <input type="hidden" name="company_id" value="{{ $user->SiegeID }}">
+@endif
                     <div class="ca-form-group mb-4">
                         <label for="code" class="ca-form-label text-sm font-medium">Code identifiant *</label>
                         <input type="text" name="code" id="code" value="{{ old('code') }}"
