@@ -1,5 +1,4 @@
 <?php
-// app/Models/Employe.php
 
 namespace App\Models;
 
@@ -34,6 +33,15 @@ class Employe extends Authenticatable
         'email',
         'telephone',
         'password',
+        // ============ ORGANISATION (NOUVEAU) ============
+        'company_id',
+        'site_id',
+        'department_id',
+        'job_title_id',
+        'hierarchy_level_id',
+        'manager_id',
+        'employment_status',
+        'hire_date',
     ];
 
     protected $hidden = [
@@ -46,6 +54,7 @@ class Employe extends Authenticatable
         'HasFaceSetup' => 'boolean',
         'CreatedAt' => 'datetime',
         'Actived' => 'boolean',
+        'hire_date' => 'date',
     ];
     
     public function siege(): BelongsTo
@@ -57,10 +66,42 @@ class Employe extends Authenticatable
     {
         return $this->hasMany(Pointage::class, 'employee_id', 'ID');
     }
+
     public function meta(): HasOne
-{
-    return $this->hasOne(\App\Models\EmployeeMeta::class, 'employee_id', 'ID');
-}
+    {
+        return $this->hasOne(\App\Models\EmployeeMeta::class, 'employee_id', 'ID');
+    }
+
+    // ============ RELATIONS ORGANISATION (NOUVEAU) ============
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function jobTitle()
+    {
+        return $this->belongsTo(JobTitle::class, 'job_title_id');
+    }
+
+    public function hierarchyLevel()
+    {
+        return $this->belongsTo(HierarchyLevel::class, 'hierarchy_level_id');
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(Employe::class, 'manager_id');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(Employe::class, 'manager_id');
+    }
+
+    public function site()
+    {
+        return $this->belongsTo(EntrepriseSiege::class, 'SiegeID');
+    }
 
     protected static function boot()
     {

@@ -99,6 +99,39 @@
             <i class="bi bi-people"></i>
             <span>{{ __('Employé') }}</span>
         </a>
+        {{-- ==================== ORGANISATION RH ==================== --}}
+        @if(!auth()->user()->isSeller())
+        @php
+            $isOrgOpen = request()->routeIs('departments.*') 
+                      || request()->routeIs('job-titles.*') 
+                      || request()->routeIs('hierarchy-levels.*');
+        @endphp
+        <details class="sidebar-group" {{ $isOrgOpen ? 'open' : '' }}>
+            <summary class="sidebar-link sidebar-group-title {{ $isOrgOpen ? 'active' : '' }}">
+                <i class="bi bi-diagram-3"></i>
+                <span>{{ __('Organisation') }}</span>
+                <i class="bi bi-chevron-down small chevron"></i>
+            </summary>
+
+            <a href="{{ route('departments.index') }}"
+               class="sidebar-link sidebar-sub {{ request()->routeIs('departments.*') ? 'active' : '' }}">
+                <i class="bi bi-building-check"></i>
+                <span>{{ __('Services') }}</span>
+            </a>
+
+            <a href="{{ route('job-titles.index') }}"
+               class="sidebar-link sidebar-sub {{ request()->routeIs('job-titles.*') ? 'active' : '' }}">
+                <i class="bi bi-person-badge"></i>
+                <span>{{ __('Postes') }}</span>
+            </a>
+
+            <a href="{{ route('hierarchy-levels.index') }}"
+               class="sidebar-link sidebar-sub {{ request()->routeIs('hierarchy-levels.*') ? 'active' : '' }}">
+                <i class="bi bi-layers"></i>
+                <span>{{ __('Niveaux') }}</span>
+            </a>
+        </details>
+        @endif
 
         {{-- Sections INTERDITES aux vendeurs --}}
         @if(!auth()->user()->isSeller())
@@ -151,7 +184,7 @@
     <a href="{{ route('conges.index') }}"
        class="sidebar-link sidebar-sub {{ request()->routeIs('conges.index') ? 'active' : '' }}">
         <i class="bi bi-list-ul"></i>
-        <span>{{ __('Liste des congés') }}</span>
+        <span>{{ __('Gestion des Congés ') }}</span>
     </a>
 
     {{-- Lien 2 : Validation (admin) --}}

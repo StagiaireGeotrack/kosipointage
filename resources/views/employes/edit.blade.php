@@ -3,7 +3,7 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Modifier l'employé : {{ $employe->Nom }}
+                Modifier l'employé : {{ $employe->num_mat ? "N° Matricule " . $employe->num_mat . " - " : "" }} {{ $employe->Nom }} 
             </h2>
             <a href="{{ route('employes.index') }}" class="btn btn-secondary btn-sm">
                 Retour à la liste
@@ -20,6 +20,19 @@
 
                     <div class="row">
 
+                        <!-- num_mat -->
+                        <div class="form-group mb-3">
+                            <label for="num_mat">Numéro matricule</label>
+                            <input type="text" 
+                                    class="form-control @error('num_mat') is-invalid @enderror" 
+                                    id="num_mat" 
+                                    name="num_mat" 
+                                    value="{{ old('num_mat', $employe->num_mat) }}" 
+                                    maxlength="50">
+                            <x-input-error :messages="$errors->get('num_mat')" class="mt-2" />
+                            <small class="form-text text-muted">Optionnel — unique par siège</small>
+                        </div>
+
                         <!-- Nom -->
                         <div class="form-group mb-3">
                             <label for="Nom">Nom <span class="text-danger">*</span></label>
@@ -28,183 +41,301 @@
                                     id="Nom" 
                                     name="Nom" 
                                     value="{{ old('Nom', $employe->Nom) }}" 
-                                    required>                            
+                                    required>
                             <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
 
-                        <!-- Département -->
-                        <div class="form-group mb-3">
-                            <label for="department_name">Département</label>
-                            <input type="text" 
-                                    class="form-control @error('department_name') is-invalid @enderror" 
-                                    id="department_name" 
-                                    name="department_name" 
-                                    value="{{ old('department_name', optional($employe->meta)->department_name) }}">
-                            <x-input-error :messages="$errors->get('department_name')" class="mt-2" />
-                        </div>
+                        <!-- ============ ORGANISATION (NOUVEAU) ============ -->
+                        <div class="card mb-3 border-primary">
+                            <div class="card-header bg-light text-primary">
+                                <i class="bi bi-diagram-3"></i> Organisation
+                            </div>
+                            <div class="card-body row">
 
-                        <!-- Poste -->
-                        <div class="form-group mb-3">
-                            <label for="job_title">Poste</label>
-                            <input type="text" 
-                                    class="form-control @error('job_title') is-invalid @enderror" 
-                                    id="job_title" 
-                                    name="job_title" 
-                                    value="{{ old('job_title', optional($employe->meta)->job_title) }}">
-                            <x-input-error :messages="$errors->get('job_title')" class="mt-2" />
-                        </div>
+                                <!-- Service -->
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="department_id">Service</label>
+                                    <select name="department_id" id="department_id" class="form-select @error('department_id') is-invalid @enderror">
+                                        <option value="">-- Non classé --</option>
+                                        @foreach($departments as $dept)
+                                            <option value="{{ $dept->id }}" {{ old('department_id', $employe->department_id) == $dept->id ? 'selected' : '' }}>
+                                                {{ $dept->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error :messages="$errors->get('department_id')" class="mt-2" />
+                                </div>
 
-                        <!-- Date d'embauche -->
-                        <div class="form-group mb-3">
-                            <label for="hire_date">Date d'embauche</label>
-                            <input type="date" 
-                                    class="form-control @error('hire_date') is-invalid @enderror" 
-                                    id="hire_date" 
-                                    name="hire_date" 
-                                    value="{{ old('hire_date', optional($employe->meta)->hire_date?->format('Y-m-d')) }}">
-                            <x-input-error :messages="$errors->get('hire_date')" class="mt-2" />
-                        </div>
+                                <!-- Poste -->
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="job_title_id">Poste</label>
+                                    <select name="job_title_id" id="job_title_id" class="form-select @error('job_title_id') is-invalid @enderror">
+                                        <option value="">-- Non défini --</option>
+                                        @foreach($jobTitles as $jt)
+                                            <option value="{{ $jt->id }}" {{ old('job_title_id', $employe->job_title_id) == $jt->id ? 'selected' : '' }}>
+                                                {{ $jt->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error :messages="$errors->get('job_title_id')" class="mt-2" />
+                                </div>
 
-                        <!-- BadgeID -->
-                        <div class="form-group mb-3">
-                            <label for="BadgeID">Badge ID <span class="text-danger">*</span></label>
-                            <input type="text" 
-                                    class="form-control @error('BadgeID') is-invalid @enderror" 
-                                    id="BadgeID" 
-                                    name="BadgeID" 
-                                    value="{{ old('BadgeID', $employe->BadgeID) }}" 
-                                    maxlength="25"
-                                    required>
-                            <small class="form-text text-muted">Identifiant unique de l'employé</small>
-                            <x-input-error :messages="$errors->get('BadgeID')" class="mt-2" />
+                                <!-- Niveau Hiérarchique -->
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="hierarchy_level_id">Niveau Hiérarchique</label>
+                                    <select name="hierarchy_level_id" id="hierarchy_level_id" class="form-select @error('hierarchy_level_id') is-invalid @enderror">
+                                        <option value="">-- Non classé --</option>
+                                        @foreach($hierarchyLevels as $lvl)
+                                            <option value="{{ $lvl->id }}" {{ old('hierarchy_level_id', $employe->hierarchy_level_id) == $lvl->id ? 'selected' : '' }}>
+                                                {{ $lvl->name }} (Rang {{ $lvl->rank }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error :messages="$errors->get('hierarchy_level_id')" class="mt-2" />
+                                </div>
+
+                                <!-- Manager Direct -->
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="manager_id">Manager Direct</label>
+                                    <select name="manager_id" id="manager_id" class="form-select @error('manager_id') is-invalid @enderror">
+                                        <option value="">-- Responsable par défaut --</option>
+                                        @foreach($managers as $mgr)
+                                            <option value="{{ $mgr->ID }}" {{ old('manager_id', $employe->manager_id) == $mgr->ID ? 'selected' : '' }}>
+                                                {{ $mgr->Nom }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error :messages="$errors->get('manager_id')" class="mt-2" />
+                                </div>
+
+                                <!-- Statut -->
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="employment_status">Statut</label>
+                                    <select name="employment_status" id="employment_status" class="form-select @error('employment_status') is-invalid @enderror">
+                                        <option value="actif" {{ old('employment_status', $employe->employment_status ?? 'actif') == 'actif' ? 'selected' : '' }}>Actif</option>
+                                        <option value="suspendu" {{ old('employment_status', $employe->employment_status ?? '') == 'suspendu' ? 'selected' : '' }}>Suspendu</option>
+                                        <option value="sorti" {{ old('employment_status', $employe->employment_status ?? '') == 'sorti' ? 'selected' : '' }}>Sorti</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('employment_status')" class="mt-2" />
+                                </div>
+
+                                <!-- Date d'embauche -->
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="hire_date">Date d'embauche</label>
+                                    <input type="date" 
+                                            class="form-control @error('hire_date') is-invalid @enderror" 
+                                            id="hire_date" 
+                                            name="hire_date" 
+                                            value="{{ old('hire_date', $employe->hire_date ? \Carbon\Carbon::parse($employe->hire_date)->format('Y-m-d') : '') }}">
+                                    <x-input-error :messages="$errors->get('hire_date')" class="mt-2" />
+                                </div>
+
+                            </div>
                         </div>
+                        <!-- ============ FIN ORGANISATION ============ -->
 
                         <!-- SiegeID -->
                         <div class="form-group mb-3">
                             <label for="SiegeID">Siège <span class="text-danger">*</span></label>
-                            <select class="form-control @error('SiegeID') is-invalid @enderror" 
-                                    id="SiegeID" 
-                                    name="SiegeID" 
-                                    required>
-                                <option value="">Sélectionnez un siège</option>
-                                @foreach($sieges as $siege)
-                                    <option value="{{ $siege->ID }}" 
-                                            {{ old('SiegeID', $employe->SiegeID) == $siege->ID ? 'selected' : '' }}>
-                                        {{ $siege->Nom }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            @if(Auth::user()->IsSuperAdmin)
+                                <select class="form-control @error('SiegeID') is-invalid @enderror" 
+                                        id="SiegeID" 
+                                        name="SiegeID" 
+                                        required>
+                                    <option value="">Sélectionnez un siège</option>
+                                    @foreach($sieges as $siege)
+                                        <option value="{{ $siege->ID }}" 
+                                                {{ old('SiegeID', $employe->SiegeID) == $siege->ID ? 'selected' : '' }}>
+                                            {{ $siege->Nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <select class="form-control" disabled>
+                                    @foreach($sieges as $siege)
+                                        <option value="{{ $siege->ID }}" {{ $employe->SiegeID == $siege->ID ? 'selected' : '' }}>
+                                            {{ $siege->Nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted">Modification réservée aux super administrateurs</small>
+                            @endif
                             <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
                         </div>
-
-                        <!-- Pin -->
-                        <div class="form-group mb-3">
-                            <label for="Pin">Code PIN</label>
-                            <input type="text" 
-                                    class="form-control @error('Pin') is-invalid @enderror" 
-                                    id="Pin" 
-                                    name="Pin" 
-                                    value="{{ old('Pin', $employe->Pin) }}" 
-                                    maxlength="6"
-                                    pattern="[0-9]{6}"
-                                    placeholder="000000">
-                            <small class="form-text text-muted">Code PIN à 6 chiffres</small>
-                            <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
-                        </div>
-                    
-                        <!-- Photo de visage actuelle -->
-                        @if($employe->FaceEncodingPath)
-                            <div class="form-group mb-3">
-                                <label class="d-block text-muted">Photo de visage actuelle :</label>
-                                <img src="{{ route('employes.face.thumbnail', $employe->ID) }}" 
-                                    alt="{{ $employe->Nom }}" 
-                                    style="width: 200px; height: 200px; object-fit: cover;">
+                        
+                        @if(Auth::user()->IsSuperAdmin)
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- BadgeID -->
+                                <div class="form-group mb-3">
+                                    <label for="BadgeID">Badge ID</label>
+                                    <input type="password" 
+                                            class="form-control @error('BadgeID') is-invalid @enderror" 
+                                            id="BadgeID" 
+                                            name="BadgeID" 
+                                            maxlength="25">
+                                    <small class="form-text text-muted">Laissez vide pour conserver l'actuel</small>
+                                    <x-input-error :messages="$errors->get('BadgeID')" class="mt-2" />
+                                </div>
                             </div>
+                        </div>
                         @endif
 
-                        <!-- HasBiometricSetup -->
-                        <div class="form-group mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input @error('HasBiometricSetup') is-invalid @enderror" 
-                                        type="checkbox" 
-                                        value="1" 
-                                        id="HasBiometricSetup" 
-                                        name="HasBiometricSetup" 
-                                        {{ old('HasBiometricSetup', $employe->HasBiometricSetup) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="HasBiometricSetup">
-                                    <i class="bi bi-fingerprint"></i> Empreinte digitale configurée
-                                </label>
-                                <x-input-error :messages="$errors->get('HasBiometricSetup')" class="mt-2" />
+                        @if(Auth::user()->isSimpleAdmin())
+                            @if(empty($employe->Pin))
+                            <div class="row">
+                                <div class="col-md-12">                                
+                                    <div class="form-group mb-3">
+                                        <label for="Pin">Code PIN (6 chiffres)</label>
+                                        <input type="password" 
+                                            class="form-control @error('Pin') is-invalid @enderror" 
+                                            id="Pin" 
+                                            name="Pin" 
+                                            value="{{ old('Pin', $employe->Pin) }}" 
+                                            maxlength="6"
+                                            inputmode="numeric"
+                                            pattern="[0-9]{6}"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                        <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- HasFaceSetup (lecture seule, automatique) -->
-                        @if($employe->HasFaceSetup)
-                            <div class="alert alert-info">
-                                <i class="bi bi-check-circle"></i> Reconnaissance faciale configurée
-                            </div>
+                            @endif
                         @endif
 
                         <!-- Actived -->
                         <div class="form-group mb-3">
                             <div class="form-check">
-                                <input class="form-check-input @error('Actived') is-invalid @enderror" 
-                                        type="checkbox" 
-                                        value="1" 
-                                        id="Actived" 
-                                        name="Actived" 
-                                        {{ old('Actived', $employe->Actived) ? 'checked' : '' }}
-                                        {{ !Auth::user()->IsSuperAdmin ? 'disabled' : '' }}>
-                                <label class="form-check-label" for="Actived">
-                                    Activer
-                                    @if(!Auth::user()->IsSuperAdmin)
-                                        <small class="text-muted">(réservé aux super administrateurs)</small>
-                                    @endif
-                                </label>
+                                @if(Auth::user()->IsSuperAdmin)
+                                    <input class="form-check-input @error('Actived') is-invalid @enderror" 
+                                            type="checkbox" 
+                                            value="1" 
+                                            id="Actived" 
+                                            name="Actived" 
+                                            {{ old('Actived', $employe->Actived) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="Actived">Activer</label>
+                                @else
+                                    <input class="form-check-input" 
+                                            type="checkbox" 
+                                            id="Actived_display" 
+                                            {{ $employe->Actived ? 'checked' : '' }}
+                                            disabled>
+                                    <input type="hidden" name="Actived" value="{{ $employe->Actived ? '1' : '0' }}">
+                                    <label class="form-check-label" for="Actived_display">
+                                        Activer <small class="text-muted">(réservé aux super administrateurs)</small>
+                                    </label>
+                                @endif
                                 <x-input-error :messages="$errors->get('Actived')" class="mt-2" />
                             </div>
-                        </div>
-                        
+                        </div>                               
+                            
                     </div>
 
+                    @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> Enregistrer les modifications
                         </button>
                     </div>
+                    @endif
                 </form>
+
+                @if(auth()->user()->isSimpleAdmin() && !empty($employe->Pin))
+                    <hr>
+                    <div class="text-end mt-4">
+                        <button type="button" class="btn btn-info"
+                                onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                data-bs-toggle="modal"
+                                data-bs-target="#resetPinModal"
+                                title="Réinitialiser le PIN">
+                            <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser le Code Pin
+                        </button>
+                    </div>
+                @endif
+
+                <!-- Modal Reset PIN -->
+                <div class="modal fade" id="resetPinModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Réinitialisation du code PIN</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Voulez-vous vraiment réinitialiser le code PIN de cet employé ?</p>
+                                <p class="fw-bold" id="details_employee_pin"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <form id="resetPinForm" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-warning">Réinitialiser</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
     @push('scripts')
     <script>
-        // Aperçu de la nouvelle photo
-        document.getElementById('FaceEncodingFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('facePreview');
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.innerHTML = `
-                        <label class="d-block text-muted mb-1">Nouvelle photo :</label>
-                        <img src="${e.target.result}" 
-                             alt="Aperçu de la nouvelle photo" 
-                             style="max-width: 200px; max-height: 200px;" 
-                             class="img-thumbnail">
-                    `;
-                }
-                reader.readAsDataURL(file);
-            } else {
-                preview.innerHTML = '';
-            }
-        });
+        const pinInput = document.getElementById('Pin');
+        if (pinInput) {
+            pinInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
+            });
+        }
 
-        // Validation du PIN
-        document.getElementById('Pin').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
+        function setResetPinAction(url, nom) {
+            document.getElementById('resetPinForm').action = url;
+            document.getElementById('details_employee_pin').textContent = nom;
+        }
+
+        // AJAX : charger Services & Managers selon Siège (uniquement si SuperAdmin peut changer le siège)
+        @if(Auth::user()->IsSuperAdmin)
+        document.addEventListener('DOMContentLoaded', function() {
+            const siteSelect = document.getElementById('SiegeID');
+            const deptSelect = document.getElementById('department_id');
+            const mgrSelect  = document.getElementById('manager_id');
+
+            if (!siteSelect || siteSelect.disabled) return;
+
+            siteSelect.addEventListener('change', function() {
+                const siteId = this.value;
+                if (!siteId) {
+                    if (deptSelect) deptSelect.innerHTML = '<option value="">-- Non classé --</option>';
+                    if (mgrSelect)  mgrSelect.innerHTML  = '<option value="">-- Responsable par défaut --</option>';
+                    return;
+                }
+
+                if (deptSelect) {
+                    fetch(`/api/departments-by-site/${siteId}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            deptSelect.innerHTML = '<option value="">-- Non classé --</option>';
+                            data.forEach(d => {
+                                deptSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+                            });
+                        });
+                }
+
+                if (mgrSelect) {
+                    fetch(`/api/managers-by-site/${siteId}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            mgrSelect.innerHTML = '<option value="">-- Responsable par défaut --</option>';
+                            data.forEach(e => {
+                                mgrSelect.innerHTML += `<option value="${e.id}">${e.name}</option>`;
+                            });
+                        });
+                }
+            });
         });
+        @endif
     </script>
     @endpush
 </x-app-layout>

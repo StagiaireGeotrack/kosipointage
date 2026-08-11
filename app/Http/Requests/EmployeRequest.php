@@ -75,9 +75,12 @@ class EmployeRequest extends FormRequest
             'Actived'           => 'nullable|boolean',
             'SiegeID'           => 'required|exists:Entreprises_sieges,ID',
             'FaceEncodingFile'  => 'nullable|image|mimes:jpeg,jpg,png,gif|max:5120',
-            'hire_date'       => 'required|date',
-'department_name' => 'nullable|string|max:255',
-'job_title'       => 'nullable|string|max:255',
+            'department_id'      => 'nullable|exists:departments,id',
+        'job_title_id'       => 'nullable|exists:job_titles,id',
+        'hierarchy_level_id' => 'nullable|exists:hierarchy_levels,id',
+        'manager_id'         => 'nullable|exists:Employes,ID|not_in:' . ($this->employe ?? '0'),
+        'employment_status'  => 'nullable|in:actif,suspendu,sorti',
+        'hire_date'          => 'nullable|date',
         ];
 
         $rules['num_mat'] = $isUpdate

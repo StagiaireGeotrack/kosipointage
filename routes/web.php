@@ -23,7 +23,9 @@ use App\Http\Controllers\LeavePolicyController;
 use App\Http\Controllers\RuleFieldController;
 use App\Http\Controllers\CalculationRuleController;
 
-
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\JobTitleController;
+use App\Http\Controllers\HierarchyLevelController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -385,6 +387,41 @@ Route::post('/calculation-rules/test', [CalculationRuleController::class, 'testF
 
 // API calcul solde
 Route::get('/leave-policies/{policyId}/calculate', [LeaveBalanceController::class, 'calculate'])->name('leave-policies.calculate');
+
+
+
+
+ Route::resource('departments', DepartmentController::class);
+    
+    // Postes (Job Titles)
+    Route::resource('job-titles', JobTitleController::class);
+    
+    // Niveaux hiérarchiques (Hierarchy Levels)
+    Route::resource('hierarchy-levels', HierarchyLevelController::class);
+
+    // ============================================
+    // NOUVEAU : API/AJAX (utile pour P4)
+    // ============================================
+    
+    // Chargement dynamique des départements selon le siège (pour le formulaire employé)
+    Route::get('/api/departments-by-site/{siteId}', function ($siteId) {
+        return \App\Models\Department::where('site_id', $siteId)
+            ->orderBy('name')
+            ->get(['id', 'name', 'code']);
+    })->name('api.departments-by-site');
+
+    // Chargement dynamique des managers selon le siège (pour le formulaire employé)
+    Route::get('/api/managers-by-site/{siteId}', function ($siteId) {
+        return \App\Models\Employe::where('SiegeID', $siteId)
+            ->where('Actived', 1)
+            ->where('deleted', 0)
+            ->orderBy('Nom')
+            ->get(['ID as id', 'Nom as name']);
+    })->name('api.managers-by-site');
+
+
+
+
 
 Route::fallback(function () {
     return redirect()->route('sieges.index');
