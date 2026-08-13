@@ -15,10 +15,12 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array<class-string, class-string>
      */
-    protected $policies = [
-        //
-    ];
+  
     
+
+    protected $policies = [
+    \App\Models\LeaveType::class => \App\Policies\LeaveTypePolicy::class,
+];
     /**
      * Register any authentication / authorization services.
      */

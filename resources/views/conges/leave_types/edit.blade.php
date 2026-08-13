@@ -1,111 +1,204 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h5 class="font-semibold text-xl text-gray-800 leading-tight">
-            Modifier les types de congés
-        </h5>
-    </x-slot>
 
-    <div class="py-12 conges-admin">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+<style>
+    select option { color: #111827 !important; background: #ffffff !important; }
+</style>
 
-           <a href="{{ route('leave-types.index') }}" class="ca-btn-back">
-    &larr; Retour au catalogue
-</a>
+    <div style="background:#f3f4f6; min-height:100vh; padding:32px 24px;">
+        <div style="max-width:800px; margin:0 auto;">
 
-            <div class="ca-form-card">
-                <div style="margin-bottom: 1.5rem;">
-                    <h3 class="ca-page-title"></h3>
-                    <p class="ca-page-subtitle">{{ $leaveType->name }}</p>
+            {{-- Header --}}
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px;">
+                @php
+                    $displayColor = $leaveType->color ?? '#9ca3af';
+                    if (!str_starts_with($displayColor, '#')) $displayColor = '#' . $displayColor;
+                @endphp
+                <div style="width:48px; height:48px; border-radius:12px; background-color:{{ $displayColor }}; box-shadow:0 0 0 4px {{ $displayColor }}26; border:2px solid white; flex-shrink:0;"></div>
+                <div>
+                    <h1 style="font-size:28px; font-weight:800; color:#111827; margin:0; letter-spacing:-0.5px;">Modifier : {{ $leaveType->name }}</h1>
+                    <p style="color:#6b7280; margin:4px 0 0 0; font-size:14px;">Code <span style="font-family:monospace; font-weight:700; color:#4f46e5;">{{ $leaveType->code }}</span></p>
                 </div>
+            </div>
 
-                <form action="{{ route('leave-types.update', $leaveType) }}" method="POST">
+            {{-- Card --}}
+            <div style="background:white; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e5e7eb; overflow:hidden;">
+
+                @if($errors->any())
+                    <div style="background:#fef2f2; border-left:4px solid #ef4444; color:#991b1b; padding:16px 20px; margin:24px 24px 0 24px; border-radius:8px;">
+                        <div style="font-weight:700; font-size:13px; margin-bottom:6px;">⚠️ Veuillez corriger les erreurs suivantes :</div>
+                        <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.8;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.leave-types.update', $leaveType) }}" method="POST" style="padding:28px 24px;">
                     @csrf
                     @method('PUT')
-                    @php
-    $user = auth()->user();
-    $isSuperAdmin = $user instanceof \App\Models\Administration && ($user->IsSuperAdmin || is_null($user->SiegeID));
-@endphp
 
-@if($isSuperAdmin)
-<div class="ca-form-group mb-4">
-    <label for="company_id" class="ca-form-label">Visibilité du type</label>
-    <select name="company_id" id="company_id" 
-            class="ca-form-input @error('company_id') is-invalid @enderror">
-        <option value="" {{ is_null($leaveType->company_id) ? 'selected' : '' }}>
-            🌍 Global (tous les sièges)
-        </option>
-        @foreach($companies as $company)
-            <option value="{{ $company->ID }}" {{ $leaveType->company_id == $company->ID ? 'selected' : '' }}>
-                🔒 {{ $company->Nom }} uniquement
-            </option>
-        @endforeach
-    </select>
-    @error('company_id')
-        <p class="ca-form-error">{{ $message }}</p>
-    @enderror
-</div>
-@endif
-
-                    <div class="ca-form-group">
-                        <label for="code" class="ca-form-label">Code identifiant *</label>
-                        <input type="text" name="code" id="code" value="{{ old('code', $leaveType->code) }}"
-                               class="ca-form-input @error('code') is-invalid @enderror"
-                               maxlength="50" required>
-                        @error('code')
-                            <p class="ca-form-error">{{ $message }}</p>
-                        @enderror
+                    {{-- Siège --}}
+                    @if(auth()->user()->isAdmin())
+                    <div style="margin-bottom:24px; padding:20px; background:#f9fafb; border-radius:12px; border:1px solid #e5e7eb;">
+                        <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.3px;">
+                             Visibilité / Siège
+                        </label>
+                        <select name="site_id" style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+                            <option value="" style="color:#111827;">Global (tous les sièges)</option>
+                            @foreach($sites as $site)
+                                <option value="{{ $site->ID }}" style="color:#111827;" {{ old('site_id', $leaveType->site_id) == $site->ID ? 'selected' : '' }}>
+                                    {{ $site->Nom }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
+                    @endif
 
-                    <div class="ca-form-group">
-                        <label for="name" class="ca-form-label">Nom affiché *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $leaveType->name) }}"
-                               class="ca-form-input @error('name') is-invalid @enderror"
-                               required>
-                        @error('name')
-                            <p class="ca-form-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="ca-form-group">
-                        <label for="description" class="ca-form-label">Description</label>
-                        <textarea name="description" id="description" rows="3"
-                                  class="ca-form-textarea @error('description') is-invalid @enderror">{{ old('description', $leaveType->description) }}</textarea>
-                        @error('description')
-                            <p class="ca-form-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="ca-form-group">
-                        <label for="color" class="ca-form-label">Couleur d'affichage</label>
-                        <div class="ca-color-wrap">
-                            <input type="color" name="color" id="color" value="{{ old('color', $leaveType->color ?? '#3B82F6') }}"
-                                   class="ca-color-input">
+                    {{-- Nom + Code --}}
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
+                                Nom <span style="color:#ef4444;">*</span>
+                            </label>
+                            <input type="text" name="name" value="{{ old('name', $leaveType->name) }}" required maxlength="100"
+                                   style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
+                                Code <span style="color:#ef4444;">*</span>
+                            </label>
+                            <input type="text" name="code" value="{{ old('code', $leaveType->code) }}" required maxlength="20"
+                                   style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box; text-transform:uppercase;">
                         </div>
                     </div>
 
-                    <div class="ca-form-group">
-                        <label class="ca-check">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', $leaveType->is_active) ? 'checked' : '' }}
-                                   class="ca-check-input">
-                            <span class="ca-check-label">Type actif</span>
-                        </label>
+                    {{-- Unité + Couleur + Actif --}}
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-bottom:24px;">
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
+                                Unité <span style="color:#ef4444;">*</span>
+                            </label>
+                            <select name="unit" style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+                                <option value="days" style="color:#111827;" {{ old('unit', $leaveType->unit)=='days'?'selected':'' }}>Jours</option>
+                                <option value="half_days" style="color:#111827;" {{ old('unit', $leaveType->unit)=='half_days'?'selected':'' }}>Demi-journées</option>
+                                <option value="hours" style="color:#111827;" {{ old('unit', $leaveType->unit)=='hours'?'selected':'' }}>Heures</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
+                                Couleur <span style="color:#ef4444;">*</span>
+                            </label>
+                            @php
+                                $editColor = old('color', $leaveType->color);
+                                if (!str_starts_with($editColor, '#')) $editColor = '#' . $editColor;
+                            @endphp
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <input type="color" name="color" value="{{ $editColor }}" required
+                                       style="width:50px; height:42px; border:1px solid #d1d5db; border-radius:8px; padding:2px; background:#ffffff; cursor:pointer;">
+                                <span style="font-family:monospace; font-size:13px; color:#6b7280;">{{ strtoupper($editColor) }}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-end; padding-bottom:8px;">
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                <input type="checkbox" name="is_active" value="1" {{ old('is_active', $leaveType->is_active) ? 'checked' : '' }}
+                                       style="width:20px; height:20px; accent-color:#4f46e5; cursor:pointer;">
+                                <span style="font-size:14px; font-weight:600; color:#374151;">Actif</span>
+                            </label>
+                        </div>
                     </div>
 
-                    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 0.5rem; border-top: 1px solid #f1f5f9;">
-                        <a href="{{ route('leave-types.index') }}" class="ca-btn ca-btn-secondary">Annuler</a>
-                        <button type="submit" class="ca-btn ca-btn-primary">Enregistrer</button>
+                    <hr style="border:none; border-top:1px solid #e5e7eb; margin:24px 0;">
+
+                    {{-- Solde --}}
+                    <div style="margin-bottom:20px;">
+                        <h3 style="font-size:14px; font-weight:700; color:#374151; margin:0 0 14px 0; text-transform:uppercase; letter-spacing:0.3px;">Configuration du solde</h3>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <div style="padding:16px; background:#f9fafb; border-radius:10px; border:1px solid #e5e7eb;">
+                                <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                                    <input type="checkbox" name="deducts_balance" value="1"
+                                           {{ old('deducts_balance', $leaveType->deducts_balance) ? 'checked' : '' }}
+                                           style="width:18px; height:18px; accent-color:#4f46e5; cursor:pointer;">
+                                    <span style="font-size:14px; color:#374151; font-weight:500;">Décompte du solde de congés</span>
+                                </label>
+                                <p style="color:#6b7280; font-size:12px; margin:6px 0 0 28px;">Le solde de l'employé sera décrémenté</p>
+                            </div>
+                            <div style="padding:16px; background:#f9fafb; border-radius:10px; border:1px solid #e5e7eb;">
+                                <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                                    <input type="checkbox" name="allow_negative_balance" value="1"
+                                           {{ old('allow_negative_balance', $leaveType->allow_negative_balance) ? 'checked' : '' }}
+                                           style="width:18px; height:18px; accent-color:#4f46e5; cursor:pointer;"
+                                           onchange="document.getElementById('max-negative').style.display = this.checked ? 'block' : 'none'">
+                                    <span style="font-size:14px; color:#374151; font-weight:500;">Solde négatif autorisé</span>
+                                </label>
+                                <div id="max-negative" style="margin-top:10px; {{ old('allow_negative_balance', $leaveType->allow_negative_balance) ? '' : 'display:none;' }}">
+                                    <input type="number" name="max_negative_limit"
+                                           value="{{ old('max_negative_limit', $leaveType->max_negative_limit) }}"
+                                           placeholder="Limite max (vide = illimité)"
+                                           style="width:100%; padding:8px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:13px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    {{-- Justificatif --}}
+                    <div style="margin-bottom:28px;">
+                        <h3 style="font-size:14px; font-weight:700; color:#374151; margin:0 0 14px 0; text-transform:uppercase; letter-spacing:0.3px;">Justificatif requis</h3>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <div>
+                                <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
+                                    Condition <span style="color:#ef4444;">*</span>
+                                </label>
+                                <select name="requires_attachment" id="requires_attachment"
+                                        style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;"
+                                        onchange="toggleAttachmentAfter()">
+                                    <option value="never" style="color:#111827;" {{ old('requires_attachment', $leaveType->requires_attachment)=='never'?'selected':'' }}>Jamais</option>
+                                    <option value="always" style="color:#111827;" {{ old('requires_attachment', $leaveType->requires_attachment)=='always'?'selected':'' }}>Toujours</option>
+                                    <option value="after_duration" style="color:#111827;" {{ old('requires_attachment', $leaveType->requires_attachment)=='after_duration'?'selected':'' }}>Après une durée</option>
+                                </select>
+                            </div>
+                            <div id="attachment-after-wrapper" style="{{ old('requires_attachment', $leaveType->requires_attachment)=='after_duration' ? '' : 'display:none;' }}">
+                                <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
+                                    À partir de (jours)
+                                </label>
+                                <input type="number" name="requires_attachment_after" id="requires_attachment_after"
+                                       value="{{ old('requires_attachment_after', $leaveType->requires_attachment_after) }}" min="1"
+                                       style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Boutons --}}
+                    <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #e5e7eb;">
+                        <a href="{{ route('admin.leave-types.index') }}"
+                           style="padding:10px 22px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; font-weight:600; color:#4b5563; text-decoration:none; background:#ffffff;">
+                            Annuler
+                        </a>
+                        <button type="submit"
+                                style="padding:10px 24px; background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#ffffff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(79,70,229,0.35);">
+                            ✓ Mettre à jour
+                        </button>
+                    </div>
+
                 </form>
-            </div>
-
-            <div class="ca-alert">
-                <p class="ca-alert-title">Impact sur les sieges</p>
-                <p class="ca-alert-text">
-                    Ce type est actuellement utilise par <strong>{{ $leaveType->leavePolicies()->count() }} regle(s) de siege</strong>.
-                    Toute modification du nom ou du code sera immediatement visible pour tous les sieges concernes.
-                </p>
             </div>
 
         </div>
     </div>
+
+    <script>
+    function toggleAttachmentAfter() {
+        const sel = document.getElementById('requires_attachment');
+        const wrap = document.getElementById('attachment-after-wrapper');
+        const input = document.getElementById('requires_attachment_after');
+        if (sel.value === 'after_duration') {
+            wrap.style.display = 'block';
+            input.setAttribute('required','required');
+        } else {
+            wrap.style.display = 'none';
+            input.removeAttribute('required');
+            input.value = '';
+        }
+    }
+    </script>
 </x-app-layout>

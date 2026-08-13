@@ -2,134 +2,183 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\EntrepriseSiege;
 use App\Models\LeaveType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class LeaveTypeController extends Controller
 {
     private function isSuperAdmin(): bool
     {
-        $user = auth()->user();
-        return $user instanceof \App\Models\Administration && ($user->IsSuperAdmin || is_null($user->SiegeID));
+        $user = Auth::user();
+        return $user && $user->IsSuperAdmin == 1;
+    }
+
+    private function getUserSiteId(): ?int
+    {
+        $user = Auth::user();
+        return $user ? $user->SiegeID : null;
     }
 
     public function index()
     {
-        $leaveTypes = LeaveType::orderBy('name')->paginate(20);
+        $leaveTypes = LeaveType::with('site')
+            ->visibleForUser(Auth::user())
+            ->orderBy('name')
+            ->get();
+
         return view('conges.leave_types.index', compact('leaveTypes'));
     }
 
     public function create()
     {
-        $companies = $this->isSuperAdmin() 
-            ? EntrepriseSiege::orderBy('Nom')->get() 
+        $this->authorize('create', LeaveType::class);
+
+        $sites = $this->isSuperAdmin()
+            ? EntrepriseSiege::orderBy('nom')->get()
             : collect();
 
-        return view('conges.leave_types.create', compact('companies'));
+        return view('conges.leave_types.create', compact('sites'));
     }
 
     public function store(Request $request)
     {
-        $user = auth()->user();
-        $isSuperAdmin = $this->isSuperAdmin();
+        $this->authorize('create', LeaveType::class);
 
-        $validated = $request->validate([
-            'name' => [
-                'required', 'string', 'max:255',
-                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user) {
-                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
-                    // Si vide ou null, on force null pour l'unicité
-                    $query->where('company_id', $companyId ?: null);
-                })
-            ],
-            'code' => [
-                'required', 'string', 'max:50',
-                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user) {
-                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
-                    $query->where('company_id', $companyId ?: null);
-                })
-            ],
-            'description' => 'nullable|string|max:1000',
-            'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
-            'is_active' => 'boolean',
-        ]);
+        $isAdmin = $this->isSuperAdmin();
+        $validated = $request->validate($this->rules($isAdmin));
 
-        // Détermine company_id
-        if ($isSuperAdmin) {
-            $validated['company_id'] = $request->filled('company_id') ? $request->company_id : null;
+        if (! $isAdmin) {
+            $validated['site_id'] = $this->getUserSiteId();
         } else {
-            $validated['company_id'] = $user->SiegeID;
+            $validated['site_id'] = $validated['site_id'] ?? null;
         }
 
-        $validated['created_by'] = $user->id;
-        $validated['is_active'] = $request->boolean('is_active', true);
+        // Vérification doublon code + site_id
+        $exists = LeaveType::where('code', $validated['code'])
+            ->where('site_id', $validated['site_id'])
+            ->exists();
+
+        if ($exists) {
+            return back()
+                ->withErrors(['code' => 'Ce code est déjà utilisé pour ce siège.'])
+                ->withInput();
+        }
+
+        $validated['deducts_balance']        = $request->boolean('deducts_balance');
+        $validated['allow_negative_balance'] = $request->boolean('allow_negative_balance');
+        $validated['is_active']              = $request->boolean('is_active', true);
+
+        // ← CORRIGÉ : nettoyage aussi dans store (était seulement dans update)
+        if (($validated['requires_attachment'] ?? null) !== 'after_duration') {
+            $validated['requires_attachment_after'] = null;
+        }
 
         LeaveType::create($validated);
 
-        return redirect()->route('leave-types.index')
+        return redirect()->route('admin.leave-types.index')
             ->with('success', 'Type de congé créé avec succès.');
+    }
+
+    public function show(LeaveType $leaveType)
+    {
+        $this->authorize('view', $leaveType);
+
+        return view('conges.leave_types.show', compact('leaveType'));
     }
 
     public function edit(LeaveType $leaveType)
     {
-        $companies = $this->isSuperAdmin() 
-            ? EntrepriseSiege::orderBy('Nom')->get() 
+        $this->authorize('update', $leaveType);
+
+        $sites = $this->isSuperAdmin()
+            ? EntrepriseSiege::orderBy('nom')->get()
             : collect();
 
-        return view('conges.leave_types.edit', compact('leaveType', 'companies'));
+        return view('conges.leave_types.edit', compact('leaveType', 'sites'));
     }
 
     public function update(Request $request, LeaveType $leaveType)
     {
-        $user = auth()->user();
-        $isSuperAdmin = $this->isSuperAdmin();
+        $this->authorize('update', $leaveType);
 
-        $validated = $request->validate([
-            'name' => [
-                'required', 'string', 'max:255',
-                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user, $leaveType) {
-                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
-                    $query->where('company_id', $companyId ?: null);
-                })->ignore($leaveType->id)
-            ],
-            'code' => [
-                'required', 'string', 'max:50',
-                Rule::unique('leave_types')->where(function ($query) use ($request, $isSuperAdmin, $user, $leaveType) {
-                    $companyId = $isSuperAdmin ? $request->input('company_id') : $user->SiegeID;
-                    $query->where('company_id', $companyId ?: null);
-                })->ignore($leaveType->id)
-            ],
-            'description' => 'nullable|string|max:1000',
-            'color' => 'nullable|string|max:7|regex:/^#[0-9A-Fa-f]{6}$/',
-            'is_active' => 'boolean',
-        ]);
+        $isAdmin = $this->isSuperAdmin();
+        $validated = $request->validate($this->rules($isAdmin, $leaveType));
 
-        if ($isSuperAdmin) {
-            $validated['company_id'] = $request->filled('company_id') ? $request->company_id : null;
+        if (! $isAdmin) {
+            unset($validated['site_id']);
+            $newSiteId = $leaveType->site_id;
         } else {
-            $validated['company_id'] = $user->SiegeID;
+            $newSiteId = $validated['site_id'] ?? null;
         }
 
-        $validated['is_active'] = $request->boolean('is_active', true);
+        if ($validated['code'] !== $leaveType->code || $newSiteId != $leaveType->site_id) {
+            $exists = LeaveType::where('code', $validated['code'])
+                ->where('site_id', $newSiteId)
+                ->where('id', '!=', $leaveType->id)
+                ->exists();
+
+            if ($exists) {
+                return back()
+                    ->withErrors(['code' => 'Ce code est déjà utilisé pour ce siège.'])
+                    ->withInput();
+            }
+        }
+
+        $validated['deducts_balance']        = $request->boolean('deducts_balance');
+        $validated['allow_negative_balance'] = $request->boolean('allow_negative_balance');
+        $validated['is_active']              = $request->boolean('is_active', true);
+
+        if (($validated['requires_attachment'] ?? null) !== 'after_duration') {
+            $validated['requires_attachment_after'] = null;
+        }
 
         $leaveType->update($validated);
 
-        return redirect()->route('leave-types.index')
+        return redirect()->route('admin.leave-types.index')
             ->with('success', 'Type de congé mis à jour avec succès.');
     }
 
     public function destroy(LeaveType $leaveType)
     {
-        if ($leaveType->leavePolicies()->exists()) {
-            return redirect()->route('leave-types.index')
-                ->with('error', 'Impossible de supprimer ce type : il est utilisé par des règles de siège.');
-        }
+        $this->authorize('delete', $leaveType);
 
         $leaveType->delete();
 
-        return redirect()->route('leave-types.index')
-            ->with('success', 'Type de congé supprimé avec succès.');
+        return redirect()->route('admin.leave-types.index')
+            ->with('success', 'Type de congé supprimé.');
+    }
+
+    private function rules(bool $isAdmin, ?LeaveType $ignore = null): array
+    {
+        $rules = [
+            'name'                      => 'required|string|max:100',
+            'code'                      => [
+                'required',
+                'string',
+                'max:20',
+                // ← CORRIGÉ : utilisation de $ignore pour ignorer l'enregistrement en cours
+                Rule::unique('leave_types')->where(function ($query) use ($isAdmin) {
+                    if (! $isAdmin) {
+                        $query->where('site_id', $this->getUserSiteId());
+                    }
+                    // Si admin, on laisse le check manuel ou on ajoute site_id si présent
+                })->ignore($ignore?->id),
+            ],
+            'unit'                      => 'required|in:days,half_days,hours',
+            'requires_attachment'       => 'required|in:never,always,after_duration',
+            'requires_attachment_after' => 'nullable|integer|min:1',
+            'max_negative_limit'        => 'nullable|integer',
+            'color'                     => 'required|string|max:7',
+        ];
+
+        if ($isAdmin) {
+            $rules['site_id'] = 'nullable|exists:entreprises_sieges,ID';
+        }
+
+        return $rules;
     }
 }

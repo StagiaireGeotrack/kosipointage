@@ -153,4 +153,8 @@ class Administration extends Authenticatable
     {
         return $this->attributes['Password_'];
     }
+    public function isAdmin(): bool
+{
+    return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
+}
 }

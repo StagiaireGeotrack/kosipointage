@@ -296,20 +296,11 @@ Route::middleware('auth')->group(function () {
 
 
 // Si ton auth web ne marche pas encore, enlève ->middleware(['auth']) temporairement
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    
-    // Page interface
-    Route::get('/leave-types', [LeaveTypeController::class, 'page'])->name('admin.leave-types');
 
-    // API JSON
-    Route::get('/leave-types/api', [LeaveTypeController::class, 'index']);
-    Route::post('/leave-types/api', [LeaveTypeController::class, 'store']);
-    Route::get('/leave-types/api/{id}', [LeaveTypeController::class, 'show']);
-    Route::put('/leave-types/api/{id}', [LeaveTypeController::class, 'update']);
-    Route::delete('/leave-types/api/{id}', [LeaveTypeController::class, 'destroy']);
-    
+
+    Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('leave-types', LeaveTypeController::class);
 });
-    
 Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
     $request->validate(['siege_id' => 'required|integer']);
     Session::put('admin_selected_siege_id', $request->siege_id);
@@ -333,10 +324,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     })->name('admin.select-siege');
 });
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
 
-    Route::resource('leave-types', LeaveTypeController::class);
-});
 Route::post('/admin/leave-policies/api', [LeavePolicyController::class, 'store'])
     ->name('leave-policies.store');
     Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);

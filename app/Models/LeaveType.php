@@ -2,82 +2,70 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LeaveType extends Model
 {
+    use HasFactory;
+
+    protected $table = 'leave_types';
+
     protected $fillable = [
-        'company_id',
-        'created_by',
+        'site_id',
         'name',
         'code',
-        'color',
         'unit',
+        'deducts_balance',
+        'requires_attachment',
+        'requires_attachment_after',
+        'allow_negative_balance',
+        'max_negative_limit',
+        'color',
         'is_active',
-        'description',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'deducts_balance'        => 'boolean',
+        'allow_negative_balance' => 'boolean',
+        'is_active'              => 'boolean',
     ];
 
-    /**
-     * Filtre automatique selon qui est connecté
-     */
-    protected static function booted(): void
+    /* Relations */
+    public function site()
     {
-        static::addGlobalScope('visibility', function (Builder $builder) {
-            $user = auth()->user();
-            if (!$user) return;
+        return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
+    }
 
-            // Super admin (IsSuperAdmin = 1 ou SiegeID null) → voit TOUT
-            if ($user instanceof \App\Models\Administration && ($user->IsSuperAdmin || is_null($user->SiegeID))) {
-                return;
-            }
+    /* Scopes */
+    public function scopeVisibleForUser($query, $admin)
+    {
+        // Superadmin voit tout (globaux + tous sièges)
+        if ($admin && $admin->IsSuperAdmin) {
+            return $query;
+        }
 
-            // Admin de siège → voit uniquement global + son siège
-            $siegeId = $user->SiegeID ?? null;
-            if ($siegeId) {
-                $builder->where(function (Builder $q) use ($siegeId) {
-                    $q->whereNull('company_id')
-                      ->orWhere('company_id', $siegeId);
-                });
-            } else {
-                $builder->whereNull('company_id');
-            }
+        $siteId = $admin ? $admin->SiegeID : null;
+
+        return $query->where(function ($q) use ($siteId) {
+            $q->whereNull('site_id')              // globaux
+              ->orWhere('site_id', $siteId);     // ou ceux de mon siège
         });
     }
 
-    public function company(): BelongsTo
+    public function scopeGlobal($query)
     {
-        return $this->belongsTo(EntrepriseSiege::class, 'company_id');
+        return $query->whereNull('site_id');
     }
 
-    public function creator(): BelongsTo
+    public function scopeForSite($query, int $siteId)
     {
-        return $this->belongsTo(\App\Models\Administration::class, 'created_by');
+        return $query->where('site_id', $siteId);
     }
 
-    public function policies(): HasMany
+    /* Helpers */
+    public function isGlobal(): bool
     {
-        return $this->hasMany(LeavePolicy::class);
-    }
-
-    public function leavePolicies(): HasMany
-    {
-        return $this->hasMany(LeavePolicy::class);
-    }
-
-    public function ruleFields(): HasMany
-    {
-        return $this->hasMany(RuleField::class)->orderBy('sort_order');
-    }
-
-    public function calculationRules(): HasMany
-    {
-        return $this->hasMany(CalculationRule::class)->orderBy('sort_order');
+        return is_null($this->site_id);
     }
 }

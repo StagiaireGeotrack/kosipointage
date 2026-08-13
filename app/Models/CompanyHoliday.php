@@ -3,25 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\BelongsToSite;
 
 class CompanyHoliday extends Model
 {
-    protected $table = 'company_holidays';
+    use BelongsToSite;
 
     protected $fillable = [
-        'company_id',
-        'name',
-        'date',
-        'is_half_day',
-        'half_day_type',
-        'is_recurring',
-        'is_active',
+        'site_id', 'date', 'name', 'is_recurring',
     ];
 
     protected $casts = [
         'date' => 'date',
-        'is_half_day' => 'boolean',
         'is_recurring' => 'boolean',
-        'is_active' => 'boolean',
     ];
+
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(EntreprisesSiege::class, 'site_id', 'ID');
+    }
 }
