@@ -31,12 +31,12 @@
                     @csrf
 
                     {{-- Siège --}}
-                    @if(auth()->user()->isAdmin())
+                    @if(auth()->user()->IsSuperAdmin)
                     <div style="margin-bottom:24px; padding:20px; background:#f9fafb; border-radius:12px; border:1px solid #e5e7eb;">
                         <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.3px;">
                             Visibilité / Siège
                         </label>
-                        <select name="site_id" style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+                        <select name="site_id" id="siteSelect" style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
                             <option value="" style="color:#111827;">Global (tous les sièges)</option>
                             @foreach($sites as $site)
                                 <option value="{{ $site->ID }}" style="color:#111827;" {{ old('site_id') == $site->ID ? 'selected' : '' }}>
@@ -45,7 +45,21 @@
                             @endforeach
                         </select>
                         <p style="color:#6b7280; font-size:12px; margin:6px 0 0 0;">Global = visible par tous. Spécifique = visible uniquement par ce siège.</p>
+
+                        {{-- Personnalisable (uniquement visible si Global) --}}
+                        <div id="customizableBox" style="margin-top:16px; padding:16px; background:#fffbeb; border:1px solid #fcd34d; border-radius:10px;">
+                            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                                <input type="checkbox" name="is_customizable" value="1" id="isCustomizable" {{ old('is_customizable') ? 'checked' : '' }}
+                                       style="width:18px; height:18px; accent-color:#d97706; cursor:pointer;">
+                                <span style="font-size:14px; font-weight:600; color:#92400e;">Personnalisable par les admins de siège</span>
+                            </label>
+                            <p style="color:#b45309; font-size:12px; margin:6px 0 0 28px;">
+                                Si coché, chaque siège pourra adapter ce type (couleur, justificatif, solde négatif, etc.) sans impacter les autres.
+                            </p>
+                        </div>
                     </div>
+                    @else
+                        <input type="hidden" name="site_id" value="{{ auth()->user()->SiegeID }}">
                     @endif
 
                     {{-- Nom + Code --}}
@@ -191,5 +205,19 @@
             input.value = '';
         }
     }
+
+    @if(auth()->user()->IsSuperAdmin)
+    document.getElementById('siteSelect').addEventListener('change', function() {
+        const box = document.getElementById('customizableBox');
+        if (this.value === '') {
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+            document.getElementById('isCustomizable').checked = false;
+        }
+    });
+    // Initialiser
+    document.getElementById('siteSelect').dispatchEvent(new Event('change'));
+    @endif
     </script>
 </x-app-layout>

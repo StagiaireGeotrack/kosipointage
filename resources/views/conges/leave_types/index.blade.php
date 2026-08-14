@@ -10,8 +10,7 @@
             {{-- Header --}}
             <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:28px;">
                 <div>
-                    <h1 style="font-size:30px; font-weight:800; color:#111827; margin:0; letter-spacing:-0.8px;">Types de congés</h1>
-                    <p style="color:#6b7280; margin:6px 0 0 0; font-size:14px;">Gérez les catégories de congés de votre organisation</p>
+                    <h3 style="color:#6b7280; margin:6px 0 0 0; font-size:14px;">Gérez les catégories de congés de votre organisation</h3>
                 </div>
                 @can('create', \App\Models\LeaveType::class)
                     <a href="{{ route('admin.leave-types.create') }}"
@@ -46,22 +45,35 @@
                         </thead>
                         <tbody>
                             @forelse($leaveTypes as $lt)
+                            @php
+                                // Gère stdClass (admin site) ET Eloquent (super admin)
+                                $isGlobal = $lt->is_global ?? (method_exists($lt, 'isGlobal') ? $lt->isGlobal() : false);
+                                $siteName = $lt->site_name ?? ($lt->site->Nom ?? '—');
+                                $isCustomizable = $lt->is_customizable ?? false;
+                                $isOverridden = $lt->is_overridden ?? false;
+                                $color = $lt->color ?? '#9ca3af';
+                                if (!str_starts_with($color, '#')) $color = '#' . $color;
+                            @endphp
                             <tr style="border-top:1px solid #f3f4f6; transition:background 0.15s;"
                                 onmouseover="this.style.background='#fafafa'"
                                 onmouseout="this.style.background='white'">
                                 
                                 {{-- Couleur --}}
                                 <td style="padding:16px 20px;">
-                                    @php
-                                        $color = $lt->color ?? '#9ca3af';
-                                        if (!str_starts_with($color, '#')) $color = '#' . $color;
-                                    @endphp
                                     <div style="width:32px; height:32px; border-radius:50%; background-color:{{ $color }}; box-shadow:0 0 0 4px {{ $color }}26; border:2px solid white;"></div>
                                 </td>
 
                                 {{-- Nom --}}
                                 <td style="padding:16px 20px; font-weight:700; color:#111827; font-size:14px;">
-                                    {{ $lt->name }}
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        {{ $lt->name }}
+                                        @if($isGlobal && $isCustomizable)
+                                            <span style="background:#fef3c7; color:#d97706; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700;">PERSO.</span>
+                                        @endif
+                                        @if($isOverridden)
+                                            <span style="background:#dbeafe; color:#2563eb; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700;">MODIFIÉ</span>
+                                        @endif
+                                    </div>
                                 </td>
 
                                 {{-- Code --}}
@@ -71,10 +83,10 @@
 
                                 {{-- Siège --}}
                                 <td style="padding:16px 20px;">
-                                    @if($lt->isGlobal())
+                                    @if($isGlobal)
                                         <span style="background:#f3e8ff; color:#7c3aed; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600;">Global</span>
                                     @else
-                                        <span style="color:#374151; font-size:13px; font-weight:500;">{{ $lt->site->Nom ?? '—' }}</span>
+                                        <span style="color:#374151; font-size:13px; font-weight:500;">{{ $siteName }}</span>
                                     @endif
                                 </td>
 
@@ -121,15 +133,22 @@
                                 </td>
 
                                 {{-- Actions --}}
+                                                                {{-- Actions --}}
                                 <td style="padding:16px 20px; text-align:right; white-space:nowrap;">
-                                    @can('update', $lt)
-                                        <a href="{{ route('admin.leave-types.edit', $lt) }}"
+                                    @php
+                                        $isGlobal = $lt->is_global ?? (method_exists($lt, 'isGlobal') ? $lt->isGlobal() : false);
+                                        $isCustomizable = $lt->is_customizable ?? false;
+                                        $canUpdate = auth()->user()->IsSuperAdmin || ! $isGlobal || ($isGlobal && $isCustomizable);
+                                        $canDelete = auth()->user()->IsSuperAdmin || ! $isGlobal;
+                                    @endphp
+                                    @if($canUpdate)
+                                        <a href="{{ route('admin.leave-types.edit', $lt->id) }}"
                                            style="color:#4f46e5; text-decoration:none; font-weight:600; font-size:13px; margin-right:18px; padding:6px 0; display:inline-block;">
                                             Modifier
                                         </a>
-                                    @endcan
-                                    @can('delete', $lt)
-                                        <form action="{{ route('admin.leave-types.destroy', $lt) }}" method="POST" style="display:inline;"
+                                    @endif
+                                    @if($canDelete)
+                                        <form action="{{ route('admin.leave-types.destroy', $lt->id) }}" method="POST" style="display:inline;"
                                               onsubmit="return confirm('Supprimer définitivement ce type de congé ?');">
                                             @csrf
                                             @method('DELETE')
@@ -140,7 +159,7 @@
                                                 Supprimer
                                             </button>
                                         </form>
-                                    @endcan
+                                    @endif
                                 </td>
                             </tr>
                             @empty

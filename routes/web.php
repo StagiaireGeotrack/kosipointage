@@ -22,6 +22,7 @@ use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LeavePolicyController;
 use App\Http\Controllers\RuleFieldController;
 use App\Http\Controllers\CalculationRuleController;
+use App\Http\Controllers\LeavePeriodController;
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\JobTitleController;
@@ -297,47 +298,35 @@ Route::middleware('auth')->group(function () {
 
 // Si ton auth web ne marche pas encore, enlève ->middleware(['auth']) temporairement
 
+// ============================================
+// ADMIN / CONGÉS — Paramétrage
+// ============================================
 
-    Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+
+
+
+
+
+// ============================================
+// ADMIN / CONGÉS — Paramétrage
+// ============================================
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    
+    // Types de congés
     Route::resource('leave-types', LeaveTypeController::class);
-});
-Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
-    $request->validate(['siege_id' => 'required|integer']);
-    Session::put('admin_selected_siege_id', $request->siege_id);
-    return back();
-})->name('admin.select-siege');
-   
-
-
-Route::middleware(['auth'])->prefix('admin')->group(function () {
     
-    Route::get('/leave-policies', [LeavePolicyController::class, 'page'])
-        ->name('admin.leave-policies');
+    // Règles de calcul (leave_policies)
+    Route::resource('leave-policies', LeavePolicyController::class);
     
-    Route::get('/leave-policies/api', [LeavePolicyController::class, 'index']);
-    Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);
-    Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive']);
+    // Périodes de congés
+    Route::resource('leave-periods', LeavePeriodController::class);
+    Route::post('leave-periods/{leave_period}/site-override', [LeavePeriodController::class, 'storeSiteOverride'])
+        ->name('leave-periods.site-override.store');
+    Route::delete('site-leave-periods/{site_leave_period}', [LeavePeriodController::class, 'destroySiteOverride'])
+        ->name('leave-periods.site-override.destroy');
     
-    Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
-        session(['admin_selected_siege_id' => $request->input('siege_id')]);
-        return back();
-    })->name('admin.select-siege');
-});
-
-
-Route::post('/admin/leave-policies/api', [LeavePolicyController::class, 'store'])
-    ->name('leave-policies.store');
-    Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update']);
-    Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive']);
-
-
-
-// ... tes routes leave-policies existantes ...
-
-// Rule Fields (configuration des champs dynamiques)
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    
-    // --- vos routes existantes ---
+    // Champs dynamiques par type
     Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])
         ->name('leave-types.rule-fields');
     Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])
@@ -346,35 +335,59 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         ->name('leave-types.rule-fields.seed');
     Route::post('/leave-types/{leaveType}/rule-fields/reorder', [RuleFieldController::class, 'reorder'])
         ->name('leave-types.rule-fields.reorder');
-
-    // --- celles-ci doivent être DANS le même groupe ---
     Route::put('/rule-fields/{ruleField}', [RuleFieldController::class, 'update'])
         ->name('rule-fields.update');
     Route::delete('/rule-fields/{ruleField}', [RuleFieldController::class, 'destroy'])
         ->name('rule-fields.destroy');
+    
+    // Règles de calcul par type
+    Route::get('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'index'])
+        ->name('leave-types.calculations');
+    Route::post('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'store'])
+        ->name('leave-types.calculations.store');
+    Route::put('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'update'])
+        ->name('calculation-rules.update');
+    Route::delete('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'destroy'])
+        ->name('calculation-rules.destroy');
+    Route::post('/calculation-rules/test', [CalculationRuleController::class, 'testFormula'])
+        ->name('calculation-rules.test');
 
-    // --- leave-policies (pour info) ---
-    Route::get('/leave-policies/page', [LeavePolicyController::class, 'page'])->name('leave-policies.page');
-    Route::get('/leave-policies/api', [LeavePolicyController::class, 'index'])->name('leave-policies.api.index');
-    Route::post('/leave-policies/api', [LeavePolicyController::class, 'store'])->name('leave-policies.api.store');
-    Route::put('/leave-policies/api/{id}', [LeavePolicyController::class, 'update'])->name('leave-policies.api.update');
-    Route::patch('/leave-policies/api/{id}/toggle', [LeavePolicyController::class, 'toggleActive'])->name('leave-policies.api.toggle');
+    // Départements, Postes, Niveaux hiérarchiques
+    Route::resource('departments', DepartmentController::class);
+    Route::resource('job-titles', JobTitleController::class);
+    Route::resource('hierarchy-levels', HierarchyLevelController::class);
 });
 
-// Dans ton groupe admin/conges
-Route::get('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'index'])->name('leave-types.calculations');
-Route::post('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'store'])->name('leave-types.calculations.store');
-Route::put('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'update'])->name('calculation-rules.update');
-Route::delete('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'destroy'])->name('calculation-rules.destroy');
-Route::post('/calculation-rules/test', [CalculationRuleController::class, 'testFormula'])->name('calculation-rules.test');
+// ============================================
+// API/AJAX
+// ============================================
+
+Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
+    Route::get('/departments-by-site/{siteId}', function ($siteId) {
+        return \App\Models\Department::where('site_id', $siteId)
+            ->orderBy('name')
+            ->get(['id', 'name', 'code']);
+    })->name('departments-by-site');
+
+    Route::get('/managers-by-site/{siteId}', function ($siteId) {
+        return \App\Models\Employe::where('SiegeID', $siteId)
+            ->where('Actived', 1)
+            ->where('deleted', 0)
+            ->orderBy('Nom')
+            ->get(['ID as id', 'Nom as name']);
+    })->name('managers-by-site');
+});
+
+// Sélection du siège (hors prefix admin pour compatibilité)
+Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
+    $request->validate(['siege_id' => 'required|integer']);
+    Session::put('admin_selected_siege_id', $request->siege_id);
+    return back();
+})->name('admin.select-siege');
 
 
 
 
-
-
-// API calcul solde
-Route::get('/leave-policies/{policyId}/calculate', [LeaveBalanceController::class, 'calculate'])->name('leave-policies.calculate');
 
 
 

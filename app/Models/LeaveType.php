@@ -1,4 +1,5 @@
 <?php
+// app/Models/LeaveType.php
 
 namespace App\Models;
 
@@ -23,24 +24,46 @@ class LeaveType extends Model
         'max_negative_limit',
         'color',
         'is_active',
+        'is_customizable',
     ];
 
     protected $casts = [
         'deducts_balance'        => 'boolean',
         'allow_negative_balance' => 'boolean',
         'is_active'              => 'boolean',
+        'is_customizable'        => 'boolean',
     ];
-
+protected $appends = ['is_global'];
+    
     /* Relations */
+   
+
+
+
     public function site()
     {
         return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
     }
 
+    /* Accessors */
+    public function getIsGlobalAttribute(): bool
+    {
+        return is_null($this->site_id);
+    }
+
+    public function siteSettings()
+    {
+        return $this->hasMany(SiteLeaveTypeSetting::class, 'leave_type_id');
+    }
+
+    public function settingForSite(int $siteId): ?SiteLeaveTypeSetting
+    {
+        return $this->siteSettings()->where('site_id', $siteId)->first();
+    }
+
     /* Scopes */
     public function scopeVisibleForUser($query, $admin)
     {
-        // Superadmin voit tout (globaux + tous sièges)
         if ($admin && $admin->IsSuperAdmin) {
             return $query;
         }
@@ -48,10 +71,11 @@ class LeaveType extends Model
         $siteId = $admin ? $admin->SiegeID : null;
 
         return $query->where(function ($q) use ($siteId) {
-            $q->whereNull('site_id')              // globaux
-              ->orWhere('site_id', $siteId);     // ou ceux de mon siège
+            $q->whereNull('site_id')
+              ->orWhere('site_id', $siteId);
         });
     }
+    
 
     public function scopeGlobal($query)
     {

@@ -2,249 +2,206 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\LeavePolicy;
-use App\Models\LeaveType;
-use App\Models\PolicyValue;
+use App\Models\SiteLeavePolicySetting;
+use App\Models\EntrepriseSiege;
+use App\Services\LeavePolicyResolver;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LeavePolicyController extends Controller
 {
-    private function companyId(): int
+    private function isSuperAdmin(): bool
     {
-        $user = auth()->user();
-
-        if ($user && $user->isTrueSuperAdmin()) {
-            return (int) session('admin_selected_siege_id', $user->SiegeID ?? 1);
-        }
-
-        return (int) ($user->SiegeID ?? 1);
+        return Auth::user()->IsSuperAdmin == 1;
     }
 
-    public function page()
+    private function getUserSiteId(): ?int
     {
-        $sieges = null;
-        $selectedSiegeId = session('admin_selected_siege_id', auth()->user()->SiegeID ?? 1);
-        $selectedSiegeName = null;
-
-        if (auth()->user()?->isTrueSuperAdmin()) {
-            $sieges = \App\Models\EntrepriseSiege::orderBy('Nom')->get();
-            $selectedSiegeName = $sieges->firstWhere('ID', $selectedSiegeId)?->Nom ?? 'Siège ' . $selectedSiegeId;
-        } else {
-            $siege = \App\Models\EntrepriseSiege::find($selectedSiegeId);
-            $selectedSiegeName = $siege?->Nom ?? 'Siège ' . $selectedSiegeId;
-        }
-
-        return view('conges.leave-policies', compact('sieges', 'selectedSiegeId', 'selectedSiegeName'));
+        return Auth::user()->SiegeID;
     }
 
-    /**
-     * LISTE : types globaux + rule_fields + policies du siège avec leurs values
-     */
     public function index()
     {
-        $companyId = $this->companyId();
+        $isAdmin = $this->isSuperAdmin();
+        $siteId = $isAdmin ? null : $this->getUserSiteId();
 
-        $types = LeaveType::where('is_active', true)
-            ->with('ruleFields')
-            ->orderBy('name')
-            ->get();
+        $query = LeavePolicy::with('site')->forTenant($siteId)->orderBy('name');
 
-        $policies = LeavePolicy::where('company_id', $companyId)
-            ->with(['values' => fn($q) => $q->with('ruleField')])
-            ->get()
-            ->keyBy('leave_type_id');
+        $policies = $query->get();
 
-        $items = $types->map(function ($type) use ($policies) {
-            $policy = $policies->get($type->id);
-
-            // Valeurs par défaut depuis les rule_fields
-            $defaultValues = [];
-            foreach ($type->ruleFields as $rf) {
-                $defaultValues[$rf->field_key] = $rf->default_value ?? '';
-            }
-
-            // Valeurs actuellement enregistrées dans la policy
-            $policyValues = [];
-            if ($policy) {
-                foreach ($policy->values as $pv) {
-                    $val = $pv->value;
-                    // Décoder JSON pour checkbox
-                    if ($pv->ruleField->field_type === 'checkbox') {
-                        $decoded = json_decode($val, true);
-                        $val = is_array($decoded) ? $decoded : [];
-                    }
-                    $policyValues[$pv->ruleField->field_key] = $val;
-                }
-            }
-
-            return [
-                'leave_type' => [
-                    'id'          => $type->id,
-                    'code'        => $type->code,
-                    'name'        => $type->name,
-                    'color'       => $type->color,
-                    'description' => $type->description,
-                ],
-                'rule_fields'    => $type->ruleFields->map(fn($rf) => [
-                    'id'            => $rf->id,
-                    'field_key'     => $rf->field_key,
-                    'field_type'    => $rf->field_type,
-                    'label'         => $rf->label,
-                    'default_value' => $rf->default_value,
-                    'options'       => $rf->options,
-                    'validation'    => $rf->validation,
-                    'sort_order'    => $rf->sort_order,
-                ]),
-                'policy'         => $policy ? [
-                    'id'        => $policy->id,
-                    'is_active' => $policy->is_active,
-                ] : null,
-                'policy_values'  => $policyValues,
-                'default_values' => $defaultValues,
-                'configured'     => !is_null($policy),
-            ];
-        });
-
-        return response()->json($items);
-    }
-
-    /**
-     * CRÉER une policy + pré-remplir avec les default_value des rule_fields
-     */
-    public function store(Request $request)
-    {
-        $companyId = $this->companyId();
-
-        $validated = $request->validate([
-            'leave_type_id' => 'required|exists:leave_types,id',
-            'is_active'     => 'boolean',
-        ]);
-
-        $exists = LeavePolicy::where('company_id', $companyId)
-            ->where('leave_type_id', $validated['leave_type_id'])
-            ->exists();
-
-        if ($exists) {
-            return response()->json(['message' => 'Cette règle existe déjà.'], 409);
+        if (! $isAdmin) {
+            $resolver = new LeavePolicyResolver();
+            $policies = $resolver->resolveCollection($policies, $this->getUserSiteId());
         }
 
-        $type = LeaveType::with('ruleFields')->findOrFail($validated['leave_type_id']);
-
-        $policy = DB::transaction(function () use ($companyId, $type, $validated) {
-            $policy = LeavePolicy::create([
-                'company_id'    => $companyId,
-                'leave_type_id' => $type->id,
-                'rules'         => null,
-                'is_active'     => $validated['is_active'] ?? true,
-            ]);
-
-            foreach ($type->ruleFields as $rf) {
-                $value = $rf->default_value ?? '';
-                // Encoder en JSON si checkbox (array)
-                if ($rf->field_type === 'checkbox' && is_array($value)) {
-                    $value = json_encode($value);
-                }
-
-                PolicyValue::create([
-                    'leave_policy_id' => $policy->id,
-                    'rule_field_id'   => $rf->id,
-                    'value'           => (string) $value,
-                ]);
-            }
-
-            return $policy;
-        });
-
-        return response()->json([
-            'message' => 'Règle créée avec succès.',
-            'policy'  => $policy->load('leaveType')
-        ], 201);
+        return view('conges.leave_policies.index', compact('policies'));
     }
 
-    /**
-     * METTRE À JOUR les valeurs d'une policy (formulaire dynamique)
-     */
-    public function update(Request $request, $id)
+    public function create()
     {
-        $companyId = $this->companyId();
+        $sites = $this->isSuperAdmin()
+            ? EntrepriseSiege::orderBy('nom')->get()
+            : collect();
 
-        $policy = LeavePolicy::where('company_id', $companyId)
-            ->with('leaveType.ruleFields')
-            ->findOrFail($id);
+        return view('conges.leave_policies.create', compact('sites'));
+    }
 
-        $ruleFields = $policy->leaveType->ruleFields->keyBy('field_key');
+    public function store(Request $request)
+    {
+        $isAdmin = $this->isSuperAdmin();
 
-        // Construction dynamique des règles de validation
-        $rules = ['is_active' => 'boolean'];
-        foreach ($ruleFields as $key => $rf) {
-            $fieldRules = [];
-            $val = $rf->validation ?? [];
+        $rules = [
+            'name' => 'required|string|max:100',
+            'calculation_method' => 'required|in:working_days,business_days,hours',
+            'holiday_handling' => 'required|in:skip,count,split',
+            'rounding_rule' => 'required|in:none,half_day,full_day,quarter_hour,half_hour',
+            'weekend_days' => 'required|in:saturday_sunday,friday_saturday,sunday_only',
+            'exclude_holidays' => 'nullable|boolean',
+            'is_default' => 'nullable|boolean',
+        ];
 
-            if ($rf->field_type === 'number') {
-                $fieldRules[] = 'numeric';
-                if (isset($val['min'])) $fieldRules[] = 'min:' . $val['min'];
-                if (isset($val['max'])) $fieldRules[] = 'max:' . $val['max'];
-            } elseif ($rf->field_type === 'boolean') {
-                $fieldRules[] = 'boolean';
-            } elseif ($rf->field_type === 'select') {
-                $allowed = collect($rf->options ?? [])->pluck('value')->implode(',');
-                $fieldRules[] = 'in:' . $allowed;
-            } elseif ($rf->field_type === 'checkbox') {
-                $fieldRules[] = 'array';
-                $fieldRules[] = 'nullable';
-                $rules["values.$key.*"] = 'in:' . collect($rf->options ?? [])->pluck('value')->implode(',');
-            }
-
-            if ($val['required'] ?? false) {
-                $fieldRules[] = 'required';
-            } else {
-                $fieldRules[] = 'nullable';
-            }
-
-            $rules["values.$key"] = $fieldRules;
+        if ($isAdmin) {
+            $rules['site_id'] = 'nullable|exists:entreprises_sieges,ID';
         }
 
         $validated = $request->validate($rules);
 
-        DB::transaction(function () use ($policy, $ruleFields, $validated, $request) {
-            if (isset($validated['is_active'])) {
-                $policy->update(['is_active' => $validated['is_active']]);
-            }
+        if (! $isAdmin) {
+            $validated['site_id'] = $this->getUserSiteId();
+        } else {
+            $validated['site_id'] = $validated['site_id'] ?? null;
+        }
 
-            $incoming = $request->input('values', []);
-            foreach ($ruleFields as $key => $rf) {
-                // Gestion spécifique checkbox (tableau → JSON)
-                if ($rf->field_type === 'checkbox') {
-                    $raw = $incoming[$key] ?? [];
-                    $value = json_encode(array_values($raw));
-                } else {
-                    $raw = $incoming[$key] ?? ($rf->field_type === 'boolean' ? '0' : '');
-                    $value = (string) $raw;
-                }
+        $validated['exclude_holidays'] = $request->boolean('exclude_holidays', true);
+        $validated['is_default'] = $request->boolean('is_default', false);
 
-                PolicyValue::updateOrCreate(
-                    ['leave_policy_id' => $policy->id, 'rule_field_id' => $rf->id],
-                    ['value' => $value]
-                );
-            }
-        });
+        if ($isAdmin) {
+            $validated['is_customizable'] = $request->boolean('is_customizable', false);
+        }
 
-        return response()->json([
-            'message' => 'Règles mises à jour.',
-            'policy'  => $policy->fresh()->load('values.ruleField')
-        ]);
+        LeavePolicy::create($validated);
+
+        return redirect()->route('admin.leave-policies.index')
+            ->with('success', 'Règle de calcul créée avec succès.');
     }
 
-    public function toggleActive($id)
+    public function edit(LeavePolicy $leavePolicy)
     {
-        $companyId = $this->companyId();
-        $policy = LeavePolicy::where('company_id', $companyId)->findOrFail($id);
-        $policy->update(['is_active' => !$policy->is_active]);
+        $sites = $this->isSuperAdmin()
+            ? EntrepriseSiege::orderBy('nom')->get()
+            : collect();
 
-        return response()->json([
-            'message' => $policy->is_active ? 'Type activé.' : 'Type désactivé.',
-            'policy'  => $policy->load('leaveType')
+        $override = null;
+        if (! $this->isSuperAdmin() && $leavePolicy->isGlobal() && $leavePolicy->is_customizable) {
+            $override = SiteLeavePolicySetting::where('site_id', $this->getUserSiteId())
+                ->where('leave_policy_id', $leavePolicy->id)
+                ->first();
+        }
+
+        return view('conges.leave_policies.edit', compact('leavePolicy', 'sites', 'override'));
+    }
+
+    public function update(Request $request, LeavePolicy $leavePolicy)
+    {
+        $isAdmin = $this->isSuperAdmin();
+
+        // CAS SPÉCIAL : Admin site + global customizable → override
+        if (! $isAdmin && $leavePolicy->isGlobal() && $leavePolicy->is_customizable) {
+            return $this->updateOverride($request, $leavePolicy);
+        }
+
+        $rules = [
+            'name' => 'required|string|max:100',
+            'calculation_method' => 'required|in:working_days,business_days,hours',
+            'holiday_handling' => 'required|in:skip,count,split',
+            'rounding_rule' => 'required|in:none,half_day,full_day,quarter_hour,half_hour',
+            'weekend_days' => 'required|in:saturday_sunday,friday_saturday,sunday_only',
+            'exclude_holidays' => 'nullable|boolean',
+            'is_default' => 'nullable|boolean',
+        ];
+
+        if ($isAdmin) {
+            $rules['site_id'] = 'nullable|exists:entreprises_sieges,ID';
+        }
+
+        $validated = $request->validate($rules);
+
+        if (! $isAdmin) {
+            unset($validated['site_id']);
+        } else {
+            $validated['site_id'] = $validated['site_id'] ?? null;
+        }
+
+        $validated['exclude_holidays'] = $request->boolean('exclude_holidays', true);
+        $validated['is_default'] = $request->boolean('is_default', false);
+
+        if ($isAdmin) {
+            $validated['is_customizable'] = $request->boolean('is_customizable', false);
+        }
+
+        $leavePolicy->update($validated);
+
+        return redirect()->route('admin.leave-policies.index')
+            ->with('success', 'Règle de calcul mise à jour avec succès.');
+    }
+
+    public function destroy(LeavePolicy $leavePolicy)
+    {
+        $leavePolicy->delete();
+
+        return redirect()->route('admin.leave-policies.index')
+            ->with('success', 'Règle de calcul supprimée.');
+    }
+
+    private function updateOverride(Request $request, LeavePolicy $leavePolicy)
+    {
+        $siteId = $this->getUserSiteId();
+
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:100',
+            'calculation_method' => 'nullable|in:working_days,business_days,hours',
+            'holiday_handling' => 'nullable|in:skip,count,split',
+            'rounding_rule' => 'nullable|in:none,half_day,full_day,quarter_hour,half_hour',
+            'weekend_days' => 'nullable|in:saturday_sunday,friday_saturday,sunday_only',
+            'exclude_holidays' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
         ]);
+
+        $overrideData = [
+            'site_id' => $siteId,
+            'leave_policy_id' => $leavePolicy->id,
+        ];
+
+        if ($request->has('name')) {
+            $overrideData['local_name'] = $validated['name'] ?: null;
+        }
+        if ($request->has('calculation_method')) {
+            $overrideData['local_calculation_method'] = $validated['calculation_method'] ?: null;
+        }
+        if ($request->has('weekend_days')) {
+            $overrideData['local_weekend_days'] = $validated['weekend_days'] ?: null;
+        }
+        if ($request->has('holiday_handling')) {
+            $overrideData['local_holiday_handling'] = $validated['holiday_handling'] ?: null;
+        }
+        if ($request->has('rounding_rule')) {
+            $overrideData['local_rounding_rule'] = $validated['rounding_rule'] ?: null;
+        }
+        if ($request->has('exclude_holidays')) {
+            $overrideData['local_exclude_holidays'] = $request->boolean('exclude_holidays');
+        }
+        if ($request->has('is_active')) {
+            $overrideData['is_enabled'] = $request->boolean('is_active');
+        }
+
+        SiteLeavePolicySetting::updateOrCreate(
+            ['site_id' => $siteId, 'leave_policy_id' => $leavePolicy->id],
+            $overrideData
+        );
+
+        return redirect()->route('admin.leave-policies.index')
+            ->with('success', 'Configuration locale de la règle mise à jour.');
     }
 }

@@ -148,10 +148,11 @@
             <span>{{ __('Rapport') }}</span>
         </a>
 
-        @php
+       @php
     $isCongeOpen = request()->routeIs('conges.*') 
                 || request()->routeIs('conge-validations.*') 
-                || request()->routeIs('admin.leave-policies');
+                || request()->routeIs('admin.leave-types.*')
+                || request()->routeIs('admin.leave-policies.*');
 
     $pendingCount = 0;
     try {
@@ -201,10 +202,10 @@
         </a>
     @endif
 
-    {{-- Lien 3 : Paramètres (admin) --}}
+    {{-- Lien 3 : Paramètres (admin) → pointe vers Types de congés --}}
     @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
-        <a href="{{ route('admin.leave-policies') }}"
-           class="sidebar-link sidebar-sub {{ request()->routeIs('admin.leave-policies') ? 'active' : '' }}">
+        <a href="{{ route('admin.leave-types.index') }}"
+           class="sidebar-link sidebar-sub {{ request()->routeIs('admin.leave-types.*') || request()->routeIs('admin.leave-policies.*') ? 'active' : '' }}">
             <i class="bi bi-sliders"></i>
             <span>{{ __('Paramètres congés') }}</span>
         </a>
