@@ -320,11 +320,26 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('leave-policies', LeavePolicyController::class);
     
     // Périodes de congés
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::resource('leave-periods', LeavePeriodController::class);
+    
+    
+    Route::delete('leave-periods/override/{override}', [LeavePeriodController::class, 'destroySiteOverride'])
+        ->name('leave-periods.site-override.destroy');
+});
+    
     Route::resource('leave-periods', LeavePeriodController::class);
     Route::post('leave-periods/{leave_period}/site-override', [LeavePeriodController::class, 'storeSiteOverride'])
         ->name('leave-periods.site-override.store');
     Route::delete('site-leave-periods/{site_leave_period}', [LeavePeriodController::class, 'destroySiteOverride'])
         ->name('leave-periods.site-override.destroy');
+
+
+  Route::resource('company-holidays', \App\Http\Controllers\CompanyHolidayController::class);
+        Route::patch('company-holidays/{id}/restore', [\App\Http\Controllers\CompanyHolidayController::class, 'restore'])
+            ->name('company-holidays.restore');
+
     
     // Champs dynamiques par type
     Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])

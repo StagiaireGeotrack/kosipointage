@@ -20,6 +20,10 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
     \App\Models\LeaveType::class => \App\Policies\LeaveTypePolicy::class,
+        \App\Models\LeavePeriod::class => \App\Policies\LeavePeriodPolicy::class,
+            CompanyHoliday::class => CompanyHolidayPolicy::class,
+
+
 ];
     /**
      * Register any authentication / authorization services.

@@ -1,13 +1,16 @@
 <?php
+// app/Models/SiteLeavePeriodSetting.php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SiteLeavePeriod extends Model
+class SiteLeavePeriodSetting extends Model
 {
     use HasFactory;
+
+    protected $table = 'site_leave_periods';
 
     protected $fillable = [
         'site_id',
@@ -25,22 +28,22 @@ class SiteLeavePeriod extends Model
     ];
 
     protected $casts = [
+        'allow_rollover' => 'boolean',
+        'is_default' => 'boolean',
+        'is_active' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date',
         'submission_deadline' => 'date',
         'rollover_expiry_date' => 'date',
-        'allow_rollover' => 'boolean',
-        'is_default' => 'boolean',
-        'is_active' => 'boolean',
     ];
-
-    public function leavePeriod()
-    {
-        return $this->belongsTo(LeavePeriod::class);
-    }
 
     public function site()
     {
-        return $this->belongsTo(\App\Models\EntrepriseSiege::class, 'site_id', 'ID');
+        return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
+    }
+
+    public function leavePeriod()
+    {
+        return $this->belongsTo(LeavePeriod::class, 'leave_period_id');
     }
 }

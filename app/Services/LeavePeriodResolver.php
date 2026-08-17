@@ -1,59 +1,79 @@
 <?php
+// app/Services/LeavePeriodResolver.php
 
 namespace App\Services;
 
 use App\Models\LeavePeriod;
-use App\Models\SiteLeavePeriod;
+use App\Models\SiteLeavePeriodSetting;
 
 class LeavePeriodResolver
 {
-    /**
-     * Résout une période pour un siège donné (fallback global → local)
-     */
-    public static function resolve(int $leavePeriodId, int $siteId): ?\stdClass
+    public function resolve(LeavePeriod $period, int $siteId): \stdClass
     {
-        $global = LeavePeriod::find($leavePeriodId);
-
-        if (!$global) {
-            return null;
-        }
-
-        $local = SiteLeavePeriod::where('site_id', $siteId)
-            ->where('leave_period_id', $leavePeriodId)
-            ->where('is_active', true)
+        $override = SiteLeavePeriodSetting::where('site_id', $siteId)
+            ->where('leave_period_id', $period->id)
             ->first();
 
-        return (object) [
-            'id' => $global->id,
-            'site_id' => $global->site_id,
-            'leave_type_id' => $global->leave_type_id,
-            'name' => $local?->name ?? $global->name,
-            'start_date' => $local?->start_date ?? $global->start_date,
-            'end_date' => $local?->end_date ?? $global->end_date,
-            'submission_deadline' => $local?->submission_deadline ?? $global->submission_deadline,
-            'allow_rollover' => $local?->allow_rollover ?? $global->allow_rollover,
-            'max_rollover_days' => $local?->max_rollover_days ?? $global->max_rollover_days,
-            'rollover_expiry_date' => $local?->rollover_expiry_date ?? $global->rollover_expiry_date,
-            'is_default' => $local?->is_default ?? $global->is_default,
-            'status' => $local?->status ?? $global->status,
-            'is_active' => $local?->is_active ?? $global->is_active,
-            'has_override' => !is_null($local),
-        ];
-    }
+        $r = new \stdClass();
+        $r->id = $period->id;
+        $r->leave_type_id = $period->leave_type_id;
+        $r->site_id = $period->site_id;
+        $r->is_global = true;
+        $r->site_name = '—';
+        $r->is_customizable = $period->is_customizable;
+        $r->is_overridden = !is_null($override);
+        $r->override_id = $override?->id;
+        $r->deleted_at = $period->deleted_at;
 
-    /**
-     * Récupère toutes les périodes actives résolues pour un siège
-     */
-    public static function forSite(int $siteId, ?int $leaveTypeId = null): array
-    {
-        $query = LeavePeriod::forSite($siteId)->active();
+        // Champs résolus (override ou global)
+        $r->name = $override->name ?? $period->name;
+        $r->start_date = $override->start_date ?? $period->start_date;
+        $r->end_date = $override->end_date ?? $period->end_date;
+        $r->submission_deadline = $override->submission_deadline ?? $period->submission_deadline;
+        $r->allow_rollover = $override->allow_rollover ?? $period->allow_rollover;
+        $r->max_rollover_days = $override->max_rollover_days ?? $period->max_rollover_days;
+        $r->rollover_expiry_date = $override->rollover_expiry_date ?? $period->rollover_expiry_date;
+        $r->is_default = $override->is_default ?? $period->is_default;
+        $r->status = $override->status ?? $period->status;
+        $r->is_active = $override->is_active ?? $period->is_active;
 
-        if ($leaveTypeId) {
-            $query->where('leave_type_id', $leaveTypeId);
+        // Ajouter les relations
+        if ($period->relationLoaded('leaveType')) {
+            $r->leaveType = $period->leaveType;
+        }
+        if ($period->relationLoaded('site')) {
+            $r->site = $period->site;
         }
 
-        return $query->get()->map(function ($period) use ($siteId) {
-            return self::resolve($period->id, $siteId);
-        })->all();
+        return $r;
+    }
+
+    public function resolveCollection($periods, int $siteId): \Illuminate\Support\Collection
+    {
+        return $periods->map(function ($period) use ($siteId) {
+            if ($period->isGlobal()) {
+                return $this->resolve($period, $siteId);
+            }
+
+            $local = new \stdClass();
+            foreach ($period->getAttributes() as $k => $v) {
+                $local->{$k} = $v;
+            }
+            $local->is_global = false;
+            $local->site_name = $period->site->Nom ?? '—';
+            $local->is_customizable = false;
+            $local->is_overridden = false;
+            $local->override_id = null;
+
+            // Ajouter les relations
+            if ($period->relationLoaded('leaveType')) {
+                $local->leaveType = $period->leaveType;
+            }
+            if ($period->relationLoaded('site')) {
+                $local->site = $period->site;
+            }
+
+            return $local;
+        });
     }
 }

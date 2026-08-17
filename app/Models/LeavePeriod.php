@@ -1,4 +1,5 @@
 <?php
+// app/Models/LeavePeriod.php
 
 namespace App\Models;
 
@@ -10,8 +11,10 @@ class LeavePeriod extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'leave_periods';
+
     protected $fillable = [
-        'site_id',      // NULL = global, X = spécifique à ce siège
+        'site_id',
         'leave_type_id',
         'name',
         'start_date',
@@ -23,31 +26,73 @@ class LeavePeriod extends Model
         'is_default',
         'status',
         'is_active',
+        'is_customizable',
     ];
 
     protected $casts = [
+        'allow_rollover' => 'boolean',
+        'is_default' => 'boolean',
+        'is_active' => 'boolean',
+        'is_customizable' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date',
         'submission_deadline' => 'date',
         'rollover_expiry_date' => 'date',
-        'allow_rollover' => 'boolean',
-        'is_default' => 'boolean',
-        'is_active' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
 
-    public function leaveType()
-    {
-        return $this->belongsTo(LeaveType::class);
-    }
+    protected $appends = ['is_global'];
 
+    /* Relations */
     public function site()
     {
         return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
     }
 
+    public function leaveType()
+    {
+        return $this->belongsTo(LeaveType::class, 'leave_type_id');
+    }
+
     public function siteSettings()
     {
-        return $this->hasMany(SiteLeavePeriod::class, 'leave_period_id');
+        return $this->hasMany(SiteLeavePeriodSetting::class, 'leave_period_id');
+    }
+
+    /* Accessors */
+    public function getIsGlobalAttribute(): bool
+    {
+        return is_null($this->site_id);
+    }
+
+    /* Scopes */
+    public function scopeVisibleForUser($query, $user)
+    {
+        if ($user && $user->IsSuperAdmin == 1) {
+            return $query;
+        }
+
+        $siteId = $user ? $user->SiegeID : null;
+
+        return $query->where(function ($q) use ($siteId) {
+            $q->whereNull('site_id')
+              ->orWhere('site_id', $siteId);
+        });
+    }
+
+    public function scopeGlobal($query)
+    {
+        return $query->whereNull('site_id');
+    }
+
+    public function scopeForSite($query, int $siteId)
+    {
+        return $query->where('site_id', $siteId);
+    }
+
+    public function scopeForLeaveType($query, int $leaveTypeId)
+    {
+        return $query->where('leave_type_id', $leaveTypeId);
     }
 
     public function scopeActive($query)
@@ -55,15 +100,14 @@ class LeavePeriod extends Model
         return $query->where('is_active', true);
     }
 
-    // Périodes globales
-    public function scopeGlobal($query)
+    /* Helpers */
+    public function isGlobal(): bool
     {
-        return $query->whereNull('site_id');
+        return is_null($this->site_id);
     }
 
-    // Périodes spécifiques à un siège
-    public function scopeForSite($query, $siteId)
+    public function settingForSite(int $siteId): ?SiteLeavePeriodSetting
     {
-        return $query->where('site_id', $siteId);
+        return $this->siteSettings()->where('site_id', $siteId)->first();
     }
 }

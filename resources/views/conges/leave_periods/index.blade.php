@@ -1,208 +1,259 @@
+{{-- resources/views/conges/leave_periods/index.blade.php --}}
 <x-app-layout>
-
-<div class="container-fluid py-4">
-
-    {{-- HEADER --}}
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-        <div>
-            <h2 class="fw-bold mb-1 text-dark">
-                <i class="bi bi-calendar-range me-2 text-primary"></i>Périodes de référence
+    <x-slot name="header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark mb-0">
+                {{ __('Gestion des Périodes de Congé') }}
             </h2>
-            <p class="text-muted mb-0">
-                @if($isSuperAdmin)
-                    <span class="badge bg-dark"><i class="bi bi-eye me-1"></i>Vue Super Admin — Tous les sièges</span>
-                @else
-                    <span class="badge bg-primary"><i class="bi bi-building me-1"></i>Siège : {{ Auth::user()->employe?->siege?->nom ?? 'Votre siège' }}</span>
+            <a href="{{ route('admin.leave-periods.create') }}" class="btn btn-primary">
+                {{ __('Nouvelle période') }}
+            </a>
+        </div>
+    </x-slot>
+
+    <div class="p-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <!-- Filtres -->
+                <form action="{{ route('admin.leave-periods.index') }}" method="GET" class="mb-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <x-input-label for="leave_type_id" :value="__('Type de congé')" />
+                            <select id="leave_type_id" name="leave_type_id" class="form-select mt-1">
+                                <option value="">{{ __('Tous') }}</option>
+                                @foreach($leaveTypes as $type)
+                                    <option value="{{ $type->id }}" {{ request('leave_type_id') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <x-input-label for="status" :value="__('Statut')" />
+                            <select id="status" name="status" class="form-select mt-1">
+                                <option value="">{{ __('Tous') }}</option>
+                                <option value="preparing" {{ request('status') == 'preparing' ? 'selected' : '' }}>{{ __('Préparation') }}</option>
+                                <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>{{ __('Ouvert') }}</option>
+                                <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>{{ __('Fermé') }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <x-input-label for="search" :value="__('Recherche')" />
+                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" :value="request('search')" placeholder="{{ __('Nom de la période') }}" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Valider') }}
+                        </button>
+                        <a href="{{ route('admin.leave-periods.index') }}" class="btn btn-secondary">
+                            {{ __('Réinitialiser') }}
+                        </a>
+                    </div>
+                </form>
+
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 @endif
-            </p>
-        </div>
-        <a href="{{ route('admin.leave-periods.create') }}" class="btn btn-primary shadow-sm">
-            <i class="bi bi-plus-lg me-1"></i> Nouvelle période
-        </a>
-    </div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show shadow-sm rounded-3">
-            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
-    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
-        <div class="card-header bg-light border-bottom py-3">
-            <small class="text-muted">
-                <i class="bi bi-info-circle me-1"></i>
-                <strong>Portée</strong> = Global (tous sièges) ou Siège spécifique |
-                <strong>Dates</strong> = début → fin du solde |
-                <strong>Par défaut</strong> = période proposée automatiquement aux employés
-                @if(!$isSuperAdmin)
-                    | <span class="text-primary">Les valeurs affichées tiennent compte de vos personnalisations.</span>
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 @endif
-            </small>
-        </div>
 
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead style="background-color: #0d6efd; color: white;">
-                        <tr>
-                            <th class="py-3 ps-4">Portée</th>
-                            <th class="py-3">Type de congé</th>
-                            <th class="py-3">Nom de la période</th>
-                            <th class="py-3">Dates de validité</th>
-                            <th class="py-3">Statut</th>
-                            <th class="py-3 text-center">Par défaut</th>
-                            @if($isSuperAdmin)
-                                <th class="py-3">Personnalisations</th>
-                            @else
-                                <th class="py-3">État</th>
-                            @endif
-                            <th class="py-3 text-end pe-4">Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody class="bg-white">
-                        @forelse($periods as $period)
-                            {{-- Pour Admin Siège : on utilise les valeurs résolues --}}
-                            @php
-                                $isGlobal = is_null($period->site_id);
-                                $displayName = $isSuperAdmin ? $period->name : ($period->resolved_name ?? $period->name);
-                                $displayStart = $isSuperAdmin ? $period->start_date : ($period->resolved_start_date ?? $period->start_date);
-                                $displayEnd = $isSuperAdmin ? $period->end_date : ($period->resolved_end_date ?? $period->end_date);
-                                $displayDeadline = $isSuperAdmin ? $period->submission_deadline : ($period->resolved_submission_deadline ?? $period->submission_deadline);
-                                $displayStatus = $isSuperAdmin ? $period->status : ($period->resolved_status ?? $period->status);
-                                $displayDefault = $isSuperAdmin ? $period->is_default : ($period->resolved_is_default ?? $period->is_default);
-                                $hasOverride = !$isSuperAdmin && ($period->has_override ?? false);
-                            @endphp
-
-                        <tr>
-                            {{-- PORTÉE --}}
-                            <td class="ps-4">
-                                @if($isGlobal)
-                                    <span class="badge bg-dark"><i class="bi bi-globe me-1"></i>Global</span>
-                                @else
-                                    <span class="badge bg-secondary"><i class="bi bi-building me-1"></i>{{ $period->site?->nom ?? 'Siège #'.$period->site_id }}</span>
-                                @endif
-                            </td>
-
-                            {{-- TYPE --}}
-                            <td>
-                                <span class="badge" style="background-color: {{ $period->leaveType->color ?? '#666' }}">
-                                    {{ $period->leaveType->name ?? 'N/A' }}
-                                </span>
-                                <small class="text-muted d-block">{{ $period->leaveType->code ?? '' }}</small>
-                            </td>
-
-                            {{-- NOM --}}
-                            <td class="fw-semibold text-dark">
-                                {{ $displayName }}
-                                @if($hasOverride)
-                                    <span class="badge bg-warning text-dark ms-1"><i class="bi bi-pencil-square me-1"></i>Modifié</span>
-                                @endif
-                            </td>
-
-                            {{-- DATES --}}
-                            <td>
-                                <div class="small">
-                                    <div class="mb-1"><i class="bi bi-calendar-check text-success me-1"></i>{{ $displayStart->format('d/m/Y') }}</div>
-                                    <div class="mb-1"><i class="bi bi-calendar-x text-danger me-1"></i>{{ $displayEnd->format('d/m/Y') }}</div>
-                                    @if($displayDeadline)
-                                        <div class="text-warning"><i class="bi bi-alarm me-1"></i>Limite : {{ $displayDeadline->format('d/m/Y') }}</div>
-                                    @endif
-                                </div>
-                            </td>
-
-                            {{-- STATUT --}}
-                            <td>
-                                @if($displayStatus == 'open')
-                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Ouverte</span>
-                                @elseif($displayStatus == 'closed')
-                                    <span class="badge bg-secondary"><i class="bi bi-lock me-1"></i>Clôturée</span>
-                                @else
-                                    <span class="badge bg-warning text-dark"><i class="bi bi-pencil me-1"></i>Préparation</span>
-                                @endif
-                            </td>
-
-                            {{-- PAR DÉFAUT --}}
-                            <td class="text-center">
-                                @if($displayDefault)
-                                    <span class="badge bg-info"><i class="bi bi-star-fill me-1"></i>Oui</span>
-                                @else
-                                    <span class="text-muted">—</span>
-                                @endif
-                            </td>
-
-                            {{-- PERSONNALISATIONS / ÉTAT --}}
-                            @if($isSuperAdmin)
-                                <td>
-                                    @if($isGlobal)
-                                        @if($period->site_settings_count > 0)
-                                            <span class="badge bg-warning text-dark">
-                                                <i class="bi bi-sliders me-1"></i>{{ $period->site_settings_count }} siège(s)
+                <!-- Tableau des périodes -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Nom') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Type de congé') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Siège') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date début') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Date fin') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Statut') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Report') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Personnalisable') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Actions') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($periods as $period)
+                                <tr>
+                                    <td class="align-middle">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <strong>{{ $period->name }}</strong>
+                                            @if(isset($period->is_global) && $period->is_global)
+                                                <span class="badge bg-info" title="Période globale">Global</span>
+                                            @endif
+                                            @if(isset($period->is_overridden) && $period->is_overridden)
+                                                <span class="badge bg-warning text-dark" title="Configuration locale personnalisée">Override</span>
+                                            @endif
+                                            @if(isset($period->is_default) && $period->is_default)
+                                                <span class="badge bg-success">Par défaut</span>
+                                            @endif
+                                            @if(isset($period->deleted_at) && $period->deleted_at)
+                                                <span class="badge bg-danger">Supprimé</span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ $period->leaveType->name ?? 'N/A' }}
+                                    </td>
+                                    <td class="align-middle">
+                                        @if(isset($period->is_global) && $period->is_global)
+                                            <span class="text-muted">—</span>
+                                        @else
+                                            {{ $period->site_name ?? $period->site->Nom ?? 'N/A' }}
+                                        @endif
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ \Carbon\Carbon::parse($period->start_date)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ \Carbon\Carbon::parse($period->end_date)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="align-middle">
+                                        @php
+                                            $statusBadge = match($period->status) {
+                                                'preparing' => 'bg-secondary',
+                                                'open' => 'bg-success',
+                                                'closed' => 'bg-danger',
+                                                default => 'bg-secondary'
+                                            };
+                                            $statusLabel = match($period->status) {
+                                                'preparing' => 'Préparation',
+                                                'open' => 'Ouvert',
+                                                'closed' => 'Fermé',
+                                                default => $period->status
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $statusBadge }}">
+                                            {{ $statusLabel }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        @if($period->allow_rollover ?? false)
+                                            <span class="badge bg-info">
+                                                {{ $period->max_rollover_days ?? 'Illimité' }} jours
                                             </span>
                                         @else
-                                            <span class="text-muted small">Aucune</span>
+                                            <span class="badge bg-secondary">Non</span>
                                         @endif
-                                    @else
-                                        <span class="text-muted small">—</span>
-                                    @endif
-                                </td>
-                            @else
-                                <td>
-                                    @if($isGlobal)
-                                        @if($hasOverride)
-                                            <span class="badge bg-warning text-dark"><i class="bi bi-sliders me-1"></i>Personnalisé</span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        @if(isset($period->is_customizable) && $period->is_customizable)
+                                            <span class="badge bg-primary">Oui</span>
                                         @else
-                                            <span class="badge bg-light text-dark border"><i class="bi bi-globe me-1"></i>Global inchangé</span>
+                                            <span class="badge bg-secondary">Non</span>
                                         @endif
-                                    @else
-                                        <span class="badge bg-secondary"><i class="bi bi-building me-1"></i>Spécifique</span>
-                                    @endif
-                                </td>
-                            @endif
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('admin.leave-periods.show', $period->id) }}" class="text-primary" title="Voir">
+                                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </a>
 
-                            {{-- ACTIONS --}}
-                            <td class="text-end pe-4">
-                                <a href="{{ route('admin.leave-periods.edit', $period) }}"
-                                   class="btn btn-sm btn-outline-primary me-1">
-                                    <i class="bi bi-pencil me-1"></i>Modifier
-                                </a>
+                                            <a href="{{ route('admin.leave-periods.edit', $period->id) }}" class="text-warning" title="Modifier">
+                                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                </svg>
+                                            </a>
 
-                                {{-- Admin siège ne peut pas supprimer un global --}}
-                                @if($isSuperAdmin || !$isGlobal)
-                                    <form action="{{ route('admin.leave-periods.destroy', $period) }}"
-                                          method="POST" class="d-inline"
-                                          onsubmit="return confirm('Supprimer cette période ?');">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-outline-danger" type="submit">
-                                            <i class="bi bi-trash me-1"></i>Supprimer
-                                        </button>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="{{ $isSuperAdmin ? 8 : 8 }}" class="text-center text-muted py-5">
-                                <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary"></i>
-                                <p class="mb-3">Aucune période définie.</p>
-                                <a href="{{ route('admin.leave-periods.create') }}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg me-1"></i>Créer la première période
-                                </a>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                            @if(!(isset($period->is_global) && $period->is_global) || (auth()->user()->IsSuperAdmin ?? false))
+                                                <button type="button" class="btn btn-link text-danger p-0 border-0" 
+                                                        onclick="setDeleteAction('{{ route('admin.leave-periods.destroy', $period->id) }}', '{{ $period->name }}')" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#deleteModal" 
+                                                        title="Supprimer">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="text-center py-4">
+                                        {{ __('Aucune période de congé pour le moment') }}
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal de confirmation -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">{{ __('Confirmation de suppression') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ __('Voulez-vous vraiment supprimer cette période de congé ?') }}</p>
+                                <p class="fw-bold" id="details_period"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+                                <form id="deleteForm" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">{{ __('Supprimer') }}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                @if(isset($periods) && method_exists($periods, 'links'))
+                    <div class="mt-1">
+                        {{ $periods->links('pagination.custom') }}
+                    </div>
+                @endif
             </div>
         </div>
-
-        @if($periods->hasPages())
-            <div class="card-footer bg-white border-top py-3">
-                {{ $periods->links() }}
-            </div>
-        @endif
     </div>
-</div>
 
+    @push("scripts")
+        <script>
+        function setDeleteAction(url, name) {
+            document.getElementById('deleteForm').action = url;
+            document.getElementById('details_period').textContent = name;
+        }
+        </script>
+    @endpush
 </x-app-layout>

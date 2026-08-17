@@ -1,355 +1,309 @@
 <?php
+// app/Http/Controllers/LeavePeriodController.php
 
 namespace App\Http\Controllers;
 
-use App\Models\LeavePeriod;
-use App\Models\SiteLeavePeriod;
-use App\Models\LeaveType;
+use App\Http\Controllers\Controller;
 use App\Models\EntrepriseSiege;
+use App\Models\LeavePeriod;
+use App\Models\LeaveType;
+use App\Models\SiteLeavePeriodSetting;
+use App\Services\LeavePeriodResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class LeavePeriodController extends Controller
 {
     private function isSuperAdmin(): bool
     {
-        return is_null(Auth::user()->employe);
+        $user = Auth::user();
+        return $user && $user->IsSuperAdmin == 1;
     }
 
     private function getUserSiteId(): ?int
     {
-        return Auth::user()->employe?->SiegeID ?? Auth::user()->site_id ?? null;
+        $user = Auth::user();
+        return $user ? $user->SiegeID : null;
     }
 
-    // ============================================================
-    // INDEX
-    // ============================================================
-    public function index()
+    public function index(Request $request)
     {
-        $userSiteId = $this->getUserSiteId();
-        $isSuperAdmin = $this->isSuperAdmin();
+        $this->authorize('viewAny', LeavePeriod::class);
 
-        if ($isSuperAdmin) {
-            $periods = LeavePeriod::with('leaveType', 'site')
-                ->withCount('siteSettings')
-                ->orderByRaw('site_id IS NULL DESC, site_id, start_date DESC')
-                ->paginate(20);
-        } else {
-            // Admin siège : globaux + siens, avec eager-load de SON override
-            $periods = LeavePeriod::with(['leaveType', 'site', 'siteSettings' => function ($q) use ($userSiteId) {
-                    $q->where('site_id', $userSiteId);
-                }])
-                ->where(function ($q) use ($userSiteId) {
-                    $q->whereNull('site_id')
-                      ->orWhere('site_id', $userSiteId);
-                })
-                ->orderBy('start_date', 'desc')
-                ->paginate(20);
+        $query = LeavePeriod::with(['site', 'leaveType'])
+            ->visibleForUser(Auth::user())
+            ->orderBy('name');
 
-            // On "résout" chaque période en mémoire pour la vue
-            foreach ($periods as $period) {
-                $ov = $period->siteSettings->first();
-
-                $period->resolved_name              = $ov?->name ?? $period->name;
-                $period->resolved_start_date        = $ov?->start_date ?? $period->start_date;
-                $period->resolved_end_date          = $ov?->end_date ?? $period->end_date;
-                $period->resolved_submission_deadline = $ov?->submission_deadline ?? $period->submission_deadline;
-                $period->resolved_allow_rollover    = $ov?->allow_rollover ?? $period->allow_rollover;
-                $period->resolved_max_rollover_days = $ov?->max_rollover_days ?? $period->max_rollover_days;
-                $period->resolved_rollover_expiry_date = $ov?->rollover_expiry_date ?? $period->rollover_expiry_date;
-                $period->resolved_is_default        = $ov?->is_default ?? $period->is_default;
-                $period->resolved_status            = $ov?->status ?? $period->status;
-                $period->resolved_is_active         = $ov?->is_active ?? $period->is_active;
-                $period->has_override               = !is_null($ov);
-            }
+        if ($request->filled('leave_type_id')) {
+            $query->where('leave_type_id', $request->leave_type_id);
         }
 
-        return view('conges.leave_periods.index', compact('periods', 'isSuperAdmin', 'userSiteId'));
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        $periods = $query->paginate(15);
+
+        if (! $this->isSuperAdmin()) {
+            $resolver = new LeavePeriodResolver();
+            $resolvedPeriods = $resolver->resolveCollection($periods->getCollection(), $this->getUserSiteId());
+            $periods->setCollection($resolvedPeriods);
+        }
+
+        $leaveTypes = LeaveType::where('is_active', true)
+            ->visibleForUser(Auth::user())
+            ->orderBy('name')
+            ->get();
+
+        // CHEMIN MODIFIÉ : conges.leave_periods.index
+        return view('conges.leave_periods.index', compact('periods', 'leaveTypes'));
     }
 
-    // ============================================================
-    // CREATE
-    // ============================================================
     public function create()
     {
-        $isSuperAdmin = $this->isSuperAdmin();
-        $userSiteId = $this->getUserSiteId();
+        $this->authorize('create', LeavePeriod::class);
 
-        $sites = $isSuperAdmin ? EntrepriseSiege::orderBy('nom')->get() : collect();
+        $sites = $this->isSuperAdmin()
+            ? EntrepriseSiege::orderBy('nom')->get()
+            : collect();
 
-        if ($isSuperAdmin) {
-            $leaveTypes = LeaveType::where('is_active', true)
-                ->orderByRaw('site_id IS NULL DESC, site_id, name')
-                ->get();
-        } else {
-            $leaveTypes = LeaveType::where(function ($q) use ($userSiteId) {
-                    $q->whereNull('site_id')
-                      ->orWhere('site_id', $userSiteId);
-                })
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->get();
-        }
+        $leaveTypes = LeaveType::where('is_active', true)
+            ->visibleForUser(Auth::user())
+            ->orderBy('name')
+            ->get();
 
-        return view('conges.leave_periods.create', compact('leaveTypes', 'sites', 'isSuperAdmin', 'userSiteId'));
+        // CHEMIN MODIFIÉ : conges.leave_periods.create
+        return view('conges.leave_periods.create', compact('sites', 'leaveTypes'));
     }
 
-    // ============================================================
-    // STORE
-    // ============================================================
     public function store(Request $request)
     {
-        $isSuperAdmin = $this->isSuperAdmin();
+        $this->authorize('create', LeavePeriod::class);
 
-        $validated = $request->validate([
-            'leave_type_id' => 'required|exists:leave_types,id',
-            'name' => 'required|string|max:100',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'submission_deadline' => 'nullable|date|before_or_equal:end_date',
-            'allow_rollover' => 'boolean',
-            'max_rollover_days' => 'nullable|integer|min:0',
-            'rollover_expiry_date' => 'nullable|date|after:end_date',
-            'is_default' => 'boolean',
-            'status' => 'required|in:preparing,open,closed',
-        ]);
+        $isAdmin = $this->isSuperAdmin();
+        $validated = $request->validate($this->rules($isAdmin));
 
-        if ($isSuperAdmin) {
-            $request->validate(['scope' => 'required|in:global,site']);
-            $siteId = $request->scope === 'global' ? null : (int) $request->site_id;
-            if ($request->scope === 'site' && !$siteId) {
-                return back()->with('error', 'Veuillez choisir un siège.');
-            }
+        if (! $isAdmin) {
+            $validated['site_id'] = $this->getUserSiteId();
         } else {
-            $siteId = $this->getUserSiteId();
-            if (!$siteId) {
-                return back()->with('error', 'Impossible de déterminer votre siège.');
-            }
+            $validated['site_id'] = $validated['site_id'] ?? null;
         }
 
-        $validated['site_id'] = $siteId;
-        $validated['allow_rollover'] = $request->boolean('allow_rollover');
-        $validated['is_default'] = $request->boolean('is_default');
+        $exists = LeavePeriod::where('name', $validated['name'])
+            ->where('leave_type_id', $validated['leave_type_id'])
+            ->where('site_id', $validated['site_id'] ?? null)
+            ->exists();
 
-        if ($validated['is_default']) {
-            $q = LeavePeriod::where('leave_type_id', $validated['leave_type_id']);
-            if ($siteId) {
-                $q->where('site_id', $siteId);
-            } else {
-                $q->whereNull('site_id');
-            }
-            $q->update(['is_default' => false]);
+        if ($exists) {
+            return back()
+                ->withErrors(['name' => 'Une période avec ce nom existe déjà pour ce type de congé et ce siège.'])
+                ->withInput();
+        }
+
+        $validated['allow_rollover'] = $request->boolean('allow_rollover');
+        $validated['is_default'] = $request->boolean('is_default', false);
+        $validated['is_active'] = $request->boolean('is_active', true);
+
+        if ($isAdmin) {
+            $validated['is_customizable'] = $request->boolean('is_customizable', false);
         }
 
         LeavePeriod::create($validated);
 
-        $msg = $siteId
-            ? 'Période créée pour le siège sélectionné.'
-            : 'Période globale créée avec succès.';
-
-        return redirect()->route('admin.leave-periods.index')->with('success', $msg);
+        return redirect()->route('admin.leave-periods.index')
+            ->with('success', 'Période de congé créée avec succès.');
     }
 
-    // ============================================================
-    // EDIT
-    // ============================================================
-    public function edit($id)
+    public function show(LeavePeriod $leavePeriod)
     {
-        $isSuperAdmin = $this->isSuperAdmin();
-        $userSiteId = $this->getUserSiteId();
+        $this->authorize('view', $leavePeriod);
 
-        $period = LeavePeriod::with('siteSettings.site')->findOrFail($id);
-
-        // Sécurité
-        if (!$isSuperAdmin) {
-            if (!is_null($period->site_id) && $period->site_id !== $userSiteId) {
-                abort(403, 'Cette période appartient à un autre siège.');
-            }
+        $resolved = $leavePeriod;
+        if (! $this->isSuperAdmin() && $leavePeriod->isGlobal()) {
+            $resolver = new LeavePeriodResolver();
+            $resolved = $resolver->resolve($leavePeriod, $this->getUserSiteId());
         }
 
-        // Types
-        $leaveTypes = $isSuperAdmin
-            ? LeaveType::where('is_active', true)->orderByRaw('site_id IS NULL DESC, site_id, name')->get()
-            : LeaveType::where(function ($q) use ($userSiteId) {
-                  $q->whereNull('site_id')->orWhere('site_id', $userSiteId);
-              })->where('is_active', true)->orderBy('name')->get();
+        // CHEMIN MODIFIÉ : conges.leave_periods.show
+        return view('conges.leave_periods.show', compact('leavePeriod', 'resolved'));
+    }
 
-        // Admin siège qui édite un GLOBAL → il va créer son override
-        $siteOverride = null;
-        $isEditingGlobalAsSite = false;
+    public function edit(LeavePeriod $leavePeriod)
+    {
+        $this->authorize('update', $leavePeriod);
 
-        if (!$isSuperAdmin && is_null($period->site_id)) {
-            $isEditingGlobalAsSite = true;
-            $siteOverride = SiteLeavePeriod::where('leave_period_id', $period->id)
-                ->where('site_id', $userSiteId)
+        $sites = $this->isSuperAdmin()
+            ? EntrepriseSiege::orderBy('nom')->get()
+            : collect();
+
+        $leaveTypes = LeaveType::where('is_active', true)
+            ->visibleForUser(Auth::user())
+            ->orderBy('name')
+            ->get();
+
+        $override = null;
+        if (! $this->isSuperAdmin() && $leavePeriod->isGlobal() && $leavePeriod->is_customizable) {
+            $override = SiteLeavePeriodSetting::where('site_id', $this->getUserSiteId())
+                ->where('leave_period_id', $leavePeriod->id)
                 ->first();
         }
 
-        // Bloc "Personnalisations par siège" visible uniquement pour Super Admin
-        $siblingSites = collect();
-        if ($isSuperAdmin) {
-            $siblingSites = EntrepriseSiege::where('ID', '!=', $period->site_id ?? 0)->get();
-        }
-
-        return view('conges.leave_periods.edit', compact(
-            'period', 'leaveTypes', 'siblingSites',
-            'isSuperAdmin', 'userSiteId', 'siteOverride', 'isEditingGlobalAsSite'
-        ));
+        // CHEMIN MODIFIÉ : conges.leave_periods.edit
+        return view('conges.leave_periods.edit', compact('leavePeriod', 'sites', 'leaveTypes', 'override'));
     }
 
-    // ============================================================
-    // UPDATE
-    // ============================================================
-    public function update(Request $request, $id)
+    public function update(Request $request, LeavePeriod $leavePeriod)
     {
-        $isSuperAdmin = $this->isSuperAdmin();
-        $userSiteId = $this->getUserSiteId();
+        $this->authorize('update', $leavePeriod);
 
-        $period = LeavePeriod::findOrFail($id);
+        $isAdmin = $this->isSuperAdmin();
 
-        if (!$isSuperAdmin && !is_null($period->site_id) && $period->site_id !== $userSiteId) {
-            abort(403);
+        if (! $isAdmin && $leavePeriod->isGlobal() && $leavePeriod->is_customizable) {
+            return $this->updateOverride($request, $leavePeriod);
         }
 
-        // ADMIN SIÈGE + GLOBAL = création d'un override, pas de modification du global
-        if (!$isSuperAdmin && is_null($period->site_id)) {
-            return $this->updateOrCreateOverride($request, $period, $userSiteId);
+        $validated = $request->validate($this->rules($isAdmin, $leavePeriod));
+
+        if (! $isAdmin) {
+            unset($validated['site_id']);
+            $newSiteId = $leavePeriod->site_id;
+        } else {
+            $newSiteId = $validated['site_id'] ?? null;
         }
 
-        // SUPER ADMIN ou ADMIN SIÈGE sur une période spécifique → update normal
-        $validated = $request->validate([
-            'leave_type_id' => 'required|exists:leave_types,id',
-            'name' => 'required|string|max:100',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'submission_deadline' => 'nullable|date|before_or_equal:end_date',
-            'allow_rollover' => 'boolean',
-            'max_rollover_days' => 'nullable|integer|min:0',
-            'rollover_expiry_date' => 'nullable|date|after:end_date',
-            'is_default' => 'boolean',
-            'status' => 'required|in:preparing,open,closed',
-            'is_active' => 'boolean',
-        ]);
+        if ($validated['name'] !== $leavePeriod->name || 
+            $validated['leave_type_id'] != $leavePeriod->leave_type_id || 
+            $newSiteId != $leavePeriod->site_id) {
+            $exists = LeavePeriod::where('name', $validated['name'])
+                ->where('leave_type_id', $validated['leave_type_id'])
+                ->where('site_id', $newSiteId)
+                ->where('id', '!=', $leavePeriod->id)
+                ->exists();
+
+            if ($exists) {
+                return back()
+                    ->withErrors(['name' => 'Une période avec ce nom existe déjà pour ce type de congé et ce siège.'])
+                    ->withInput();
+            }
+        }
 
         $validated['allow_rollover'] = $request->boolean('allow_rollover');
-        $validated['is_default'] = $request->boolean('is_default');
+        $validated['is_default'] = $request->boolean('is_default', false);
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        $period->update($validated);
-
-        return redirect()->route('admin.leave-periods.index')->with('success', 'Période mise à jour.');
-    }
-
-    // ============================================================
-    // DESTROY
-    // ============================================================
-    public function destroy($id)
-    {
-        $isSuperAdmin = $this->isSuperAdmin();
-        $userSiteId = $this->getUserSiteId();
-
-        $period = LeavePeriod::findOrFail($id);
-
-        if (!$isSuperAdmin && !is_null($period->site_id) && $period->site_id !== $userSiteId) {
-            abort(403);
+        if ($isAdmin) {
+            $validated['is_customizable'] = $request->boolean('is_customizable', false);
         }
 
-        $period->delete();
+        $leavePeriod->update($validated);
 
-        return redirect()->route('admin.leave-periods.index')->with('success', 'Période supprimée.');
+        return redirect()->route('admin.leave-periods.index')
+            ->with('success', 'Période de congé mise à jour avec succès.');
     }
 
-    // ============================================================
-    // OVERRIDE (Admin Siège qui modifie un global)
-    // ============================================================
-    private function updateOrCreateOverride(Request $request, LeavePeriod $period, int $siteId)
+    public function destroy(LeavePeriod $leavePeriod)
     {
+        $this->authorize('delete', $leavePeriod);
+
+        $leavePeriod->delete();
+
+        return redirect()->route('admin.leave-periods.index')
+            ->with('success', 'Période de congé supprimée.');
+    }
+
+    private function updateOverride(Request $request, LeavePeriod $leavePeriod)
+    {
+        $siteId = $this->getUserSiteId();
+
         $validated = $request->validate([
             'name' => 'nullable|string|max:100',
             'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'end_date' => 'nullable|date|after:start_date',
             'submission_deadline' => 'nullable|date',
             'allow_rollover' => 'nullable|boolean',
             'max_rollover_days' => 'nullable|integer|min:0',
             'rollover_expiry_date' => 'nullable|date',
             'is_default' => 'nullable|boolean',
             'status' => 'nullable|in:preparing,open,closed',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        foreach (['allow_rollover', 'is_default'] as $field) {
-            $validated[$field] = $request->has($field) ? $request->boolean($field) : null;
+        $overrideData = [
+            'site_id' => $siteId,
+            'leave_period_id' => $leavePeriod->id,
+        ];
+
+        if ($request->has('name')) {
+            $overrideData['name'] = $validated['name'] ?: null;
+        }
+        if ($request->has('start_date')) {
+            $overrideData['start_date'] = $validated['start_date'];
+        }
+        if ($request->has('end_date')) {
+            $overrideData['end_date'] = $validated['end_date'];
+        }
+        if ($request->has('submission_deadline')) {
+            $overrideData['submission_deadline'] = $validated['submission_deadline'];
+        }
+        if ($request->has('allow_rollover')) {
+            $overrideData['allow_rollover'] = $request->boolean('allow_rollover');
+        }
+        if ($request->has('max_rollover_days')) {
+            $overrideData['max_rollover_days'] = $validated['max_rollover_days'];
+        }
+        if ($request->has('rollover_expiry_date')) {
+            $overrideData['rollover_expiry_date'] = $validated['rollover_expiry_date'];
+        }
+        if ($request->has('is_default')) {
+            $overrideData['is_default'] = $request->boolean('is_default');
+        }
+        if ($request->has('status')) {
+            $overrideData['status'] = $validated['status'];
+        }
+        if ($request->has('is_active')) {
+            $overrideData['is_active'] = $request->boolean('is_active');
         }
 
-        $validated['site_id'] = $siteId;
-        $validated['leave_period_id'] = $period->id;
-        $validated['is_active'] = true;
-
-        SiteLeavePeriod::updateOrCreate(
-            ['site_id' => $siteId, 'leave_period_id' => $period->id],
-            $validated
+        SiteLeavePeriodSetting::updateOrCreate(
+            [
+                'site_id' => $siteId,
+                'leave_period_id' => $leavePeriod->id,
+            ],
+            $overrideData
         );
 
         return redirect()->route('admin.leave-periods.index')
-            ->with('success', 'Votre personnalisation a été enregistrée. Le global reste inchangé.');
+            ->with('success', 'Configuration locale de la période mise à jour avec succès.');
     }
 
-    // ============================================================
-    // OVERRIDE (Super Admin uniquement — gardé pour compatibilité)
-    // ============================================================
-    public function storeSiteOverride(Request $request, $leavePeriodId)
+    private function rules(bool $isAdmin, ?LeavePeriod $ignore = null): array
     {
-        $isSuperAdmin = $this->isSuperAdmin();
-        $userSiteId = $this->getUserSiteId();
-
-        $period = LeavePeriod::findOrFail($leavePeriodId);
-
-        if (!is_null($period->site_id)) {
-            return back()->with('error', 'Cette période est déjà spécifique à un siège.');
-        }
-
-        $validated = $request->validate([
-            'site_id' => 'required|exists:entreprises_sieges,ID',
-            'name' => 'nullable|string|max:100',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+        $rules = [
+            'name' => 'required|string|max:100',
+            'leave_type_id' => [
+                'required',
+                'exists:leave_types,id',
+            ],
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'submission_deadline' => 'nullable|date',
             'allow_rollover' => 'nullable|boolean',
             'max_rollover_days' => 'nullable|integer|min:0',
             'rollover_expiry_date' => 'nullable|date',
-            'is_default' => 'nullable|boolean',
-            'status' => 'nullable|in:preparing,open,closed',
-        ]);
+            'status' => 'required|in:preparing,open,closed',
+        ];
 
-        if (!$isSuperAdmin && (int)$validated['site_id'] !== $userSiteId) {
-            abort(403);
+        if ($isAdmin) {
+            $rules['site_id'] = 'nullable|exists:entreprises_sieges,ID';
+            $rules['is_customizable'] = 'nullable|boolean';
         }
 
-        foreach (['allow_rollover', 'is_default'] as $field) {
-            $validated[$field] = $request->has($field) ? $request->boolean($field) : null;
-        }
-
-        $validated['leave_period_id'] = $period->id;
-
-        SiteLeavePeriod::updateOrCreate(
-            ['site_id' => $validated['site_id'], 'leave_period_id' => $period->id],
-            $validated
-        );
-
-        return back()->with('success', 'Personnalisation enregistrée pour ce siège.');
-    }
-
-    public function destroySiteOverride($siteLeavePeriodId)
-    {
-        $isSuperAdmin = $this->isSuperAdmin();
-        $userSiteId = $this->getUserSiteId();
-
-        $override = SiteLeavePeriod::with('leavePeriod')->findOrFail($siteLeavePeriodId);
-
-        if (!$isSuperAdmin && $override->site_id !== $userSiteId) {
-            abort(403);
-        }
-
-        $override->delete();
-        return back()->with('success', 'Personnalisation supprimée. Le siège reprend la règle globale.');
+        return $rules;
     }
 }
