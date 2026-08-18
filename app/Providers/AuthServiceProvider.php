@@ -22,6 +22,9 @@ class AuthServiceProvider extends ServiceProvider
     \App\Models\LeaveType::class => \App\Policies\LeaveTypePolicy::class,
         \App\Models\LeavePeriod::class => \App\Policies\LeavePeriodPolicy::class,
             CompanyHoliday::class => CompanyHolidayPolicy::class,
+                LeavePolicy::class => LeavePolicyPolicy::class,
+    LeaveWorkflow::class => LeaveWorkflowPolicy::class,
+
 
 
 ];

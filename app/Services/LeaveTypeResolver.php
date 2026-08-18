@@ -24,7 +24,9 @@ class LeaveTypeResolver
         $r->is_customizable = $type->is_customizable;
         $r->is_overridden = !is_null($override);
         $r->override_id = $override?->id;
+        $r->deleted_at = $type->deleted_at;
 
+        // Champs résolus (override ou global)
         $r->name = $override->local_name ?? $type->name;
         $r->color = $override->local_color ?? $type->color;
         $r->requires_attachment = $override->local_requires_attachment ?? $type->requires_attachment;
@@ -53,6 +55,7 @@ class LeaveTypeResolver
             $local->is_customizable = false;
             $local->is_overridden = false;
             $local->override_id = null;
+
             return $local;
         });
     }

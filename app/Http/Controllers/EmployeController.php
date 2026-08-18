@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/EmployeController.php
 
 namespace App\Http\Controllers;
 
@@ -42,7 +43,7 @@ class EmployeController extends Controller
         ]);
 
         $employes = $this->repository->getFiltered($filters);
-        $employes->load(['meta', 'department', 'jobTitle', 'hierarchyLevel', 'manager']);
+        $employes->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);
         $employes->appends($filters);
 
         $sieges = EntrepriseSiege::all();
@@ -59,11 +60,9 @@ class EmployeController extends Controller
         $admin_connected = auth()->user();
         $siege_id = $admin_connected->SiegeID ?? null;
 
-        // Référentiels organisationnels
         $jobTitles = JobTitle::orderBy('name')->get();
         $hierarchyLevels = HierarchyLevel::orderBy('rank', 'desc')->get();
 
-        // Si l'admin a un siège fixe, on pré-charge les départements et managers
         if ($siege_id) {
             $departments = Department::where('site_id', $siege_id)->orderBy('name')->get();
             $managers = Employe::where('SiegeID', $siege_id)
@@ -123,7 +122,7 @@ class EmployeController extends Controller
 
         // --- Restrictions non-SuperAdmin ---
         if (!auth()->user()->IsSuperAdmin) {
-            $data['Actived'] = "0";
+            $data['Actived'] = 0;
             $data['HasBiometricSetup'] = false;
         }
 
@@ -149,19 +148,8 @@ class EmployeController extends Controller
         // Créer l'employé
         $employe = $this->repository->create($data);
 
-        // Synchroniser employee_meta (compatibilité temporaire)
-        \App\Models\EmployeeMeta::updateOrCreate(
-            ['employee_id' => $employe->ID],
-            [
-                'hire_date'         => $data['hire_date'],
-                'department_name'   => optional($employe->department)->name,
-                'job_title'         => optional($employe->jobTitle)->name,
-                'employment_status' => $data['employment_status'] === 'actif' ? 'active' : $data['employment_status'],
-                'company_id'        => $siegeId,
-            ]
-        );
-
-        return redirect()->back()->with('success', __('Employé créé avec succès'));
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé créé avec succès.');
     }
 
     /* =========================================================
@@ -170,7 +158,7 @@ class EmployeController extends Controller
     public function show($id)
     {
         $employe = $this->repository->findById($id);
-        $employe->load(['meta', 'department', 'jobTitle', 'hierarchyLevel', 'manager']);
+        $employe->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);
         $pointages = $employe->pointages()->latest('timestamp_')->paginate(5);
         $sieges = EntrepriseSiege::all();
 
@@ -183,11 +171,10 @@ class EmployeController extends Controller
     public function edit($id)
     {
         $employe = $this->repository->findById($id);
-        $employe->load(['meta', 'department', 'jobTitle', 'hierarchyLevel', 'manager']);
+        $employe->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);
 
         $sieges = EntrepriseSiege::all();
 
-        // Référentiels organisationnels pour le siège de l'employé
         $jobTitles = JobTitle::orderBy('name')->get();
         $hierarchyLevels = HierarchyLevel::orderBy('rank', 'desc')->get();
         $departments = Department::where('site_id', $employe->SiegeID)->orderBy('name')->get();
@@ -213,21 +200,11 @@ class EmployeController extends Controller
        ========================================================= */
     public function update(EmployeRequest $request, $id)
     {
-        // --- Récupérer les valeurs organisationnelles AVANT la réassignation de $data ---
-        $orgData = [
-            'department_id'      => $request->input('department_id') ?: null,
-            'job_title_id'       => $request->input('job_title_id') ?: null,
-            'hierarchy_level_id' => $request->input('hierarchy_level_id') ?: null,
-            'manager_id'         => $request->input('manager_id') ?: null,
-            'employment_status'  => $request->input('employment_status', 'actif'),
-            'hire_date'          => $request->input('hire_date') ?: null,
-        ];
-
         $data = $request->validated();
         $employe = Employe::findOrFail($id);
 
         // ==================================================
-        // NON SUPER ADMIN : champs très limités
+        // NON SUPER ADMIN : champs limités
         // ==================================================
         if (!auth()->user()->IsSuperAdmin) {
             $newPin = $data['Pin'] ?? null;
@@ -249,15 +226,24 @@ class EmployeController extends Controller
             }
 
             $data = [
-                'Nom'               => $data['Nom'],
-                'num_mat'           => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
-                'Pin'               => $newPin,
-                'SiegeID'           => $employe->SiegeID,
-                'BadgeID'           => $employe->BadgeID,
+                'Nom' => $data['Nom'],
+                'num_mat' => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
+                'Pin' => $newPin,
+                'SiegeID' => $employe->SiegeID,
+                'BadgeID' => $employe->BadgeID,
                 'HasBiometricSetup' => $employe->HasBiometricSetup,
-                'HasFaceSetup'      => $employe->HasFaceSetup,
-                'FaceEncodingPath'  => $employe->FaceEncodingPath,
-                'Actived'           => $employe->Actived,
+                'HasFaceSetup' => $employe->HasFaceSetup,
+                'FaceEncodingPath' => $employe->FaceEncodingPath,
+                'Actived' => $employe->Actived,
+                // Organisation
+                'department_id' => $employe->department_id,
+                'job_title_id' => $employe->job_title_id,
+                'hierarchy_level_id' => $employe->hierarchy_level_id,
+                'manager_id' => $employe->manager_id,
+                'employment_status' => $employe->employment_status,
+                'hire_date' => $employe->hire_date,
+                'company_id' => $employe->company_id,
+                'site_id' => $employe->site_id,
             ];
         }
         // ==================================================
@@ -309,44 +295,34 @@ class EmployeController extends Controller
             } else {
                 unset($data['FaceEncodingPath'], $data['HasFaceSetup']);
             }
-        }
 
-        unset($data['FaceEncodingFile']);
-
-        // ============================================
-        // FUSIONNER les champs organisationnels (SuperAdmin uniquement)
-        // ============================================
-        if (auth()->user()->IsSuperAdmin) {
-            $data = array_merge($data, $orgData);
+            // Organisation
+            $data['department_id'] = $request->input('department_id') ?: null;
+            $data['job_title_id'] = $request->input('job_title_id') ?: null;
+            $data['hierarchy_level_id'] = $request->input('hierarchy_level_id') ?: null;
+            $data['manager_id'] = $request->input('manager_id') ?: null;
+            $data['employment_status'] = $request->input('employment_status', 'actif');
+            $data['hire_date'] = $request->input('hire_date') ?: null;
             $data['company_id'] = $employe->SiegeID;
             $data['site_id'] = $employe->SiegeID;
         }
 
+        unset($data['FaceEncodingFile']);
+
         $this->repository->update($id, $data);
 
-        // Synchroniser employee_meta (compatibilité temporaire)
-        \App\Models\EmployeeMeta::updateOrCreate(
-            ['employee_id' => $employe->ID],
-            [
-                'hire_date'         => $orgData['hire_date'],
-                'department_name'   => optional(Department::find($orgData['department_id']))->name,
-                'job_title'         => optional(JobTitle::find($orgData['job_title_id']))->name,
-                'employment_status' => $orgData['employment_status'] === 'actif' ? 'active' : $orgData['employment_status'],
-                'company_id'        => $employe->SiegeID,
-            ]
-        );
-
-        return redirect()->back()->with('success', __('Employé modifié avec succès'));
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé modifié avec succès.');
     }
 
     /* =========================================================
-       DESTROY / RESET / AUTRES (inchangés)
+       DESTROY
        ========================================================= */
     public function destroy($id)
     {
         $user = auth()->user();
         if (!$user->isTrueSuperAdmin()) {
-            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+            return redirect()->back()->with('error', 'Vous n\'avez pas accès à cette fonctionnalité.');
         }
 
         $employe = $this->repository->findById($id);
@@ -356,18 +332,22 @@ class EmployeController extends Controller
 
         ActivityLogService::log(
             action: 'delete',
-            modelType: 'Entreprise',
+            modelType: 'Employe',
             modelId: (int) $id,
         );
 
-        return redirect()->back()->with('success', __('Employé supprimé avec succès'));
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé supprimé avec succès.');
     }
 
+    /* =========================================================
+       RESET
+       ========================================================= */
     public function reset($id)
     {
         $user = auth()->user();
         if (!$user->isTrueSuperAdmin()) {
-            return redirect()->back()->with('error', __('Vous n\'avez pas d\' accès à cette fonctionnalité'));
+            return redirect()->back()->with('error', 'Vous n\'avez pas accès à cette fonctionnalité.');
         }
 
         $employe = $this->repository->findById($id);
@@ -377,32 +357,34 @@ class EmployeController extends Controller
 
         ActivityLogService::log(
             action: 'reset',
-            modelType: 'Entreprise',
+            modelType: 'Employe',
             modelId: (int) $id,
         );
 
-        return redirect()->back()->with('success', __('Employé restauré avec succès'));
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé restauré avec succès.');
     }
 
+    /* =========================================================
+       RESET PIN
+       ========================================================= */
     public function resetCodePin($id)
     {
         $employe = $this->repository->findById($id);
         $employe->Pin = null;
         $employe->save();
 
-        return redirect()->back()->with('success', __('Code Pin réinitialisé avec succès'));
+        return redirect()->back()->with('success', 'Code PIN réinitialisé avec succès.');
     }
 
+    /* =========================================================
+       ASSIGN WEB ACCESS
+       ========================================================= */
     public function assignWebAccess(Request $request, $id)
     {
         $request->validate([
-            'email'    => 'required|email|max:255|unique:Employes,email,' . $id . ',ID',
+            'email' => 'required|email|max:255|unique:Employes,email,' . $id . ',ID',
             'password' => 'nullable|min:6',
-        ], [
-            'email.required' => 'L\'adresse email est obligatoire.',
-            'email.email'    => 'L\'adresse email doit être valide.',
-            'email.unique'   => 'Cette adresse email est déjà utilisée par un autre employé.',
-            'password.min'   => 'Le mot de passe doit contenir au moins 6 caractères.',
         ]);
 
         $employe = Employe::findOrFail($id);
@@ -420,7 +402,7 @@ class EmployeController extends Controller
             modelId: (int) $id,
         );
 
-        return redirect()->back()->with('success', __('Accès Web assigné avec succès à ' . $employe->Nom));
+        return redirect()->back()->with('success', 'Accès Web assigné avec succès à ' . $employe->Nom);
     }
 
     /* =========================================================
@@ -435,7 +417,7 @@ class EmployeController extends Controller
         $employes = $this->repository->getAllForExport($filters);
 
         ActivityLogService::log(action: 'export_excel', modelType: 'Employe');
-        return $this->exportService->exportToExcel($employes, __('Employés'));
+        return $this->exportService->exportToExcel($employes, 'Employés');
     }
 
     public function exportPdf(Request $request)
@@ -447,7 +429,7 @@ class EmployeController extends Controller
         $employes = $this->repository->getAllForExport($filters);
 
         ActivityLogService::log(action: 'export_pdf', modelType: 'Employe');
-        return $this->exportService->exportToPdf($employes, "Liste des employés", 'exports.generic');
+        return $this->exportService->exportToPdf($employes, 'Liste des employés', 'exports.generic');
     }
 
     /* =========================================================
@@ -480,7 +462,6 @@ class EmployeController extends Controller
             return view('404', compact('message'));
         }
 
-        // Si vous avez une logique de thumbnail, ajoutez-la ici
         return $this->getFaceEncoding($id);
     }
 
@@ -489,7 +470,6 @@ class EmployeController extends Controller
        ========================================================= */
     private function optimizeAndConvertToBase64($file)
     {
-        // Votre logique existante de compression + base64
         $image = imagecreatefromstring(file_get_contents($file->getRealPath()));
         if (!$image) {
             throw new \Exception("Image invalide");

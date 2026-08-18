@@ -1,253 +1,389 @@
+{{-- resources/views/conges/leave_types/edit.blade.php --}}
 <x-app-layout>
-
-<style>
-    select option { color: #111827 !important; background: #ffffff !important; }
-</style>
-
-@php
-    $isAdmin = auth()->user()->IsSuperAdmin;
-    $isGlobal = $leaveType->isGlobal();
-    $isCustomizable = $leaveType->is_customizable;
-    $isGlobalCustomizable = $isGlobal && $isCustomizable;
-    $isLocalType = ! $isGlobal;
-    $canEditDirectly = $isAdmin || $isLocalType;
-
-    // Valeurs de l'override si on est en mode édition locale d'un global
-    $ovName = $override->local_name ?? null;
-    $ovColor = $override->local_color ?? null;
-    $ovAttachment = $override->local_requires_attachment ?? null;
-    $ovAttachmentAfter = $override->local_requires_attachment_after ?? null;
-    $ovAllowNegative = $override->local_allow_negative_balance ?? null;
-    $ovMaxNegative = $override->local_max_negative_limit ?? null;
-    $ovDeducts = $override->local_deducts_balance ?? null;
-    $ovEnabled = $override->is_enabled ?? null;
-@endphp
-
-    <div style="background:#f3f4f6; min-height:100vh; padding:32px 24px;">
-        <div style="max-width:800px; margin:0 auto;">
-
-            {{-- Header --}}
-            <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px;">
+    <x-slot name="header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark mb-0">
                 @php
-                    $displayColor = $ovColor ?? $leaveType->color ?? '#9ca3af';
-                    if (!str_starts_with($displayColor, '#')) $displayColor = '#' . $displayColor;
+                    $isSuperAdmin = auth()->user()->IsSuperAdmin ?? false;
+                    $isGlobal = $leaveType->isGlobal();
+                    $hasOverride = isset($override) && $override;
+                    $isCustomizable = $leaveType->is_customizable ?? false;
+                    $isDeleted = $leaveType->trashed();
                 @endphp
-                <div style="width:48px; height:48px; border-radius:12px; background-color:{{ $displayColor }}; box-shadow:0 0 0 4px {{ $displayColor }}26; border:2px solid white; flex-shrink:0;"></div>
-                <div>
-                    <h1 style="font-size:28px; font-weight:800; color:#111827; margin:0; letter-spacing:-0.5px;">
-                        @if($canEditDirectly)
-                            Modifier : {{ $leaveType->name }}
-                        @else
-                            Configurer localement : {{ $leaveType->name }}
+
+                @if($hasOverride && !$isSuperAdmin)
+                    {{ __('Personnalisation du type global') }}
+                @elseif($isGlobal && $isSuperAdmin)
+                    {{ __('Modifier le Type (Global)') }}
+                @elseif($isGlobal && !$isSuperAdmin)
+                    {{ __('Personnaliser le Type Global') }}
+                @else
+                    {{ __('Modifier le Type') }}
+                @endif
+            </h2>
+            <a href="{{ route('admin.leave-types.index') }}" class="btn btn-secondary">
+                {{ __('Retour à la liste') }}
+            </a>
+        </div>
+    </x-slot>
+
+    <div class="p-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                @if($hasOverride)
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        {{ __('Vous personnalisez un type global pour votre siège. Les modifications n\'affecteront que votre siège.') }}
+                    </div>
+                @endif
+
+                @if($isGlobal && !$isSuperAdmin && !$hasOverride && $isCustomizable)
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        {{ __('Vous personnalisez ce type global pour votre siège. Les modifications ne seront visibles que pour votre siège.') }}
+                    </div>
+                @endif
+
+                @if($isGlobal && !$isSuperAdmin && !$isCustomizable)
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        {{ __('Ce type global n\'est pas personnalisable. Vous ne pouvez pas le modifier.') }}
+                    </div>
+                @endif
+
+                @if($isDeleted)
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        {{ __('Ce type a été supprimé le ') . $leaveType->deleted_at->format('d/m/Y H:i') }}
+                        <form action="{{ route('admin.leave-types.restore', $leaveType->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-sm btn-success ms-2">
+                                {{ __('Restaurer') }}
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if((!$isGlobal || $isSuperAdmin || ($isGlobal && $isCustomizable)) && !$isDeleted)
+                    <form method="POST" action="{{ route('admin.leave-types.update', $leaveType->id) }}">
+                        @csrf
+                        @method('PUT')
+
+                        @if($hasOverride)
+                            <input type="hidden" name="is_override" value="1">
                         @endif
-                    </h1>
-                    <p style="color:#6b7280; margin:4px 0 0 0; font-size:14px;">Code <span style="font-family:monospace; font-weight:700; color:#4f46e5;">{{ $leaveType->code }}</span></p>
-                </div>
-            </div>
 
-            {{-- Card --}}
-            <div style="background:white; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e5e7eb; overflow:hidden;">
+                        <div class="row g-3 mb-4">
+                            <div class="col-lg-6">
+                                <x-input-label for="name" :value="__('Nom du type')" />
+                                @if($hasOverride && !$isSuperAdmin)
+                                    <span class="text-muted small ms-2">{{ __('(Laisser vide pour hériter du global)') }}</span>
+                                @else
+                                    <span class="text-danger">*</span>
+                                @endif
+                                <input 
+                                    id="name" 
+                                    name="name" 
+                                    type="text" 
+                                    class="form-control mt-1 @error('name') is-invalid @enderror" 
+                                    value="{{ old('name', $hasOverride ? ($override->local_name ?? '') : $leaveType->name) }}"
+                                    placeholder="{{ __('Ex: Congés Payés') }}"
+                                    {{ ($isSuperAdmin || !$hasOverride) ? 'required' : '' }} />
+                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->name)
+                                    <small class="text-muted">Valeur globale : {{ $leaveType->name }}</small>
+                                @endif
+                            </div>
 
-                @if($errors->any())
-                    <div style="background:#fef2f2; border-left:4px solid #ef4444; color:#991b1b; padding:16px 20px; margin:24px 24px 0 24px; border-radius:8px;">
-                        <div style="font-weight:700; font-size:13px; margin-bottom:6px;">⚠️ Veuillez corriger les erreurs suivantes :</div>
-                        <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.8;">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                @if(! $canEditDirectly)
-                <div style="background:#eff6ff; border-left:4px solid #3b82f6; color:#1e40af; padding:16px 20px; margin:24px 24px 0 24px; border-radius:8px;">
-                    <div style="font-weight:700; font-size:13px; margin-bottom:4px;">ℹ️ Configuration locale</div>
-                    <p style="margin:0; font-size:13px;">
-                        Vous modifiez la configuration <strong>locale</strong> de ce type global. 
-                        Les champs <em>Code</em> et <em>Unité</em> sont hérités du global et ne sont pas modifiables ici. 
-                        Laissez un champ vide pour hériter de la valeur globale.
-                    </p>
-                </div>
-                @endif
-
-                <form action="{{ route('admin.leave-types.update', $leaveType) }}" method="POST" style="padding:28px 24px;">
-                    @csrf
-                    @method('PUT')
-
-                    {{-- Siège (Super Admin uniquement) --}}
-                    @if($isAdmin)
-                    <div style="margin-bottom:24px; padding:20px; background:#f9fafb; border-radius:12px; border:1px solid #e5e7eb;">
-                        <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.3px;">
-                             Visibilité / Siège
-                        </label>
-                        <select name="site_id" style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
-                            <option value="" style="color:#111827;">Global (tous les sièges)</option>
-                            @foreach($sites as $site)
-                                <option value="{{ $site->ID }}" style="color:#111827;" {{ old('site_id', $leaveType->site_id) == $site->ID ? 'selected' : '' }}>
-                                    {{ $site->Nom }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
-
-                    {{-- Nom + Code --}}
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
-                        <div>
-                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
-                                Nom <span style="color:#ef4444;">*</span>
-                            </label>
-                            <input type="text" name="name" 
-                                   value="{{ old('name', $ovName ?? $leaveType->name) }}" 
-                                   required maxlength="100"
-                                   style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
-                            @if(! $canEditDirectly)
-                                <p style="color:#6b7280; font-size:12px; margin:6px 0 0 0;">Laissez vide pour hériter du nom global.</p>
-                            @endif
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
-                                Code <span style="color:#ef4444;">*</span>
-                            </label>
-                            <input type="text" name="code" 
-                                   value="{{ old('code', $leaveType->code) }}" 
-                                   required maxlength="20"
-                                   {{ $canEditDirectly ? '' : 'readonly' }}
-                                   style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:{{ $canEditDirectly ? '#ffffff' : '#f3f4f6' }}; outline:none; box-sizing:border-box; text-transform:uppercase;">
-                        </div>
-                    </div>
-
-                    {{-- Unité + Couleur + Actif --}}
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-bottom:24px;">
-                        <div>
-                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
-                                Unité <span style="color:#ef4444;">*</span>
-                            </label>
-                            <select name="unit" {{ $canEditDirectly ? '' : 'disabled' }}
-                                    style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:{{ $canEditDirectly ? '#ffffff' : '#f3f4f6' }}; outline:none; box-sizing:border-box;">
-                                <option value="days" style="color:#111827;" {{ old('unit', $leaveType->unit)=='days'?'selected':'' }}>Jours</option>
-                                <option value="half_days" style="color:#111827;" {{ old('unit', $leaveType->unit)=='half_days'?'selected':'' }}>Demi-journées</option>
-                                <option value="hours" style="color:#111827;" {{ old('unit', $leaveType->unit)=='hours'?'selected':'' }}>Heures</option>
-                            </select>
-                            @if(! $canEditDirectly)
-                                <input type="hidden" name="unit" value="{{ $leaveType->unit }}">
-                            @endif
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
-                                Couleur <span style="color:#ef4444;">*</span>
-                            </label>
-                            @php
-                                $editColor = old('color', $ovColor ?? $leaveType->color);
-                                if (!str_starts_with($editColor, '#')) $editColor = '#' . $editColor;
-                            @endphp
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <input type="color" name="color" value="{{ $editColor }}" required
-                                       style="width:50px; height:42px; border:1px solid #d1d5db; border-radius:8px; padding:2px; background:#ffffff; cursor:pointer;">
-                                <span style="font-family:monospace; font-size:13px; color:#6b7280;">{{ strtoupper($editColor) }}</span>
+                            <div class="col-lg-6">
+                                <x-input-label for="code" :value="__('Code')" />
+                                @if(!$hasOverride || $isSuperAdmin)
+                                    <span class="text-danger">*</span>
+                                @endif
+                                <input 
+                                    id="code" 
+                                    name="code" 
+                                    type="text" 
+                                    class="form-control mt-1 @error('code') is-invalid @enderror" 
+                                    value="{{ old('code', $leaveType->code) }}"
+                                    placeholder="{{ __('Ex: CP') }}"
+                                    {{ (!$hasOverride || $isSuperAdmin) ? 'required' : '' }}
+                                    {{ $hasOverride && !$isSuperAdmin ? 'readonly' : '' }} />
+                                <x-input-error :messages="$errors->get('code')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin)
+                                    <small class="text-muted">Le code ne peut pas être personnalisé</small>
+                                @endif
                             </div>
                         </div>
-                        <div style="display:flex; align-items:flex-end; padding-bottom:8px;">
-                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                                <input type="checkbox" name="is_active" value="1" 
-                                       {{ old('is_active', ($ovEnabled ?? $leaveType->is_active) ? true : false) ? 'checked' : '' }}
-                                       style="width:20px; height:20px; accent-color:#4f46e5; cursor:pointer;">
-                                <span style="font-size:14px; font-weight:600; color:#374151;">Actif</span>
-                            </label>
-                        </div>
-                    </div>
 
-                    <hr style="border:none; border-top:1px solid #e5e7eb; margin:24px 0;">
-
-                    {{-- Solde --}}
-                    <div style="margin-bottom:20px;">
-                        <h3 style="font-size:14px; font-weight:700; color:#374151; margin:0 0 14px 0; text-transform:uppercase; letter-spacing:0.3px;">Configuration du solde</h3>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div style="padding:16px; background:#f9fafb; border-radius:10px; border:1px solid #e5e7eb;">
-                                <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                                    <input type="checkbox" name="deducts_balance" value="1"
-                                           {{ old('deducts_balance', ($ovDeducts ?? $leaveType->deducts_balance) ? true : false) ? 'checked' : '' }}
-                                           style="width:18px; height:18px; accent-color:#4f46e5; cursor:pointer;">
-                                    <span style="font-size:14px; color:#374151; font-weight:500;">Décompte du solde de congés</span>
-                                </label>
-                                <p style="color:#6b7280; font-size:12px; margin:6px 0 0 28px;">Le solde de l'employé sera décrémenté</p>
+                        <div class="row g-3 mb-4">
+                            <div class="col-lg-4">
+                                <x-input-label for="unit" :value="__('Unité')" />
+                                @if(!$hasOverride || $isSuperAdmin)
+                                    <span class="text-danger">*</span>
+                                @endif
+                                <select id="unit" name="unit" class="form-select mt-1" 
+                                    {{ $hasOverride && !$isSuperAdmin ? 'disabled' : '' }}>
+                                    <option value="days" {{ old('unit', $leaveType->unit) == 'days' ? 'selected' : '' }}>Jours</option>
+                                    <option value="half_days" {{ old('unit', $leaveType->unit) == 'half_days' ? 'selected' : '' }}>Demi-journées</option>
+                                    <option value="hours" {{ old('unit', $leaveType->unit) == 'hours' ? 'selected' : '' }}>Heures</option>
+                                </select>
+                                @if($hasOverride && !$isSuperAdmin)
+                                    <input type="hidden" name="unit" value="{{ $leaveType->unit }}">
+                                @endif
+                                <x-input-error :messages="$errors->get('unit')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin)
+                                    <small class="text-muted">L'unité ne peut pas être personnalisée</small>
+                                @endif
                             </div>
-                            <div style="padding:16px; background:#f9fafb; border-radius:10px; border:1px solid #e5e7eb;">
-                                <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                                    <input type="checkbox" name="allow_negative_balance" value="1"
-                                           {{ old('allow_negative_balance', ($ovAllowNegative ?? $leaveType->allow_negative_balance) ? true : false) ? 'checked' : '' }}
-                                           style="width:18px; height:18px; accent-color:#4f46e5; cursor:pointer;"
-                                           onchange="document.getElementById('max-negative').style.display = this.checked ? 'block' : 'none'">
-                                    <span style="font-size:14px; color:#374151; font-weight:500;">Solde négatif autorisé</span>
-                                </label>
-                                <div id="max-negative" style="margin-top:10px; {{ old('allow_negative_balance', ($ovAllowNegative ?? $leaveType->allow_negative_balance)) ? '' : 'display:none;' }}">
-                                    <input type="number" name="max_negative_limit"
-                                           value="{{ old('max_negative_limit', $ovMaxNegative ?? $leaveType->max_negative_limit) }}"
-                                           placeholder="Limite max (vide = illimité)"
-                                           style="width:100%; padding:8px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:13px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
+
+                            <div class="col-lg-4">
+                                <x-input-label for="color" :value="__('Couleur')" />
+                                @if(!$hasOverride || $isSuperAdmin)
+                                    <span class="text-danger">*</span>
+                                @endif
+                                <div class="input-group mt-1">
+                                    <input type="color" id="color_picker" class="form-control form-control-color" 
+                                        style="width: 50px; padding: 0;" 
+                                        value="{{ old('color', $hasOverride ? ($override->local_color ?? '#10B981') : $leaveType->color) }}">
+                                    <input 
+                                        id="color" 
+                                        name="color" 
+                                        type="text" 
+                                        class="form-control @error('color') is-invalid @enderror" 
+                                        value="{{ old('color', $hasOverride ? ($override->local_color ?? '#10B981') : $leaveType->color) }}"
+                                        {{ ($isSuperAdmin || !$hasOverride) ? 'required' : '' }} />
+                                </div>
+                                <x-input-error :messages="$errors->get('color')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->color)
+                                    <small class="text-muted">Valeur globale : {{ $leaveType->color }}</small>
+                                @endif
+                            </div>
+
+                            <div class="col-lg-4">
+                                <x-input-label for="requires_attachment" :value="__('Justificatif requis')" />
+                                @if(!$hasOverride || $isSuperAdmin)
+                                    <span class="text-danger">*</span>
+                                @endif
+                                <select id="requires_attachment" name="requires_attachment" class="form-select mt-1" 
+                                    {{ $hasOverride && !$isSuperAdmin ? '' : 'required' }}>
+                                    <option value="never" {{ old('requires_attachment', $hasOverride ? ($override->local_requires_attachment ?? 'never') : $leaveType->requires_attachment) == 'never' ? 'selected' : '' }}>Jamais</option>
+                                    <option value="always" {{ old('requires_attachment', $hasOverride ? ($override->local_requires_attachment ?? 'never') : $leaveType->requires_attachment) == 'always' ? 'selected' : '' }}>Toujours</option>
+                                    <option value="after_duration" {{ old('requires_attachment', $hasOverride ? ($override->local_requires_attachment ?? 'never') : $leaveType->requires_attachment) == 'after_duration' ? 'selected' : '' }}>Après une durée</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('requires_attachment')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->requires_attachment)
+                                    <small class="text-muted">Valeur globale : {{ $leaveType->requires_attachment }}</small>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4" id="attachment_days_row" style="{{ old('requires_attachment', $hasOverride ? ($override->local_requires_attachment ?? 'never') : $leaveType->requires_attachment) == 'after_duration' ? '' : 'display: none;' }}">
+                            <div class="col-lg-4">
+                                <x-input-label for="requires_attachment_after" :value="__('Nombre de jours avant justificatif')" />
+                                <input 
+                                    id="requires_attachment_after" 
+                                    name="requires_attachment_after" 
+                                    type="number" 
+                                    class="form-control mt-1 @error('requires_attachment_after') is-invalid @enderror" 
+                                    value="{{ old('requires_attachment_after', $hasOverride ? ($override->local_requires_attachment_after ?? '') : $leaveType->requires_attachment_after) }}"
+                                    min="1" />
+                                <x-input-error :messages="$errors->get('requires_attachment_after')" class="mt-2" />
+                                <small class="text-muted">{{ __('Le justificatif sera requis après X jours') }}</small>
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->requires_attachment_after)
+                                    <small class="d-block text-muted">Valeur globale : {{ $leaveType->requires_attachment_after }}</small>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-lg-3">
+                                <x-input-label for="deducts_balance" :value="__('Déduire du solde')" />
+                                <div class="mt-1">
+                                    <input type="hidden" name="deducts_balance" value="0">
+                                    <input type="checkbox" id="deducts_balance" name="deducts_balance" value="1" 
+                                        {{ old('deducts_balance', $hasOverride ? ($override->local_deducts_balance ?? true) : $leaveType->deducts_balance) ? 'checked' : '' }} 
+                                        class="form-check-input">
+                                    <label for="deducts_balance" class="form-check-label ms-2">
+                                        {{ __('Déduire automatiquement') }}
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('deducts_balance')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->deducts_balance !== null)
+                                    <small class="d-block text-muted">Valeur globale : {{ $leaveType->deducts_balance ? 'Oui' : 'Non' }}</small>
+                                @endif
+                            </div>
+
+                            <div class="col-lg-3">
+                                <x-input-label for="allow_negative_balance" :value="__('Solde négatif autorisé')" />
+                                <div class="mt-1">
+                                    <input type="hidden" name="allow_negative_balance" value="0">
+                                    <input type="checkbox" id="allow_negative_balance" name="allow_negative_balance" value="1" 
+                                        {{ old('allow_negative_balance', $hasOverride ? ($override->local_allow_negative_balance ?? false) : $leaveType->allow_negative_balance) ? 'checked' : '' }} 
+                                        class="form-check-input" onchange="toggleNegativeLimit()">
+                                    <label for="allow_negative_balance" class="form-check-label ms-2">
+                                        {{ __('Autoriser') }}
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('allow_negative_balance')" class="mt-2" />
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->allow_negative_balance !== null)
+                                    <small class="d-block text-muted">Valeur globale : {{ $leaveType->allow_negative_balance ? 'Oui' : 'Non' }}</small>
+                                @endif
+                            </div>
+
+                            <div class="col-lg-3" id="max_negative_row" style="{{ old('allow_negative_balance', $hasOverride ? ($override->local_allow_negative_balance ?? false) : $leaveType->allow_negative_balance) ? '' : 'display: none;' }}">
+                                <x-input-label for="max_negative_limit" :value="__('Limite négative max')" />
+                                <input 
+                                    id="max_negative_limit" 
+                                    name="max_negative_limit" 
+                                    type="number" 
+                                    class="form-control mt-1 @error('max_negative_limit') is-invalid @enderror" 
+                                    value="{{ old('max_negative_limit', $hasOverride ? ($override->local_max_negative_limit ?? '') : $leaveType->max_negative_limit) }}"
+                                    min="0" />
+                                <x-input-error :messages="$errors->get('max_negative_limit')" class="mt-2" />
+                                <small class="text-muted">{{ __('Laissez vide pour illimité') }}</small>
+                                @if($hasOverride && !$isSuperAdmin && $leaveType->max_negative_limit !== null)
+                                    <small class="d-block text-muted">Valeur globale : {{ $leaveType->max_negative_limit }}</small>
+                                @endif
+                            </div>
+
+                            <div class="col-lg-3">
+                                <x-input-label for="is_active" :value="__('Actif')" />
+                                <div class="mt-1">
+                                    <input type="hidden" name="is_active" value="0">
+                                    <input type="checkbox" id="is_active" name="is_active" value="1" 
+                                        {{ old('is_active', $hasOverride ? ($override->is_enabled ?? true) : $leaveType->is_active) ? 'checked' : '' }} 
+                                        class="form-check-input">
+                                    <label for="is_active" class="form-check-label ms-2">
+                                        {{ __('Type actif') }}
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('is_active')" class="mt-2" />
+                            </div>
+                        </div>
+
+                        @if($isSuperAdmin)
+                            <div class="row g-3 mb-4">
+                                <div class="col-lg-6">
+                                    <x-input-label for="site_id" :value="__('Siège')" />
+                                    <select id="site_id" name="site_id" class="form-select mt-1">
+                                        <option value="">{{ __('Global (tous les sièges)') }}</option>
+                                        @foreach($sites as $site)
+                                            <option value="{{ $site->ID }}" 
+                                                {{ old('site_id', $leaveType->site_id) == $site->ID ? 'selected' : '' }}>
+                                                {{ $site->Nom }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error :messages="$errors->get('site_id')" class="mt-2" />
+                                    <small class="text-muted">{{ __('Sélectionnez un siège spécifique ou laissez global') }}</small>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <x-input-label for="is_customizable" :value="__('Personnalisable par siège')" />
+                                    <div class="mt-1">
+                                        <input type="hidden" name="is_customizable" value="0">
+                                        <input type="checkbox" id="is_customizable" name="is_customizable" value="1" 
+                                            {{ old('is_customizable', $leaveType->is_customizable) ? 'checked' : '' }} 
+                                            class="form-check-input" {{ $hasOverride && !$isSuperAdmin ? 'disabled' : '' }}>
+                                        <label for="is_customizable" class="form-check-label ms-2">
+                                            {{ __('Personnalisable') }}
+                                        </label>
+                                    </div>
+                                    <x-input-error :messages="$errors->get('is_customizable')" class="mt-2" />
+                                    @if($hasOverride && !$isSuperAdmin)
+                                        <small class="text-muted">Ce champ est géré au niveau global</small>
+                                    @endif
                                 </div>
                             </div>
+                        @endif
+
+                        <div class="d-flex gap-2">
+                            <x-primary-button class="btn btn-primary">
+                                @if($hasOverride && !$isSuperAdmin)
+                                    {{ __('Personnaliser') }}
+                                @elseif($isGlobal && !$isSuperAdmin)
+                                    {{ __('Personnaliser pour mon siège') }}
+                                @else
+                                    {{ __('Mettre à jour') }}
+                                @endif
+                            </x-primary-button>
+                            <a href="{{ route('admin.leave-types.index') }}" class="btn btn-secondary">
+                                {{ __('Annuler') }}
+                            </a>
                         </div>
+                    </form>
+                @elseif($isGlobal && !$isSuperAdmin && !$isCustomizable)
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        {{ __('Ce type global n\'est pas personnalisable. Vous ne pouvez pas le modifier.') }}
                     </div>
-
-                    {{-- Justificatif --}}
-                    <div style="margin-bottom:28px;">
-                        <h3 style="font-size:14px; font-weight:700; color:#374151; margin:0 0 14px 0; text-transform:uppercase; letter-spacing:0.3px;">Justificatif requis</h3>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div>
-                                <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
-                                    Condition <span style="color:#ef4444;">*</span>
-                                </label>
-                                <select name="requires_attachment" id="requires_attachment"
-                                        style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;"
-                                        onchange="toggleAttachmentAfter()">
-                                    <option value="never" style="color:#111827;" {{ old('requires_attachment', $ovAttachment ?? $leaveType->requires_attachment)=='never'?'selected':'' }}>Jamais</option>
-                                    <option value="always" style="color:#111827;" {{ old('requires_attachment', $ovAttachment ?? $leaveType->requires_attachment)=='always'?'selected':'' }}>Toujours</option>
-                                    <option value="after_duration" style="color:#111827;" {{ old('requires_attachment', $ovAttachment ?? $leaveType->requires_attachment)=='after_duration'?'selected':'' }}>Après une durée</option>
-                                </select>
-                            </div>
-                            <div id="attachment-after-wrapper" style="{{ old('requires_attachment', $ovAttachment ?? $leaveType->requires_attachment)=='after_duration' ? '' : 'display:none;' }}">
-                                <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">
-                                    À partir de (jours)
-                                </label>
-                                <input type="number" name="requires_attachment_after" id="requires_attachment_after"
-                                       value="{{ old('requires_attachment_after', $ovAttachmentAfter ?? $leaveType->requires_attachment_after) }}" min="1"
-                                       style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; color:#111827; background:#ffffff; outline:none; box-sizing:border-box;">
-                            </div>
-                        </div>
+                    <a href="{{ route('admin.leave-types.index') }}" class="btn btn-secondary">
+                        {{ __('Retour à la liste') }}
+                    </a>
+                @else
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        {{ __('Ce type est en lecture seule.') }}
                     </div>
-
-                    {{-- Boutons --}}
-                    <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #e5e7eb;">
-                        <a href="{{ route('admin.leave-types.index') }}"
-                           style="padding:10px 22px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; font-weight:600; color:#4b5563; text-decoration:none; background:#ffffff;">
-                            Annuler
-                        </a>
-                        <button type="submit"
-                                style="padding:10px 24px; background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#ffffff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(79,70,229,0.35);">
-                            ✓ {{ $canEditDirectly ? 'Mettre à jour' : 'Enregistrer la configuration locale' }}
-                        </button>
-                    </div>
-
-                </form>
+                    <a href="{{ route('admin.leave-types.index') }}" class="btn btn-secondary">
+                        {{ __('Retour à la liste') }}
+                    </a>
+                @endif
             </div>
-
         </div>
     </div>
 
-    <script>
-    function toggleAttachmentAfter() {
-        const sel = document.getElementById('requires_attachment');
-        const wrap = document.getElementById('attachment-after-wrapper');
-        const input = document.getElementById('requires_attachment_after');
-        if (sel.value === 'after_duration') {
-            wrap.style.display = 'block';
-            input.setAttribute('required','required');
-        } else {
-            wrap.style.display = 'none';
-            input.removeAttribute('required');
-            input.value = '';
-        }
-    }
-    </script>
+    @push("scripts")
+        <script>
+            // Synchronisation du color picker
+            document.getElementById('color_picker').addEventListener('input', function() {
+                document.getElementById('color').value = this.value;
+            });
+            document.getElementById('color').addEventListener('input', function() {
+                document.getElementById('color_picker').value = this.value;
+            });
+
+            // Afficher/masquer le champ "jours avant justificatif"
+            document.getElementById('requires_attachment').addEventListener('change', function() {
+                const row = document.getElementById('attachment_days_row');
+                if (this.value === 'after_duration') {
+                    row.style.display = 'block';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Afficher/masquer le champ "limite négative"
+            function toggleNegativeLimit() {
+                const checkbox = document.getElementById('allow_negative_balance');
+                const row = document.getElementById('max_negative_row');
+                if (checkbox.checked) {
+                    row.style.display = 'block';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+
+            // Initialisation
+            document.addEventListener('DOMContentLoaded', function() {
+                toggleNegativeLimit();
+            });
+        </script>
+    @endpush
 </x-app-layout>

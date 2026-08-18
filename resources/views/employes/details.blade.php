@@ -21,7 +21,7 @@
                     <!-- N° Mat -->
                     <div class="col-md-12 mb-3">
                         <label class="fw-bold text-muted">N° Matricule</label>
-                        <p class="fs-5">{{ $employe->num_mat }}</p>
+                        <p class="fs-5">{{ $employe->num_mat ?? 'Non défini' }}</p>
                     </div>
 
                     <!-- Nom -->
@@ -36,34 +36,82 @@
                         <p class="fs-5">{{ $employe->siege->Nom ?? 'Non défini' }}</p>
                     </div>
 
+                    <!-- Service -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">Service</label>
+                        <p class="fs-5">{{ $employe->department->name ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Poste -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">Poste</label>
+                        <p class="fs-5">{{ $employe->jobTitle->name ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Manager Direct -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">Manager Direct</label>
+                        <p class="fs-5">{{ $employe->manager->Nom ?? 'Aucun manager' }}</p>
+                    </div>
+
+                    <!-- Niveau Hiérarchique -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">Niveau Hiérarchique</label>
+                        <p class="fs-5">{{ $employe->hierarchyLevel->name ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Date d'embauche -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">Date d'embauche</label>
+                        <p class="fs-5">{{ $employe->hire_date ? \Carbon\Carbon::parse($employe->hire_date)->format('d/m/Y') : 'Non définie' }}</p>
+                    </div>
+
+                    <!-- Statut employé -->
+                    <div class="col-md-12 mb-3">
+                        <label class="fw-bold text-muted">Statut</label>
+                        <p class="fs-5">
+                            @php
+                                $statusLabels = [
+                                    'actif' => 'Actif',
+                                    'suspendu' => 'Suspendu',
+                                    'sorti' => 'Sorti',
+                                ];
+                            @endphp
+                            {{ $statusLabels[$employe->employment_status] ?? $employe->employment_status ?? 'Actif' }}
+                        </p>
+                    </div>
                     
                     <!-- Méthode -->
                     <label class="fw-bold text-muted d-block">Méthode</label>
-                    @if ($employe->BadgeID )
                     <div class="col-md-12 mb-2">
-                        <span class="badge bg-info">
-                            {{ __('Badge') }}
-                        </span>
+                        @if ($employe->BadgeID)
+                            <span class="badge bg-info me-1">
+                                {{ __('Badge') }}
+                            </span>
+                        @endif
+                        @if ($employe->HasFaceSetup)
+                            <span class="badge bg-primary me-1">
+                                {{ __('Face image') }}
+                            </span>
+                        @endif
+                        @if ($employe->Pin)
+                            <span class="badge bg-secondary me-1">
+                                {{ __('Code Pin') }}
+                            </span>
+                        @endif
+                        @if ($employe->email)
+                            <span class="badge bg-dark me-1">
+                                {{ __('Accès Web') }}
+                            </span>
+                        @endif
+                        @if (!$employe->BadgeID && !$employe->HasFaceSetup && !$employe->Pin && !$employe->email)
+                            <span class="text-muted">Aucune méthode configurée</span>
+                        @endif
                     </div>
-                    @endif
-                    @if ($employe->HasFaceSetup)
-                    <div class="col-md-12 mb-2">
-                        <span class="badge bg-primary">
-                            {{ __('Face image') }}
-                        </span>
-                    </div>
-                    @endif
-                    @if ($employe->Pin)
-                    <div class="col-md-12 mb-2">
-                        <span class="badge bg-secondary">
-                            {{ __('Code Pin') }}
-                        </span>
-                    </div>
-                    @endif
 
-                    <!-- Statut -->
+                    <!-- Statut Actived -->
                     <div class="col-md-12 my-3">
-                        <label class="fw-bold text-muted d-block">Statut</label>
+                        <label class="fw-bold text-muted d-block">Statut de l'employé</label>
                         @if($employe->Actived)
                             <span class="badge bg-success fs-6 mt-2">
                                 <i class="bi bi-check-circle"></i> Actif
@@ -73,18 +121,21 @@
                                 <i class="bi bi-x-circle"></i> Inactif
                             </span>
                         @endif
+                        @if($employe->deleted)
+                            <span class="badge bg-danger fs-6 mt-2 ms-2">
+                                <i class="bi bi-trash"></i> Supprimé
+                            </span>
+                        @endif
                     </div>
 
-                    <!-- Dates de création et modification -->
+                    <!-- Dates de création -->
                     @if($employe->CreatedAt)
                         <div class="col-md-12 mt-3">
                             <div class="row">
-                                @if($employe->CreatedAt)
-                                    <div class="col-md-6">
-                                        <label class="fw-bold text-muted d-block">Date de création</label>
-                                        <p class="text-muted"><x-local-date-time :datetime="$employe->CreatedAt"/></p>
-                                    </div>
-                                @endif
+                                <div class="col-md-6">
+                                    <label class="fw-bold text-muted d-block">Date de création</label>
+                                    <p class="text-muted"><x-local-date-time :datetime="$employe->CreatedAt"/></p>
+                                </div>
                             </div>
                         </div>
                     @endif

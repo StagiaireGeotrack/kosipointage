@@ -1,73 +1,111 @@
+{{-- resources/views/departments/create.blade.php --}}
 <x-app-layout>
-<div class="container">
-    <h2>Nouveau Service</h2>
-
-    <form method="POST" action="{{ route('departments.store') }}">
-        @csrf
-        
-        <div class="mb-3">
-            <label>Siège *</label>
-            <select name="site_id" id="site_id" class="form-select" required>
-                <option value="">Choisir...</option>
-                @foreach($sites as $site)
-                    <option value="{{ $site->ID }}">{{ $site->Nom }}</option>
-                @endforeach
-            </select>
+    <x-slot name="header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-dark mb-0">
+                {{ __('Nouveau Service') }}
+            </h2>
+            <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                {{ __('Retour à la liste') }}
+            </a>
         </div>
+    </x-slot>
 
-        <div class="mb-3">
-            <label>Nom du service *</label>
-            <input type="text" name="name" class="form-control" required>
+    <div class="p-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="{{ route('departments.store') }}">
+                    @csrf
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-6">
+                            <x-input-label for="site_id" :value="__('Siège')" />
+                            <span class="text-danger">*</span>
+                            <select id="site_id" name="site_id" class="form-select mt-1" required>
+                                <option value="">{{ __('Sélectionnez un siège') }}</option>
+                                @foreach($sites as $site)
+                                    <option value="{{ $site->ID }}" {{ old('site_id') == $site->ID ? 'selected' : '' }}>
+                                        {{ $site->Nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('site_id')" class="mt-2" />
+                        </div>
+
+                        <div class="col-lg-6">
+                            <x-input-label for="name" :value="__('Nom du service')" />
+                            <span class="text-danger">*</span>
+                            <x-text-input id="name" name="name" type="text" class="form-control mt-1" 
+                                :value="old('name')" placeholder="{{ __('Ex: Service Informatique') }}" required />
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-6">
+                            <x-input-label for="code" :value="__('Code')" />
+                            <x-text-input id="code" name="code" type="text" class="form-control mt-1" 
+                                :value="old('code')" placeholder="{{ __('Ex: SI, RH, COM') }}" />
+                            <x-input-error :messages="$errors->get('code')" class="mt-2" />
+                            <small class="text-muted">{{ __('Code court pour identifier le service') }}</small>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <x-input-label for="manager_employee_id" :value="__('Responsable')" />
+                            <select id="manager_employee_id" name="manager_employee_id" class="form-select mt-1">
+                                <option value="">{{ __('Aucun responsable') }}</option>
+                                @foreach($employes as $emp)
+                                    <option value="{{ $emp->ID }}" {{ old('manager_employee_id') == $emp->ID ? 'selected' : '' }}>
+                                        {{ $emp->Nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('manager_employee_id')" class="mt-2" />
+                            <small class="text-muted">{{ __('Responsable du service (optionnel)') }}</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <x-primary-button class="btn btn-primary">
+                            {{ __('Créer') }}
+                        </x-primary-button>
+                        <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                            {{ __('Annuler') }}
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label>Code</label>
-            <input type="text" name="code" class="form-control" placeholder="ex: RH, TECH, COM...">
-        </div>
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const siteSelect = document.getElementById('site_id');
+            const mgrSelect = document.getElementById('manager_employee_id');
 
-        <div class="mb-3">
-            <label>Responsable (optionnel)</label>
-            <select name="manager_employee_id" id="manager_employee_id" class="form-select">
-                <option value="">-- Aucun --</option>
-                @foreach($employes as $emp)
-                    <option value="{{ $emp->ID }}">{{ $emp->Nom }}</option>
-                @endforeach
-            </select>
-        </div>
+            if (!siteSelect || !mgrSelect) return;
 
-        <button type="submit" class="btn btn-success">Enregistrer</button>
-        <a href="{{ route('departments.index') }}" class="btn btn-secondary">Annuler</a>
-    </form>
-</div>
+            siteSelect.addEventListener('change', function() {
+                const siteId = this.value;
+                if (!siteId) {
+                    mgrSelect.innerHTML = '<option value="">{{ __("Aucun responsable") }}</option>';
+                    return;
+                }
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const siteSelect = document.getElementById('site_id');
-        const mgrSelect = document.getElementById('manager_employee_id');
-
-        if (!siteSelect || !mgrSelect) return;
-
-        siteSelect.addEventListener('change', function() {
-            const siteId = this.value;
-            if (!siteId) {
-                mgrSelect.innerHTML = '<option value="">-- Aucun --</option>';
-                return;
-            }
-
-            fetch(`/api/managers-by-site/${siteId}`)
-                .then(r => r.json())
-                .then(data => {
-                    mgrSelect.innerHTML = '<option value="">-- Aucun --</option>';
-                    data.forEach(e => {
-                        mgrSelect.innerHTML += `<option value="${e.id}">${e.name}</option>`;
+                fetch(`/api/managers-by-site/${siteId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        mgrSelect.innerHTML = '<option value="">{{ __("Aucun responsable") }}</option>';
+                        data.forEach(e => {
+                            mgrSelect.innerHTML += `<option value="${e.id}">${e.name}</option>`;
+                        });
+                    })
+                    .catch(() => {
+                        mgrSelect.innerHTML = '<option value="">{{ __("Erreur chargement") }}</option>';
                     });
-                })
-                .catch(() => {
-                    mgrSelect.innerHTML = '<option value="">-- Erreur chargement --</option>';
-                });
+            });
         });
-    });
-</script>
-@endpush
+    </script>
+    @endpush
 </x-app-layout>

@@ -26,18 +26,33 @@ class LeaveTypeController extends Controller
         return $user ? $user->SiegeID : null;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->authorize('viewAny', LeaveType::class);
+
         $query = LeaveType::with('site')
             ->visibleForUser(Auth::user())
             ->orderBy('name');
 
-        $leaveTypes = $query->get();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('code', 'LIKE', "%{$search}%");
+            });
+        }
 
-        // Admin site : on résout les overrides pour afficher les valeurs locales
+        if ($request->filled('is_active')) {
+            $query->where('is_active', $request->is_active);
+        }
+
+        $leaveTypes = $query->paginate(15);
+
+        // Admin site : on résout les overrides
         if (! $this->isSuperAdmin()) {
             $resolver = new LeaveTypeResolver();
-            $leaveTypes = $resolver->resolveCollection($leaveTypes, $this->getUserSiteId());
+            $resolvedTypes = $resolver->resolveCollection($leaveTypes->getCollection(), $this->getUserSiteId());
+            $leaveTypes->setCollection($resolvedTypes);
         }
 
         return view('conges.leave_types.index', compact('leaveTypes'));
@@ -67,7 +82,7 @@ class LeaveTypeController extends Controller
             $validated['site_id'] = $validated['site_id'] ?? null;
         }
 
-        // Doublon code + site_id
+        // Vérification des doublons (code + site_id unique)
         $exists = LeaveType::where('code', $validated['code'])
             ->where('site_id', $validated['site_id'] ?? null)
             ->exists();
@@ -78,9 +93,9 @@ class LeaveTypeController extends Controller
                 ->withInput();
         }
 
-        $validated['deducts_balance']        = $request->boolean('deducts_balance');
+        $validated['deducts_balance'] = $request->boolean('deducts_balance');
         $validated['allow_negative_balance'] = $request->boolean('allow_negative_balance');
-        $validated['is_active']              = $request->boolean('is_active', true);
+        $validated['is_active'] = $request->boolean('is_active', true);
 
         if ($isAdmin) {
             $validated['is_customizable'] = $request->boolean('is_customizable', false);
@@ -99,7 +114,14 @@ class LeaveTypeController extends Controller
     public function show(LeaveType $leaveType)
     {
         $this->authorize('view', $leaveType);
-        return view('conges.leave_types.show', compact('leaveType'));
+
+        $resolved = $leaveType;
+        if (! $this->isSuperAdmin() && $leaveType->isGlobal()) {
+            $resolver = new LeaveTypeResolver();
+            $resolved = $resolver->resolve($leaveType, $this->getUserSiteId());
+        }
+
+        return view('conges.leave_types.show', compact('leaveType', 'resolved'));
     }
 
     public function edit(LeaveType $leaveType)
@@ -110,7 +132,6 @@ class LeaveTypeController extends Controller
             ? EntrepriseSiege::orderBy('nom')->get()
             : collect();
 
-        // Charge l'override existant si on est en mode "édition locale d'un global"
         $override = null;
         if (! $this->isSuperAdmin() && $leaveType->isGlobal() && $leaveType->is_customizable) {
             $override = SiteLeaveTypeSetting::where('site_id', $this->getUserSiteId())
@@ -142,6 +163,7 @@ class LeaveTypeController extends Controller
             $newSiteId = $validated['site_id'] ?? null;
         }
 
+        // Vérification des doublons
         if ($validated['code'] !== $leaveType->code || $newSiteId != $leaveType->site_id) {
             $exists = LeaveType::where('code', $validated['code'])
                 ->where('site_id', $newSiteId)
@@ -155,9 +177,9 @@ class LeaveTypeController extends Controller
             }
         }
 
-        $validated['deducts_balance']        = $request->boolean('deducts_balance');
+        $validated['deducts_balance'] = $request->boolean('deducts_balance');
         $validated['allow_negative_balance'] = $request->boolean('allow_negative_balance');
-        $validated['is_active']              = $request->boolean('is_active', true);
+        $validated['is_active'] = $request->boolean('is_active', true);
 
         if ($isAdmin) {
             $validated['is_customizable'] = $request->boolean('is_customizable', false);
@@ -183,54 +205,61 @@ class LeaveTypeController extends Controller
             ->with('success', 'Type de congé supprimé.');
     }
 
-    /**
-     * Écriture dans la table d'override locale.
-     */
+    public function restore($id)
+    {
+        $type = LeaveType::withTrashed()->findOrFail($id);
+        $this->authorize('update', $type);
+
+        $type->restore();
+
+        return redirect()->route('admin.leave-types.index')
+            ->with('success', 'Type de congé restauré avec succès.');
+    }
+
     private function updateOverride(Request $request, LeaveType $leaveType)
     {
         $siteId = $this->getUserSiteId();
 
         $validated = $request->validate([
-            'name'                      => 'nullable|string|max:100',
-            'color'                     => 'nullable|string|max:7',
-            'requires_attachment'       => 'nullable|in:never,always,after_duration',
-            'requires_attachment_after' => 'nullable|integer|min:1',
-            'allow_negative_balance'    => 'nullable|boolean',
-            'max_negative_limit'        => 'nullable|integer',
-            'deducts_balance'           => 'nullable|boolean',
-            'is_active'                 => 'nullable|boolean',
+            'local_name' => 'nullable|string|max:100',
+            'local_color' => 'nullable|string|max:7',
+            'local_requires_attachment' => 'nullable|in:never,always,after_duration',
+            'local_requires_attachment_after' => 'nullable|integer|min:1',
+            'local_allow_negative_balance' => 'nullable|boolean',
+            'local_max_negative_limit' => 'nullable|integer',
+            'local_deducts_balance' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        if (($validated['requires_attachment'] ?? null) !== 'after_duration') {
-            $validated['requires_attachment_after'] = null;
+        if (($validated['local_requires_attachment'] ?? null) !== 'after_duration') {
+            $validated['local_requires_attachment_after'] = null;
         }
 
         $overrideData = [
-            'site_id'       => $siteId,
+            'site_id' => $siteId,
             'leave_type_id' => $leaveType->id,
         ];
 
-        // On ne stocke que les champs explicitement envoyés (null = héritage du global)
-        if ($request->has('name')) {
-            $overrideData['local_name'] = $validated['name'] ?: null;
+        if ($request->has('local_name')) {
+            $overrideData['local_name'] = $validated['local_name'] ?: null;
         }
-        if ($request->has('color')) {
-            $overrideData['local_color'] = $validated['color'] ?: null;
+        if ($request->has('local_color')) {
+            $overrideData['local_color'] = $validated['local_color'] ?: null;
         }
-        if ($request->has('requires_attachment')) {
-            $overrideData['local_requires_attachment'] = $validated['requires_attachment'] ?: null;
+        if ($request->has('local_requires_attachment')) {
+            $overrideData['local_requires_attachment'] = $validated['local_requires_attachment'] ?: null;
         }
-        if ($request->has('requires_attachment_after')) {
-            $overrideData['local_requires_attachment_after'] = $validated['requires_attachment_after'];
+        if ($request->has('local_requires_attachment_after')) {
+            $overrideData['local_requires_attachment_after'] = $validated['local_requires_attachment_after'];
         }
-        if ($request->has('allow_negative_balance')) {
-            $overrideData['local_allow_negative_balance'] = $request->boolean('allow_negative_balance');
+        if ($request->has('local_allow_negative_balance')) {
+            $overrideData['local_allow_negative_balance'] = $request->boolean('local_allow_negative_balance');
         }
-        if ($request->has('max_negative_limit')) {
-            $overrideData['local_max_negative_limit'] = $validated['max_negative_limit'];
+        if ($request->has('local_max_negative_limit')) {
+            $overrideData['local_max_negative_limit'] = $validated['local_max_negative_limit'];
         }
-        if ($request->has('deducts_balance')) {
-            $overrideData['local_deducts_balance'] = $request->boolean('deducts_balance');
+        if ($request->has('local_deducts_balance')) {
+            $overrideData['local_deducts_balance'] = $request->boolean('local_deducts_balance');
         }
         if ($request->has('is_active')) {
             $overrideData['is_enabled'] = $request->boolean('is_active');
@@ -238,31 +267,31 @@ class LeaveTypeController extends Controller
 
         SiteLeaveTypeSetting::updateOrCreate(
             [
-                'site_id'       => $siteId,
+                'site_id' => $siteId,
                 'leave_type_id' => $leaveType->id,
             ],
             $overrideData
         );
 
         return redirect()->route('admin.leave-types.index')
-            ->with('success', 'Configuration locale mise à jour avec succès.');
+            ->with('success', 'Configuration locale du type de congé mise à jour avec succès.');
     }
 
     private function rules(bool $isAdmin, ?LeaveType $ignore = null): array
     {
         $rules = [
-            'name'                      => 'required|string|max:100',
-            'code'                      => [
+            'name' => 'required|string|max:100',
+            'code' => [
                 'required',
                 'string',
                 'max:20',
                 Rule::unique('leave_types')->ignore($ignore?->id),
             ],
-            'unit'                      => 'required|in:days,half_days,hours',
-            'requires_attachment'       => 'required|in:never,always,after_duration',
+            'unit' => 'required|in:days,half_days,hours',
+            'requires_attachment' => 'required|in:never,always,after_duration',
             'requires_attachment_after' => 'nullable|integer|min:1',
-            'max_negative_limit'        => 'nullable|integer',
-            'color'                     => 'required|string|max:7',
+            'max_negative_limit' => 'nullable|integer',
+            'color' => 'required|string|max:7',
         ];
 
         if ($isAdmin) {

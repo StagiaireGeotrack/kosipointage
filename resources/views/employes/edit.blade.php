@@ -20,7 +20,7 @@
 
                     <div class="row">
 
-                        <!-- num_mat -->
+                        <!-- num_mat - Super Admin ET Simple Admin -->
                         <div class="form-group mb-3">
                             <label for="num_mat">Numéro matricule</label>
                             <input type="text" 
@@ -29,11 +29,13 @@
                                     name="num_mat" 
                                     value="{{ old('num_mat', $employe->num_mat) }}" 
                                     maxlength="50">
-                            <x-input-error :messages="$errors->get('num_mat')" class="mt-2" />
+                            @error('num_mat')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                             <small class="form-text text-muted">Optionnel — unique par siège</small>
                         </div>
 
-                        <!-- Nom -->
+                        <!-- Nom - TOUS LES UTILISATEURS PEUVENT MODIFIER -->
                         <div class="form-group mb-3">
                             <label for="Nom">Nom <span class="text-danger">*</span></label>
                             <input type="text" 
@@ -42,10 +44,38 @@
                                     name="Nom" 
                                     value="{{ old('Nom', $employe->Nom) }}" 
                                     required>
-                            <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
+                            @error('Nom')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- ============ ORGANISATION (NOUVEAU) ============ -->
+                        <!-- Email - TOUS LES UTILISATEURS -->
+                        <div class="form-group mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" 
+                                    class="form-control @error('email') is-invalid @enderror" 
+                                    id="email" 
+                                    name="email" 
+                                    value="{{ old('email', $employe->email) }}">
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Téléphone - TOUS LES UTILISATEURS -->
+                        <div class="form-group mb-3">
+                            <label for="telephone">Téléphone</label>
+                            <input type="text" 
+                                    class="form-control @error('telephone') is-invalid @enderror" 
+                                    id="telephone" 
+                                    name="telephone" 
+                                    value="{{ old('telephone', $employe->telephone) }}">
+                            @error('telephone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- ============ ORGANISATION ============ -->
                         <div class="card mb-3 border-primary">
                             <div class="card-header bg-light text-primary">
                                 <i class="bi bi-diagram-3"></i> Organisation
@@ -173,7 +203,8 @@
                                             class="form-control @error('BadgeID') is-invalid @enderror" 
                                             id="BadgeID" 
                                             name="BadgeID" 
-                                            maxlength="25">
+                                            maxlength="25"
+                                            placeholder="Laissez vide pour conserver l'actuel">
                                     <small class="form-text text-muted">Laissez vide pour conserver l'actuel</small>
                                     <x-input-error :messages="$errors->get('BadgeID')" class="mt-2" />
                                 </div>
@@ -197,6 +228,7 @@
                                             pattern="[0-9]{6}"
                                             oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
+                                        <small class="form-text text-muted">Code PIN à 6 chiffres (optionnel)</small>
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +263,8 @@
                             
                     </div>
 
-                    @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+                    {{-- Bouton submit pour TOUS LES UTILISATEURS --}}
+                    @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> Enregistrer les modifications
@@ -240,17 +273,19 @@
                     @endif
                 </form>
 
-                @if(auth()->user()->isSimpleAdmin() && !empty($employe->Pin))
-                    <hr>
-                    <div class="text-end mt-4">
-                        <button type="button" class="btn btn-info"
-                                onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
-                                data-bs-toggle="modal"
-                                data-bs-target="#resetPinModal"
-                                title="Réinitialiser le PIN">
-                            <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser le Code Pin
-                        </button>
-                    </div>
+                @if (auth()->user()->isSimpleAdmin())
+                    @if(!empty($employe->Pin))                
+                        <hr>
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-info"
+                                    onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#resetPinModal"
+                                    title="Réinitialiser le PIN">
+                                <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser le Code Pin
+                            </button>
+                        </div>
+                    @endif
                 @endif
 
                 <!-- Modal Reset PIN -->
@@ -262,8 +297,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
-                                <p>Voulez-vous vraiment réinitialiser le code PIN de cet employé ?</p>
-                                <p class="fw-bold" id="details_employee_pin"></p>
+                                <p>Voulez-vous vraiment réinitialiser le code PIN de <strong id="details_employee_pin"></strong> ?</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -283,19 +317,22 @@
 
     @push('scripts')
     <script>
+        // Validation du PIN pour Super Admin
+        @if(Auth::user()->IsSuperAdmin)
         const pinInput = document.getElementById('Pin');
         if (pinInput) {
             pinInput.addEventListener('input', function(e) {
                 this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
             });
         }
+        @endif
 
         function setResetPinAction(url, nom) {
             document.getElementById('resetPinForm').action = url;
             document.getElementById('details_employee_pin').textContent = nom;
         }
 
-        // AJAX : charger Services & Managers selon Siège (uniquement si SuperAdmin peut changer le siège)
+        // AJAX : charger Services & Managers selon Siège (uniquement si SuperAdmin)
         @if(Auth::user()->IsSuperAdmin)
         document.addEventListener('DOMContentLoaded', function() {
             const siteSelect = document.getElementById('SiegeID');
@@ -304,8 +341,7 @@
 
             if (!siteSelect || siteSelect.disabled) return;
 
-            siteSelect.addEventListener('change', function() {
-                const siteId = this.value;
+            function loadSiteData(siteId) {
                 if (!siteId) {
                     if (deptSelect) deptSelect.innerHTML = '<option value="">-- Non classé --</option>';
                     if (mgrSelect)  mgrSelect.innerHTML  = '<option value="">-- Responsable par défaut --</option>';
@@ -316,23 +352,39 @@
                     fetch(`/api/departments-by-site/${siteId}`)
                         .then(r => r.json())
                         .then(data => {
+                            const currentVal = "{{ old('department_id', $employe->department_id) }}";
                             deptSelect.innerHTML = '<option value="">-- Non classé --</option>';
                             data.forEach(d => {
-                                deptSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+                                const selected = d.id == currentVal ? 'selected' : '';
+                                deptSelect.innerHTML += `<option value="${d.id}" ${selected}>${d.name}</option>`;
                             });
-                        });
+                        })
+                        .catch(err => console.error('Erreur chargement services:', err));
                 }
 
                 if (mgrSelect) {
                     fetch(`/api/managers-by-site/${siteId}`)
                         .then(r => r.json())
                         .then(data => {
+                            const currentVal = "{{ old('manager_id', $employe->manager_id) }}";
                             mgrSelect.innerHTML = '<option value="">-- Responsable par défaut --</option>';
                             data.forEach(e => {
-                                mgrSelect.innerHTML += `<option value="${e.id}">${e.name}</option>`;
+                                const selected = e.id == currentVal ? 'selected' : '';
+                                mgrSelect.innerHTML += `<option value="${e.id}" ${selected}>${e.name}</option>`;
                             });
-                        });
+                        })
+                        .catch(err => console.error('Erreur chargement managers:', err));
                 }
+            }
+
+            // Charger les données initiales
+            const initialSiteId = siteSelect.value;
+            if (initialSiteId) {
+                loadSiteData(initialSiteId);
+            }
+
+            siteSelect.addEventListener('change', function() {
+                loadSiteData(this.value);
             });
         });
         @endif

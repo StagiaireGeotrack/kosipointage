@@ -1,318 +1,378 @@
-{{-- Modification --}}
+{{-- resources/views/employes/show.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="fw-semibold fs-4 text-dark mb-0">
-                Modifier l'employé : {{ $employe->num_mat ? "N° Matricule " . $employe->num_mat . " - " : "" }} {{ $employe->Nom }} 
+                Détails de l'employé : {{ $employe->Nom }}
             </h2>
-            <a href="{{ route('employes.index') }}" class="btn btn-secondary btn-sm">
-                Retour à la liste
-            </a>
+            <div>
+                <a href="{{ route('employes.edit', $employe->ID) }}" class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil"></i> Modifier
+                </a>
+                <a href="{{ route('employes.index') }}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
         </div>
     </x-slot>
 
     <div class="p-2">
         <div class="card">
             <div class="card-body">
-                <form method="POST" action="{{ route('employes.update', $employe->ID) }}" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                <div class="row">
+                    
+                    <!-- ========================================================= -->
+                    <!-- IDENTITÉ -->
+                    <!-- ========================================================= -->
+                    <div class="col-12">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-person-badge"></i> Identité
+                        </h5>
+                    </div>
 
-                    <div class="row">
+                    <!-- N° Mat -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">N° Matricule</label>
+                        <p class="fs-5">{{ $employe->num_mat ?? 'Non défini' }}</p>
+                    </div>
 
-                        <!-- num_mat - Super Admin ET Simple Admin -->
-                        <div class="form-group mb-3">
-                            <label for="num_mat">Numéro matricule</label>
-                            <input type="text" 
-                                    class="form-control @error('num_mat') is-invalid @enderror" 
-                                    id="num_mat" 
-                                    name="num_mat" 
-                                    value="{{ old('num_mat', $employe->num_mat) }}" 
-                                    maxlength="50">
-                            @error('num_mat')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                            <small class="form-text text-muted">Optionnel — unique par siège</small>
+                    <!-- Nom -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Nom</label>
+                        <p class="fs-5">{{ $employe->Nom }}</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Email</label>
+                        <p class="fs-5">{{ $employe->email ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Téléphone -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Téléphone</label>
+                        <p class="fs-5">{{ $employe->telephone ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- ========================================================= -->
+                    <!-- ORGANISATION -->
+                    <!-- ========================================================= -->
+                    <div class="col-12 mt-3">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-diagram-3"></i> Organisation
+                        </h5>
+                    </div>
+
+                    <!-- Siège -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Siège</label>
+                        <p class="fs-5">{{ $employe->siege->Nom ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Service -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Service</label>
+                        <p class="fs-5">{{ $employe->department->name ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Poste -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Poste</label>
+                        <p class="fs-5">{{ $employe->jobTitle->name ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Niveau Hiérarchique -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Niveau Hiérarchique</label>
+                        <p class="fs-5">{{ $employe->hierarchyLevel->name ?? 'Non défini' }}</p>
+                    </div>
+
+                    <!-- Manager Direct -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Manager Direct</label>
+                        <p class="fs-5">{{ $employe->manager->Nom ?? 'Aucun manager' }}</p>
+                    </div>
+
+                    <!-- Statut employé -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Statut</label>
+                        <p class="fs-5">
+                            @php
+                                $statusLabels = [
+                                    'actif' => 'Actif',
+                                    'suspendu' => 'Suspendu',
+                                    'sorti' => 'Sorti',
+                                ];
+                            @endphp
+                            <span class="badge {{ $employe->employment_status == 'actif' ? 'bg-success' : ($employe->employment_status == 'suspendu' ? 'bg-warning text-dark' : 'bg-danger') }}">
+                                {{ $statusLabels[$employe->employment_status] ?? $employe->employment_status ?? 'Actif' }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- Date d'embauche -->
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Date d'embauche</label>
+                        <p class="fs-5">{{ $employe->hire_date ? \Carbon\Carbon::parse($employe->hire_date)->format('d/m/Y') : 'Non définie' }}</p>
+                    </div>
+
+                    <!-- ========================================================= -->
+                    <!-- MÉTHODES D'AUTHENTIFICATION -->
+                    <!-- ========================================================= -->
+                    <div class="col-12 mt-3">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-shield-lock"></i> Méthodes d'authentification
+                        </h5>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="d-flex flex-wrap gap-2">
+                            @if ($employe->BadgeID)
+                                <span class="badge bg-info p-2">
+                                    <i class="bi bi-credit-card"></i> Badge
+                                </span>
+                            @endif
+                            @if ($employe->HasFaceSetup)
+                                <span class="badge bg-primary p-2">
+                                    <i class="bi bi-camera"></i> Face image
+                                </span>
+                            @endif
+                            @if ($employe->Pin)
+                                <span class="badge bg-secondary p-2">
+                                    <i class="bi bi-key"></i> Code Pin
+                                </span>
+                            @endif
+                            @if ($employe->email)
+                                <span class="badge bg-dark p-2">
+                                    <i class="bi bi-globe"></i> Accès Web
+                                </span>
+                            @endif
+                            @if (!$employe->BadgeID && !$employe->HasFaceSetup && !$employe->Pin && !$employe->email)
+                                <span class="text-muted">Aucune méthode configurée</span>
+                            @endif
                         </div>
+                    </div>
 
-                        <!-- Nom - TOUS LES UTILISATEURS PEUVENT MODIFIER -->
-                        <div class="form-group mb-3">
-                            <label for="Nom">Nom <span class="text-danger">*</span></label>
-                            <input type="text" 
-                                    class="form-control @error('Nom') is-invalid @enderror" 
-                                    id="Nom" 
-                                    name="Nom" 
-                                    value="{{ old('Nom', $employe->Nom) }}" 
-                                    required>
-                            @error('Nom')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    <!-- Badge ID (détaillé) -->
+                    @if ($employe->BadgeID)
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold text-muted">Badge ID</label>
+                            <p class="fs-5"><code>{{ $employe->BadgeID }}</code></p>
                         </div>
+                    @endif
 
-                        <!-- Département -->
-                        <div class="form-group mb-3">
-                            <label for="department_name">Département</label>
-                            <input type="text" 
-                                    class="form-control @error('department_name') is-invalid @enderror" 
-                                    id="department_name" 
-                                    name="department_name" 
-                                    value="{{ old('department_name', optional($employe->meta)->department_name) }}">
-                            @error('department_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    <!-- Pin (détaillé) -->
+                    @if ($employe->Pin)
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold text-muted">Code PIN</label>
+                            <p class="fs-5">••••••</p>
                         </div>
+                    @endif
 
-                        <!-- Poste -->
-                        <div class="form-group mb-3">
-                            <label for="job_title">Poste</label>
-                            <input type="text" 
-                                    class="form-control @error('job_title') is-invalid @enderror" 
-                                    id="job_title" 
-                                    name="job_title" 
-                                    value="{{ old('job_title', optional($employe->meta)->job_title) }}">
-                            @error('job_title')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <!-- ========================================================= -->
+                    <!-- STATUT -->
+                    <!-- ========================================================= -->
+                    <div class="col-12 mt-3">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-info-circle"></i> Statut
+                        </h5>
+                    </div>
 
-                        <!-- Date d'embauche -->
-                        <div class="form-group mb-3">
-                            <label for="hire_date">Date d'embauche</label>
-                            <input type="date" 
-                                    class="form-control @error('hire_date') is-invalid @enderror" 
-                                    id="hire_date" 
-                                    name="hire_date" 
-                                    value="{{ old('hire_date', optional($employe->meta)->hire_date?->format('Y-m-d')) }}">
-                            @error('hire_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- SiegeID - SEULEMENT SUPER ADMIN -->
-                        <div class="form-group mb-3">
-                            <label for="SiegeID">Siège <span class="text-danger">*</span></label>
-                            @if(Auth::user()->IsSuperAdmin)
-                                {{-- Super Admin : select MODIFIABLE --}}
-                                <select class="form-control @error('SiegeID') is-invalid @enderror" 
-                                        id="SiegeID" 
-                                        name="SiegeID" 
-                                        required>
-                                    <option value="">Sélectionnez un siège</option>
-                                    @foreach($sieges as $siege)
-                                        <option value="{{ $siege->ID }}" 
-                                                {{ old('SiegeID', $employe->SiegeID) == $siege->ID ? 'selected' : '' }}>
-                                            {{ $siege->Nom }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Statut de l'employé</label>
+                        <p class="fs-5">
+                            @if($employe->Actived)
+                                <span class="badge bg-success fs-6">
+                                    <i class="bi bi-check-circle"></i> Actif
+                                </span>
                             @else
-                                {{-- Non Super Admin : juste disabled (valeur non envoyée) --}}
-                                <select class="form-control" 
-                                        id="SiegeID" 
-                                        disabled>
-                                    <option value="">Sélectionnez un siège</option>
-                                    @foreach($sieges as $siege)
-                                        <option value="{{ $siege->ID }}" 
-                                                {{ $employe->SiegeID == $siege->ID ? 'selected' : '' }}>
-                                            {{ $siege->Nom }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <small class="form-text text-muted">Modification réservée aux super administrateurs</small>
+                                <span class="badge bg-danger fs-6">
+                                    <i class="bi bi-x-circle"></i> Inactif
+                                </span>
                             @endif
-                            @error('SiegeID')
-                                <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
-                            @enderror
+                            @if($employe->deleted)
+                                <span class="badge bg-danger fs-6 ms-2">
+                                    <i class="bi bi-trash"></i> Supprimé
+                                </span>
+                            @endif
+                        </p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold text-muted">Méthode de pointage</label>
+                        <p class="fs-5">
+                            @php
+                                $methodes = [];
+                                if ($employe->BadgeID) $methodes[] = 'Badge';
+                                if ($employe->HasFaceSetup) $methodes[] = 'Reconnaissance faciale';
+                                if ($employe->Pin) $methodes[] = 'Code PIN';
+                                echo !empty($methodes) ? implode(' • ', $methodes) : 'Aucune méthode configurée';
+                            @endphp
+                        </p>
+                    </div>
+
+                    <!-- ========================================================= -->
+                    <!-- DATES -->
+                    <!-- ========================================================= -->
+                    <div class="col-12 mt-3">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-calendar-event"></i> Dates
+                        </h5>
+                    </div>
+
+                    @if($employe->CreatedAt)
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold text-muted">Date de création</label>
+                            <p class="text-muted"><x-local-date-time :datetime="$employe->CreatedAt"/></p>
                         </div>
-                        
-                        @if( Auth::user()->IsSuperAdmin )
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- BadgeID - SEULEMENT SUPER ADMIN -->
-                                <div class="form-group mb-3">
-                                    <label for="BadgeID">Badge ID</label>
-                                    @if(Auth::user()->IsSuperAdmin)
-                                        {{-- Super Admin : input MODIFIABLE --}}
-                                        <input type="password" 
-                                                class="form-control @error('BadgeID') is-invalid @enderror" 
-                                                id="BadgeID" 
-                                                name="BadgeID" 
-                                                maxlength="25">
+                    @endif
+
+                    <!-- Dernière mise à jour (si disponible) -->
+                    @if(isset($employe->updated_at))
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold text-muted">Dernière mise à jour</label>
+                            <p class="text-muted"><x-local-date-time :datetime="$employe->updated_at"/></p>
+                        </div>
+                    @endif
+
+                    <!-- ========================================================= -->
+                    <!-- ACTIONS -->
+                    <!-- ========================================================= -->
+                    <div class="col-12 mt-3">
+                        <div class="border-top pt-3">
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('employes.edit', $employe->ID) }}" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i> Modifier
+                                </a>
+                                @if(auth()->user()->isTrueSuperAdmin())
+                                    @if($employe->deleted)
+                                        <button type="button" class="btn btn-success" 
+                                                onclick="if(confirm('Voulez-vous vraiment restaurer cet employé ?')) { 
+                                                    document.getElementById('reset-form').submit(); 
+                                                }">
+                                            <i class="bi bi-arrow-counterclockwise"></i> Restaurer
+                                        </button>
+                                        <form id="reset-form" action="{{ route('employes.reset', $employe->ID) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
                                     @else
-                                        {{-- Non Super Admin : disabled --}}
-                                        <input type="text" 
-                                                class="form-control" 
-                                                id="BadgeID" 
-                                                maxlength="25"
-                                                disabled>
+                                        <button type="button" class="btn btn-danger" 
+                                                onclick="if(confirm('Voulez-vous vraiment supprimer cet employé ?')) { 
+                                                    document.getElementById('delete-form').submit(); 
+                                                }">
+                                            <i class="bi bi-trash"></i> Supprimer
+                                        </button>
+                                        <form id="delete-form" action="{{ route('employes.destroy', $employe->ID) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
                                     @endif
-                                    <small class="form-text text-muted">
-                                        Identifiant unique de l'employé
-                                        @if(!Auth::user()->IsSuperAdmin)
-                                            <span class="text-warning">(modification réservée aux super administrateurs)</span>
-                                        @endif
-                                    </small>
-                                    @error('BadgeID')
-                                        <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? 'd-block' : '' }}">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        @if( Auth::user()->isSimpleAdmin() )
-                            @if(empty($employe->Pin))
-                            <div class="row">
-                                <div class="col-md-12">                                
-                                    <!-- Pin - SEULEMENT SUPER ADMIN -->
-                                    <div class="form-group mb-3">
-                                        <label for="Pin">Code PIN (6 chiffres)</label>
-                                        <input type="password" 
-                                            class="form-control @error('Pin') is-invalid @enderror" 
-                                            id="Pin" 
-                                            name="Pin" 
-                                            value="{{ old('Pin', $employe->Pin) }}" 
-                                            maxlength="6"
-                                            inputmode="numeric"
-                                            pattern="[0-9]{6}"
-                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                        <x-input-error :messages="$errors->get('Pin')" class="mt-2" />
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-                        @endif
-
-                        <!-- Actived - SEULEMENT SUPER ADMIN -->
-                        <div class="form-group mb-3">
-                            <div class="form-check">
-                                @if(Auth::user()->IsSuperAdmin)
-                                    {{-- Super Admin peut modifier --}}
-                                    <input class="form-check-input @error('Actived') is-invalid @enderror" 
-                                            type="checkbox" 
-                                            value="1" 
-                                            id="Actived" 
-                                            name="Actived" 
-                                            {{ old('Actived', $employe->Actived) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="Actived">
-                                        Activer
-                                    </label>
-                                @else
-                                    {{-- Non Super Admin : disabled + hidden --}}
-                                    <input class="form-check-input" 
-                                            type="checkbox" 
-                                            id="Actived_display" 
-                                            {{ $employe->Actived ? 'checked' : '' }}
-                                            disabled>
-                                    <input type="hidden" name="Actived" value="{{ $employe->Actived ? '1' : '0' }}">
-                                    <label class="form-check-label" for="Actived_display">
-                                        Activer
-                                        <small class="text-muted">(réservé aux super administrateurs)</small>
-                                    </label>
                                 @endif
-                                @error('Actived')
-                                    <div class="invalid-feedback {{ Auth::user()->IsSuperAdmin ? '' : 'd-block' }}">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>                               
-                            
-                    </div>
 
-                    {{-- Bouton submit pour TOUS LES UTILISATEURS (au moins pour modifier le Nom) --}}
-                    @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
-                    <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Enregistrer les modifications
-                        </button>
-                    </div>
-                    @endif
-                </form>
+                                @if(auth()->user()->isSimpleAdmin() && !empty($employe->Pin))
+                                    <button type="button" class="btn btn-info" 
+                                            onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#resetPinModal">
+                                        <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser PIN
+                                    </button>
+                                @endif
 
-                @if (auth()->user()->isSimpleAdmin())
-                    @if(!empty($employe->Pin))                
-                        <hr>
-                        <div class="text-end mt-4">
-                            <button type="button" class="btn btn-info"
-                                                                onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#resetPinModal"
-                                                                title="Réinitialiser le PIN">
-                                <i class="bi bi-save"></i> Réinitialiser le Code Pin
-                            </button>
-                        </div>
-                    @endif
-                @endif
-
-                <!-- Modal de confirmation réinitialisation Pin Employé -->
-                <div class="modal fade" id="resetPinModal" tabindex="-1" aria-labelledby="resetPinModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="resetPinModalLabel">{{ __('Réinitialisation du code PIN') }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>{{ __('Voulez-vous vraiment réinitialiser le code PIN de cet employé ?') }}</p>
-                                <p class="fw-bold" id="details_employee_pin"></p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
-                                <form id="resetPinForm" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-warning">{{ __('Réinitialiser') }}</button>
-                                </form>
+                                @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+                                    <button type="button" class="btn btn-primary" 
+                                            onclick="setAssignWebAccessAction('{{ route('employes.assign-web-access', $employe->ID) }}', '{{ addslashes($employe->Nom) }}', '{{ $employe->email ?? '' }}', {{ $employe->email ? 'true' : 'false' }})"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#assignWebAccessModal">
+                                        <i class="bi bi-globe"></i> {{ $employe->email ? 'Modifier accès Web' : 'Créer accès Web' }}
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
+
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal Reset PIN -->
+    <div class="modal fade" id="resetPinModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Réinitialisation du code PIN</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous vraiment réinitialiser le code PIN de <strong id="details_employee_pin"></strong> ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form id="resetPinForm" method="POST" class="d-inline">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-warning">Réinitialiser</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Assigner Accès Web -->
+    <div class="modal fade" id="assignWebAccessModal" tabindex="-1" aria-labelledby="assignWebAccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignWebAccessModalLabel">{{ __('Gérer l\'accès Web') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="assignWebAccessForm" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <p>{{ __('Configurez l\'accès au portail pour :') }} <strong id="assignWebAccess_employee_name"></strong></p>
+                        
+                        <div class="form-group mb-3">
+                            <label for="assign_email" class="form-label">{{ __('Adresse e-mail') }} <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="assign_email" name="email" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="assign_password" class="form-label">{{ __('Mot de passe') }}</label>
+                            <input type="password" class="form-control" id="assign_password" name="password" minlength="6">
+                            <small class="text-muted" id="password_help_text">{{ __('Laissez vide si vous ne souhaitez pas le modifier. (Minimum 6 caractères)') }}</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Sauvegarder') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     @push('scripts')
     <script>
-        // Aperçu de la nouvelle photo
-        const faceInput = document.getElementById('FaceEncodingFile');
-        if (faceInput) {
-            faceInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                const preview = document.getElementById('facePreview');
-                
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.innerHTML = `
-                            <label class="d-block text-muted mb-1">Nouvelle photo :</label>
-                            <img src="${e.target.result}" 
-                                 alt="Aperçu de la nouvelle photo" 
-                                 style="max-width: 200px; max-height: 200px;" 
-                                 class="img-thumbnail">
-                        `;
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.innerHTML = '';
-                }
-            });
-        }
-
-        // Validation du PIN pour Super Admin
-        @if(Auth::user()->IsSuperAdmin)
-        const pinInput = document.getElementById('Pin');
-        if (pinInput) {
-            pinInput.addEventListener('input', function(e) {
-                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 6);
-            });
-        }
-        @endif
-
         function setResetPinAction(url, nom) {
             document.getElementById('resetPinForm').action = url;
             document.getElementById('details_employee_pin').textContent = nom;
         }
 
+        function setAssignWebAccessAction(url, nom, email, isEdit) {
+            document.getElementById('assignWebAccessForm').action = url;
+            document.getElementById('assignWebAccess_employee_name').textContent = nom;
+            document.getElementById('assign_email').value = email;
+            document.getElementById('assign_password').value = '';
+            
+            if (isEdit) {
+                document.getElementById('assignWebAccessModalLabel').textContent = "Modifier l'accès Web";
+                document.getElementById('password_help_text').textContent = "Laissez vide si vous ne souhaitez pas modifier le mot de passe actuel. (Minimum 6 caractères)";
+            } else {
+                document.getElementById('assignWebAccessModalLabel').textContent = "Créer un accès Web";
+                document.getElementById('password_help_text').textContent = "Veuillez définir un mot de passe pour cette première assignation. (Minimum 6 caractères)";
+            }
+        }
     </script>
     @endpush
 </x-app-layout>

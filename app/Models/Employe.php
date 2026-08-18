@@ -1,4 +1,5 @@
 <?php
+// app/Models/Employe.php
 
 namespace App\Models;
 
@@ -7,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Loggable;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employe extends Authenticatable
 {
@@ -33,7 +33,8 @@ class Employe extends Authenticatable
         'email',
         'telephone',
         'password',
-        // ============ ORGANISATION (NOUVEAU) ============
+        'remember_token',
+        // ============ ORGANISATION ============
         'company_id',
         'site_id',
         'department_id',
@@ -42,6 +43,7 @@ class Employe extends Authenticatable
         'manager_id',
         'employment_status',
         'hire_date',
+        'user_id',
     ];
 
     protected $hidden = [
@@ -55,8 +57,10 @@ class Employe extends Authenticatable
         'CreatedAt' => 'datetime',
         'Actived' => 'boolean',
         'hire_date' => 'date',
+        'deleted' => 'boolean',
     ];
     
+    // ============ RELATIONS ============
     public function siege(): BelongsTo
     {
         return $this->belongsTo(EntrepriseSiege::class, 'SiegeID', 'ID');
@@ -67,12 +71,6 @@ class Employe extends Authenticatable
         return $this->hasMany(Pointage::class, 'employee_id', 'ID');
     }
 
-    public function meta(): HasOne
-    {
-        return $this->hasOne(\App\Models\EmployeeMeta::class, 'employee_id', 'ID');
-    }
-
-    // ============ RELATIONS ORGANISATION (NOUVEAU) ============
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
@@ -103,6 +101,59 @@ class Employe extends Authenticatable
         return $this->belongsTo(EntrepriseSiege::class, 'SiegeID');
     }
 
+    // ============ ACCESSORS ============
+    public function getDepartmentNameAttribute()
+    {
+        return $this->department?->name ?? 'Non défini';
+    }
+
+    public function getJobTitleNameAttribute()
+    {
+        return $this->jobTitle?->name ?? 'Non défini';
+    }
+
+    public function getManagerNameAttribute()
+    {
+        return $this->manager?->Nom ?? 'Aucun manager';
+    }
+
+    public function getHierarchyLevelNameAttribute()
+    {
+        return $this->hierarchyLevel?->name ?? 'Non défini';
+    }
+
+    public function getEmploymentStatusLabelAttribute()
+    {
+        return match($this->employment_status) {
+            'actif' => 'Actif',
+            'suspendu' => 'Suspendu',
+            'sorti' => 'Sorti',
+            default => $this->employment_status ?? 'Actif',
+        };
+    }
+
+    public function getFullInfoAttribute()
+    {
+        return $this->Nom . ' (' . ($this->num_mat ?? 'N/A') . ')';
+    }
+
+    public function getHireDateFormattedAttribute()
+    {
+        return $this->hire_date ? \Carbon\Carbon::parse($this->hire_date)->format('d/m/Y') : '-';
+    }
+
+    // ============ SCOPES ============
+    public function scopeActive($query)
+    {
+        return $query->where('Actived', 1)->where('deleted', 0);
+    }
+
+    public function scopeBySite($query, $siteId)
+    {
+        return $query->where('SiegeID', $siteId);
+    }
+
+    // ============ BOOT ============
     protected static function boot()
     {
         parent::boot();

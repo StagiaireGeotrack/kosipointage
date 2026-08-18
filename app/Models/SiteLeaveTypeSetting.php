@@ -1,4 +1,5 @@
 <?php
+// app/Models/SiteLeaveTypeSetting.php
 
 namespace App\Models;
 
@@ -25,11 +26,11 @@ class SiteLeaveTypeSetting extends Model
     ];
 
     protected $casts = [
-        'is_enabled'                     => 'boolean',
-        'local_allow_negative_balance'   => 'boolean',
-        'local_deducts_balance'          => 'boolean',
-        'local_requires_attachment_after'=> 'integer',
-        'local_max_negative_limit'       => 'integer',
+        'is_enabled' => 'boolean',
+        'local_allow_negative_balance' => 'boolean',
+        'local_deducts_balance' => 'boolean',
+        'local_requires_attachment_after' => 'integer',
+        'local_max_negative_limit' => 'integer',
     ];
 
     public function site()
@@ -40,5 +41,41 @@ class SiteLeaveTypeSetting extends Model
     public function leaveType()
     {
         return $this->belongsTo(LeaveType::class, 'leave_type_id');
+    }
+
+    // Accessors pour récupérer la valeur ou hériter du global
+    public function getName($globalName)
+    {
+        return $this->local_name ?? $globalName;
+    }
+
+    public function getColor($globalColor)
+    {
+        return $this->local_color ?? $globalColor;
+    }
+
+    public function getRequiresAttachment($globalValue)
+    {
+        return $this->local_requires_attachment ?? $globalValue;
+    }
+
+    public function getRequiresAttachmentAfter($globalValue)
+    {
+        return $this->local_requires_attachment_after ?? $globalValue;
+    }
+
+    public function getAllowNegativeBalance($globalValue)
+    {
+        return $this->local_allow_negative_balance ?? $globalValue;
+    }
+
+    public function getMaxNegativeLimit($globalValue)
+    {
+        return $this->local_max_negative_limit ?? $globalValue;
+    }
+
+    public function getDeductsBalance($globalValue)
+    {
+        return $this->local_deducts_balance ?? $globalValue;
     }
 }

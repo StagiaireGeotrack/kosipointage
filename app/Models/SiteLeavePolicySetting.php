@@ -1,4 +1,5 @@
 <?php
+// app/Models/SiteLeavePolicySetting.php
 
 namespace App\Models;
 
@@ -14,18 +15,21 @@ class SiteLeavePolicySetting extends Model
     protected $fillable = [
         'site_id',
         'leave_policy_id',
-        'is_enabled',
-        'local_name',
-        'local_calculation_method',
-        'local_weekend_days',
-        'local_holiday_handling',
-        'local_rounding_rule',
-        'local_exclude_holidays',
+        'name',
+        'calculation_method',
+        'reference_schedule_id',
+        'holiday_handling',
+        'rounding_rule',
+        'weekend_days',
+        'exclude_holidays',
+        'is_default',
+        'is_active',
     ];
 
     protected $casts = [
-        'is_enabled' => 'boolean',
-        'local_exclude_holidays' => 'boolean',
+        'exclude_holidays' => 'boolean',
+        'is_default' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function site()
@@ -36,5 +40,10 @@ class SiteLeavePolicySetting extends Model
     public function leavePolicy()
     {
         return $this->belongsTo(LeavePolicy::class, 'leave_policy_id');
+    }
+
+    public function referenceSchedule()
+    {
+        return $this->belongsTo(ReferenceSchedule::class, 'reference_schedule_id');
     }
 }

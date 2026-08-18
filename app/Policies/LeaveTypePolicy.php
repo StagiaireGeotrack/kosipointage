@@ -50,7 +50,6 @@ class LeaveTypePolicy
         if ($this->isSuperAdmin($user)) return true;
 
         // Un admin site ne peut supprimer que ses types propres.
-        // Jamais un global (même customizable).
         return ! $leaveType->isGlobal() && $leaveType->site_id == $user->SiegeID;
     }
 }

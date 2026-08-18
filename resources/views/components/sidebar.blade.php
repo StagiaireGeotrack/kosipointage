@@ -99,6 +99,7 @@
             <i class="bi bi-people"></i>
             <span>{{ __('Employé') }}</span>
         </a>
+
         {{-- ==================== ORGANISATION RH ==================== --}}
         @if(!auth()->user()->isSeller())
         @php
@@ -113,23 +114,32 @@
                 <i class="bi bi-chevron-down small chevron"></i>
             </summary>
 
+            {{-- Vérifier si la route 'departments.index' existe --}}
+            @if(Route::has('departments.index'))
             <a href="{{ route('departments.index') }}"
                class="sidebar-link sidebar-sub {{ request()->routeIs('departments.*') ? 'active' : '' }}">
                 <i class="bi bi-building-check"></i>
                 <span>{{ __('Services') }}</span>
             </a>
+            @endif
 
+            {{-- Vérifier si la route 'job-titles.index' existe --}}
+            @if(Route::has('job-titles.index'))
             <a href="{{ route('job-titles.index') }}"
                class="sidebar-link sidebar-sub {{ request()->routeIs('job-titles.*') ? 'active' : '' }}">
                 <i class="bi bi-person-badge"></i>
                 <span>{{ __('Postes') }}</span>
             </a>
+            @endif
 
+            {{-- Vérifier si la route 'hierarchy-levels.index' existe --}}
+            @if(Route::has('hierarchy-levels.index'))
             <a href="{{ route('hierarchy-levels.index') }}"
                class="sidebar-link sidebar-sub {{ request()->routeIs('hierarchy-levels.*') ? 'active' : '' }}">
                 <i class="bi bi-layers"></i>
                 <span>{{ __('Niveaux') }}</span>
             </a>
+            @endif
         </details>
         @endif
 
@@ -148,70 +158,72 @@
             <span>{{ __('Rapport') }}</span>
         </a>
 
-       @php
-    $isCongeOpen = request()->routeIs('conges.*') 
-                || request()->routeIs('conge-validations.*') 
-                || request()->routeIs('admin.leave-types.*')
-                || request()->routeIs('admin.leave-policies.*');
+        @php
+            $isCongeOpen = request()->routeIs('conges.*') 
+                        || request()->routeIs('conge-validations.*') 
+                        || request()->routeIs('admin.leave-types.*')
+                        || request()->routeIs('admin.leave-policies.*')
+                        || request()->routeIs('admin.leave-periods.*')
+                        || request()->routeIs('admin.company-holidays.*')
+                        || request()->routeIs('admin.leave-workflows.*');
 
-    $pendingCount = 0;
-    try {
-        if (auth()->check() && auth()->user()->isTrueSuperAdmin()) {
-            $pendingCount = (int) \App\Models\CongeValidation::where('status', 'en_cours')->count();
-        } elseif (auth()->check() && auth()->user()->isSimpleAdmin()) {
-            $pendingCount = (int) \App\Models\CongeValidation::where('SiegeID', auth()->user()->SiegeID)
-                ->where('status', 'en_cours')
-                ->count();
-        }
-    } catch (\Throwable $e) {
-        $pendingCount = 0;
-    }
-@endphp
+            $pendingCount = 0;
+            try {
+                if (auth()->check() && auth()->user()->isTrueSuperAdmin()) {
+                    $pendingCount = (int) \App\Models\CongeValidation::where('status', 'en_cours')->count();
+                } elseif (auth()->check() && auth()->user()->isSimpleAdmin()) {
+                    $pendingCount = (int) \App\Models\CongeValidation::where('SiegeID', auth()->user()->SiegeID)
+                        ->where('status', 'en_cours')
+                        ->count();
+                }
+            } catch (\Throwable $e) {
+                $pendingCount = 0;
+            }
+        @endphp
 
-{{-- Groupe Congés --}}
-<details class="sidebar-group" {{ $isCongeOpen ? 'open' : '' }}>
-    <summary class="sidebar-link sidebar-group-title {{ $isCongeOpen ? 'active' : '' }}">
-        <i class="bi bi-calendar-x"></i>
-        <span>{{ __('Congés') }}</span>
-        @if($pendingCount > 0)
-            <span class="badge bg-warning text-dark rounded-pill ms-auto me-2" style="font-size:0.65rem;">
-                {{ $pendingCount }}
-            </span>
-        @endif
-        <i class="bi bi-chevron-down small chevron"></i>
-    </summary>
+        {{-- Groupe Congés --}}
+        <details class="sidebar-group" {{ $isCongeOpen ? 'open' : '' }}>
+            <summary class="sidebar-link sidebar-group-title {{ $isCongeOpen ? 'active' : '' }}">
+                <i class="bi bi-calendar-x"></i>
+                <span>{{ __('Congés') }}</span>
+                @if($pendingCount > 0)
+                    <span class="badge bg-warning text-dark rounded-pill ms-auto me-2" style="font-size:0.65rem;">
+                        {{ $pendingCount }}
+                    </span>
+                @endif
+                <i class="bi bi-chevron-down small chevron"></i>
+            </summary>
 
-    {{-- Lien 1 : Liste --}}
-    <a href="{{ route('conges.index') }}"
-       class="sidebar-link sidebar-sub {{ request()->routeIs('conges.index') ? 'active' : '' }}">
-        <i class="bi bi-list-ul"></i>
-        <span>{{ __('Gestion des Congés ') }}</span>
-    </a>
+            {{-- Lien 1 : Liste --}}
+            <a href="{{ route('conges.index') }}"
+               class="sidebar-link sidebar-sub {{ request()->routeIs('conges.index') ? 'active' : '' }}">
+                <i class="bi bi-list-ul"></i>
+                <span>{{ __('Gestion des Congés') }}</span>
+            </a>
 
-    {{-- Lien 2 : Validation (admin) --}}
-    @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
-        <a href="{{ route('conge-validations.index') }}"
-           class="sidebar-link sidebar-sub {{ request()->routeIs('conge-validations.*') ? 'active' : '' }}">
-            <i class="bi bi-patch-check"></i>
-            <span>{{ __('Validation congé') }}</span>
-            @if($pendingCount > 0)
-                <span class="badge bg-warning text-dark rounded-pill ms-auto" style="font-size:0.65rem;">
-                    {{ $pendingCount }}
-                </span>
+            {{-- Lien 2 : Validation (admin) --}}
+            @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+                <a href="{{ route('conge-validations.index') }}"
+                   class="sidebar-link sidebar-sub {{ request()->routeIs('conge-validations.*') ? 'active' : '' }}">
+                    <i class="bi bi-patch-check"></i>
+                    <span>{{ __('Validation congé') }}</span>
+                    @if($pendingCount > 0)
+                        <span class="badge bg-warning text-dark rounded-pill ms-auto" style="font-size:0.65rem;">
+                            {{ $pendingCount }}
+                        </span>
+                    @endif
+                </a>
             @endif
-        </a>
-    @endif
 
-    {{-- Lien 3 : Paramètres (admin) → pointe vers Types de congés --}}
-    @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
-        <a href="{{ route('admin.leave-types.index') }}"
-           class="sidebar-link sidebar-sub {{ request()->routeIs('admin.leave-types.*') || request()->routeIs('admin.leave-policies.*') ? 'active' : '' }}">
-            <i class="bi bi-sliders"></i>
-            <span>{{ __('Paramètres congés') }}</span>
-        </a>
-    @endif
-</details>
-
+            {{-- Lien 3 : Paramètres congés (admin) --}}
+            @if(auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin())
+                <a href="{{ route('admin.leave-types.index') }}"
+                   class="sidebar-link sidebar-sub {{ request()->routeIs('admin.leave-types.*') || request()->routeIs('admin.leave-policies.*') || request()->routeIs('admin.leave-periods.*') || request()->routeIs('admin.company-holidays.*') || request()->routeIs('admin.leave-workflows.*') ? 'active' : '' }}">
+                    <i class="bi bi-sliders"></i>
+                    <span>{{ __('Paramètres congés') }}</span>
+                </a>
+            @endif
+        </details>
 
         <a href="{{ route('jours-non-travailles.index') }}"
            class="sidebar-link {{ request()->routeIs('jours-non-travailles.*') ? 'active' : '' }}">
@@ -248,7 +260,6 @@
 
     </nav>
 
-    {{-- Pied de sidebar : email + déconnexion --}}
     {{-- Pied de sidebar : déconnexion uniquement --}}
     <div class="sidebar-footer">
         <form method="POST" action="{{ route('logout') }}">

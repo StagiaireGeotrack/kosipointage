@@ -1,4 +1,5 @@
 <?php
+// app/Services/LeavePolicyResolver.php
 
 namespace App\Services;
 
@@ -14,24 +15,25 @@ class LeavePolicyResolver
             ->first();
 
         $r = new \stdClass();
+        $r->id = $policy->id;
+        $r->site_id = $policy->site_id;
+        $r->is_global = true;
+        $r->site_name = '—';
+        $r->is_customizable = $policy->is_customizable;
+        $r->is_overridden = !is_null($override);
+        $r->override_id = $override?->id;
+        $r->deleted_at = $policy->deleted_at;
 
-        // ─── Identifiants & flags ───
-        $r->id              = $policy->id;
-        $r->site_id         = $policy->site_id;
-        $r->is_global       = true;
-        $r->is_customizable = (bool) $policy->is_customizable;
-        $r->is_default      = (bool) $policy->is_default;
-        $r->is_overridden   = ! is_null($override);
-        $r->override_id     = $override?->id;
-        $r->override_enabled = $override?->is_enabled ?? true;
-
-        // ─── Valeurs effectives (override > global) ───
-        $r->name               = $override->local_name               ?? $policy->name;
-        $r->calculation_method = $override->local_calculation_method ?? $policy->calculation_method;
-        $r->weekend_days       = $override->local_weekend_days       ?? $policy->weekend_days;
-        $r->holiday_handling   = $override->local_holiday_handling   ?? $policy->holiday_handling;
-        $r->rounding_rule      = $override->local_rounding_rule      ?? $policy->rounding_rule;
-        $r->exclude_holidays   = $override->local_exclude_holidays   ?? $policy->exclude_holidays;
+        // Champs résolus (override ou global)
+        $r->name = $override->name ?? $policy->name;
+        $r->calculation_method = $override->calculation_method ?? $policy->calculation_method;
+        $r->reference_schedule_id = $override->reference_schedule_id ?? $policy->reference_schedule_id;
+        $r->holiday_handling = $override->holiday_handling ?? $policy->holiday_handling;
+        $r->rounding_rule = $override->rounding_rule ?? $policy->rounding_rule;
+        $r->weekend_days = $override->weekend_days ?? $policy->weekend_days;
+        $r->exclude_holidays = $override->exclude_holidays ?? $policy->exclude_holidays;
+        $r->is_default = $override->is_default ?? $policy->is_default;
+        $r->is_active = $override->is_active ?? $policy->is_active;
 
         return $r;
     }
@@ -43,23 +45,15 @@ class LeavePolicyResolver
                 return $this->resolve($policy, $siteId);
             }
 
-            // Policy locale : on expose la même interface pour l'index
             $local = new \stdClass();
-            $local->id              = $policy->id;
-            $local->site_id         = $policy->site_id;
-            $local->is_global       = false;
+            foreach ($policy->getAttributes() as $k => $v) {
+                $local->{$k} = $v;
+            }
+            $local->is_global = false;
+            $local->site_name = $policy->site->Nom ?? '—';
             $local->is_customizable = false;
-            $local->is_default      = (bool) $policy->is_default;
-            $local->is_overridden   = false;
-            $local->override_id     = null;
-            $local->override_enabled = true;
-
-            $local->name               = $policy->name;
-            $local->calculation_method = $policy->calculation_method;
-            $local->weekend_days       = $policy->weekend_days;
-            $local->holiday_handling   = $policy->holiday_handling;
-            $local->rounding_rule      = $policy->rounding_rule;
-            $local->exclude_holidays   = $policy->exclude_holidays;
+            $local->is_overridden = false;
+            $local->override_id = null;
 
             return $local;
         });

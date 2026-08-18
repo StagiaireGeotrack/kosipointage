@@ -71,191 +71,196 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
-    <tr>
-        <th class="text-uppercase small fw-semibold text-secondary">
-            {{ __('N° Matricule') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary">
-            {{ __('Nom') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
-            {{ __('Département') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
-            {{ __('Poste') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
-            {{ __('Date embauche') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
-            {{ __('Siège') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
-            {{ __('Méthode') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary d-none d-lg-table-cell">
-            {{ __('Date de création') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary">
-            {{ __('Statut') }}
-        </th>
-        <th class="text-uppercase small fw-semibold text-secondary">
-            {{ __('Actions') }}
-        </th>
-    </tr>
-</thead>
-                     <tbody>
-    @forelse ($employes as $employe)
-        <tr>
-            <td class="align-middle">
-                {{ $employe->num_mat ?? "-"}}
-            </td>
-            <td class="align-middle">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="height: 40px; width: 40px;">
-                        <span class="small fw-semibold text-white">{{ substr($employe->Nom, 0, 1) }}</span>
-                    </div>
-                    {{ $employe->Nom }}
-                </div>
-            </td>
-            <td class="align-middle d-none d-md-table-cell">
-                {{ optional($employe->meta)->department_name ?? '-' }}
-            </td>
-            <td class="align-middle d-none d-md-table-cell">
-                {{ optional($employe->meta)->job_title ?? '-' }}
-            </td>
-            <td class="align-middle d-none d-md-table-cell">
-                {{ optional($employe->meta)->hire_date?->format('d/m/Y') ?? '-' }}
-            </td>
-            <td class="align-middle d-none d-md-table-cell">
-                {{ $employe->siege->Nom }}
-            </td>
-            <td class="align-middle d-none d-md-table-cell">
-                <div class="d-flex gap-2">
-                    @if ($employe->BadgeID )
-                        <span class="badge bg-info">{{ __('Badge') }}</span>
-                    @endif
-                    @if ($employe->HasFaceSetup)
-                        <span class="badge bg-primary">{{ __('Face image') }}</span>
-                    @endif
-                    @if ($employe->Pin)
-                        <span class="badge bg-secondary">{{ __('Code Pin') }}</span>
-                    @endif
-                    @if ($employe->email)
-                        <span class="badge bg-dark" title="{{ $employe->email }}">{{ __('Accès Web') }}</span>
-                    @endif
-                </div>
-            </td>
-            <td class="align-middle d-none d-lg-table-cell">
-                <x-local-date-time :datetime="$employe->CreatedAt"/>
-            </td>
-            <td class="align-middle">
-                @if ($employe->Actived)
-                    <span class="badge bg-success">{{ __('Activé') }}</span>
-                @else
-                    <span class="badge bg-danger">{{ __('Désactivé') }}</span>
-                @endif
-                @if ($employe->deleted)
-                    <span class="badge bg-danger">{{ __('Supprimé') }}</span>
-                @endif
-            </td>
-            <td class="align-middle">
-                <div class="d-flex gap-2">
-                    {{-- tout le bloc d'actions reste identique --}}
-                    @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
-                        <!-- Bouton Assigner Accès Web -->
-                        <button type="button" class="btn btn-link {{ $employe->email ? 'text-success' : 'text-info' }} p-0 border-0"
-                                onclick="setAssignWebAccessAction('{{ route('employes.assign-web-access', $employe->ID) }}', '{{ addslashes($employe->Nom) }}', '{{ $employe->email ?? '' }}', {{ $employe->email ? 'true' : 'false' }})"
-                                data-bs-toggle="modal"
-                                data-bs-target="#assignWebAccessModal"
-                                title="{{ $employe->email ? __('Modifier l\'accès Web') : __('Créer un accès Web') }}">
-                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-2.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-                                <path fill-rule="evenodd" d="M11.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7m0 1a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>
-                            </svg>
-                        </button>
+                            <tr>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('N° Matricule') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Nom') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
+                                    {{ __('Service') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
+                                    {{ __('Poste') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
+                                    {{ __('Manager') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
+                                    {{ __('Date embauche') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
+                                    {{ __('Siège') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-md-table-cell">
+                                    {{ __('Méthode') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary d-none d-lg-table-cell">
+                                    {{ __('Date de création') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Statut') }}
+                                </th>
+                                <th class="text-uppercase small fw-semibold text-secondary">
+                                    {{ __('Actions') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($employes as $employe)
+                                <tr>
+                                    <td class="align-middle">
+                                        {{ $employe->num_mat ?? "-" }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="height: 40px; width: 40px;">
+                                                <span class="small fw-semibold text-white">{{ substr($employe->Nom, 0, 1) }}</span>
+                                            </div>
+                                            {{ $employe->Nom }}
+                                        </div>
+                                    </td>
+                                    <td class="align-middle d-none d-md-table-cell">
+                                        {{ $employe->department->name ?? '-' }}
+                                    </td>
+                                    <td class="align-middle d-none d-md-table-cell">
+                                        {{ $employe->jobTitle->name ?? '-' }}
+                                    </td>
+                                    <td class="align-middle d-none d-md-table-cell">
+                                        {{ $employe->manager->Nom ?? '-' }}
+                                    </td>
+                                    <td class="align-middle d-none d-md-table-cell">
+                                        {{ $employe->hire_date ? \Carbon\Carbon::parse($employe->hire_date)->format('d/m/Y') : '-' }}
+                                    </td>
+                                    <td class="align-middle d-none d-md-table-cell">
+                                        {{ $employe->siege->Nom ?? '-' }}
+                                    </td>
+                                    <td class="align-middle d-none d-md-table-cell">
+                                        <div class="d-flex gap-2">
+                                            @if ($employe->BadgeID)
+                                                <span class="badge bg-info">{{ __('Badge') }}</span>
+                                            @endif
+                                            @if ($employe->HasFaceSetup)
+                                                <span class="badge bg-primary">{{ __('Face image') }}</span>
+                                            @endif
+                                            @if ($employe->Pin)
+                                                <span class="badge bg-secondary">{{ __('Code Pin') }}</span>
+                                            @endif
+                                            @if ($employe->email)
+                                                <span class="badge bg-dark" title="{{ $employe->email }}">{{ __('Accès Web') }}</span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="align-middle d-none d-lg-table-cell">
+                                        <x-local-date-time :datetime="$employe->CreatedAt"/>
+                                    </td>
+                                    <td class="align-middle">
+                                        @if ($employe->Actived)
+                                            <span class="badge bg-success">{{ __('Activé') }}</span>
+                                        @else
+                                            <span class="badge bg-danger">{{ __('Désactivé') }}</span>
+                                        @endif
+                                        @if ($employe->deleted)
+                                            <span class="badge bg-danger">{{ __('Supprimé') }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex gap-2">
+                                            @if (auth()->user()->isTrueSuperAdmin() || auth()->user()->isSimpleAdmin() )
+                                                <!-- Bouton Assigner Accès Web -->
+                                                <button type="button" class="btn btn-link {{ $employe->email ? 'text-success' : 'text-info' }} p-0 border-0"
+                                                        onclick="setAssignWebAccessAction('{{ route('employes.assign-web-access', $employe->ID) }}', '{{ addslashes($employe->Nom) }}', '{{ $employe->email ?? '' }}', {{ $employe->email ? 'true' : 'false' }})"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#assignWebAccessModal"
+                                                        title="{{ $employe->email ? __('Modifier l\'accès Web') : __('Créer un accès Web') }}">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-2.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                                                        <path fill-rule="evenodd" d="M11.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7m0 1a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>
+                                                    </svg>
+                                                </button>
 
-                        @if (auth()->user()->isTrueSuperAdmin())
-                        <form action="{{ route('impersonate.employe', $employe->ID) }}" method="POST" class="d-inline" title="Se connecter en tant que">
-                            @csrf
-                            <button type="submit" class="btn btn-link text-info p-0 border-0 m-0">
-                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
-                                    <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
-                                </svg>
-                            </button>
-                        </form>
-                        @endif
+                                                @if (auth()->user()->isTrueSuperAdmin())
+                                                <form action="{{ route('impersonate.employe', $employe->ID) }}" method="POST" class="d-inline" title="Se connecter en tant que">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-link text-info p-0 border-0 m-0">
+                                                        <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                                                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                @endif
 
-                        <a href="{{ route('employes.show', $employe->ID) }}" class="text-primary" title="Voir ou modifier">
-                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                            </svg>
-                        </a>
+                                                <a href="{{ route('employes.show', $employe->ID) }}" class="text-primary" title="Voir ou modifier">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </a>
 
-                        @if (auth()->user()->isTrueSuperAdmin() )
-                            @if ($employe->deleted)                                
-                            <button type="button" class="btn btn-link text-danger p-0 border-0" 
-                                    onclick="setResetAction('{{ route('employes.reset', $employe->ID) }}', '{{ $employe->Nom }}')" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#resetModal" 
-                                    title="Réinitialiser">
-                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            @else                                   
-                            <button type="button" class="btn btn-link text-danger p-0 border-0" 
-                                    onclick="setDeleteAction('{{ route('employes.destroy', $employe->ID) }}', '{{ $employe->Nom }}')" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#deleteModal" 
-                                    title="Supprimer">
-                                <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            @endif
-                        @endif
+                                                @if (auth()->user()->isTrueSuperAdmin() )
+                                                    @if ($employe->deleted)                                
+                                                        <button type="button" class="btn btn-link text-danger p-0 border-0" 
+                                                                onclick="setResetAction('{{ route('employes.reset', $employe->ID) }}', '{{ $employe->Nom }}')" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#resetModal" 
+                                                                title="Réinitialiser">
+                                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </button>
+                                                    @else                                   
+                                                        <button type="button" class="btn btn-link text-danger p-0 border-0" 
+                                                                onclick="setDeleteAction('{{ route('employes.destroy', $employe->ID) }}', '{{ $employe->Nom }}')" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#deleteModal" 
+                                                                title="Supprimer">
+                                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </button>
+                                                    @endif
+                                                @endif
 
-                        @if( auth()->user()->isSimpleAdmin() )
-                            @if( !empty($employe->Pin) )
-                                <button type="button" class="btn btn-link text-warning p-0 border-0"
-                                    onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#resetPinModal"
-                                    title="Réinitialiser le Code PIN">
-                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M17.65 6.35A7.96 7.96 0 0012 4C7.58 4 4.01 7.58 4.01 12S7.58 20 12 20c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                                    </svg>
-                                </button>
-                            @endif
-                        @endif
-                    @endif
+                                                @if( auth()->user()->isSimpleAdmin() )
+                                                    @if( !empty($employe->Pin) )
+                                                        <button type="button" class="btn btn-link text-warning p-0 border-0"
+                                                            onclick="setResetPinAction('{{ route('employes.reset-pin', $employe->ID) }}', '{{ $employe->Nom }}')"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#resetPinModal"
+                                                            title="Réinitialiser le Code PIN">
+                                                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M17.65 6.35A7.96 7.96 0 0012 4C7.58 4 4.01 7.58 4.01 12S7.58 20 12 20c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                                                            </svg>
+                                                        </button>
+                                                    @endif
+                                                @endif
+                                            @endif
 
-                    @if (auth()->user()->isSeller() )
-                        <a href="{{ route('employe.show.seller', $employe->ID) }}" title="Voir les détails">
-                            <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                    @endif
-                </div>
-            </td>
-        </tr>
-    @empty
-        <tr>
-            <td colspan="10" class="text-center py-3">  {{-- ← 10 au lieu de 6 --}}
-                {{ __('Aucun employé pour le moment') }}
-            </td>
-        </tr>
-    @endforelse
-</tbody>
+                                            @if (auth()->user()->isSeller() )
+                                                <a href="{{ route('employe.show.seller', $employe->ID) }}" title="Voir les détails">
+                                                    <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="text-center py-3">
+                                        {{ __('Aucun employé pour le moment') }}
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
                     </table>
                 </div>
 
-                <!-- Modal de confirmation Delete Employé -->
+                <!-- Modals (inchangés) -->
                 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -279,7 +284,6 @@
                     </div>
                 </div>
 
-
                 <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -288,7 +292,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p>{{ __('Voulez-vous vraiment supprimer cet employé ?') }}</p>
+                                <p>{{ __('Voulez-vous vraiment réinitialiser cet employé ?') }}</p>
                                 <p class="fw-bold" id="employee_"></p>
                             </div>
                             <div class="modal-footer">
@@ -303,7 +307,6 @@
                     </div>
                 </div>
 
-                <!-- Modal de confirmation réinitialisation Pin Employé -->
                 <div class="modal fade" id="resetPinModal" tabindex="-1" aria-labelledby="resetPinModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -327,7 +330,6 @@
                     </div>
                 </div>
 
-                <!-- Modal Assigner Accès Web -->
                 <div class="modal fade" id="assignWebAccessModal" tabindex="-1" aria-labelledby="assignWebAccessModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -369,9 +371,7 @@
     </div>
 
     @push("scripts")
-
         <script>
-
             function setDeleteAction(url, name) {
                 document.getElementById('deleteForm').action = url;
                 document.getElementById('details_employee').textContent = name;
@@ -401,9 +401,6 @@
                     document.getElementById('password_help_text').textContent = "Veuillez définir un mot de passe pour cette première assignation. (Minimum 6 caractères)";
                 }
             }
-            
         </script>
-        
     @endpush
-
 </x-app-layout>

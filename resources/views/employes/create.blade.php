@@ -45,7 +45,7 @@
                             <x-input-error :messages="$errors->get('Nom')" class="mt-2" />
                         </div>
 
-                        <!-- ============ ORGANISATION (NOUVEAU) ============ -->
+                        <!-- ============ ORGANISATION ============ -->
                         <div class="card mb-3 border-primary">
                             <div class="card-header bg-light text-primary">
                                 <i class="bi bi-diagram-3"></i> Organisation

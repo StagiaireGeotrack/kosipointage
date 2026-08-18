@@ -5,10 +5,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LeaveType extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'leave_types';
 
@@ -28,27 +29,18 @@ class LeaveType extends Model
     ];
 
     protected $casts = [
-        'deducts_balance'        => 'boolean',
+        'deducts_balance' => 'boolean',
         'allow_negative_balance' => 'boolean',
-        'is_active'              => 'boolean',
-        'is_customizable'        => 'boolean',
+        'is_active' => 'boolean',
+        'is_customizable' => 'boolean',
     ];
-protected $appends = ['is_global'];
-    
-    /* Relations */
-   
 
+    protected $appends = ['is_global'];
 
-
+    // Relations
     public function site()
     {
         return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
-    }
-
-    /* Accessors */
-    public function getIsGlobalAttribute(): bool
-    {
-        return is_null($this->site_id);
     }
 
     public function siteSettings()
@@ -56,26 +48,46 @@ protected $appends = ['is_global'];
         return $this->hasMany(SiteLeaveTypeSetting::class, 'leave_type_id');
     }
 
-    public function settingForSite(int $siteId): ?SiteLeaveTypeSetting
+    // Accessors
+    public function getIsGlobalAttribute(): bool
     {
-        return $this->siteSettings()->where('site_id', $siteId)->first();
+        return is_null($this->site_id);
     }
 
-    /* Scopes */
-    public function scopeVisibleForUser($query, $admin)
+    public function getUnitLabelAttribute(): string
     {
-        if ($admin && $admin->IsSuperAdmin) {
+        return match($this->unit) {
+            'days' => 'Jours',
+            'half_days' => 'Demi-journées',
+            'hours' => 'Heures',
+            default => $this->unit,
+        };
+    }
+
+    public function getRequiresAttachmentLabelAttribute(): string
+    {
+        return match($this->requires_attachment) {
+            'never' => 'Jamais',
+            'always' => 'Toujours',
+            'after_duration' => 'Après durée',
+            default => $this->requires_attachment,
+        };
+    }
+
+    // Scopes
+    public function scopeVisibleForUser($query, $user)
+    {
+        if ($user && $user->IsSuperAdmin == 1) {
             return $query;
         }
 
-        $siteId = $admin ? $admin->SiegeID : null;
+        $siteId = $user ? $user->SiegeID : null;
 
         return $query->where(function ($q) use ($siteId) {
             $q->whereNull('site_id')
               ->orWhere('site_id', $siteId);
         });
     }
-    
 
     public function scopeGlobal($query)
     {
@@ -87,9 +99,19 @@ protected $appends = ['is_global'];
         return $query->where('site_id', $siteId);
     }
 
-    /* Helpers */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    // Helpers
     public function isGlobal(): bool
     {
         return is_null($this->site_id);
+    }
+
+    public function settingForSite(int $siteId): ?SiteLeaveTypeSetting
+    {
+        return $this->siteSettings()->where('site_id', $siteId)->first();
     }
 }
