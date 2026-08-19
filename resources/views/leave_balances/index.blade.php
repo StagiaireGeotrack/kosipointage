@@ -6,10 +6,13 @@
                 <i class="bi bi-wallet2"></i> {{ __('Gestion des Soldes') }}
             </h2>
             <div class="d-flex gap-2">
-                <a href="{{ route('leave-balances.initialize') }}" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> {{ __('Initialiser un solde') }}
+                <a href="{{ route('leave-balances.initialize') }}" class="btn" style="background-color: #4f8a8b; color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 0.875rem;">
+                    <i class="bi bi-plus-circle"></i> {{ __('Initialiser') }}
                 </a>
-                <a href="{{ route('leave-balances.export') }}" class="btn btn-info">
+                <a href="{{ route('leave-balances.import') }}" class="btn" style="background-color: #5b7f95; color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 0.875rem;">
+                    <i class="bi bi-upload"></i> {{ __('Importer') }}
+                </a>
+                <a href="{{ route('leave-balances.export') }}" class="btn" style="background-color: #7a8c8d; color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 0.875rem;">
                     <i class="bi bi-download"></i> {{ __('Exporter') }}
                 </a>
             </div>
@@ -74,16 +77,36 @@
 
                         <div class="col-md-3 d-flex align-items-end">
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn" style="background-color: #5b7f95; color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 0.875rem;">
                                     <i class="bi bi-search"></i> {{ __('Valider') }}
                                 </button>
-                                <a href="{{ route('leave-balances.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('leave-balances.index') }}" class="btn" style="background-color: #d1d5db; color: #374151; border: none; border-radius: 6px; padding: 6px 16px; font-size: 0.875rem;">
                                     <i class="bi bi-arrow-counterclockwise"></i> {{ __('Réinitialiser') }}
                                 </a>
                             </div>
                         </div>
                     </div>
                 </form>
+
+                <!-- Résumé des soldes -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="card" style="background-color: #f3f4f6;">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">{{ __('Total soldes') }}</h6>
+                                <h3 class="mb-0">{{ $balances->total() }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="background-color: #f3f4f6;">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">{{ __('Employés') }}</h6>
+                                <h3 class="mb-0">{{ $employees->count() }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -96,7 +119,7 @@
                                 <th class="text-uppercase small fw-semibold text-secondary text-end">{{ __('Acquis') }}</th>
                                 <th class="text-uppercase small fw-semibold text-secondary text-end">{{ __('Pris') }}</th>
                                 <th class="text-uppercase small fw-semibold text-secondary text-end">{{ __('Restant') }}</th>
-                                <th class="text-uppercase small fw-semibold text-secondary text-end">{{ __('Actions') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,12 +130,13 @@
                                         <br><small class="text-muted">#{{ $balance->employee->num_mat ?? 'N/A' }}</small>
                                     </td>
                                     <td class="align-middle">
-                                        {{ $balance->employee->siege->Nom ?? 'N/A' }}
+                                        <span class="badge" style="background-color: #d1d5db; color: #374151; font-weight: 400;">{{ $balance->employee->siege->Nom ?? 'N/A' }}</span>
                                     </td>
                                     <td class="align-middle">
-                                        <span class="badge" style="background-color: {{ $balance->leaveType->color ?? '#6c757d' }}">
+                                        <span class="badge" style="background-color: {{ $balance->leaveType->color ?? '#4f8a8b' }}; color: #fff;">
                                             {{ $balance->leaveType->name ?? 'N/A' }}
                                         </span>
+                                        <br><small class="text-muted">{{ $balance->leaveType->code ?? '' }}</small>
                                     </td>
                                     <td class="align-middle">
                                         <small>{{ $balance->period->name ?? 'N/A' }}</small>
@@ -121,10 +145,10 @@
                                         <strong>{{ number_format($balance->total_entitled, 2) }}</strong>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <span class="text-danger">{{ number_format($balance->total_taken, 2) }}</span>
+                                        <span style="color: #b91c1c;">{{ number_format($balance->total_taken, 2) }}</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <span class="badge bg-{{ $balance->remaining > 0 ? 'success' : ($balance->remaining == 0 ? 'secondary' : 'danger') }} fs-6">
+                                        <span class="badge" style="background-color: {{ $balance->remaining > 0 ? '#4f8a8b' : ($balance->remaining == 0 ? '#d1d5db' : '#b91c1c') }}; color: #fff;">
                                             {{ number_format($balance->remaining, 2) }}
                                         </span>
                                         <br>
@@ -134,16 +158,24 @@
                                         <small class="text-muted">Disponible: {{ number_format($available, 2) }}</small>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <div class="d-flex gap-2 justify-content-center">
-                                            <button type="button" class="btn btn-sm btn-primary" 
+                                        <div class="d-flex gap-1 justify-content-center">
+                                            {{-- Bouton Ajuster --}}
+                                            <button type="button" class="btn btn-sm" 
+                                                    style="background-color: #d97706; color: #fff; border: none; border-radius: 4px; padding: 4px 12px; font-size: 0.75rem;"
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#adjustModal{{ $balance->id }}"
-                                                    title="Ajuster">
+                                                    title="Ajuster le solde manuellement">
                                                 <i class="bi bi-pencil"></i>
+                                                <span class="d-none d-md-inline">Ajuster</span>
                                             </button>
+
+                                            {{-- Bouton Transactions --}}
                                             <a href="{{ route('leave-balances.transactions', $balance->id) }}" 
-                                               class="btn btn-sm btn-info" title="Transactions">
+                                               class="btn btn-sm" 
+                                               style="background-color: #5b7f95; color: #fff; border: none; border-radius: 4px; padding: 4px 12px; font-size: 0.75rem;"
+                                               title="Voir l'historique des transactions">
                                                 <i class="bi bi-clock-history"></i>
+                                                <span class="d-none d-md-inline">Transactions</span>
                                             </a>
                                         </div>
                                     </td>
@@ -176,7 +208,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
-                                                    <button type="submit" class="btn btn-primary">{{ __('Ajuster') }}</button>
+                                                    <button type="submit" class="btn" style="background-color: #5b7f95; color: #fff; border: none; border-radius: 4px;">{{ __('Ajuster') }}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -189,6 +221,14 @@
                                             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                             <p>{{ __('Aucun solde pour le moment') }}</p>
                                             <p class="small">{{ __('Commencez par initialiser les soldes des employés.') }}</p>
+                                            <div class="mt-2">
+                                                <a href="{{ route('leave-balances.initialize') }}" class="btn btn-sm" style="background-color: #4f8a8b; color: #fff; border: none; border-radius: 4px;">
+                                                    <i class="bi bi-plus-circle"></i> {{ __('Initialiser un solde') }}
+                                                </a>
+                                                <a href="{{ route('leave-balances.import') }}" class="btn btn-sm" style="background-color: #5b7f95; color: #fff; border: none; border-radius: 4px;">
+                                                    <i class="bi bi-upload"></i> {{ __('Importer') }}
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

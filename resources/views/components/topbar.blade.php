@@ -14,32 +14,45 @@
     {{-- Zone droite : badge rôle + menu profil --}}
     <div class="d-flex align-items-center gap-3">
 
+        @php
+            $user = Auth::user();
+            $isAdmin = $user instanceof \App\Models\Administration;
+            $isEmploye = $user instanceof \App\Models\Employe;
+            
+            // Rôle de l'utilisateur
+            $roleLabel = 'Employé';
+            $roleColor = 'linear-gradient(135deg, #4f8a8b, #3d6b6c)';
+            
+            if ($isAdmin) {
+                if ($user->IsSuperAdmin == 1 && !($user->isManager ?? false)) {
+                    $roleLabel = 'Super Administrateur';
+                    $roleColor = 'linear-gradient(135deg, #3F52A4, #5a6fb8)';
+                } elseif ($user->IsSuperAdmin == 1 && ($user->isManager ?? false)) {
+                    $roleLabel = 'Manager Super Admin';
+                    $roleColor = 'linear-gradient(135deg, #3F52A4, #5a6fb8)';
+                } elseif ($user->IsSeller == 1 && ($user->isManager ?? false)) {
+                    $roleLabel = 'Manager Revendeur';
+                    $roleColor = 'linear-gradient(135deg, #10b981, #059669)';
+                } elseif ($user->IsSeller == 1) {
+                    $roleLabel = 'Revendeur';
+                    $roleColor = 'linear-gradient(135deg, #10b981, #059669)';
+                } elseif ($user->isManager ?? false) {
+                    $roleLabel = 'Manager Admin Simple';
+                    $roleColor = 'linear-gradient(135deg, #6b7280, #4b5563)';
+                } else {
+                    $roleLabel = 'Simple Administrateur';
+                    $roleColor = 'linear-gradient(135deg, #6b7280, #4b5563)';
+                }
+            } elseif ($isEmploye) {
+                $roleLabel = 'Employé';
+                $roleColor = 'linear-gradient(135deg, #4f8a8b, #3d6b6c)';
+            }
+        @endphp
+
         {{-- Badge rôle --}}
-        @if(Auth::user()->isTrueSuperAdmin() && !Auth::user()->isManagerSuperAdmin())
-            <span class="topbar-role-badge d-none d-sm-inline" style="background: linear-gradient(135deg, #3F52A4, #5a6fb8);">
-                {{ __('Super Administrateur') }}
-            </span>
-        @elseif(Auth::user()->isManagerSuperAdmin())
-            <span class="topbar-role-badge d-none d-sm-inline" style="background: linear-gradient(135deg, #3F52A4, #5a6fb8); opacity: 0.85;">
-                {{ __('Manager Super Admin') }}
-            </span>
-        @elseif(Auth::user()->isManagerSeller())
-            <span class="topbar-role-badge d-none d-sm-inline" style="background: linear-gradient(135deg, #10b981, #059669); opacity: 0.85;">
-                {{ __('Manager Revendeur') }}
-            </span>
-        @elseif(Auth::user()->isSeller())
-            <span class="topbar-role-badge d-none d-sm-inline" style="background: linear-gradient(135deg, #10b981, #059669);">
-                {{ __('Revendeur') }}
-            </span>
-        @elseif(Auth::user()->isManagerSimpleAdmin())
-            <span class="topbar-role-badge d-none d-sm-inline" style="background: linear-gradient(135deg, #6b7280, #4b5563); opacity: 0.85;">
-                {{ __('Manager Admin Simple') }}
-            </span>
-        @else
-            <span class="topbar-role-badge d-none d-sm-inline" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
-                {{ __('Simple Administrateur') }}
-            </span>
-        @endif
+        <span class="topbar-role-badge d-none d-sm-inline" style="background: {{ $roleColor }};">
+            {{ __($roleLabel) }}
+        </span>
 
         {{-- Menu dropdown profil --}}
         <div class="dropdown">
@@ -48,22 +61,46 @@
                     type="button" id="topbarUserDropdown"
                     data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle"></i>
-                <span class="d-none d-sm-inline small">{{ Auth::user()->Identifiant_email }}</span>
+                <span class="d-none d-sm-inline small">
+                    @if($isAdmin)
+                        {{ $user->Identifiant_email ?? $user->email ?? 'Admin' }}
+                    @elseif($isEmploye)
+                        {{ $user->email ?? $user->Nom ?? 'Employé' }}
+                    @else
+                        {{ 'Utilisateur' }}
+                    @endif
+                </span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="topbarUserDropdown"
                 style="border: 2px solid #3F52A4; border-radius: 10px;">
-                @can('superadmin')
+                
+                {{-- Logs d'activité (Super Admin uniquement) --}}
+                @if($isAdmin && $user->IsSuperAdmin == 1)
                 <li>
                     <a class="dropdown-item" href="{{ route('activity-logs.index') }}">
                         <i class="bi bi-journal-text me-2"></i> {{ __("Logs d'activité") }}
                     </a>
                 </li>
-                @endcan
+                @endif
+
+                {{-- Profil Admin --}}
+                @if($isAdmin)
                 <li>
                     <a class="dropdown-item" href="{{ route('profile.edit') }}">
                         <i class="bi bi-person me-2"></i> {{ __('Identifiant') }}
                     </a>
                 </li>
+                @endif
+
+                {{-- Profil Employé --}}
+                @if($isEmploye)
+                <li>
+                    <a class="dropdown-item" href="{{ route('employe.profile') }}">
+                        <i class="bi bi-person me-2"></i> {{ __('Mon profil') }}
+                    </a>
+                </li>
+                @endif
+
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">

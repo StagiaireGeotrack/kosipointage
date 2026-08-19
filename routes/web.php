@@ -35,7 +35,7 @@ use App\Http\Controllers\EmployeCongeController;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeavePolicyAssignmentController;
-
+use App\Http\Controllers\Employe\LeaveRequestController;
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
 
@@ -364,7 +364,7 @@ Route::middleware('auth')->group(function () {
     Route::get('leave-balances/import', [LeaveBalanceController::class, 'import'])->name('leave-balances.import');
     Route::post('leave-balances/import', [LeaveBalanceController::class, 'storeImport'])->name('leave-balances.store-import');
     Route::get('leave-balances/export', [LeaveBalanceController::class, 'export'])->name('leave-balances.export');
-Route::get('leave-balances/download-template', [LeaveBalanceController::class, 'downloadTemplate'])->name('leave-balances.download-template');
+    Route::get('leave-balances/download-template', [LeaveBalanceController::class, 'downloadTemplate'])->name('leave-balances.download-template');
     // ==========================================
     // ROUTES SUPPLÉMENTAIRES (leave-periods override)
     // ==========================================
@@ -448,6 +448,42 @@ Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
     return back();
 })->name('admin.select-siege');
 
+
+// routes/web.php
+
+// Routes pour l'employé connecté
+Route::middleware(['auth:employe'])->prefix('portail')->name('employe.')->group(function () {
+    
+    // Dashboard
+    Route::get('/', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
+    
+    // Demandes de congé
+    Route::resource('leave-requests', LeaveRequestController::class);
+    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
+    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
+});
+
+
+
+
+Route::prefix('employe')->name('employe.')->group(function () {
+    // Routes pour les demandes de congé
+    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
+    Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
+    Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
+    Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
+    Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
+    Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
+    Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
+    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
+    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
+    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])
+    ->name('leave-requests.upload-attachment');
+Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])
+    ->name('leave-requests.delete-attachment');
+Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])
+        ->name('leave-requests.download-attachment');
+});
 // ============================================
 // FALLBACK
 // ============================================

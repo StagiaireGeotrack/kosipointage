@@ -293,15 +293,18 @@ public function import()
   /**
  * Importer des soldes
  */
+/**
+ * Importer des soldes
+ */
 public function storeImport(Request $request)
 {
     $request->validate([
         'file' => 'required|file|mimes:xlsx,xls,csv',
         'period_id' => 'required|exists:leave_periods,id',
-        'simulate' => 'nullable|boolean',
     ]);
 
-    $simulate = $request->boolean('simulate', true);
+    // FORCER le mode réel (pas de simulation)
+    $simulate = false; // <-- TOUJOURS FALSE
     $periodId = $request->period_id;
     
     // Récupérer le site_id
@@ -309,7 +312,6 @@ public function storeImport(Request $request)
     $isSuperAdmin = $user->IsSuperAdmin ?? false;
     $userSiteId = $user->SiegeID ?? null;
 
-    // Si Super Admin, on prend le site_id du formulaire
     if ($isSuperAdmin && $request->filled('site_id')) {
         $siteId = $request->site_id;
     } else {
@@ -327,25 +329,19 @@ public function storeImport(Request $request)
         $batch = $import->getBatch();
         $errors = $import->getErrors();
 
-        if ($simulate) {
-            $message = "Simulation terminée. " . $import->getSuccessCount() . " lignes valides, " . $import->getFailureCount() . " erreurs.";
-            if ($import->getFailureCount() > 0) {
-                return back()->with('warning', $message)->with('import_errors', $errors);
-            }
-            return back()->with('info', $message);
-        }
-
-        $message = "Import terminé. " . $import->getSuccessCount() . " soldes créés, " . $import->getFailureCount() . " erreurs.";
+        // Vérifier s'il y a eu des erreurs
         if ($import->getFailureCount() > 0) {
+            $message = "Import terminé avec des erreurs. " . $import->getSuccessCount() . " soldes créés, " . $import->getFailureCount() . " erreurs.";
             return redirect()->route('leave-balances.import')->with('warning', $message)->with('import_errors', $errors);
         }
+
+        $message = "Import terminé avec succès. " . $import->getSuccessCount() . " soldes créés.";
         return redirect()->route('leave-balances.index')->with('success', $message);
 
     } catch (\Exception $e) {
         return back()->with('error', 'Erreur lors de l\'import: ' . $e->getMessage());
     }
 }
-
     /**
      * Télécharger le modèle Excel
      */

@@ -66,7 +66,7 @@
                     @csrf
 
                     <div class="row g-3">
-                        {{-- AJOUT : Sélection du siège (pour Super Admin) --}}
+                        {{-- Sélection du siège (pour Super Admin) --}}
                         @if(auth()->user()->IsSuperAdmin)
                             <div class="col-md-6">
                                 <x-input-label for="site_id" :value="__('Siège')" />
@@ -121,8 +121,9 @@
                     <div class="row g-3 mt-2">
                         <div class="col-md-12">
                             <div class="form-check">
+                                {{-- MODIFICATION ICI : false au lieu de true pour décoché par défaut --}}
                                 <input type="checkbox" name="simulate" id="simulate" class="form-check-input" value="1" 
-                                    {{ old('simulate', true) ? 'checked' : '' }}>
+                                    {{ old('simulate', false) ? 'checked' : '' }}>
                                 <label for="simulate" class="form-check-label">
                                     {{ __('Mode simulation (vérifier sans importer)') }}
                                 </label>
