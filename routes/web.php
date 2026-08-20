@@ -483,6 +483,8 @@ Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class,
     ->name('leave-requests.delete-attachment');
 Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])
         ->name('leave-requests.download-attachment');
+         Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
+    Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
 });
 // ============================================
 // FALLBACK

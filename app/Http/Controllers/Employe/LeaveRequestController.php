@@ -103,31 +103,66 @@ private function getEmployee()
     /**
      * Tableau de bord de l'employé
      */
-    public function dashboard()
-    {
-        $employee = $this->getEmployee();
-        
-        if (!$employee) {
-            return redirect()->route('employe.login')
-                ->with('error', 'Aucun employé associé à ce compte.');
+public function dashboard()
+{
+    $employee = $this->getEmployee();
+    
+    if (!$employee) {
+        return redirect()->route('employe.login')
+            ->with('error', 'Aucun employé associé à ce compte.');
+    }
+    
+    $balances = LeaveBalance::with(['leaveType', 'period'])
+        ->where('employee_id', $employee->ID)
+        ->get();
+
+    $requests = $this->leaveRequestService->getEmployeeRequests($employee->ID);
+    
+    // Statistiques
+    $stats = [
+        'total_requests' => $requests->count(),
+        'pending' => $requests->where('status', 'pending')->count(),
+        'approved' => $requests->where('status', 'approved')->count(),
+        'rejected' => $requests->where('status', 'rejected')->count(),
+    ];
+    
+    // Statistiques mensuelles (12 mois)
+    $monthlyStats = $requests->groupBy(function($request) {
+        return $request->created_at->month;
+    })->map->count()->toArray();
+    
+    // Remplir les mois manquants avec 0
+    $monthlyStatsArray = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $monthlyStatsArray[] = $monthlyStats[$i] ?? 0;
+    }
+    
+    // Statistiques par type
+    $typeStats = $requests->groupBy('leave_type_id')
+        ->map(function($group) {
+            return $group->count();
+        });
+    
+    $typeLabels = [];
+    $typeData = [];
+    
+    if ($typeStats->isNotEmpty()) {
+        $types = LeaveType::whereIn('id', $typeStats->keys())->get();
+        foreach ($types as $type) {
+            $typeLabels[] = $type->name;
+            $typeData[] = $typeStats[$type->id] ?? 0;
         }
-        
-        $balances = LeaveBalance::with(['leaveType', 'period'])
-            ->where('employee_id', $employee->ID)
-            ->get();
-
-        $requests = $this->leaveRequestService->getEmployeeRequests($employee->ID);
-        
-        $stats = [
-            'total_requests' => $requests->count(),
-            'pending' => $requests->where('status', 'pending')->count(),
-            'approved' => $requests->where('status', 'approved')->count(),
-            'rejected' => $requests->where('status', 'rejected')->count(),
-        ];
-
-        return view('employes.dashboard', compact('balances', 'requests', 'stats'));
     }
 
+    return view('employes.dashboard', compact(
+        'balances', 
+        'requests', 
+        'stats', 
+        'monthlyStatsArray', 
+        'typeLabels', 
+        'typeData'
+    ));
+}
     /**
      * Liste des demandes de congé
      */
@@ -592,4 +627,73 @@ public function downloadAttachment($id)
             return back()->with('error', $e->getMessage());
         }
     }
+    /**
+ * Calendrier des congés
+ */
+public function calendar()
+{
+    $employee = $this->getEmployee();
+    
+    if (!$employee) {
+        return redirect()->route('employe.login')
+            ->with('error', 'Aucun employé associé à ce compte.');
+    }
+    
+    return view('employes.leave_calendar.index');
+}
+
+/**
+ * Récupérer les événements pour le calendrier
+ */
+public function getCalendarEvents(Request $request)
+{
+    try {
+        $employee = $this->getEmployee();
+        
+        if (!$employee) {
+            return response()->json([]);
+        }
+        
+        // Récupérer toutes les demandes (approuvées, en attente, etc.)
+        $requests = LeaveRequest::where('employee_id', $employee->ID)
+            ->whereIn('status', ['approved', 'pending', 'rejected', 'draft'])
+            ->with('leaveType')
+            ->get();
+        
+        $events = $requests->map(function($request) {
+            // Couleurs selon le statut
+            $statusColors = [
+                'pending' => '#f59e0b',
+                'approved' => '#22c55e',
+                'rejected' => '#ef4444',
+                'draft' => '#6b7280'
+            ];
+            
+            // Titre avec le type et la durée
+            $title = $request->leaveType->name . ' (' . number_format($request->duration, 1) . 'j)';
+            
+            return [
+                'id' => $request->id,
+                'title' => $title,
+                'start' => $request->start_date->format('Y-m-d'),
+                'end' => $request->end_date->format('Y-m-d'),
+                'backgroundColor' => $statusColors[$request->status] ?? '#4f8a8b',
+                'borderColor' => $statusColors[$request->status] ?? '#4f8a8b',
+                'extendedProps' => [
+                    'status' => $request->status,
+                    'duration' => $request->duration,
+                    'url' => route('employe.leave-requests.show', $request->id)
+                ]
+            ];
+        });
+        
+        return response()->json($events);
+        
+    } catch (\Exception $e) {
+        \Log::error('Erreur calendrier: ' . $e->getMessage());
+        return response()->json([
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }
