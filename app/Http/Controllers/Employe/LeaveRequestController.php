@@ -645,6 +645,9 @@ public function calendar()
 /**
  * Récupérer les événements pour le calendrier
  */
+/**
+ * Récupérer les événements pour le calendrier
+ */
 public function getCalendarEvents(Request $request)
 {
     try {
@@ -654,13 +657,31 @@ public function getCalendarEvents(Request $request)
             return response()->json([]);
         }
         
-        // Récupérer toutes les demandes (approuvées, en attente, etc.)
+        // Récupérer toutes les demandes
         $requests = LeaveRequest::where('employee_id', $employee->ID)
             ->whereIn('status', ['approved', 'pending', 'rejected', 'draft'])
             ->with('leaveType')
             ->get();
         
         $events = $requests->map(function($request) {
+            // Vérifier que leaveType existe
+            if (!$request->leaveType) {
+                // Si le type n'existe pas, utiliser des valeurs par défaut
+                return [
+                    'id' => $request->id,
+                    'title' => 'Type inconnu (' . number_format($request->duration, 1) . 'j)',
+                    'start' => $request->start_date->format('Y-m-d'),
+                    'end' => $request->end_date->format('Y-m-d'),
+                    'backgroundColor' => '#6b7280', // Gris
+                    'borderColor' => '#6b7280',
+                    'extendedProps' => [
+                        'status' => $request->status,
+                        'duration' => $request->duration,
+                        'url' => route('employe.leave-requests.show', $request->id)
+                    ]
+                ];
+            }
+            
             // Couleurs selon le statut
             $statusColors = [
                 'pending' => '#f59e0b',

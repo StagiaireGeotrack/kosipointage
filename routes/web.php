@@ -36,6 +36,14 @@ use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeavePolicyAssignmentController;
 use App\Http\Controllers\Employe\LeaveRequestController;
+use App\Http\Controllers\Manager\NotificationController;
+use App\Http\Controllers\Manager\NotificationController as ManagerNotificationController;
+use App\Http\Controllers\Manager\ManagerLeaveRequestController;
+use App\Http\Controllers\Employe\EmployeNotificationController;
+
+
+
+
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
 
@@ -450,24 +458,15 @@ Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
 
 
 // routes/web.php
-
-// Routes pour l'employé connecté
-Route::middleware(['auth:employe'])->prefix('portail')->name('employe.')->group(function () {
+// ============================================
+// ROUTES POUR LES EMPLOYÉS (employe.)
+// ============================================
+Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(function () {
     
     // Dashboard
-    Route::get('/', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
+    Route::get('dashboard', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
     
     // Demandes de congé
-    Route::resource('leave-requests', LeaveRequestController::class);
-    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
-    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
-});
-
-
-
-
-Route::prefix('employe')->name('employe.')->group(function () {
-    // Routes pour les demandes de congé
     Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
     Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
     Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
@@ -477,15 +476,54 @@ Route::prefix('employe')->name('employe.')->group(function () {
     Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
     Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
     Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
-    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])
-    ->name('leave-requests.upload-attachment');
-Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])
-    ->name('leave-requests.delete-attachment');
-Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])
-        ->name('leave-requests.download-attachment');
-         Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
+    
+    // Pièces jointes
+    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])->name('leave-requests.upload-attachment');
+    Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])->name('leave-requests.delete-attachment');
+    Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])->name('leave-requests.download-attachment');
+    
+    // Calendrier
+   Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
     Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
+    
+    
+    // ==========================================
+    // 🔔 NOTIFICATIONS (PROTÉGÉES)
+    // ==========================================
+    Route::get('notifications', [EmployeNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [EmployeNotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::get('notifications/unread-count', [EmployeNotificationController::class, 'unreadCount'])->name('notifications.unread');
 });
+
+// ============================================
+// ROUTES POUR LE PORTAIL (employé)
+// ============================================
+Route::middleware(['auth:employe'])->prefix('portail')->name('portail.')->group(function () {
+    Route::get('/', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
+    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
+});
+
+// ============================================
+// ROUTES POUR LES MANAGERS
+// ============================================
+Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function () {
+    
+    // Dashboard
+    Route::get('dashboard', [ManagerLeaveRequestController::class, 'dashboard'])->name('dashboard');
+    
+    // Notifications
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread');
+    
+    // Demandes de congé
+    Route::get('leave-requests', [ManagerLeaveRequestController::class, 'index'])->name('leave-requests.index');
+    Route::get('leave-requests/{id}', [ManagerLeaveRequestController::class, 'show'])->name('leave-requests.show');
+    Route::post('leave-requests/{id}/approve', [ManagerLeaveRequestController::class, 'approve'])->name('leave-requests.approve');
+    Route::post('leave-requests/{id}/reject', [ManagerLeaveRequestController::class, 'reject'])->name('leave-requests.reject');
+});
+// Routes pour l'employé connecté
+
 // ============================================
 // FALLBACK
 // ============================================

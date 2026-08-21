@@ -16,6 +16,31 @@
     
     // Pour les employés (ils voient une version simplifiée)
     $isEmployeMode = $isEmploye;
+    
+    // Compteur de notifications non lues pour l'employé
+    $unreadNotifications = 0;
+    if ($isAdmin) {
+        try {
+            $unreadNotifications = \DB::table('notifications')
+                ->where('user_id', $user->ID)
+                ->where('is_read', 0)
+                ->count();
+        } catch (\Throwable $e) {
+            $unreadNotifications = 0;
+        }
+    }
+    
+    // Compteur pour les employés (si user_id est dans employes)
+    if ($isEmploye && $user->ID) {
+        try {
+            $unreadNotifications = \DB::table('notifications')
+                ->where('user_id', $user->ID)
+                ->where('is_read', 0)
+                ->count();
+        } catch (\Throwable $e) {
+            $unreadNotifications = 0;
+        }
+    }
 @endphp
 
 <aside id="app-sidebar" class="app-sidebar collapsed">
@@ -49,6 +74,56 @@
             <i class="bi bi-building"></i>
             <span>{{ __('Siège') }}</span>
         </a>
+
+        {{-- ==================== ESPACE EMPLOYÉ ==================== --}}
+        @if($isEmploye)
+            {{-- Mes congés --}}
+            <a href="{{ route('employe.dashboard') }}"
+               class="sidebar-link {{ request()->routeIs('employe.dashboard') ? 'active' : '' }}">
+                <i class="bi bi-calendar-check"></i>
+                <span>{{ __('Mes congés') }}</span>
+            </a>
+
+            {{-- Mes demandes --}}
+            <a href="{{ route('employe.leave-requests.index') }}"
+               class="sidebar-link {{ request()->routeIs('employe.leave-requests.*') ? 'active' : '' }}">
+                <i class="bi bi-list-ul"></i>
+                <span>{{ __('Mes demandes') }}</span>
+            </a>
+
+            {{-- Nouvelle demande --}}
+            <a href="{{ route('employe.leave-requests.create') }}"
+               class="sidebar-link {{ request()->routeIs('employe.leave-requests.create') ? 'active' : '' }}">
+                <i class="bi bi-plus-circle"></i>
+                <span>{{ __('Nouvelle demande') }}</span>
+            </a>
+
+            {{-- ========================================== --}}
+            {{-- 🔔 NOTIFICATIONS (NOUVEAU)                 --}}
+            {{-- ========================================== --}}
+           {{-- resources/views/components/sidebar.blade.php --}}
+
+<!-- 🔔 NOTIFICATIONS -->
+<a href="{{ route('employe.notifications.index') }}"
+   class="sidebar-link {{ request()->routeIs('employe.notifications.*') ? 'active' : '' }}">
+    <i class="bi bi-bell"></i>
+    <span>{{ __('Notifications') }}</span>
+    @if($unreadNotifications > 0)
+        <span class="badge bg-danger rounded-pill ms-auto" style="font-size:0.65rem;">
+            {{ $unreadNotifications }}
+        </span>
+    @endif
+</a>
+
+            {{-- ========================================== --}}
+            {{-- 📅 CALENDRIER DES CONGÉS (NOUVEAU)         --}}
+            {{-- ========================================== --}}
+            <a href="{{ route('employe.leave-calendar.index') }}"
+               class="sidebar-link {{ request()->routeIs('employe.leave-calendar.*') ? 'active' : '' }}">
+                <i class="bi bi-calendar3"></i>
+                <span>{{ __('Calendrier des congés') }}</span>
+            </a>
+        @endif
 
         {{-- ADMINISTRATEUR (uniquement pour les admins) --}}
         @if($isAdmin)
@@ -271,28 +346,6 @@
             </a>
             @endif
 
-        @endif
-
-        {{-- ==================== ESPACE EMPLOYÉ ==================== --}}
-        @if($isEmploye)
-            {{-- Employés : Mes congés --}}
-            <a href="{{ route('employe.dashboard') }}"
-               class="sidebar-link {{ request()->routeIs('employe.dashboard') ? 'active' : '' }}">
-                <i class="bi bi-calendar-check"></i>
-                <span>{{ __('Mes congés') }}</span>
-            </a>
-
-            <a href="{{ route('employe.leave-requests.index') }}"
-               class="sidebar-link {{ request()->routeIs('employe.leave-requests.*') ? 'active' : '' }}">
-                <i class="bi bi-list-ul"></i>
-                <span>{{ __('Mes demandes') }}</span>
-            </a>
-
-            <a href="{{ route('employe.leave-requests.create') }}"
-               class="sidebar-link {{ request()->routeIs('employe.leave-requests.create') ? 'active' : '' }}">
-                <i class="bi bi-plus-circle"></i>
-                <span>{{ __('Nouvelle demande') }}</span>
-            </a>
         @endif
 
     </nav>

@@ -1,3 +1,4 @@
+{{-- resources/views/employe/leave_requests/index.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -47,7 +48,7 @@
                                     <div class="mt-1">
                                         <div class="progress" style="height: 4px; border-radius: 4px; background: #edf2f7;">
                                             @php
-                                                $maxBalance = 30; // Valeur par défaut, à ajuster selon vos besoins
+                                                $maxBalance = 30;
                                                 $percentage = min(($balance->balance / $maxBalance) * 100, 100);
                                             @endphp
                                             <div class="progress-bar" role="progressbar" 
@@ -133,11 +134,18 @@
                             @forelse ($requests as $request)
                                 <tr class="leave-row" data-status="{{ $request->status }}" style="background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-radius: 10px; transition: all 0.2s;">
                                     <td style="padding: 10px 16px; border-radius: 10px 0 0 10px;">
-                                        <span class="badge" style="background: {{ $request->leaveType->color ?? '#e2e8f0' }}; color: {{ $request->leaveType->color ? '#fff' : '#4a5568' }}; border-radius: 6px; padding: 4px 12px; font-weight: 500;">
-                                            {{ $request->leaveType->name ?? 'N/A' }}
+                                        @php
+                                            // Récupérer le leaveType de manière sécurisée
+                                            $leaveType = $request->leaveType;
+                                            $color = $leaveType ? $leaveType->color : '#e2e8f0';
+                                            $name = $leaveType ? $leaveType->name : 'N/A';
+                                            $textColor = $color !== '#e2e8f0' ? '#fff' : '#4a5568';
+                                        @endphp
+                                        <span class="badge" style="background: {{ $color }}; color: {{ $textColor }}; border-radius: 6px; padding: 4px 12px; font-weight: 500;">
+                                            {{ $name }}
                                         </span>
                                     </td>
-                                    <td style="padding: 10px 16px; color: #2d3748; font-size: 0.9rem;">
+                                    <td style="padding: 10px 16px; color: #2d3748; font-size: 0.9rem;" class="date-range">
                                         <i class="bi bi-calendar2" style="color: #a0aec0; font-size: 0.8rem;"></i>
                                         {{ $request->start_date->format('d/m/Y') }} - {{ $request->end_date->format('d/m/Y') }}
                                     </td>
@@ -164,7 +172,6 @@
                                     </td>
                                     <td style="padding: 10px 16px; border-radius: 0 10px 10px 0;">
                                         <div class="d-flex gap-1 flex-wrap">
-                                            <!-- Bouton Voir -->
                                             <a href="{{ route('employe.leave-requests.show', $request->id) }}" 
                                                class="btn btn-sm" 
                                                style="background: #edf2f7; color: #4a5568; border: none; border-radius: 6px; padding: 4px 12px; transition: all 0.2s;"
@@ -172,7 +179,6 @@
                                                 <i class="bi bi-eye"></i> Voir
                                             </a>
 
-                                            <!-- Boutons pour les brouillons -->
                                             @if($request->status == 'draft')
                                                 <a href="{{ route('employe.leave-requests.edit', $request->id) }}" 
                                                    class="btn btn-sm" 
@@ -197,7 +203,6 @@
                                                 </form>
                                             @endif
 
-                                            <!-- Bouton Annuler pour les approuvés -->
                                             @if($request->status == 'approved')
                                                 <form action="{{ route('employe.leave-requests.cancel-approved', $request->id) }}" method="POST" class="d-inline">
                                                     @csrf
@@ -258,7 +263,6 @@
             border-color: #5a7d8a !important;
             box-shadow: 0 0 0 3px rgba(90, 125, 138, 0.1) !important;
         }
-        /* Animation d'apparition */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -266,7 +270,6 @@
         .card {
             animation: fadeIn 0.5s ease forwards;
         }
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
