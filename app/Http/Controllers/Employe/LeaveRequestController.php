@@ -8,13 +8,14 @@ use App\Models\LeaveType;
 use App\Models\LeavePeriod;
 use App\Models\LeaveBalance;
 use App\Models\Employe;
+use App\Models\LeaveRequestAttachment;
 use App\Services\LeaveRequestService;
 use App\Services\LeaveBalanceService;
 use App\Services\LeaveDurationCalculator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\LeaveRequestAttachment;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class LeaveRequestController extends Controller
 {
@@ -30,6 +31,9 @@ class LeaveRequestController extends Controller
         $this->leaveRequestService = $leaveRequestService;
         $this->balanceService = $balanceService;
         $this->durationCalculator = $durationCalculator;
+        
+        // ✅ Ajouter le middleware auth
+        $this->middleware('auth');
     }
 
     /**
@@ -37,6 +41,12 @@ class LeaveRequestController extends Controller
      */
     private function getEmployee()
     {
+        // ✅ Vérifier d'abord l'authentification
+        if (!Auth::check()) {
+            Log::warning('getEmployee: Utilisateur non connecté');
+            return null;
+        }
+
         if (session()->has('employee_id')) {
             $employee = Employe::find(session('employee_id'));
             if ($employee) {
@@ -47,17 +57,17 @@ class LeaveRequestController extends Controller
         $user = Auth::user();
         
         if (!$user) {
-            \Log::error('getEmployee: Aucun utilisateur connecté');
+            Log::error('getEmployee: Aucun utilisateur connecté');
             return null;
         }
         
-        \Log::info('getEmployee: User trouvé', [
+        Log::info('getEmployee: User trouvé', [
             'user_id' => $user->ID ?? $user->id ?? 'unknown',
             'user_type' => get_class($user)
         ]);
         
         if ($user instanceof Employe) {
-            \Log::info('getEmployee: User est un Employe');
+            Log::info('getEmployee: User est un Employe');
             session(['employee_id' => $user->ID]);
             return $user;
         }
@@ -90,16 +100,25 @@ class LeaveRequestController extends Controller
             return $employee;
         }
         
-        \Log::error('getEmployee: Aucun employé trouvé');
+        Log::error('getEmployee: Aucun employé trouvé');
         return null;
     }
 
     /**
-     * ✅ Calcul AJAX de la durée
+     * ✅ Calcul AJAX de la durée (GET)
+     * Route: /employe/leave/calculate-duration
      */
-    public function calculateDurationAjax(Request $request)
+    public function calculateDuration(Request $request)
     {
         try {
+            // ✅ Vérifier l'authentification
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Non authentifié. Veuillez vous connecter.'
+                ], 401);
+            }
+
             $employee = $this->getEmployee();
 
             if (!$employee) {
@@ -116,7 +135,7 @@ class LeaveRequestController extends Controller
                 'period_id' => 'nullable|exists:leave_periods,id'
             ]);
 
-            \Log::info('Calcul durée AJAX', [
+            Log::info('Calcul durée', [
                 'employee_id' => $employee->ID,
                 'leave_type_id' => $request->leave_type_id,
                 'start_date' => $request->start_date,
@@ -131,15 +150,41 @@ class LeaveRequestController extends Controller
                 $request->period_id
             );
 
+            // ✅ Récupérer le type de congé pour les pièces justificatives
+            $leaveType = LeaveType::find($request->leave_type_id);
+            $attachmentRequired = false;
+            $attachmentMessage = null;
+            $attachmentRule = 'never';
+            $threshold = null;
+
+            if ($leaveType) {
+                $attachmentRule = $leaveType->requires_attachment;
+                
+                if ($attachmentRule === 'always') {
+                    $attachmentRequired = true;
+                    $attachmentMessage = 'Pièce justificative obligatoire pour ce type de congé.';
+                } elseif ($attachmentRule === 'after_duration') {
+                    $threshold = $leaveType->requires_attachment_after ?? 3;
+                    if ($duration > $threshold) {
+                        $attachmentRequired = true;
+                        $attachmentMessage = 'Pièce justificative obligatoire pour les congés de plus de ' . $threshold . ' jours.';
+                    }
+                }
+            }
+
             return response()->json([
                 'success' => true,
                 'duration' => $duration,
                 'duration_formatted' => number_format($duration, 1) . ' jour' . ($duration > 1 ? 's' : ''),
+                'attachments' => [
+                    'required' => $attachmentRequired,
+                    'message' => $attachmentMessage,
+                    'rule' => $attachmentRule,
+                    'threshold' => $threshold,
+                ],
                 'details' => [
                     'employee' => $employee->FirstName . ' ' . $employee->LastName,
                     'method' => 'jours ouvrés (selon politique)',
-                    'weekends_excluded' => true,
-                    'holidays_excluded' => true
                 ]
             ]);
 
@@ -150,7 +195,176 @@ class LeaveRequestController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Erreur calcul durée AJAX: ' . $e->getMessage());
+            Log::error('Erreur calcul durée: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * ✅ Calcul de durée pour un brouillon existant (GET)
+     * Route: /employe/leave-requests/{id}/calculate-duration
+     */
+    public function calculateDurationForDraft(Request $request, $id)
+    {
+        try {
+            // ✅ Vérifier l'authentification
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Non authentifié. Veuillez vous connecter.'
+                ], 401);
+            }
+
+            $employee = $this->getEmployee();
+
+            if (!$employee) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Employé non trouvé'
+                ], 401);
+            }
+
+            $leaveRequest = LeaveRequest::with('leaveType')
+                ->where('employee_id', $employee->ID)
+                ->findOrFail($id);
+
+            if ($leaveRequest->status !== 'draft') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cette demande n\'est pas un brouillon.'
+                ], 400);
+            }
+
+            // ✅ Valider les paramètres
+            $validator = validator($request->all(), [
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur de validation',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $startDate = $request->start_date ?? $leaveRequest->start_date;
+            $endDate = $request->end_date ?? $leaveRequest->end_date;
+            
+            if (!$startDate || !$endDate) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Les dates de début et de fin sont requises.'
+                ], 422);
+            }
+
+            $duration = $this->durationCalculator->calculate(
+                $employee->ID,
+                $leaveRequest->leave_type_id,
+                $startDate,
+                $endDate,
+                $leaveRequest->period_id
+            );
+
+            $leaveType = $leaveRequest->leaveType;
+            $attachmentRequired = false;
+            $attachmentMessage = null;
+            $attachmentRule = 'never';
+            $threshold = null;
+            $hasAttachments = LeaveRequestAttachment::where('leave_request_id', $id)->exists();
+            $attachmentsCount = LeaveRequestAttachment::where('leave_request_id', $id)->count();
+
+            if ($leaveType) {
+                $attachmentRule = $leaveType->requires_attachment;
+                
+                if ($attachmentRule === 'always') {
+                    $attachmentRequired = true;
+                    $attachmentMessage = $hasAttachments ? '✅ Pièces fournies' : '❌ Pièce justificative obligatoire';
+                } elseif ($attachmentRule === 'after_duration') {
+                    $threshold = $leaveType->requires_attachment_after ?? 3;
+                    if ($duration > $threshold) {
+                        $attachmentRequired = true;
+                        $attachmentMessage = $hasAttachments ? '✅ Pièces fournies' : '❌ Pièce justificative requise (' . $threshold . ' jours)';
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'duration' => $duration,
+                'duration_formatted' => number_format($duration, 1) . ' jour' . ($duration > 1 ? 's' : ''),
+                'previous_duration' => $leaveRequest->duration,
+                'attachments' => [
+                    'required' => $attachmentRequired,
+                    'message' => $attachmentMessage,
+                    'rule' => $attachmentRule,
+                    'threshold' => $threshold,
+                    'has_attachments' => $hasAttachments,
+                    'count' => $attachmentsCount,
+                ],
+                'request' => [
+                    'id' => $id,
+                    'status' => $leaveRequest->status,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Demande non trouvée.'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Erreur calcul durée pour brouillon: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * ✅ Récupérer le statut des pièces justificatives pour une demande
+     * Route: /employe/leave-requests/{id}/attachments/status
+     */
+    public function getAttachmentsStatus($id)
+    {
+        try {
+            // ✅ Vérifier l'authentification
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Non authentifié. Veuillez vous connecter.'
+                ], 401);
+            }
+
+            $employee = $this->getEmployee();
+            
+            if (!$employee) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucun employé associé à ce compte.'
+                ], 401);
+            }
+            
+            $leaveRequest = LeaveRequest::where('employee_id', $employee->ID)
+                ->with('leaveType')
+                ->findOrFail($id);
+            
+            $status = $this->leaveRequestService->getAttachmentsStatus($id);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $status
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Erreur getAttachmentsStatus: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -269,7 +483,8 @@ class LeaveRequestController extends Controller
     }
 
     /**
-     * ✅ Créer une demande de congé (brouillon) - CORRIGÉ avec redirection normale
+     * ✅ Créer une demande de congé (brouillon)
+     * NE VALIDE PAS LES PIÈCES ICI
      */
     public function store(Request $request)
     {
@@ -290,6 +505,8 @@ class LeaveRequestController extends Controller
                 'comment' => 'nullable|string|max:500',
                 'attachments.*' => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png,xls,xlsx,txt',
             ]);
+
+            // ✅ NE PAS valider les pièces ici - c'est un brouillon
 
             // Créer la demande
             $leaveRequest = $this->leaveRequestService->createRequest(
@@ -319,27 +536,27 @@ class LeaveRequestController extends Controller
                 }
             }
 
-            // ✅ Si le bouton "Soumettre" a été cliqué
+            // Si le bouton "Soumettre" a été cliqué
             if ($request->has('submit')) {
-                $this->leaveRequestService->submitRequest($leaveRequest->id);
-                
-                // ✅ REDIRECTION NORMALE (pas de JSON)
-                return redirect()->route('employe.leave-requests.index')
-                    ->with('success', 'Demande soumise avec succès.');
+                try {
+                    $this->leaveRequestService->submitRequest($leaveRequest->id);
+                    return redirect()->route('employe.leave-requests.index')
+                        ->with('success', 'Demande soumise avec succès.');
+                } catch (\Exception $e) {
+                    return redirect()->route('employe.leave-requests.edit', $leaveRequest->id)
+                        ->with('error', $e->getMessage());
+                }
             }
 
-            // ✅ Redirection vers la page de la demande (brouillon)
             return redirect()->route('employe.leave-requests.show', $leaveRequest->id)
                 ->with('success', 'Demande créée avec succès.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // ✅ Redirection avec erreurs de validation
             return redirect()->back()
                 ->withErrors($e->errors())
                 ->withInput();
                 
         } catch (\Exception $e) {
-            // ✅ Redirection avec message d'erreur
             return redirect()->back()
                 ->with('error', 'Erreur: ' . $e->getMessage())
                 ->withInput();
@@ -359,14 +576,17 @@ class LeaveRequestController extends Controller
         }
         
         $request = LeaveRequest::where('employee_id', $employee->ID)
-            ->with(['leaveType', 'period', 'approver'])
+            ->with(['leaveType', 'period', 'approver', 'attachments'])
             ->findOrFail($id);
 
-        return view('employes.leave_requests.show', compact('request'));
+        // ✅ Vérifier le statut des pièces
+        $attachmentStatus = $this->leaveRequestService->getAttachmentsStatus($id);
+
+        return view('employes.leave_requests.show', compact('request', 'attachmentStatus'));
     }
 
     /**
-     * Formulaire d'édition d'une demande
+     * Formulaire d'édition d'une demande (brouillon)
      */
     public function edit($id)
     {
@@ -379,6 +599,7 @@ class LeaveRequestController extends Controller
         
         $request = LeaveRequest::where('employee_id', $employee->ID)
             ->where('status', 'draft')
+            ->with(['leaveType', 'attachments'])
             ->findOrFail($id);
         
         $userSiteId = $employee->SiegeID;
@@ -399,51 +620,84 @@ class LeaveRequestController extends Controller
             ->orderBy('start_date', 'desc')
             ->get();
         
-        return view('employes.leave_requests.edit', compact('request', 'leaveTypes', 'periods'));
+        // ✅ Vérifier le statut des pièces
+        $attachmentStatus = $this->leaveRequestService->getAttachmentsStatus($id);
+        
+        return view('employes.leave_requests.edit', compact('request', 'leaveTypes', 'periods', 'attachmentStatus'));
     }
 
     /**
-     * Mettre à jour une demande
+     * Mettre à jour une demande (brouillon)
+     * NE VALIDE PAS LES PIÈCES ICI
      */
     public function update(Request $request, $id)
     {
-        $employee = $this->getEmployee();
-        
-        if (!$employee) {
-            return redirect()->route('employe.login')
-                ->with('error', 'Aucun employé associé à ce compte.');
+        try {
+            $employee = $this->getEmployee();
+            
+            if (!$employee) {
+                return redirect()->route('employe.login')
+                    ->with('error', 'Aucun employé associé à ce compte.');
+            }
+            
+            $leaveRequest = LeaveRequest::where('employee_id', $employee->ID)
+                ->where('status', 'draft')
+                ->findOrFail($id);
+            
+            $request->validate([
+                'leave_type_id' => 'required|exists:leave_types,id',
+                'period_id' => 'required|exists:leave_periods,id',
+                'start_date' => 'required|date|after_or_equal:today',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'reason' => 'nullable|string|max:500',
+                'comment' => 'nullable|string|max:500',
+            ]);
+            
+            // ✅ NE PAS valider les pièces ici - c'est un brouillon
+            
+            $leaveRequest->update([
+                'leave_type_id' => $request->leave_type_id,
+                'period_id' => $request->period_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'reason' => $request->reason,
+                'comment' => $request->comment,
+            ]);
+            
+            // Recalculer la durée
+            $duration = $this->durationCalculator->calculate(
+                $employee->ID,
+                $request->leave_type_id,
+                $request->start_date,
+                $request->end_date,
+                $request->period_id
+            );
+            $leaveRequest->update(['duration' => $duration]);
+            
+            if ($request->has('submit')) {
+                try {
+                    $this->leaveRequestService->submitRequest($id);
+                    return redirect()->route('employe.leave-requests.index')
+                        ->with('success', 'Demande soumise avec succès.');
+                } catch (\Exception $e) {
+                    return redirect()->route('employe.leave-requests.edit', $id)
+                        ->with('error', $e->getMessage());
+                }
+            }
+            
+            return redirect()->route('employe.leave-requests.show', $id)
+                ->with('success', 'Demande mise à jour avec succès.');
+                
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput();
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Erreur: ' . $e->getMessage())
+                ->withInput();
         }
-        
-        $leaveRequest = LeaveRequest::where('employee_id', $employee->ID)
-            ->where('status', 'draft')
-            ->findOrFail($id);
-        
-        $request->validate([
-            'leave_type_id' => 'required|exists:leave_types,id',
-            'period_id' => 'required|exists:leave_periods,id',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'nullable|string|max:500',
-            'comment' => 'nullable|string|max:500',
-        ]);
-        
-        $leaveRequest->update([
-            'leave_type_id' => $request->leave_type_id,
-            'period_id' => $request->period_id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'reason' => $request->reason,
-            'comment' => $request->comment,
-        ]);
-        
-        if ($request->has('submit')) {
-            $this->leaveRequestService->submitRequest($id);
-            return redirect()->route('employe.leave-requests.index')
-                ->with('success', 'Demande soumise avec succès.');
-        }
-        
-        return redirect()->route('employe.leave-requests.show', $id)
-            ->with('success', 'Demande mise à jour avec succès.');
     }
 
     /**
@@ -476,6 +730,13 @@ class LeaveRequestController extends Controller
             ->where('status', 'draft')
             ->findOrFail($id);
 
+        // Supprimer les fichiers joints
+        $attachments = LeaveRequestAttachment::where('leave_request_id', $id)->get();
+        foreach ($attachments as $attachment) {
+            Storage::disk('public')->delete($attachment->file_path);
+            $attachment->delete();
+        }
+
         $request->delete();
 
         return redirect()->route('employe.leave-requests.index')
@@ -488,7 +749,7 @@ class LeaveRequestController extends Controller
     public function uploadAttachment(Request $request, $id)
     {
         try {
-            \Log::info('=== UPLOAD ATTACHMENT START ===', [
+            Log::info('=== UPLOAD ATTACHMENT START ===', [
                 'id' => $id,
                 'method' => $request->method(),
                 'has_file' => $request->hasFile('attachment')
@@ -497,28 +758,28 @@ class LeaveRequestController extends Controller
             $employee = $this->getEmployee();
             
             if (!$employee) {
-                \Log::error('Aucun employé trouvé');
+                Log::error('Aucun employé trouvé');
                 return response()->json([
                     'success' => false,
                     'message' => 'Aucun employé associé à ce compte.'
                 ], 401);
             }
             
-            \Log::info('Employé trouvé', ['employee_id' => $employee->ID]);
+            Log::info('Employé trouvé', ['employee_id' => $employee->ID]);
             
             $leaveRequest = LeaveRequest::where('employee_id', $employee->ID)
                 ->whereIn('status', ['draft', 'pending'])
                 ->find($id);
             
             if (!$leaveRequest) {
-                \Log::error('Demande non trouvée', ['id' => $id, 'employee_id' => $employee->ID]);
+                Log::error('Demande non trouvée', ['id' => $id, 'employee_id' => $employee->ID]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Demande non trouvée ou non modifiable'
                 ], 404);
             }
             
-            \Log::info('Demande trouvée', ['request_id' => $leaveRequest->id]);
+            Log::info('Demande trouvée', ['request_id' => $leaveRequest->id]);
             
             if (!$request->hasFile('attachment')) {
                 return response()->json([
@@ -533,7 +794,7 @@ class LeaveRequestController extends Controller
                 'attachment' => 'required|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png,xls,xlsx,txt',
             ]);
             
-            \Log::info('Fichier validé', [
+            Log::info('Fichier validé', [
                 'name' => $file->getClientOriginalName(),
                 'size' => $file->getSize()
             ]);
@@ -541,7 +802,7 @@ class LeaveRequestController extends Controller
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('leave_attachments/' . $id, $fileName, 'public');
             
-            \Log::info('Fichier stocké', ['path' => $filePath]);
+            Log::info('Fichier stocké', ['path' => $filePath]);
             
             $uploadedBy = $employee->FirstName . ' ' . $employee->LastName;
             if (empty(trim($uploadedBy))) {
@@ -557,7 +818,7 @@ class LeaveRequestController extends Controller
                 'uploaded_by' => $uploadedBy,
             ]);
             
-            \Log::info('Attachment créé', ['attachment_id' => $attachment->id]);
+            Log::info('Attachment créé', ['attachment_id' => $attachment->id]);
             
             return response()->json([
                 'success' => true,
@@ -571,14 +832,14 @@ class LeaveRequestController extends Controller
             ]);
             
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Erreur validation', ['errors' => $e->errors()]);
+            Log::error('Erreur validation', ['errors' => $e->errors()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur de validation',
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Erreur upload attachment', [
+            Log::error('Erreur upload attachment', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
@@ -595,27 +856,37 @@ class LeaveRequestController extends Controller
      */
     public function deleteAttachment($id)
     {
-        $employee = $this->getEmployee();
-        
-        if (!$employee) {
-            return redirect()->route('employe.login')
-                ->with('error', 'Aucun employé associé à ce compte.');
+        try {
+            $employee = $this->getEmployee();
+            
+            if (!$employee) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucun employé associé à ce compte.'
+                ], 401);
+            }
+            
+            $attachment = LeaveRequestAttachment::with('leaveRequest')
+                ->whereHas('leaveRequest', function ($query) use ($employee) {
+                    $query->where('employee_id', $employee->ID);
+                })
+                ->findOrFail($id);
+            
+            Storage::disk('public')->delete($attachment->file_path);
+            
+            $attachment->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Pièce jointe supprimée avec succès'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur: ' . $e->getMessage()
+            ], 500);
         }
-        
-        $attachment = LeaveRequestAttachment::with('leaveRequest')
-            ->whereHas('leaveRequest', function ($query) use ($employee) {
-                $query->where('employee_id', $employee->ID);
-            })
-            ->findOrFail($id);
-        
-        Storage::disk('public')->delete($attachment->file_path);
-        
-        $attachment->delete();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Pièce jointe supprimée avec succès'
-        ]);
     }
 
     /**
@@ -729,7 +1000,7 @@ class LeaveRequestController extends Controller
             return response()->json($events);
             
         } catch (\Exception $e) {
-            \Log::error('Erreur calendrier: ' . $e->getMessage());
+            Log::error('Erreur calendrier: ' . $e->getMessage());
             return response()->json([
                 'error' => $e->getMessage()
             ], 500);

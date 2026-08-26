@@ -409,6 +409,8 @@ Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(
     Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
     Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
     Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
+      Route::get('/leave-requests/{id}/calculate-duration', [LeaveRequestController::class, 'calculateDurationForDraft'])
+        ->name('leave-requests.calculate-duration');
     
     // Pièces jointes
     Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])->name('leave-requests.upload-attachment');

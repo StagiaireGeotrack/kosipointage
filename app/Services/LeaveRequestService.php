@@ -32,14 +32,15 @@ class LeaveRequestService
 
     /**
      * Créer une demande de congé (brouillon)
+     * ✅ NE VALIDE PAS LES PIÈCES ICI - SEULEMENT À LA SOUMISSION
      */
     public function createRequest($employeeId, $leaveTypeId, $periodId, $startDate, $endDate, $reason = null, $comment = null, $attachments = [])
     {
         // ✅ Récupérer le type de congé
         $leaveType = LeaveType::findOrFail($leaveTypeId);
         
-        // ✅ VALIDATION DES PIÈCES SELON LA VALEUR DE requires_attachment
-        $this->validateAttachments($leaveType, $attachments);
+        // ✅ NE PAS valider les pièces ici - c'est un brouillon
+        // Les pièces seront validées à la soumission (submitRequest)
 
         $duration = $this->durationCalculator->calculate(
             $employeeId,
@@ -79,7 +80,57 @@ class LeaveRequestService
     }
 
     /**
+     * Mettre à jour une demande de congé (brouillon)
+     * ✅ NE VALIDE PAS LES PIÈCES ICI - SEULEMENT À LA SOUMISSION
+     */
+    public function updateRequest($requestId, $startDate, $endDate, $reason = null, $comment = null, $attachments = [])
+    {
+        $request = LeaveRequest::with('leaveType')->findOrFail($requestId);
+        
+        // ✅ Vérifier que c'est un brouillon
+        if ($request->status !== 'draft') {
+            throw new \Exception('Seuls les brouillons peuvent être modifiés.');
+        }
+
+        // ✅ NE PAS valider les pièces ici - c'est un brouillon
+        // Les pièces seront validées à la soumission
+
+        $duration = $this->durationCalculator->calculate(
+            $request->employee_id,
+            $request->leave_type_id,
+            $startDate,
+            $endDate,
+            $request->period_id
+        );
+
+        $request->update([
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'duration' => $duration,
+            'reason' => $reason,
+            'comment' => $comment,
+        ]);
+
+        // ✅ Ajouter les nouvelles pièces justificatives si présentes
+        if (!empty($attachments)) {
+            foreach ($attachments as $attachment) {
+                LeaveRequestAttachment::create([
+                    'leave_request_id' => $request->id,
+                    'file_name' => $attachment['name'] ?? $attachment['file_name'],
+                    'file_path' => $attachment['path'] ?? $attachment['file_path'],
+                    'file_size' => $attachment['size'] ?? $attachment['file_size'] ?? null,
+                    'mime_type' => $attachment['type'] ?? $attachment['mime_type'] ?? null,
+                    'uploaded_by' => $attachment['uploaded_by'] ?? Auth::user()?->name ?? 'System',
+                ]);
+            }
+        }
+
+        return $request;
+    }
+
+    /**
      * Soumettre une demande (draft → pending)
+     * ✅ VALIDATION OBLIGATOIRE DES PIÈCES ICI
      */
     public function submitRequest($requestId)
     {
@@ -89,7 +140,7 @@ class LeaveRequestService
             throw new \Exception('Cette demande ne peut pas être soumise.');
         }
 
-        // ✅ VALIDATION DES PIÈCES SELON LA VALEUR DE requires_attachment
+        // ✅ VALIDATION OBLIGATOIRE DES PIÈCES À LA SOUMISSION
         $this->validateRequestAttachments($request);
 
         // Vérifier le solde disponible
@@ -109,6 +160,8 @@ class LeaveRequestService
 
         DB::transaction(function () use ($request) {
             $request->status = 'pending';
+            // ✅ submitted_at commentée car la colonne n'existe pas
+            // $request->submitted_at = now();
             $request->save();
 
             try {
@@ -123,6 +176,7 @@ class LeaveRequestService
 
     /**
      * Approuver une demande (pending → approved)
+     * ✅ VALIDATION OBLIGATOIRE DES PIÈCES ICI
      */
     public function approveRequest($requestId, $approvedBy, $comment = null)
     {
@@ -132,7 +186,7 @@ class LeaveRequestService
             throw new \Exception('Cette demande ne peut pas être approuvée.');
         }
 
-        // ✅ VALIDATION DES PIÈCES SELON LA VALEUR DE requires_attachment
+        // ✅ VALIDATION OBLIGATOIRE DES PIÈCES À L'APPROBATION
         $this->validateRequestAttachments($request);
 
         // Vérifier le solde disponible
@@ -216,7 +270,7 @@ class LeaveRequestService
             throw new \Exception('Seules les demandes approuvées peuvent être annulées.');
         }
 
-        // ✅ Vérifier si un reversal existe déjà
+        // Vérifier si un reversal existe déjà
         $existingReversal = LeaveBalanceTransaction::where('reference_id', $request->id)
             ->where('reference_type', 'leave_request')
             ->where('type', 'reversal')
@@ -230,7 +284,7 @@ class LeaveRequestService
             return $request;
         }
 
-        // ✅ Vérifier si un ancien crédit existe (compatibilité)
+        // Vérifier si un ancien crédit existe (compatibilité)
         $existingCredit = LeaveBalanceTransaction::where('reference_id', $request->id)
             ->where('reference_type', 'leave_request')
             ->where('type', 'credit')
@@ -256,7 +310,6 @@ class LeaveRequestService
         }
 
         DB::transaction(function () use ($request) {
-            // ✅ Utiliser reverseDebit
             $this->balanceService->reverseDebit(
                 $request->employee_id,
                 $request->leave_type_id,
@@ -309,33 +362,9 @@ class LeaveRequestService
     }
 
     /**
-     * ✅ VALIDATION DES PIÈCES SELON LA VALEUR DE requires_attachment
-     * Les valeurs possibles : 'never', 'always', 'after_duration'
-     */
-    protected function validateAttachments($leaveType, $attachments)
-    {
-        // 🔴 Si requires_attachment = 'always' → PIÈCE OBLIGATOIRE
-        if ($leaveType->requires_attachment === 'always') {
-            if (empty($attachments)) {
-                throw new \Exception(
-                    'Le type de congé "' . $leaveType->name . '" requiert une pièce justificative obligatoire.'
-                );
-            }
-        }
-
-        // 🟡 Si requires_attachment = 'after_duration' → PIÈCE OBLIGATOIRE AU-DELÀ D'UNE DURÉE
-        // (mais ici on n'a pas encore la durée, donc on ne peut pas valider)
-        // La validation se fera dans validateRequestAttachments()
-        
-        // 🟢 Si requires_attachment = 'never' → AUCUNE PIÈCE REQUISE
-        // Ne rien faire
-
-        return true;
-    }
-
-    /**
      * ✅ VALIDATION DES PIÈCES POUR UNE DEMANDE EXISTANTE
      * Lit la valeur de requires_attachment dans leave_types
+     * ⚠️ Cette méthode est appelée UNIQUEMENT à la soumission et à l'approbation
      */
     protected function validateRequestAttachments($request)
     {
@@ -357,7 +386,7 @@ class LeaveRequestService
 
         // 🟡 CAS 2 : requires_attachment = 'after_duration' → Pièce obligatoire au-delà d'une durée
         if ($leaveType->requires_attachment === 'after_duration') {
-            $threshold = $leaveType->requires_attachment_after ?? 3; // Par défaut 3 jours
+            $threshold = $leaveType->requires_attachment_after ?? 3;
             
             if ($request->duration > $threshold) {
                 $hasAttachments = LeaveRequestAttachment::where('leave_request_id', $request->id)->exists();
@@ -375,7 +404,6 @@ class LeaveRequestService
 
     /**
      * ✅ VÉRIFIER SI UNE DEMANDE A TOUTES LES PIÈCES REQUISES
-     * Lecture de la valeur de requires_attachment dans leave_types
      */
     public function hasRequiredAttachments($requestId)
     {
@@ -387,12 +415,10 @@ class LeaveRequestService
 
         $leaveType = $request->leaveType;
         
-        // 🔴 requires_attachment = 'always' → Pièce toujours obligatoire
         if ($leaveType->requires_attachment === 'always') {
             return LeaveRequestAttachment::where('leave_request_id', $requestId)->exists();
         }
 
-        // 🟡 requires_attachment = 'after_duration' → Pièce obligatoire au-delà d'une durée
         if ($leaveType->requires_attachment === 'after_duration') {
             $threshold = $leaveType->requires_attachment_after ?? 3;
             if ($request->duration > $threshold) {
@@ -401,7 +427,6 @@ class LeaveRequestService
             return true;
         }
 
-        // 🟢 requires_attachment = 'never' → Aucune pièce requise
         return true;
     }
 
@@ -499,12 +524,9 @@ class LeaveRequestService
     }
 
     // ============================================
-    // MÉTHODES EXISTANTES (inchangées)
+    // MÉTHODES EXISTANTES
     // ============================================
 
-    /**
-     * Récupérer les demandes d'un employé
-     */
     public function getEmployeeRequests($employeeId)
     {
         return LeaveRequest::where('employee_id', $employeeId)
@@ -512,9 +534,6 @@ class LeaveRequestService
             ->get();
     }
 
-    /**
-     * Récupérer les demandes en attente pour un manager
-     */
     public function getPendingRequestsForManager($managerId)
     {
         $employeeIds = Employe::where('manager_id', $managerId)
@@ -527,9 +546,6 @@ class LeaveRequestService
             ->get();
     }
 
-    /**
-     * Récupérer les demandes par statut
-     */
     public function getRequestsByStatus($employeeId, $status)
     {
         return LeaveRequest::where('employee_id', $employeeId)
@@ -538,9 +554,6 @@ class LeaveRequestService
             ->get();
     }
 
-    /**
-     * Vérifier si un employé a des demandes en conflit
-     */
     public function hasConflictingRequests($employeeId, $startDate, $endDate, $excludeRequestId = null)
     {
         $query = LeaveRequest::where('employee_id', $employeeId)
@@ -561,17 +574,11 @@ class LeaveRequestService
         return $query->exists();
     }
 
-    /**
-     * Obtenir le solde d'un employé pour un type de congé
-     */
     public function getEmployeeBalance($employeeId, $leaveTypeId, $periodId)
     {
         return $this->balanceService->getBalance($employeeId, $leaveTypeId, $periodId);
     }
 
-    /**
-     * Obtenir le solde disponible d'un employé
-     */
     public function getEmployeeAvailableBalance($employeeId, $leaveTypeId, $periodId)
     {
         return $this->balanceService->getAvailableBalance($employeeId, $leaveTypeId, $periodId);

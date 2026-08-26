@@ -22,6 +22,7 @@ class LeaveRequest extends Model
         'duration',
         'status',
         'reason',
+        'submitted_at',
         'comment',
         'attachment_path',
         'approved_by',
@@ -38,6 +39,8 @@ class LeaveRequest extends Model
         'end_date' => 'date',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
+                'submitted_at' => 'datetime',
+
         'duration' => 'decimal:2',
     ];
 
