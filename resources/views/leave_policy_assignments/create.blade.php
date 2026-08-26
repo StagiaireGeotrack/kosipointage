@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 <i class="bi bi-plus-circle"></i> {{ __('Nouvelle Assignation') }}
             </h2>
-            <a href="{{ route('leave-policy-assignments.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.leave-policy-assignments.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
             </a>
         </div>
@@ -14,7 +14,7 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="{{ route('leave-policy-assignments.store') }}">
+                <form method="POST" action="{{ route('admin.leave-policy-assignments.store') }}">
                     @csrf
 
                     <div class="row g-3">
@@ -43,23 +43,22 @@
 
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <x-input-label for="target_type" :value="__('Type de cible')" />
+                            <x-input-label for="assignment_type" :value="__('Type d\'assignation')" />
                             <span class="text-danger">*</span>
-                            <select id="target_type" name="target_type" class="form-select mt-1" required>
+                            <select id="assignment_type" name="assignment_type" class="form-select mt-1" required>
                                 <option value="">{{ __('Sélectionnez un type') }}</option>
-                                <option value="employee" {{ old('target_type') == 'employee' ? 'selected' : '' }}>Employé</option>
-                                <option value="department" {{ old('target_type') == 'department' ? 'selected' : '' }}>Service</option>
-                                <option value="job_title" {{ old('target_type') == 'job_title' ? 'selected' : '' }}>Poste</option>
-                                <option value="hierarchy_level" {{ old('target_type') == 'hierarchy_level' ? 'selected' : '' }}>Niveau KOSI</option>
-                                <option value="site" {{ old('target_type') == 'site' ? 'selected' : '' }}>Siège</option>
+                                <option value="individual" {{ old('assignment_type') == 'individual' ? 'selected' : '' }}>Individuel</option>
+                                <option value="department" {{ old('assignment_type') == 'department' ? 'selected' : '' }}>Service</option>
+                                <option value="site" {{ old('assignment_type') == 'site' ? 'selected' : '' }}>Siège</option>
+                                <option value="company" {{ old('assignment_type') == 'company' ? 'selected' : '' }}>Entreprise</option>
                             </select>
-                            <x-input-error :messages="$errors->get('target_type')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('assignment_type')" class="mt-2" />
                         </div>
 
-                        <div class="col-md-6" id="target_select_container">
+                        <div class="col-md-6" id="target_container">
                             <x-input-label for="target_id" :value="__('Cible')" />
                             <span class="text-danger">*</span>
-                            <select id="target_id" name="target_id" class="form-select mt-1" required>
+                            <select id="target_id" name="target_id" class="form-select mt-1">
                                 <option value="">{{ __('Sélectionnez d\'abord un type') }}</option>
                             </select>
                             <x-input-error :messages="$errors->get('target_id')" class="mt-2" />
@@ -82,10 +81,10 @@
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
-                        <x-primary-button class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> {{ __('Créer') }}
-                        </x-primary-button>
-                        <a href="{{ route('leave-policy-assignments.index') }}" class="btn btn-secondary">
+                        </button>
+                        <a href="{{ route('admin.leave-policy-assignments.index') }}" class="btn btn-secondary">
                             {{ __('Annuler') }}
                         </a>
                     </div>
@@ -97,23 +96,21 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const targetType = document.getElementById('target_type');
+            const assignmentType = document.getElementById('assignment_type');
             const targetId = document.getElementById('target_id');
 
             // Données préchargées
             const data = {
                 employees: @json($employees->map(fn($e) => ['id' => $e->ID, 'name' => $e->Nom])),
                 departments: @json($departments->map(fn($d) => ['id' => $d->id, 'name' => $d->name])),
-                job_titles: @json($jobTitles->map(fn($j) => ['id' => $j->id, 'name' => $j->name])),
-                hierarchy_levels: @json($hierarchyLevels->map(fn($h) => ['id' => $h->id, 'name' => $h->code . ' - ' . $h->name])),
                 sites: @json($sites->map(fn($s) => ['id' => $s->ID, 'name' => $s->Nom])),
             };
 
             function updateTargetOptions() {
-                const type = targetType.value;
+                const type = assignmentType.value;
                 let options = '<option value="">{{ __("Sélectionnez une cible") }}</option>';
 
-                if (type === 'employee') {
+                if (type === 'individual') {
                     data.employees.forEach(item => {
                         options += `<option value="${item.id}">${item.name}</option>`;
                     });
@@ -121,33 +118,28 @@
                     data.departments.forEach(item => {
                         options += `<option value="${item.id}">${item.name}</option>`;
                     });
-                } else if (type === 'job_title') {
-                    data.job_titles.forEach(item => {
-                        options += `<option value="${item.id}">${item.name}</option>`;
-                    });
-                } else if (type === 'hierarchy_level') {
-                    data.hierarchy_levels.forEach(item => {
-                        options += `<option value="${item.id}">${item.name}</option>`;
-                    });
                 } else if (type === 'site') {
                     data.sites.forEach(item => {
                         options += `<option value="${item.id}">${item.name}</option>`;
                     });
+                } else if (type === 'company') {
+                    // Pour l'entreprise, on pourrait avoir une liste
+                    options += `<option value="1">Entreprise principale</option>`;
                 }
 
                 targetId.innerHTML = options;
             }
 
-            targetType.addEventListener('change', updateTargetOptions);
+            assignmentType.addEventListener('change', updateTargetOptions);
 
             // Initialisation
-            const oldTargetType = '{{ old('target_type') }}';
-            const oldTargetId = '{{ old('target_id') }}';
-            if (oldTargetType) {
-                targetType.value = oldTargetType;
+            const oldType = '{{ old('assignment_type') }}';
+            const oldTarget = '{{ old('target_id') }}';
+            if (oldType) {
+                assignmentType.value = oldType;
                 updateTargetOptions();
-                if (oldTargetId) {
-                    targetId.value = oldTargetId;
+                if (oldTarget) {
+                    targetId.value = oldTarget;
                 }
             }
         });

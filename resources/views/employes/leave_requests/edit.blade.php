@@ -16,12 +16,15 @@
             <div class="card-body">
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle"></i>
-                    {{ __('Modifiez les informations de votre demande de congé. La durée sera recalculée automatiquement.') }}
+                    {{ __('Modifiez les informations de votre demande de congé. La durée sera recalculée automatiquement selon les règles configurées.') }}
                 </div>
 
                 <form method="POST" action="{{ route('employe.leave-requests.update', $request->id) }}" id="leaveRequestForm">
                     @csrf
                     @method('PUT')
+
+                    <!-- ID Employé caché -->
+                    <input type="hidden" id="employee_id" value="{{ $employee->ID ?? auth()->user()->employee->ID ?? '' }}">
 
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -58,7 +61,7 @@
                             <x-input-label for="start_date" :value="__('Date de début')" />
                             <span class="text-danger">*</span>
                             <input type="date" id="start_date" name="start_date" class="form-control mt-1" 
-                                   value="{{ old('start_date', $request->start_date->format('Y-m-d')) }}" required onchange="calculateDuration()">
+                                   value="{{ old('start_date', $request->start_date->format('Y-m-d')) }}" required>
                             <x-input-error :messages="$errors->get('start_date')" class="mt-2" />
                         </div>
 
@@ -66,17 +69,24 @@
                             <x-input-label for="end_date" :value="__('Date de fin')" />
                             <span class="text-danger">*</span>
                             <input type="date" id="end_date" name="end_date" class="form-control mt-1" 
-                                   value="{{ old('end_date', $request->end_date->format('Y-m-d')) }}" required onchange="calculateDuration()">
+                                   value="{{ old('end_date', $request->end_date->format('Y-m-d')) }}" required>
                             <x-input-error :messages="$errors->get('end_date')" class="mt-2" />
                         </div>
                     </div>
 
+                    <!-- Durée calculée automatiquement -->
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <x-input-label for="duration" :value="__('Durée calculée (jours)')" />
-                            <input type="text" id="duration" name="duration" class="form-control mt-1" 
-                                   value="{{ old('duration', $request->duration) }}" readonly style="background-color: #f3f4f6;">
-                            <small class="text-muted">{{ __('La durée est calculée automatiquement en jours ouvrés') }}</small>
+                            <x-input-label for="duration_display" :value="__('Durée calculée')" />
+                            <div id="duration_display" class="form-control mt-1" style="background-color: #f3f4f6; font-weight: bold; padding: 8px 12px; min-height: 38px;">
+                                <span class="text-muted">{{ number_format($request->duration, 1) }} jours</span>
+                            </div>
+                            <input type="hidden" id="duration_hidden" name="duration" value="{{ $request->duration }}">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i> 
+                                {{ __('La durée est calculée automatiquement selon : type de congé, politique, jours fériés et week-ends') }}
+                            </small>
+                            <div id="duration_details" class="mt-1 small text-muted" style="display: none;"></div>
                         </div>
 
                         <div class="col-md-6">
@@ -114,34 +124,86 @@
 
     @push('scripts')
     <script>
+        // ============================================
+        // CALCUL DE LA DURÉE AVEC API (SANS CODE EN DUR)
+        // ============================================
+        const leaveTypeSelect = document.getElementById('leave_type_id');
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+        const durationDisplay = document.getElementById('duration_display');
+        const durationHidden = document.getElementById('duration_hidden');
+        const durationDetails = document.getElementById('duration_details');
+        const employeeId = document.getElementById('employee_id').value;
+
         function calculateDuration() {
-            const startDate = document.getElementById('start_date').value;
-            const endDate = document.getElementById('end_date').value;
-            const durationField = document.getElementById('duration');
+            const data = {
+                employee_id: employeeId,
+                leave_type_id: leaveTypeSelect.value,
+                start_date: startDateInput.value,
+                end_date: endDateInput.value,
+                period_id: document.getElementById('period_id').value
+            };
 
-            if (startDate && endDate) {
-                const start = new Date(startDate);
-                const end = new Date(endDate);
-                
-                if (end < start) {
-                    durationField.value = '0';
-                    return;
-                }
-
-                let days = 0;
-                const current = new Date(start);
-                while (current <= end) {
-                    const day = current.getDay();
-                    if (day !== 0 && day !== 6) { // Lundi-vendredi
-                        days++;
-                    }
-                    current.setDate(current.getDate() + 1);
-                }
-                durationField.value = days;
+            if (!data.start_date || !data.end_date || !data.leave_type_id) {
+                durationDisplay.innerHTML = '<span class="text-muted">-- jours</span>';
+                durationHidden.value = '0';
+                durationDetails.style.display = 'none';
+                return;
             }
+
+            if (new Date(data.end_date) < new Date(data.start_date)) {
+                durationDisplay.innerHTML = '<span class="text-danger">⚠️ Date de fin antérieure</span>';
+                durationHidden.value = '0';
+                durationDetails.style.display = 'none';
+                return;
+            }
+
+            durationDisplay.innerHTML = '<span class="text-warning">⏳ Calcul en cours...</span>';
+
+            fetch('/api/leave/calculate-duration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    durationDisplay.innerHTML = `<span class="text-success fw-bold">${data.duration_formatted}</span>`;
+                    durationHidden.value = data.duration;
+                    
+                    if (data.details) {
+                        durationDetails.innerHTML = data.details;
+                        durationDetails.style.display = 'block';
+                    } else {
+                        durationDetails.style.display = 'none';
+                    }
+                } else {
+                    durationDisplay.innerHTML = `<span class="text-danger">⚠️ ${data.message || 'Erreur de calcul'}</span>`;
+                    durationHidden.value = '0';
+                    durationDetails.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                durationDisplay.innerHTML = '<span class="text-danger">❌ Erreur de calcul</span>';
+                durationHidden.value = '0';
+                durationDetails.style.display = 'none';
+            });
         }
 
-        // Calculer la durée au chargement
+        // Écouter les changements
+        leaveTypeSelect.addEventListener('change', calculateDuration);
+        startDateInput.addEventListener('change', calculateDuration);
+        endDateInput.addEventListener('change', calculateDuration);
+        startDateInput.addEventListener('input', calculateDuration);
+        endDateInput.addEventListener('input', calculateDuration);
+        document.getElementById('period_id').addEventListener('change', calculateDuration);
+
+        // Calculer au chargement
         document.addEventListener('DOMContentLoaded', function() {
             calculateDuration();
         });

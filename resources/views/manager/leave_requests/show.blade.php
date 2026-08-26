@@ -88,7 +88,7 @@
                                 <span>{{ $attachment->file_name }}</span>
                                 <a href="{{ route('employe.leave-requests.download-attachment', $attachment->id) }}" 
                                    class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-download"></i>
+                                    <i class="bi bi-download"></i>Telecharger
                                 </a>
                             </div>
                         @endforeach

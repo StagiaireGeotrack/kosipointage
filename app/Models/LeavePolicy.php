@@ -36,7 +36,10 @@ class LeavePolicy extends Model
 
     protected $appends = ['is_global'];
 
-    // Relations
+    // ============================================
+    // RELATIONS
+    // ============================================
+
     public function site()
     {
         return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
@@ -52,13 +55,36 @@ class LeavePolicy extends Model
         return $this->belongsTo(ReferenceSchedule::class, 'reference_schedule_id');
     }
 
-    // Accessors
+    /**
+     * ✅ RELATION AVEC LES ASSIGNMENTS (CORRIGÉE)
+     * Utilise 'leave_policy_id' comme clé étrangère
+     */
+    public function assignments()
+    {
+        return $this->hasMany(LeavePolicyAssignment::class, 'leave_policy_id');
+    }
+
+    /**
+     * ✅ RELATION AVEC LE TYPE DE CONGÉ (AJOUTÉE)
+     */
+    public function leaveType()
+    {
+        return $this->belongsTo(LeaveType::class, 'leave_type_id');
+    }
+
+    // ============================================
+    // ACCESSORS
+    // ============================================
+
     public function getIsGlobalAttribute(): bool
     {
         return is_null($this->site_id);
     }
 
-    // Scopes
+    // ============================================
+    // SCOPES
+    // ============================================
+
     public function scopeVisibleForUser($query, $user)
     {
         if ($user && $user->IsSuperAdmin == 1) {
@@ -93,7 +119,18 @@ class LeavePolicy extends Model
         return $query->where('is_default', true);
     }
 
-    // Helpers
+    /**
+     * ✅ SCOPE POUR UN TYPE DE CONGÉ SPÉCIFIQUE (AJOUTÉ)
+     */
+    public function scopeForLeaveType($query, $leaveTypeId)
+    {
+        return $query->where('leave_type_id', $leaveTypeId);
+    }
+
+    // ============================================
+    // HELPERS
+    // ============================================
+
     public function isGlobal(): bool
     {
         return is_null($this->site_id);
@@ -104,7 +141,6 @@ class LeavePolicy extends Model
         return $this->siteSettings()->where('site_id', $siteId)->first();
     }
 
-    // Méthodes utilitaires
     public function getCalculationMethodLabel(): string
     {
         return match($this->calculation_method) {

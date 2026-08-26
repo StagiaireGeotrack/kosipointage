@@ -18,24 +18,32 @@ class LeaveRequestService
 {
     protected $balanceService;
     protected $notificationService;
+    protected $durationCalculator;
 
     public function __construct(
         LeaveBalanceService $balanceService,
-        NotificationService $notificationService
+        NotificationService $notificationService,
+        LeaveDurationCalculator $durationCalculator
     ) {
         $this->balanceService = $balanceService;
         $this->notificationService = $notificationService;
+        $this->durationCalculator = $durationCalculator;
     }
 
     /**
-     * Créer une demande de congé
+     * Créer une demande de congé (brouillon)
+     * ✅ AUCUN IMPACT SUR LE SOLDE
      */
     public function createRequest($employeeId, $leaveTypeId, $periodId, $startDate, $endDate, $reason = null, $comment = null)
     {
-        // Calculer la durée
-        $duration = $this->calculateDuration($startDate, $endDate, $leaveTypeId);
+        $duration = $this->durationCalculator->calculate(
+            $employeeId,
+            $leaveTypeId,
+            $startDate,
+            $endDate,
+            $periodId
+        );
 
-        // Créer la demande avec TOUS les champs
         $request = LeaveRequest::create([
             'employee_id' => $employeeId,
             'leave_type_id' => $leaveTypeId,
@@ -46,28 +54,26 @@ class LeaveRequestService
             'status' => 'draft',
             'reason' => $reason,
             'comment' => $comment,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
         return $request;
     }
 
     /**
-     * Soumettre une demande (passer de draft à pending)
-     * 🔔 ENVOIE UNE NOTIFICATION AU MANAGER
+     * Soumettre une demande (draft → pending)
+     * ✅ AUCUN IMPACT SUR LE SOLDE
+     * ✅ NE PAS créer de transaction en attente
      */
     public function submitRequest($requestId)
     {
         $request = LeaveRequest::with(['employee', 'leaveType'])->findOrFail($requestId);
         
-        // Vérifier que la demande est en brouillon
         if ($request->status !== 'draft') {
             throw new \Exception('Cette demande ne peut pas être soumise.');
         }
 
-        // Vérifier le solde
-        $balance = $this->balanceService->getBalance(
+        // Vérifier le solde disponible
+        $availableBalance = $this->balanceService->getAvailableBalance(
             $request->employee_id,
             $request->leave_type_id,
             $request->period_id
@@ -75,9 +81,9 @@ class LeaveRequestService
 
         $leaveType = LeaveType::find($request->leave_type_id);
 
-        if ($balance && $balance->remaining < $request->duration) {
+        if ($availableBalance < $request->duration) {
             if (!$leaveType || !$leaveType->allow_negative_balance) {
-                throw new \Exception('Solde insuffisant pour cette demande.');
+                throw new \Exception('Solde insuffisant pour cette demande. (Disponible: ' . $availableBalance . ' jours)');
             }
         }
 
@@ -85,22 +91,12 @@ class LeaveRequestService
             $request->status = 'pending';
             $request->save();
 
-            // Mettre à jour le solde en prévisionnel
-            $balance = LeaveBalance::where('employee_id', $request->employee_id)
-                ->where('leave_type_id', $request->leave_type_id)
-                ->where('period_id', $request->period_id)
-                ->first();
+            // ✅ NE PAS créer de transaction en attente
 
-            if ($balance) {
-                $balance->total_pending += $request->duration;
-                $balance->save();
-            }
-
-            // 🔔 ENVOYER LA NOTIFICATION AU MANAGER
             try {
                 $this->notificationService->notifyManager($request);
             } catch (\Exception $e) {
-                Log::error('Erreur lors de l\'envoi de la notification: ' . $e->getMessage());
+                Log::error('Erreur notification: ' . $e->getMessage());
             }
         });
 
@@ -108,8 +104,8 @@ class LeaveRequestService
     }
 
     /**
-     * Approuver une demande
-     * 🔔 NOTIFICATION À L'EMPLOYÉ
+     * Approuver une demande (pending → approved)
+     * ✅ DÉBITE LE SOLDE UNIQUEMENT ICI
      */
     public function approveRequest($requestId, $approvedBy, $comment = null)
     {
@@ -119,8 +115,23 @@ class LeaveRequestService
             throw new \Exception('Cette demande ne peut pas être approuvée.');
         }
 
+        // Vérifier le solde disponible
+        $availableBalance = $this->balanceService->getAvailableBalance(
+            $request->employee_id,
+            $request->leave_type_id,
+            $request->period_id
+        );
+
+        $leaveType = LeaveType::find($request->leave_type_id);
+
+        if ($availableBalance < $request->duration) {
+            if (!$leaveType || !$leaveType->allow_negative_balance) {
+                throw new \Exception('Solde insuffisant pour cette demande. (Disponible: ' . $availableBalance . ' jours)');
+            }
+        }
+
         DB::transaction(function () use ($request, $approvedBy, $comment) {
-            // Créer la transaction de débit
+            // ✅ Créer la transaction de débit (UNIQUEMENT à l'approbation)
             $this->balanceService->debitBalance(
                 $request->employee_id,
                 $request->leave_type_id,
@@ -130,31 +141,16 @@ class LeaveRequestService
                 'Validation de congé - ' . ($request->reason ?? '')
             );
 
-            // Mettre à jour la demande
             $request->status = 'approved';
             $request->approved_by = $approvedBy;
             $request->approved_at = now();
             $request->comment = $comment;
             $request->save();
 
-            // Mettre à jour le solde (retirer du pending)
-            $balance = LeaveBalance::where('employee_id', $request->employee_id)
-                ->where('leave_type_id', $request->leave_type_id)
-                ->where('period_id', $request->period_id)
-                ->first();
-
-            if ($balance) {
-                $balance->total_pending -= $request->duration;
-                $balance->total_taken += $request->duration;
-                $balance->remaining = $balance->total_entitled - $balance->total_taken;
-                $balance->save();
-            }
-
-            // 🔔 NOTIFIER L'EMPLOYÉ QUE SA DEMANDE EST APPROUVÉE
             try {
                 $this->notificationService->notifyEmployeeApproved($request);
             } catch (\Exception $e) {
-                Log::error('Erreur lors de l\'envoi de la notification d\'approbation: ' . $e->getMessage());
+                Log::error('Erreur notification approbation: ' . $e->getMessage());
             }
         });
 
@@ -162,100 +158,170 @@ class LeaveRequestService
     }
 
     /**
-     * Rejeter une demande
-     * 🔔 NOTIFICATION À L'EMPLOYÉ
+     * Rejeter une demande (pending → rejected)
+     * ✅ AUCUN IMPACT SUR LE SOLDE
      */
-   
-   public function rejectRequest($requestId, $rejectedBy, $reason)
+    public function rejectRequest($requestId, $rejectedBy, $reason)
+    {
+        $request = LeaveRequest::with(['employee'])->findOrFail($requestId);
+        
+        if ($request->status !== 'pending') {
+            throw new \Exception('Cette demande ne peut pas être rejetée.');
+        }
+
+        DB::transaction(function () use ($request, $rejectedBy, $reason) {
+            $request->status = 'rejected';
+            $request->rejected_by = $rejectedBy;
+            $request->rejected_at = now();
+            $request->rejection_reason = $reason;
+            $request->save();
+
+            try {
+                $this->notificationService->notifyEmployeeRejected($request);
+            } catch (\Exception $e) {
+                Log::error('Erreur notification rejet: ' . $e->getMessage());
+            }
+        });
+
+        return $request;
+    }
+
+    /**
+     * Annuler une demande approuvée
+     * ✅ CRÉDITE LE SOLDE
+     */
+   // app/Services/LeaveRequestService.php
+
+// app/Services/LeaveRequestService.php
+
+public function cancelApprovedRequest($requestId)
 {
     $request = LeaveRequest::with(['employee'])->findOrFail($requestId);
     
-    if ($request->status !== 'pending') {
-        throw new \Exception('Cette demande ne peut pas être rejetée.');
+    // ✅ Vérifier le statut
+    if ($request->status !== 'approved') {
+        throw new \Exception('Seules les demandes approuvées peuvent être annulées.');
     }
 
-    \DB::transaction(function () use ($request, $rejectedBy, $reason) {
-        $request->status = 'rejected';
-        $request->rejected_by = $rejectedBy;
-        $request->rejected_at = now();
-        $request->rejection_reason = $reason;
+    // ✅ Vérifier si un crédit existe déjà (vérification plus robuste)
+    $existingCredit = LeaveBalanceTransaction::where('reference_id', $request->id)
+        ->where('reference_type', 'leave_request')
+        ->whereIn('type', ['credit', 'adjustment']) // ✅ inclure adjustment si jamais
+        ->where('amount', '>', 0) // ✅ s'assurer que c'est un crédit
+        ->first();
+
+    if ($existingCredit) {
+        // ✅ Si le crédit existe déjà, on vérifie si la demande est déjà annulée
+        if ($request->status === 'cancelled') {
+            Log::info('Demande déjà annulée', ['request_id' => $requestId]);
+            return $request;
+        }
+        
+        // ✅ Si le crédit existe mais la demande n'est pas annulée, on met juste à jour le statut
+        Log::warning('Crédit existant mais demande non annulée, mise à jour du statut', [
+            'request_id' => $requestId,
+            'transaction_id' => $existingCredit->id
+        ]);
+        
+        $request->status = 'cancelled';
+        $request->save();
+        
+        return $request;
+    }
+
+    DB::transaction(function () use ($request) {
+        // ✅ Créer le crédit
+        $this->balanceService->creditBalance(
+            $request->employee_id,
+            $request->leave_type_id,
+            $request->period_id,
+            $request->duration,
+            $request->id,
+            'Annulation de congé - ' . ($request->reason ?? '')
+        );
+
+        $request->status = 'cancelled';
         $request->save();
 
-        // Retirer du pending
-        $balance = LeaveBalance::where('employee_id', $request->employee_id)
-            ->where('leave_type_id', $request->leave_type_id)
-            ->where('period_id', $request->period_id)
-            ->first();
-
-        if ($balance) {
-            $balance->total_pending -= $request->duration;
-            $balance->save();
+        try {
+            $this->notificationService->notifyEmployeeCancelled($request);
+        } catch (\Exception $e) {
+            Log::error('Erreur notification annulation: ' . $e->getMessage());
         }
-
-        // 🔔 NOTIFIER L'EMPLOYÉ
-        $this->notificationService->notifyEmployeeRejected($request);
     });
 
     return $request;
 }
-    /**
-     * Annuler une demande approuvée
-     * 🔔 NOTIFICATION À L'EMPLOYÉ
-     */
-    public function cancelApprovedRequest($requestId)
-    {
-        $request = LeaveRequest::with(['employee'])->findOrFail($requestId);
-        
-        if ($request->status !== 'approved') {
-            throw new \Exception('Seules les demandes approuvées peuvent être annulées.');
+// app/Services/LeaveRequestService.php
+
+/**
+ * Vérifier si une demande peut être annulée
+ */
+public function canCancelRequest($requestId)
+{
+    $request = LeaveRequest::find($requestId);
+    
+    if (!$request) {
+        return false;
+    }
+    
+    // ✅ Déjà annulée
+    if ($request->status === 'cancelled') {
+        return false;
+    }
+    
+    // ✅ Seulement les demandes approuvées ou en attente peuvent être annulées
+    if (!in_array($request->status, ['approved', 'pending'])) {
+        return false;
+    }
+    
+    // ✅ Vérifier si un crédit existe déjà (pour les demandes approuvées)
+    if ($request->status === 'approved') {
+        $existingCredit = LeaveBalanceTransaction::where('reference_id', $request->id)
+            ->where('reference_type', 'leave_request')
+            ->where('type', 'credit')
+            ->where('amount', '>', 0)
+            ->exists();
+            
+        if ($existingCredit) {
+            return false; // Déjà annulée
         }
+    }
+    
+    return true;
+}
+// app/Services/LeaveRequestService.php
 
-        DB::transaction(function () use ($request) {
-            // Créditer le solde
-            $this->balanceService->creditBalance(
-                $request->employee_id,
-                $request->leave_type_id,
-                $request->period_id,
-                $request->duration,
-                $request->id,
-                'Annulation de congé - ' . ($request->reason ?? '')
-            );
+/**
+ * Annuler une demande en attente (sans impact sur le solde)
+ */
+public function cancelPendingRequest($requestId)
+{
+    $request = LeaveRequest::with(['employee'])->findOrFail($requestId);
+    
+    if ($request->status !== 'pending') {
+        throw new \Exception('Seules les demandes en attente peuvent être annulées.');
+    }
 
-            $request->status = 'cancelled';
-            $request->save();
-
-            // 🔔 NOTIFIER L'EMPLOYÉ QUE SON CONGÉ EST ANNULÉ
-            try {
-                $this->notificationService->notifyEmployeeCancelled($request);
-            } catch (\Exception $e) {
-                Log::error('Erreur lors de l\'envoi de la notification d\'annulation: ' . $e->getMessage());
-            }
-        });
-
+    // ✅ Vérifier si la demande est déjà annulée
+    if ($request->status === 'cancelled') {
         return $request;
     }
 
-    /**
-     * Calculer la durée entre deux dates
-     */
-    public function calculateDuration($startDate, $endDate, $leaveTypeId)
-    {
-        $start = Carbon::parse($startDate);
-        $end = Carbon::parse($endDate);
-        
-        // Calculer les jours ouvrés (lundi-vendredi)
-        $days = 0;
-        $current = $start->copy();
-        
-        while ($current <= $end) {
-            if ($current->isWeekday()) {
-                $days++;
-            }
-            $current->addDay();
-        }
+    DB::transaction(function () use ($request) {
+        // ✅ Aucun impact sur le solde pour les demandes en attente
+        $request->status = 'cancelled';
+        $request->save();
 
-        return $days;
-    }
+        try {
+            $this->notificationService->notifyEmployeeCancelled($request);
+        } catch (\Exception $e) {
+            Log::error('Erreur notification annulation: ' . $e->getMessage());
+        }
+    });
+
+    return $request;
+}
 
     /**
      * Récupérer les demandes d'un employé
@@ -272,7 +338,6 @@ class LeaveRequestService
      */
     public function getPendingRequestsForManager($managerId)
     {
-        // Récupérer les employés du manager
         $employeeIds = Employe::where('manager_id', $managerId)
             ->pluck('ID')
             ->toArray();
@@ -294,15 +359,9 @@ class LeaveRequestService
             ->get();
     }
 
-
-
-
-
-    
     /**
      * Vérifier si un employé a des demandes en conflit
      */
-
     public function hasConflictingRequests($employeeId, $startDate, $endDate, $excludeRequestId = null)
     {
         $query = LeaveRequest::where('employee_id', $employeeId)
@@ -323,6 +382,19 @@ class LeaveRequestService
         return $query->exists();
     }
 
+    /**
+     * Obtenir le solde d'un employé pour un type de congé
+     */
+    public function getEmployeeBalance($employeeId, $leaveTypeId, $periodId)
+    {
+        return $this->balanceService->getBalance($employeeId, $leaveTypeId, $periodId);
+    }
 
-    
+    /**
+     * Obtenir le solde disponible d'un employé
+     */
+    public function getEmployeeAvailableBalance($employeeId, $leaveTypeId, $periodId)
+    {
+        return $this->balanceService->getAvailableBalance($employeeId, $leaveTypeId, $periodId);
+    }
 }

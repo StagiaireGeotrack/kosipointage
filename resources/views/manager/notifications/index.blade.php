@@ -34,7 +34,8 @@
                             </div>
                             <div class="d-flex gap-2">
                                 @if($notification->leave_request_id)
-                                    <a href="{{ route('employe.leave-requests.show', $notification->leave_request_id) }}" 
+                                    <!-- ✅ CORRIGÉ : Utiliser la route manager -->
+                                    <a href="{{ route('manager.leave-requests.show', $notification->leave_request_id) }}" 
                                        class="btn btn-sm btn-primary">
                                         <i class="bi bi-eye"></i> Voir
                                     </a>
@@ -48,6 +49,13 @@
                             </div>
                         </div>
                     @endforeach
+                    
+                    <!-- Pagination -->
+                    @if(isset($notifications) && method_exists($notifications, 'links'))
+                        <div class="mt-3">
+                            {{ $notifications->links() }}
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>
@@ -56,6 +64,7 @@
     @push('scripts')
     <script>
         function markAsRead(id) {
+            // ✅ Utiliser la route manager pour marquer comme lu
             const url = '{{ route("manager.notifications.read", ":id") }}'.replace(':id', id);
             
             fetch(url, {
@@ -71,10 +80,11 @@
                 if (data.success) {
                     location.reload();
                 } else {
-                    alert('Erreur: ' + data.message);
+                    alert('Erreur: ' + (data.message || 'Erreur inconnue'));
                 }
             })
             .catch(error => {
+                console.error('Erreur:', error);
                 alert('Erreur réseau');
             });
         }

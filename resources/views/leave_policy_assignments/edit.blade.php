@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 <i class="bi bi-pencil"></i> {{ __('Modifier l\'Assignation') }}
             </h2>
-            <a href="{{ route('leave-policy-assignments.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.leave-policy-assignments.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
             </a>
         </div>
@@ -14,7 +14,7 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="{{ route('leave-policy-assignments.update', $leavePolicyAssignment) }}">
+                <form method="POST" action="{{ route('admin.leave-policy-assignments.update', $leavePolicyAssignment) }}">
                     @csrf
                     @method('PUT')
 
@@ -44,10 +44,10 @@
 
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <x-input-label for="target_type_display" :value="__('Type de cible')" />
-                            <input type="text" id="target_type_display" class="form-control mt-1" 
-                                   value="{{ $leavePolicyAssignment->target_type }}" disabled>
-                            <small class="text-muted">Le type de cible ne peut pas être modifié</small>
+                            <x-input-label for="assignment_type_display" :value="__('Type d\'assignation')" />
+                            <input type="text" id="assignment_type_display" class="form-control mt-1" 
+                                   value="{{ $leavePolicyAssignment->assignment_type_label }}" disabled>
+                            <small class="text-muted">Le type ne peut pas être modifié</small>
                         </div>
 
                         <div class="col-md-6">
@@ -74,10 +74,10 @@
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
-                        <x-primary-button class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> {{ __('Mettre à jour') }}
-                        </x-primary-button>
-                        <a href="{{ route('leave-policy-assignments.index') }}" class="btn btn-secondary">
+                        </button>
+                        <a href="{{ route('admin.leave-policy-assignments.index') }}" class="btn btn-secondary">
                             {{ __('Annuler') }}
                         </a>
                     </div>

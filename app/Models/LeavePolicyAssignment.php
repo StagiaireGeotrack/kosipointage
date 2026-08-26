@@ -5,10 +5,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LeavePolicyAssignment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'leave_policy_assignments';
 
@@ -22,14 +23,22 @@ class LeavePolicyAssignment extends Model
         'employee_id',
         'priority',
         'is_active',
+        'assignment_type', // ✅ AJOUTÉ : 'individual', 'department', 'site', 'company'
+        'start_date',
+        'end_date',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'priority' => 'integer',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     // ============ RELATIONS ============
+    
     public function leavePolicy()
     {
         return $this->belongsTo(LeavePolicy::class, 'leave_policy_id');
@@ -65,7 +74,13 @@ class LeavePolicyAssignment extends Model
         return $this->belongsTo(Employe::class, 'employee_id');
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(Administration::class, 'created_by');
+    }
+
     // ============ ACCESSORS ============
+    
     public function getTargetLabelAttribute()
     {
         if ($this->employee_id) {
@@ -100,7 +115,20 @@ class LeavePolicyAssignment extends Model
         };
     }
 
+    public function getAssignmentTypeLabelAttribute()
+    {
+        return match($this->assignment_type) {
+            'individual' => 'Individuel',
+            'department' => 'Service',
+            'site' => 'Siège',
+            'company' => 'Entreprise',
+            'global' => 'Global',
+            default => $this->assignment_type,
+        };
+    }
+
     // ============ SCOPES ============
+    
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -108,12 +136,14 @@ class LeavePolicyAssignment extends Model
 
     public function scopeForEmployee($query, $employeeId)
     {
-        return $query->where('employee_id', $employeeId);
+        return $query->where('employee_id', $employeeId)
+            ->where('assignment_type', 'individual');
     }
 
     public function scopeForDepartment($query, $departmentId)
     {
-        return $query->where('department_id', $departmentId);
+        return $query->where('department_id', $departmentId)
+            ->where('assignment_type', 'department');
     }
 
     public function scopeForJobTitle($query, $jobTitleId)
@@ -128,11 +158,28 @@ class LeavePolicyAssignment extends Model
 
     public function scopeForSite($query, $siteId)
     {
-        return $query->where('site_id', $siteId);
+        return $query->where('site_id', $siteId)
+            ->where('assignment_type', 'site');
     }
 
     public function scopeForCompany($query, $companyId)
     {
-        return $query->where('company_id', $companyId);
+        return $query->where('company_id', $companyId)
+            ->where('assignment_type', 'company');
+    }
+
+    /**
+     * ✅ Scope pour récupérer les assignments valides à une date donnée
+     */
+    public function scopeValidAt($query, $date = null)
+    {
+        $date = $date ?? now();
+        return $query->where(function ($q) use ($date) {
+            $q->whereNull('start_date')
+              ->orWhere('start_date', '<=', $date);
+        })->where(function ($q) use ($date) {
+            $q->whereNull('end_date')
+              ->orWhere('end_date', '>=', $date);
+        });
     }
 }

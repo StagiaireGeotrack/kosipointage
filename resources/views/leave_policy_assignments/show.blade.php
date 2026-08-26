@@ -6,10 +6,10 @@
                 <i class="bi bi-link-45deg"></i> {{ __('Détails de l\'Assignation') }}
             </h2>
             <div>
-                <a href="{{ route('leave-policy-assignments.edit', $leavePolicyAssignment) }}" class="btn btn-warning">
+                <a href="{{ route('admin.leave-policy-assignments.edit', $leavePolicyAssignment) }}" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> {{ __('Modifier') }}
                 </a>
-                <a href="{{ route('leave-policy-assignments.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.leave-policy-assignments.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
                 </a>
             </div>
@@ -27,24 +27,9 @@
                                 <strong>{{ $leavePolicyAssignment->leavePolicy->name ?? 'N/A' }}</strong>
                             </dd>
 
-                            <dt class="col-sm-4 fw-bold">{{ __('Type de cible') }}</dt>
+                            <dt class="col-sm-4 fw-bold">{{ __('Type d\'assignation') }}</dt>
                             <dd class="col-sm-8">
-                                @php
-                                    $targetTypes = [
-                                        'employee' => 'Employé',
-                                        'department' => 'Service',
-                                        'job_title' => 'Poste',
-                                        'hierarchy_level' => 'Niveau KOSI',
-                                        'site' => 'Siège',
-                                        'company' => 'Entreprise',
-                                    ];
-                                    $targetType = $leavePolicyAssignment->employee_id ? 'employee' :
-                                                  ($leavePolicyAssignment->department_id ? 'department' :
-                                                  ($leavePolicyAssignment->job_title_id ? 'job_title' :
-                                                  ($leavePolicyAssignment->hierarchy_level_id ? 'hierarchy_level' :
-                                                  ($leavePolicyAssignment->site_id ? 'site' : 'global'))));
-                                @endphp
-                                <span class="badge bg-info">{{ $targetTypes[$targetType] ?? 'Global' }}</span>
+                                <span class="badge bg-info">{{ $leavePolicyAssignment->assignment_type_label }}</span>
                             </dd>
 
                             <dt class="col-sm-4 fw-bold">{{ __('Cible') }}</dt>
@@ -53,10 +38,6 @@
                                     👤 {{ $leavePolicyAssignment->employee->Nom ?? 'N/A' }}
                                 @elseif($leavePolicyAssignment->department_id)
                                     🏢 {{ $leavePolicyAssignment->department->name ?? 'N/A' }}
-                                @elseif($leavePolicyAssignment->job_title_id)
-                                    💼 {{ $leavePolicyAssignment->jobTitle->name ?? 'N/A' }}
-                                @elseif($leavePolicyAssignment->hierarchy_level_id)
-                                    📊 {{ $leavePolicyAssignment->hierarchyLevel->code ?? 'N/A' }} - {{ $leavePolicyAssignment->hierarchyLevel->name ?? 'N/A' }}
                                 @elseif($leavePolicyAssignment->site_id)
                                     🏛️ {{ $leavePolicyAssignment->site->Nom ?? 'N/A' }}
                                 @else
@@ -107,7 +88,7 @@
                                     <strong>Règle de priorité :</strong>
                                     <ul class="mb-0 mt-1">
                                         <li>L'assignation avec la priorité la plus élevée est appliquée en premier</li>
-                                        <li>L'ordre de priorité : Employé > Service > Poste > Niveau > Siège > Entreprise</li>
+                                        <li>L'ordre de priorité : Employé > Service > Siège > Entreprise</li>
                                     </ul>
                                 </div>
 
@@ -119,14 +100,6 @@
                                         <br><small class="text-muted">Méthode: {{ $leavePolicyAssignment->leavePolicy->calculation_method ?? 'N/A' }}</small>
                                     @endif
                                 </div>
-
-                                @if($leavePolicyAssignment->employee)
-                                    <div class="mt-2">
-                                        <h6 class="card-title"><i class="bi bi-person"></i> {{ __('Employé concerné') }}</h6>
-                                        <p><strong>{{ $leavePolicyAssignment->employee->Nom }}</strong></p>
-                                        <small class="text-muted">Matricule: {{ $leavePolicyAssignment->employee->num_mat ?? 'N/A' }}</small>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -134,7 +107,7 @@
 
                 <div class="mt-3 pt-3 border-top">
                     <div class="d-flex gap-2">
-                        <a href="{{ route('leave-policy-assignments.edit', $leavePolicyAssignment) }}" class="btn btn-warning">
+                        <a href="{{ route('admin.leave-policy-assignments.edit', $leavePolicyAssignment) }}" class="btn btn-warning">
                             <i class="bi bi-pencil"></i> {{ __('Modifier') }}
                         </a>
                         <button type="button" class="btn btn-danger" 
@@ -143,7 +116,7 @@
                                 }">
                             <i class="bi bi-trash"></i> {{ __('Supprimer') }}
                         </button>
-                        <form id="delete-form" action="{{ route('leave-policy-assignments.destroy', $leavePolicyAssignment) }}" method="POST" style="display: none;">
+                        <form id="delete-form" action="{{ route('admin.leave-policy-assignments.destroy', $leavePolicyAssignment) }}" method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
                         </form>

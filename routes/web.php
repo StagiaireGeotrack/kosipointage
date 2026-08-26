@@ -37,12 +37,9 @@ use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeavePolicyAssignmentController;
 use App\Http\Controllers\Employe\LeaveRequestController;
 use App\Http\Controllers\Manager\NotificationController;
-use App\Http\Controllers\Manager\NotificationController as ManagerNotificationController;
 use App\Http\Controllers\Manager\ManagerLeaveRequestController;
 use App\Http\Controllers\Employe\EmployeNotificationController;
-
-
-
+use App\Http\Controllers\Api\LeaveDurationController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -94,7 +91,7 @@ Route::get('/', function ()
 });
 
 // ============================================
-// ROUTES AUTHENTIFIÉES (Tous les admins)
+// ✅ ROUTES AUTHENTIFIÉES (Tous les admins)
 // ============================================
 Route::middleware('auth')->group(function () {
     
@@ -107,7 +104,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Impersonation (leave)
+    // Impersonation
     Route::post('/impersonate-leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
     Route::post('/impersonate-employe-leave', [ImpersonateController::class, 'leaveEmploye'])->name('impersonate.employe.leave');
 
@@ -359,6 +356,9 @@ Route::middleware('auth')->group(function () {
 
         // ===== LEAVE POLICY ASSIGNMENTS =====
         Route::resource('leave-policy-assignments', LeavePolicyAssignmentController::class);
+        Route::resource('leave-policy-assignments', LeavePolicyAssignmentController::class);
+    Route::patch('leave-policy-assignments/{id}/toggle', [LeavePolicyAssignmentController::class, 'toggle'])
+        ->name('leave-policy-assignments.toggle');
     });
 
     // ==========================================
@@ -373,10 +373,11 @@ Route::middleware('auth')->group(function () {
     Route::post('leave-balances/import', [LeaveBalanceController::class, 'storeImport'])->name('leave-balances.store-import');
     Route::get('leave-balances/export', [LeaveBalanceController::class, 'export'])->name('leave-balances.export');
     Route::get('leave-balances/download-template', [LeaveBalanceController::class, 'downloadTemplate'])->name('leave-balances.download-template');
+
     // ==========================================
     // ROUTES SUPPLÉMENTAIRES (leave-periods override)
     // ==========================================
-    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('leave-periods/override/{override}', [LeavePeriodController::class, 'destroySiteOverride'])
             ->name('leave-periods.site-override.destroy');
         Route::post('leave-periods/{leave_period}/site-override', [LeavePeriodController::class, 'storeSiteOverride'])
@@ -387,7 +388,73 @@ Route::middleware('auth')->group(function () {
 });
 
 // ============================================
-// API / AJAX (En dehors du groupe auth pour être accessibles)
+// ✅ ROUTES POUR LES EMPLOYÉS (employe.) - AVANT les routes avec {id}
+// ============================================
+Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(function () {
+    
+    // Dashboard
+    Route::get('dashboard', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
+    
+    // ✅ Route de calcul AJAX (SANS paramètre {id}) - DOIT ÊTRE AVANT
+    Route::get('leave-requests/calculate-duration', [LeaveRequestController::class, 'calculateDurationAjax'])
+        ->name('leave-requests.calculate-duration');
+    
+    // Demandes de congé - Routes avec paramètre {id} (APRÈS)
+    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
+    Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
+    Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
+    Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
+    Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
+    Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
+    Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
+    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
+    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
+    
+    // Pièces jointes
+    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])->name('leave-requests.upload-attachment');
+    Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])->name('leave-requests.delete-attachment');
+    Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])->name('leave-requests.download-attachment');
+    
+    // Calendrier
+    Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
+    Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
+    
+    // Notifications
+    Route::get('notifications', [EmployeNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [EmployeNotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::get('notifications/unread-count', [EmployeNotificationController::class, 'unreadCount'])->name('notifications.unread');
+});
+
+// ============================================
+// ROUTES POUR LE PORTAIL (employé)
+// ============================================
+Route::middleware(['auth:employe'])->prefix('portail')->name('portail.')->group(function () {
+    Route::get('/', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
+    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
+});
+
+// ============================================
+// ROUTES POUR LES MANAGERS
+// ============================================
+Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function () {
+    
+    // Dashboard
+    Route::get('dashboard', [ManagerLeaveRequestController::class, 'dashboard'])->name('dashboard');
+    
+    // Notifications
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread');
+    
+    // Demandes de congé
+    Route::get('leave-requests', [ManagerLeaveRequestController::class, 'index'])->name('leave-requests.index');
+    Route::get('leave-requests/{id}', [ManagerLeaveRequestController::class, 'show'])->name('leave-requests.show');
+    Route::post('leave-requests/{id}/approve', [ManagerLeaveRequestController::class, 'approve'])->name('leave-requests.approve');
+    Route::post('leave-requests/{id}/reject', [ManagerLeaveRequestController::class, 'reject'])->name('leave-requests.reject');
+});
+
+// ============================================
+// API / AJAX (Routes pour les appels AJAX)
 // ============================================
 Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     
@@ -417,7 +484,6 @@ Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
             ->get(['id', 'name', 'rank', 'is_managerial']);
     })->name('hierarchy-levels-by-site');
 
-    // Routes pour les soldes (AJAX)
     Route::get('/employees-by-site/{siteId}', function ($siteId) {
         return \App\Models\Employe::where('SiegeID', $siteId)
             ->where('Actived', 1)
@@ -456,73 +522,8 @@ Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
     return back();
 })->name('admin.select-siege');
 
+// routes/web.php - Ajouter dans le groupe admin
 
-// routes/web.php
-// ============================================
-// ROUTES POUR LES EMPLOYÉS (employe.)
-// ============================================
-Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(function () {
-    
-    // Dashboard
-    Route::get('dashboard', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
-    
-    // Demandes de congé
-    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
-    Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
-    Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
-    Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
-    Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
-    Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
-    Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
-    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
-    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
-    
-    // Pièces jointes
-    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])->name('leave-requests.upload-attachment');
-    Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])->name('leave-requests.delete-attachment');
-    Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])->name('leave-requests.download-attachment');
-    
-    // Calendrier
-   Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
-    Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
-    
-    
-    // ==========================================
-    // 🔔 NOTIFICATIONS (PROTÉGÉES)
-    // ==========================================
-    Route::get('notifications', [EmployeNotificationController::class, 'index'])->name('notifications.index');
-    Route::post('notifications/{id}/read', [EmployeNotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::get('notifications/unread-count', [EmployeNotificationController::class, 'unreadCount'])->name('notifications.unread');
-});
-
-// ============================================
-// ROUTES POUR LE PORTAIL (employé)
-// ============================================
-Route::middleware(['auth:employe'])->prefix('portail')->name('portail.')->group(function () {
-    Route::get('/', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
-    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
-});
-
-// ============================================
-// ROUTES POUR LES MANAGERS
-// ============================================
-Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function () {
-    
-    // Dashboard
-    Route::get('dashboard', [ManagerLeaveRequestController::class, 'dashboard'])->name('dashboard');
-    
-    // Notifications
-    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread');
-    
-    // Demandes de congé
-    Route::get('leave-requests', [ManagerLeaveRequestController::class, 'index'])->name('leave-requests.index');
-    Route::get('leave-requests/{id}', [ManagerLeaveRequestController::class, 'show'])->name('leave-requests.show');
-    Route::post('leave-requests/{id}/approve', [ManagerLeaveRequestController::class, 'approve'])->name('leave-requests.approve');
-    Route::post('leave-requests/{id}/reject', [ManagerLeaveRequestController::class, 'reject'])->name('leave-requests.reject');
-});
-// Routes pour l'employé connecté
 
 // ============================================
 // FALLBACK

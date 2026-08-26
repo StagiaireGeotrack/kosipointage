@@ -10,62 +10,130 @@ use App\Models\LeaveType;
 use App\Models\LeavePeriod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class LeaveBalanceService
 {
     /**
      * Créer ou mettre à jour le solde d'un employé
      */
-    public function updateBalance($employeeId, $leaveTypeId, $periodId)
-    {
-        $balance = LeaveBalance::firstOrNew([
-            'employee_id' => $employeeId,
-            'leave_type_id' => $leaveTypeId,
-            'period_id' => $periodId,
-        ]);
+    // app/Services/LeaveBalanceService.php
 
-        // Calculer le total des transactions
-        $transactions = LeaveBalanceTransaction::where('employee_id', $employeeId)
-            ->where('leave_type_id', $leaveTypeId)
-            ->where('period_id', $periodId)
-            ->get();
+/**
+ * Créer ou mettre à jour le solde d'un employé
+ */
+public function updateBalance($employeeId, $leaveTypeId, $periodId)
+{
+    $balance = LeaveBalance::firstOrNew([
+        'employee_id' => $employeeId,
+        'leave_type_id' => $leaveTypeId,
+        'period_id' => $periodId,
+    ]);
 
-        $totalCredits = $transactions->where('amount', '>', 0)->sum('amount');
-        $totalDebits = abs($transactions->where('amount', '<', 0)->sum('amount'));
+    $transactions = LeaveBalanceTransaction::where('employee_id', $employeeId)
+        ->where('leave_type_id', $leaveTypeId)
+        ->where('period_id', $periodId)
+        ->get();
 
-        $balance->total_entitled = $totalCredits;
-        $balance->total_taken = $totalDebits;
-        $balance->remaining = $totalCredits - $totalDebits;
+    // ✅ Les crédits qui AUGMENTENT le droit (opening, carryover, adjustments positifs)
+    $totalEntitled = $transactions->filter(function($t) {
+            return in_array($t->type, ['opening', 'carryover'])
+                || ($t->type === 'adjustment' && $t->amount > 0);
+        })
+        ->sum('amount');
 
-        $balance->save();
+    // ✅ Les crédits qui ANNULENT des débits (credit)
+    $totalCreditsFromCancellation = $transactions->filter(function($t) {
+            return $t->type === 'credit' && $t->amount > 0;
+        })
+        ->sum('amount');
 
-        return $balance;
+    // ✅ Les débits (prises de congé)
+    $totalDebits = $transactions->filter(function($t) {
+            return $t->type === 'debit' && $t->amount < 0;
+        })
+        ->sum('amount'); // somme négative
+
+    // ✅ Les débits en attente
+    $totalPending = $transactions->filter(function($t) {
+            return $t->type === 'pending_debit';
+        })
+        ->sum('amount');
+
+    // ✅ Calcul du solde restant
+    // total_entitled = droits initiaux (opening + carryover + adjustments positifs)
+    // total_taken = total des débits (absolus) - crédits d'annulation
+    $totalTaken = abs($totalDebits) - $totalCreditsFromCancellation;
+    
+    // ✅ S'assurer que total_taken n'est pas négatif
+    if ($totalTaken < 0) {
+        $totalTaken = 0;
     }
+
+    $balance->total_entitled = $totalEntitled;
+    $balance->total_taken = $totalTaken;
+    $balance->total_pending = abs($totalPending);
+    $balance->remaining = $totalEntitled - $totalTaken;
+
+    $balance->save();
+
+    return $balance;
+}
 
     /**
-     * Créer une transaction de solde
+     * ✅ Créer une transaction de solde - AVEC VÉRIFICATION DE DOUBLON
      */
-    public function createTransaction($employeeId, $leaveTypeId, $periodId, $amount, $type, $description = null, $referenceId = null, $referenceType = null, $metadata = null)
-    {
-        $transaction = LeaveBalanceTransaction::create([
-            'employee_id' => $employeeId,
-            'leave_type_id' => $leaveTypeId,
-            'period_id' => $periodId,
-            'amount' => $amount,
-            'type' => $type,
-            'description' => $description,
-            'reference_id' => $referenceId,
-            'reference_type' => $referenceType,
-            'metadata' => $metadata,
-            'created_by' => Auth::user()?->ID ?? null,
-            'created_at' => now(),
-        ]);
+    // app/Services/LeaveBalanceService.php
 
-        // Mettre à jour le solde
-        $this->updateBalance($employeeId, $leaveTypeId, $periodId);
+/**
+ * ✅ Créer une transaction de solde - AVEC VÉRIFICATION DE DOUBLON AMÉLIORÉE
+ */
+public function createTransaction($employeeId, $leaveTypeId, $periodId, $amount, $type, $description = null, $referenceId = null, $referenceType = null, $metadata = null)
+{
+    // ✅ VÉRIFICATION DE DOUBLON PLUS ROBUSTE
+    if ($referenceId && $referenceType) {
+        $existing = LeaveBalanceTransaction::where('reference_id', $referenceId)
+            ->where('reference_type', $referenceType)
+            ->where('type', $type)
+            ->first();
 
-        return $transaction;
+        if ($existing) {
+            Log::warning('Transaction déjà existante', [
+                'reference_id' => $referenceId,
+                'reference_type' => $referenceType,
+                'type' => $type,
+                'existing_id' => $existing->id,
+                'existing_amount' => $existing->amount,
+                'new_amount' => $amount
+            ]);
+            
+            // ✅ Mettre à jour le solde
+            $this->updateBalance($employeeId, $leaveTypeId, $periodId);
+            
+            return $existing;
+        }
     }
+
+    // ✅ Création de la transaction
+    $transaction = LeaveBalanceTransaction::create([
+        'employee_id' => $employeeId,
+        'leave_type_id' => $leaveTypeId,
+        'period_id' => $periodId,
+        'amount' => $amount,
+        'type' => $type,
+        'description' => $description,
+        'reference_id' => $referenceId,
+        'reference_type' => $referenceType,
+        'metadata' => $metadata ? json_encode($metadata) : null,
+        'created_by' => Auth::user()?->ID ?? null,
+        'created_at' => now(),
+    ]);
+
+    // ✅ Mise à jour du solde
+    $this->updateBalance($employeeId, $leaveTypeId, $periodId);
+
+    return $transaction;
+}
 
     /**
      * Initialiser le solde d'un employé (solde initial)
@@ -86,18 +154,32 @@ class LeaveBalanceService
     }
 
     /**
-     * Débiter le solde d'un employé (validation de congé)
+     * ✅ Débiter le solde d'un employé - AVEC VÉRIFICATION
      */
     public function debitBalance($employeeId, $leaveTypeId, $periodId, $amount, $referenceId = null, $description = null)
     {
-        // Vérifier que le solde est suffisant
+        // ✅ Vérifier si un débit existe déjà pour cette référence
+        if ($referenceId) {
+            $existing = LeaveBalanceTransaction::where('reference_id', $referenceId)
+                ->where('reference_type', 'leave_request')
+                ->where('type', 'debit')
+                ->first();
+
+            if ($existing) {
+                Log::warning('Débit déjà existant pour cette demande', [
+                    'reference_id' => $referenceId,
+                    'existing_id' => $existing->id
+                ]);
+                return $existing;
+            }
+        }
+
         $balance = LeaveBalance::where('employee_id', $employeeId)
             ->where('leave_type_id', $leaveTypeId)
             ->where('period_id', $periodId)
             ->first();
 
         if ($balance && $balance->remaining < $amount) {
-            // Vérifier si le solde négatif est autorisé
             $leaveType = LeaveType::find($leaveTypeId);
             if (!$leaveType || !$leaveType->allow_negative_balance) {
                 throw new \Exception('Solde insuffisant pour ce type de congé.');
@@ -118,22 +200,50 @@ class LeaveBalanceService
     }
 
     /**
-     * Créditer le solde d'un employé (annulation de congé)
+     * ✅ Créditer le solde d'un employé - AVEC VÉRIFICATION
      */
-    public function creditBalance($employeeId, $leaveTypeId, $periodId, $amount, $referenceId = null, $description = null)
-    {
-        return $this->createTransaction(
-            $employeeId,
-            $leaveTypeId,
-            $periodId,
-            $amount,
-            'credit',
-            $description ?? 'Crédit suite à annulation de congé',
-            $referenceId,
-            'leave_request',
-            ['type' => 'credit']
-        );
+   // app/Services/LeaveBalanceService.php
+
+/**
+ * ✅ Créditer le solde d'un employé - AVEC VÉRIFICATION ROBUSTE
+ */
+public function creditBalance($employeeId, $leaveTypeId, $periodId, $amount, $referenceId = null, $description = null)
+{
+    // ✅ Vérifier si un crédit existe déjà pour cette référence
+    if ($referenceId) {
+        $existing = LeaveBalanceTransaction::where('reference_id', $referenceId)
+            ->where('reference_type', 'leave_request')
+            ->where('type', 'credit')
+            ->where('amount', '>', 0) // ✅ s'assurer que c'est un crédit positif
+            ->first();
+
+        if ($existing) {
+            Log::info('Crédit déjà existant pour cette référence', [
+                'reference_id' => $referenceId,
+                'reference_type' => 'leave_request',
+                'transaction_id' => $existing->id,
+                'amount' => $existing->amount
+            ]);
+            
+            // ✅ Mettre à jour le solde quand même
+            $this->updateBalance($employeeId, $leaveTypeId, $periodId);
+            
+            return $existing;
+        }
     }
+
+    return $this->createTransaction(
+        $employeeId,
+        $leaveTypeId,
+        $periodId,
+        $amount, // ✅ amount positif pour un crédit
+        'credit',
+        $description ?? 'Crédit suite à annulation de congé',
+        $referenceId,
+        'leave_request',
+        ['type' => 'credit', 'cancelled_request' => true]
+    );
+}
 
     /**
      * Ajuster manuellement le solde d'un employé
@@ -201,7 +311,7 @@ class LeaveBalanceService
             return 0;
         }
 
-        return $balance->remaining - $balance->total_pending;
+        return $balance->remaining - ($balance->total_pending ?? 0);
     }
 
     /**
@@ -217,5 +327,24 @@ class LeaveBalanceService
         }
 
         return $available >= $amount;
+    }
+
+    /**
+     * Obtenir l'historique des transactions d'un employé
+     */
+    public function getTransactionHistory($employeeId, $leaveTypeId = null, $periodId = null)
+    {
+        $query = LeaveBalanceTransaction::where('employee_id', $employeeId)
+            ->orderBy('created_at', 'desc');
+
+        if ($leaveTypeId) {
+            $query->where('leave_type_id', $leaveTypeId);
+        }
+
+        if ($periodId) {
+            $query->where('period_id', $periodId);
+        }
+
+        return $query->get();
     }
 }
