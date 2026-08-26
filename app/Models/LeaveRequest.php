@@ -36,10 +36,10 @@ class LeaveRequest extends Model
 
     protected $casts = [
         'start_date' => 'date',
-        'end_date' => 'date',
+        'end_date' => 'date2',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
-                'submitted_at' => 'datetime',
+        'submitted_at' => 'datetime',
 
         'duration' => 'decimal:2',
     ];
