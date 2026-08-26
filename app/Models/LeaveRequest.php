@@ -22,7 +22,7 @@ class LeaveRequest extends Model
         'duration',
         'status',
         'reason',
-        submitted_at?
+        'submitted_at',
         'comment',
         'attachment_path',
         'approved_by',
@@ -37,6 +37,7 @@ class LeaveRequest extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'submitted_at' => 'datetime',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
         'duration' => 'decimal:2',

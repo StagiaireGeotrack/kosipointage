@@ -31,6 +31,27 @@ class LeaveBalance extends Model
         'carryover_from_previous' => 'decimal:2',
     ];
 
+    // ✅ Accesseurs pour compatibilité avec le code existant
+    public function getAvailableBalanceAttribute()
+    {
+        return $this->remaining ?? 0;
+    }
+
+    public function getAccruedBalanceAttribute()
+    {
+        return $this->total_entitled ?? 0;
+    }
+
+    public function getUsedBalanceAttribute()
+    {
+        return $this->total_taken ?? 0;
+    }
+
+    public function getPendingBalanceAttribute()
+    {
+        return $this->total_pending ?? 0;
+    }
+
     // Relations
     public function employee()
     {
@@ -39,41 +60,27 @@ class LeaveBalance extends Model
 
     public function leaveType()
     {
-        return $this->belongsTo(LeaveType::class);
+        return $this->belongsTo(LeaveType::class, 'leave_type_id');
     }
 
     public function period()
     {
-        return $this->belongsTo(LeavePeriod::class);
+        return $this->belongsTo(LeavePeriod::class, 'period_id');
     }
 
-    public function transactions()
-    {
-        return $this->hasMany(LeaveBalanceTransaction::class);
-    }
-
-    // Accessors
-    public function getAvailableAttribute()
-    {
-        return $this->remaining - $this->total_pending;
-    }
-
-    public function getTotalAttribute()
-    {
-        return $this->total_entitled + $this->carryover_from_previous;
-    }
-
-    // Scopes
+    // Scope pour filtrer par employé
     public function scopeForEmployee($query, $employeeId)
     {
         return $query->where('employee_id', $employeeId);
     }
 
-    public function scopeForType($query, $typeId)
+    // Scope pour filtrer par type de congé
+    public function scopeForLeaveType($query, $leaveTypeId)
     {
-        return $query->where('leave_type_id', $typeId);
+        return $query->where('leave_type_id', $leaveTypeId);
     }
 
+    // Scope pour filtrer par période
     public function scopeForPeriod($query, $periodId)
     {
         return $query->where('period_id', $periodId);

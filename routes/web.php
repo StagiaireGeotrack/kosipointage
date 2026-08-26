@@ -387,46 +387,111 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+
+
 // ============================================
-// ✅ ROUTES POUR LES EMPLOYÉS (employe.) - AVANT les routes avec {id}
+// ✅ ROUTES POUR LES EMPLOYÉS (employe.)
 // ============================================
 Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(function () {
     
-    // Dashboard
+    // ============================================
+    // 1. DASHBOARD
+    // ============================================
     Route::get('dashboard', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
     
-    // ✅ Route de calcul AJAX (SANS paramètre {id}) - DOIT ÊTRE AVANT
+    // ============================================
+    // 2. ROUTES SPÉCIFIQUES (SANS PARAMÈTRE {id})
+    // ⚠️ DOIVENT ÊTRE AVANT les routes avec {id}
+    // ============================================
+    
+    // ✅ Calcul AJAX de la durée (SANS ID)
     Route::get('leave-requests/calculate-duration', [LeaveRequestController::class, 'calculateDurationAjax'])
         ->name('leave-requests.calculate-duration');
     
-    // Demandes de congé - Routes avec paramètre {id} (APRÈS)
-    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
-    Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
-    Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
-    Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
-    Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
-    Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
-    Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
-    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
-    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])->name('leave-requests.cancel-approved');
-      Route::get('/leave-requests/{id}/calculate-duration', [LeaveRequestController::class, 'calculateDurationForDraft'])
-        ->name('leave-requests.calculate-duration');
+    // ✅ Périodes par type de congé
+    Route::get('leave-requests/periods/{leaveTypeId}', [LeaveRequestController::class, 'getPeriodsByType'])
+        ->name('leave-requests.periods-by-type');
     
-    // Pièces jointes
-    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])->name('leave-requests.upload-attachment');
-    Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])->name('leave-requests.delete-attachment');
-    Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])->name('leave-requests.download-attachment');
+    // ✅ Solde de l'employé
+    Route::get('leave-requests/balance', [LeaveRequestController::class, 'getBalance'])
+        ->name('leave-requests.get-balance');
     
-    // Calendrier
-    Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
-    Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
-    
-    // Notifications
+    // ✅ Notifications
     Route::get('notifications', [EmployeNotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [EmployeNotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::get('notifications/unread-count', [EmployeNotificationController::class, 'unreadCount'])->name('notifications.unread');
+    
+    // ============================================
+    // 3. ROUTES CRUD (AVEC PARAMÈTRE {id})
+    // ============================================
+    
+    // Liste des demandes
+    Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
+    
+    // Formulaire de création
+    Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
+    
+    // Enregistrement d'une nouvelle demande
+    Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
+    
+    // Afficher une demande
+    Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
+    
+    // Formulaire d'édition
+    Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
+    
+    // Mettre à jour une demande
+    Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
+    
+    // Supprimer une demande (brouillon)
+    Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
+    
+    // Soumettre une demande
+    Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
+    
+    // Annuler un congé validé
+    Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])
+        ->name('leave-requests.cancel-approved');
+    
+    // ============================================
+    // 4. ROUTES SPÉCIFIQUES AVEC ID (APRÈS LES CRUD DE BASE)
+    // ⚠️ Placer APRÈS les routes CRUD génériques
+    // ============================================
+    
+    // ✅ Calcul de durée pour un brouillon existant
+    Route::get('leave-requests/{id}/calculate-duration', [LeaveRequestController::class, 'calculateDurationForDraft'])
+        ->name('leave-requests.calculate-duration-draft');
+    
+    // ✅ Statut des pièces jointes
+    Route::get('leave-requests/{id}/attachments/status', [LeaveRequestController::class, 'getAttachmentsStatus'])
+        ->name('leave-requests.attachments-status');
+    
+    // ============================================
+    // 5. ROUTES POUR LES PIÈCES JOINTES
+    // ============================================
+    
+    // Upload d'une pièce jointe
+    Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])
+        ->name('leave-requests.upload-attachment');
+    
+    // Supprimer une pièce jointe
+    Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])
+        ->name('leave-requests.delete-attachment');
+    
+    // Télécharger une pièce jointe
+    Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])
+        ->name('leave-requests.download-attachment');
+    
+    // ============================================
+    // 6. CALENDRIER
+    // ============================================
+    
+    // Vue du calendrier
+    Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
+    
+    // Événements du calendrier (API)
+    Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
 });
-
 // ============================================
 // ROUTES POUR LE PORTAIL (employé)
 // ============================================
