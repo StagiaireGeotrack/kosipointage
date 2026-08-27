@@ -36,6 +36,12 @@ class LeaveTypeResolver
         $r->deducts_balance = $override->local_deducts_balance ?? $type->deducts_balance;
         $r->is_active = $override->is_enabled ?? $type->is_active;
 
+        // Nouveaux champs résolus
+        $r->min_notice_days = $override->local_min_notice_days ?? $type->min_notice_days ?? 0;
+        $r->max_duration_per_request = $override->local_max_duration_per_request ?? $type->max_duration_per_request;
+        $r->allow_overlap = $override->local_allow_overlap ?? $type->allow_overlap ?? false;
+        $r->affects_team_availability = $type->affects_team_availability ?? true;
+
         return $r;
     }
 
@@ -55,6 +61,12 @@ class LeaveTypeResolver
             $local->is_customizable = false;
             $local->is_overridden = false;
             $local->override_id = null;
+
+            // Valeurs par défaut
+            $local->min_notice_days = $type->min_notice_days ?? 0;
+            $local->max_duration_per_request = $type->max_duration_per_request;
+            $local->allow_overlap = $type->allow_overlap ?? false;
+            $local->affects_team_availability = $type->affects_team_availability ?? true;
 
             return $local;
         });

@@ -105,6 +105,12 @@ class LeaveTypeController extends Controller
             $validated['requires_attachment_after'] = null;
         }
 
+        // Nouveaux champs
+        $validated['min_notice_days'] = (int) $request->input('min_notice_days', 0);
+        $validated['max_duration_per_request'] = $request->input('max_duration_per_request') ?: null;
+        $validated['allow_overlap'] = $request->boolean('allow_overlap', false);
+        $validated['affects_team_availability'] = $request->boolean('affects_team_availability', true);
+
         LeaveType::create($validated);
 
         return redirect()->route('admin.leave-types.index')
@@ -189,6 +195,12 @@ class LeaveTypeController extends Controller
             $validated['requires_attachment_after'] = null;
         }
 
+        // Nouveaux champs
+        $validated['min_notice_days'] = (int) $request->input('min_notice_days', 0);
+        $validated['max_duration_per_request'] = $request->input('max_duration_per_request') ?: null;
+        $validated['allow_overlap'] = $request->boolean('allow_overlap', false);
+        $validated['affects_team_availability'] = $request->boolean('affects_team_availability', true);
+
         $leaveType->update($validated);
 
         return redirect()->route('admin.leave-types.index')
@@ -229,6 +241,9 @@ class LeaveTypeController extends Controller
             'local_max_negative_limit' => 'nullable|integer',
             'local_deducts_balance' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
+            'local_min_notice_days' => 'nullable|integer|min:0',
+            'local_max_duration_per_request' => 'nullable|numeric|min:0',
+            'local_allow_overlap' => 'nullable|boolean',
         ]);
 
         if (($validated['local_requires_attachment'] ?? null) !== 'after_duration') {
@@ -264,6 +279,15 @@ class LeaveTypeController extends Controller
         if ($request->has('is_active')) {
             $overrideData['is_enabled'] = $request->boolean('is_active');
         }
+        if ($request->has('local_min_notice_days')) {
+            $overrideData['local_min_notice_days'] = (int) $validated['local_min_notice_days'];
+        }
+        if ($request->has('local_max_duration_per_request')) {
+            $overrideData['local_max_duration_per_request'] = $validated['local_max_duration_per_request'] ?: null;
+        }
+        if ($request->has('local_allow_overlap')) {
+            $overrideData['local_allow_overlap'] = $request->boolean('local_allow_overlap');
+        }
 
         SiteLeaveTypeSetting::updateOrCreate(
             [
@@ -292,6 +316,10 @@ class LeaveTypeController extends Controller
             'requires_attachment_after' => 'nullable|integer|min:1',
             'max_negative_limit' => 'nullable|integer',
             'color' => 'required|string|max:7',
+            'min_notice_days' => 'nullable|integer|min:0',
+            'max_duration_per_request' => 'nullable|numeric|min:0',
+            'allow_overlap' => 'nullable|boolean',
+            'affects_team_availability' => 'nullable|boolean',
         ];
 
         if ($isAdmin) {

@@ -88,7 +88,35 @@ class LeaveRequestController extends Controller
     }
 
     /**
-     * ✅ Calcul AJAX de la durée (GET) - AVEC VÉRIFICATION DATE LIMITE
+     * ✅ VÉRIFICATION DES CHEVAUCHEMENTS
+     */
+    private function checkOverlappingLeaves($employeeId, $startDate, $endDate, $leaveTypeId = null, $excludeRequestId = null)
+    {
+        $query = LeaveRequest::where('employee_id', $employeeId)
+            ->where('status', '!=', 'rejected')
+            ->where('status', '!=', 'cancelled')
+            ->where(function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('start_date', [$startDate, $endDate])
+                  ->orWhereBetween('end_date', [$startDate, $endDate])
+                  ->orWhere(function ($q2) use ($startDate, $endDate) {
+                      $q2->where('start_date', '<=', $startDate)
+                         ->where('end_date', '>=', $endDate);
+                  });
+            });
+
+        if ($leaveTypeId) {
+            $query->where('leave_type_id', $leaveTypeId);
+        }
+
+        if ($excludeRequestId) {
+            $query->where('id', '!=', $excludeRequestId);
+        }
+
+        return $query->exists();
+    }
+
+    /**
+     * ✅ Calcul AJAX de la durée - AVEC TOUTES LES VALIDATIONS
      */
     public function calculateDurationAjax(Request $request)
     {
@@ -109,7 +137,71 @@ class LeaveRequestController extends Controller
                 'period_id' => 'nullable|exists:leave_periods,id'
             ]);
 
-            // VÉRIFICATION : Les dates doivent être dans la période
+            // ✅ Récupérer le type de congé avec ses règles
+            $leaveType = LeaveType::find($request->leave_type_id);
+            
+            if (!$leaveType) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Type de congé non trouvé'
+                ], 422);
+            }
+
+            // ✅ Calculer la durée
+            $duration = $this->durationCalculator->calculate(
+                $employee->ID,
+                $request->leave_type_id,
+                $request->start_date,
+                $request->end_date,
+                $request->period_id
+            );
+
+            // ✅ VÉRIFICATION 1 : Durée maximale par demande (leave_types.max_duration_per_request)
+            $maxDuration = $leaveType->max_duration_per_request ?? null;
+            if ($maxDuration && $duration > $maxDuration) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "La durée demandée ({$duration} jour(s)) dépasse la durée maximale autorisée de {$maxDuration} jour(s) pour ce type de congé.",
+                    'error_type' => 'max_duration'
+                ], 422);
+            }
+
+            // ✅ VÉRIFICATION 2 : Délai de prévenance (leave_types.min_notice_days)
+            $minNoticeDays = $leaveType->min_notice_days ?? 0;
+            if ($minNoticeDays > 0) {
+                $startDate = Carbon::parse($request->start_date);
+                $today = Carbon::today();
+                $noticeRequired = $today->copy()->addDays($minNoticeDays);
+                
+                if ($startDate->lt($noticeRequired)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Vous devez faire votre demande au moins {$minNoticeDays} jours à l'avance. La date de début doit être après le " . $noticeRequired->format('d/m/Y') . ".",
+                        'error_type' => 'notice'
+                    ], 422);
+                }
+            }
+
+            // ✅ VÉRIFICATION 3 : Chevauchement avec d'autres congés (leave_types.allow_overlap)
+            if (!$leaveType->allow_overlap) {
+                $hasOverlap = $this->checkOverlappingLeaves(
+                    $employee->ID,
+                    $request->start_date,
+                    $request->end_date,
+                    $request->leave_type_id,
+                    null
+                );
+
+                if ($hasOverlap) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Vous avez déjà une demande de congé sur cette période. Les chevauchements ne sont pas autorisés pour ce type de congé.",
+                        'error_type' => 'overlap'
+                    ], 422);
+                }
+            }
+
+            // ✅ VÉRIFICATION 4 : Période et Date limite de pose (leave_periods)
             if ($request->filled('period_id')) {
                 $period = LeavePeriod::find($request->period_id);
                 if ($period) {
@@ -119,7 +211,7 @@ class LeaveRequestController extends Controller
                     $periodEnd = Carbon::parse($period->end_date);
                     $today = Carbon::today();
 
-                    // ✅ VÉRIFICATION 1 : Dates dans la période
+                    // Dates dans la période
                     if ($start->lt($periodStart) || $end->gt($periodEnd)) {
                         return response()->json([
                             'success' => false,
@@ -127,7 +219,7 @@ class LeaveRequestController extends Controller
                         ], 422);
                     }
 
-                    // ✅ VÉRIFICATION 2 : Période ouverte
+                    // Période ouverte
                     if ($period->status !== 'open' || !$period->is_active) {
                         return response()->json([
                             'success' => false,
@@ -135,10 +227,9 @@ class LeaveRequestController extends Controller
                         ], 422);
                     }
 
-                    // ✅ VÉRIFICATION 3 : DATE LIMITE DE POSE
+                    // ✅ DATE LIMITE DE POSE (leave_periods.submission_deadline)
                     if ($period->submission_deadline) {
                         $deadline = Carbon::parse($period->submission_deadline);
-                        
                         if ($today->gt($deadline)) {
                             return response()->json([
                                 'success' => false,
@@ -149,16 +240,7 @@ class LeaveRequestController extends Controller
                 }
             }
 
-            $duration = $this->durationCalculator->calculate(
-                $employee->ID,
-                $request->leave_type_id,
-                $request->start_date,
-                $request->end_date,
-                $request->period_id
-            );
-
             // VÉRIFICATION : Solde suffisant
-            $leaveType = LeaveType::find($request->leave_type_id);
             $balanceSufficient = true;
             $balanceMessage = null;
 
@@ -187,7 +269,10 @@ class LeaveRequestController extends Controller
                     'employee' => $employee->FirstName . ' ' . $employee->LastName,
                     'method' => 'jours ouvrés (selon politique)',
                     'weekends_excluded' => true,
-                    'holidays_excluded' => true
+                    'holidays_excluded' => true,
+                    'min_notice_days' => $leaveType->min_notice_days ?? 0,
+                    'max_duration_per_request' => $leaveType->max_duration_per_request ?? 'Illimité',
+                    'allow_overlap' => $leaveType->allow_overlap ? 'Oui' : 'Non',
                 ]
             ]);
 
@@ -330,7 +415,7 @@ class LeaveRequestController extends Controller
     }
 
     /**
-     * Formulaire de demande de congé - AVEC DATE LIMITE
+     * Formulaire de demande de congé
      */
     public function create()
     {
@@ -351,7 +436,7 @@ class LeaveRequestController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Récupérer toutes les périodes groupées par type AVEC DATE LIMITE
+        // Récupérer toutes les périodes groupées par type
         $allPeriods = LeavePeriod::where('is_active', true)
             ->where(function ($q) use ($userSiteId) {
                 $q->where('site_id', $userSiteId)
@@ -367,7 +452,7 @@ class LeaveRequestController extends Controller
                         'name' => $period->name,
                         'start_date' => $period->start_date->format('Y-m-d'),
                         'end_date' => $period->end_date->format('Y-m-d'),
-                        'submission_deadline' => $period->submission_deadline?->format('Y-m-d'), // ✅ AJOUTÉ
+                        'submission_deadline' => $period->submission_deadline?->format('Y-m-d'),
                         'status' => $period->status,
                         'is_active' => $period->is_active,
                         'allow_rollover' => $period->allow_rollover,
@@ -382,7 +467,7 @@ class LeaveRequestController extends Controller
     }
 
     /**
-     * ✅ Créer une demande de congé - AVEC VÉRIFICATION DATE LIMITE
+     * ✅ Créer une demande de congé - AVEC TOUTES LES VALIDATIONS
      */
     public function store(Request $request)
     {
@@ -404,6 +489,14 @@ class LeaveRequestController extends Controller
                 'attachments.*' => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png,xls,xlsx,txt',
             ]);
 
+            // ✅ Récupérer le type de congé
+            $leaveType = LeaveType::find($validated['leave_type_id']);
+            
+            if (!$leaveType) {
+                return back()->withErrors(['leave_type_id' => 'Type de congé non trouvé.'])
+                    ->withInput();
+            }
+
             // VÉRIFICATION : La période doit correspondre au type
             $period = LeavePeriod::findOrFail($validated['period_id']);
             if ($period->leave_type_id != $validated['leave_type_id']) {
@@ -424,13 +517,13 @@ class LeaveRequestController extends Controller
                 ])->withInput();
             }
 
-            // ✅ VÉRIFICATION : La période doit être ouverte
+            // VÉRIFICATION : La période doit être ouverte
             if ($period->status !== 'open' || !$period->is_active) {
                 return back()->withErrors(['period_id' => 'Cette période n\'est pas ouverte pour les demandes.'])
                     ->withInput();
             }
 
-            // ✅ VÉRIFICATION : DATE LIMITE DE POSE
+            // ✅ DATE LIMITE DE POSE (leave_periods.submission_deadline)
             if ($period->submission_deadline) {
                 $deadline = Carbon::parse($period->submission_deadline);
                 
@@ -441,17 +534,54 @@ class LeaveRequestController extends Controller
                 }
             }
 
-            // VÉRIFICATION : Solde suffisant
-            $leaveType = LeaveType::find($validated['leave_type_id']);
-            if ($leaveType && $leaveType->deducts_balance) {
-                $duration = $this->durationCalculator->calculate(
+            // ✅ Calculer la durée
+            $duration = $this->durationCalculator->calculate(
+                $employee->ID,
+                $validated['leave_type_id'],
+                $validated['start_date'],
+                $validated['end_date'],
+                $validated['period_id']
+            );
+
+            // ✅ VÉRIFICATION 1 : Durée maximale par demande (leave_types.max_duration_per_request)
+            $maxDuration = $leaveType->max_duration_per_request ?? null;
+            if ($maxDuration && $duration > $maxDuration) {
+                return back()->withErrors([
+                    'leave_type_id' => "La durée demandée ({$duration} jour(s)) dépasse la durée maximale autorisée de {$maxDuration} jour(s) pour ce type de congé."
+                ])->withInput();
+            }
+
+            // ✅ VÉRIFICATION 2 : Délai de prévenance (leave_types.min_notice_days)
+            $minNoticeDays = $leaveType->min_notice_days ?? 0;
+            if ($minNoticeDays > 0) {
+                $noticeRequired = $today->copy()->addDays($minNoticeDays);
+                
+                if ($start->lt($noticeRequired)) {
+                    return back()->withErrors([
+                        'start_date' => "Vous devez faire votre demande au moins {$minNoticeDays} jours à l'avance. La date de début doit être après le " . $noticeRequired->format('d/m/Y') . "."
+                    ])->withInput();
+                }
+            }
+
+            // ✅ VÉRIFICATION 3 : Chevauchement avec d'autres congés (leave_types.allow_overlap)
+            if (!$leaveType->allow_overlap) {
+                $hasOverlap = $this->checkOverlappingLeaves(
                     $employee->ID,
-                    $validated['leave_type_id'],
                     $validated['start_date'],
                     $validated['end_date'],
-                    $validated['period_id']
+                    $validated['leave_type_id'],
+                    null
                 );
 
+                if ($hasOverlap) {
+                    return back()->withErrors([
+                        'start_date' => "Vous avez déjà une demande de congé sur cette période. Les chevauchements ne sont pas autorisés pour ce type de congé."
+                    ])->withInput();
+                }
+            }
+
+            // VÉRIFICATION : Solde suffisant
+            if ($leaveType && $leaveType->deducts_balance) {
                 $balance = LeaveBalance::where('employee_id', $employee->ID)
                     ->where('leave_type_id', $validated['leave_type_id'])
                     ->where('period_id', $validated['period_id'])
@@ -477,6 +607,9 @@ class LeaveRequestController extends Controller
                 $validated['reason'] ?? null,
                 $validated['comment'] ?? null
             );
+
+            // Mettre à jour la durée
+            $leaveRequest->update(['duration' => $duration]);
 
             // Gérer les pièces jointes
             if ($request->hasFile('attachments')) {
@@ -588,6 +721,9 @@ class LeaveRequestController extends Controller
         return view('employes.leave_requests.edit', compact('request', 'leaveTypes', 'allPeriods', 'attachmentStatus'));
     }
 
+    /**
+     * ✅ Mettre à jour une demande de congé - AVEC TOUTES LES VALIDATIONS
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -610,6 +746,14 @@ class LeaveRequestController extends Controller
                 'reason' => 'nullable|string|max:500',
                 'comment' => 'nullable|string|max:500',
             ]);
+
+            // ✅ Récupérer le type de congé
+            $leaveType = LeaveType::find($validated['leave_type_id']);
+            
+            if (!$leaveType) {
+                return back()->withErrors(['leave_type_id' => 'Type de congé non trouvé.'])
+                    ->withInput();
+            }
 
             $period = LeavePeriod::findOrFail($validated['period_id']);
             if ($period->leave_type_id != $validated['leave_type_id']) {
@@ -634,13 +778,76 @@ class LeaveRequestController extends Controller
                     ->withInput();
             }
 
-            // ✅ VÉRIFICATION DATE LIMITE
+            // ✅ DATE LIMITE DE POSE (leave_periods.submission_deadline)
             if ($period->submission_deadline) {
                 $deadline = Carbon::parse($period->submission_deadline);
                 if ($today->gt($deadline)) {
                     return back()->withErrors([
                         'period_id' => "La date limite de pose était le {$deadline->format('d/m/Y')}. Vous ne pouvez plus faire de demande pour cette période."
                     ])->withInput();
+                }
+            }
+
+            // ✅ Calculer la durée
+            $duration = $this->durationCalculator->calculate(
+                $employee->ID,
+                $validated['leave_type_id'],
+                $validated['start_date'],
+                $validated['end_date'],
+                $validated['period_id']
+            );
+
+            // ✅ VÉRIFICATION 1 : Durée maximale par demande (leave_types.max_duration_per_request)
+            $maxDuration = $leaveType->max_duration_per_request ?? null;
+            if ($maxDuration && $duration > $maxDuration) {
+                return back()->withErrors([
+                    'leave_type_id' => "La durée demandée ({$duration} jour(s)) dépasse la durée maximale autorisée de {$maxDuration} jour(s) pour ce type de congé."
+                ])->withInput();
+            }
+
+            // ✅ VÉRIFICATION 2 : Délai de prévenance (leave_types.min_notice_days)
+            $minNoticeDays = $leaveType->min_notice_days ?? 0;
+            if ($minNoticeDays > 0) {
+                $noticeRequired = $today->copy()->addDays($minNoticeDays);
+                
+                if ($start->lt($noticeRequired)) {
+                    return back()->withErrors([
+                        'start_date' => "Vous devez faire votre demande au moins {$minNoticeDays} jours à l'avance. La date de début doit être après le " . $noticeRequired->format('d/m/Y') . "."
+                    ])->withInput();
+                }
+            }
+
+            // ✅ VÉRIFICATION 3 : Chevauchement avec d'autres congés (leave_types.allow_overlap)
+            if (!$leaveType->allow_overlap) {
+                $hasOverlap = $this->checkOverlappingLeaves(
+                    $employee->ID,
+                    $validated['start_date'],
+                    $validated['end_date'],
+                    $validated['leave_type_id'],
+                    $id
+                );
+
+                if ($hasOverlap) {
+                    return back()->withErrors([
+                        'start_date' => "Vous avez déjà une demande de congé sur cette période. Les chevauchements ne sont pas autorisés pour ce type de congé."
+                    ])->withInput();
+                }
+            }
+
+            // VÉRIFICATION : Solde suffisant
+            if ($leaveType && $leaveType->deducts_balance) {
+                $balance = LeaveBalance::where('employee_id', $employee->ID)
+                    ->where('leave_type_id', $validated['leave_type_id'])
+                    ->where('period_id', $validated['period_id'])
+                    ->first();
+
+                if ($balance) {
+                    $availableBalance = $balance->remaining ?? 0;
+                    if ($duration > $availableBalance && !$leaveType->allow_negative_balance) {
+                        return back()->withErrors([
+                            'leave_type_id' => "Solde insuffisant : {$availableBalance} jour(s) disponible(s) pour {$duration} jour(s) demandé(s)."
+                        ])->withInput();
+                    }
                 }
             }
             
@@ -651,16 +858,8 @@ class LeaveRequestController extends Controller
                 'end_date' => $validated['end_date'],
                 'reason' => $validated['reason'] ?? null,
                 'comment' => $validated['comment'] ?? null,
+                'duration' => $duration,
             ]);
-            
-            $duration = $this->durationCalculator->calculate(
-                $employee->ID,
-                $validated['leave_type_id'],
-                $validated['start_date'],
-                $validated['end_date'],
-                $validated['period_id']
-            );
-            $leaveRequest->update(['duration' => $duration]);
             
             if ($request->has('submit')) {
                 $this->leaveRequestService->submitRequest($id);
@@ -935,7 +1134,7 @@ class LeaveRequestController extends Controller
     }
 
     /**
-     * ✅ Récupérer le solde d'un employé - CORRIGÉ
+     * ✅ Récupérer le solde d'un employé
      */
     public function getBalance(Request $request)
     {

@@ -23,6 +23,9 @@ class SiteLeaveTypeSetting extends Model
         'local_allow_negative_balance',
         'local_max_negative_limit',
         'local_deducts_balance',
+        'local_min_notice_days',
+        'local_max_duration_per_request',
+        'local_allow_overlap',
     ];
 
     protected $casts = [
@@ -31,6 +34,9 @@ class SiteLeaveTypeSetting extends Model
         'local_deducts_balance' => 'boolean',
         'local_requires_attachment_after' => 'integer',
         'local_max_negative_limit' => 'integer',
+        'local_min_notice_days' => 'integer',
+        'local_max_duration_per_request' => 'decimal:2',
+        'local_allow_overlap' => 'boolean',
     ];
 
     public function site()
@@ -77,5 +83,20 @@ class SiteLeaveTypeSetting extends Model
     public function getDeductsBalance($globalValue)
     {
         return $this->local_deducts_balance ?? $globalValue;
+    }
+
+    public function getMinNoticeDays($globalValue)
+    {
+        return $this->local_min_notice_days ?? $globalValue;
+    }
+
+    public function getMaxDurationPerRequest($globalValue)
+    {
+        return $this->local_max_duration_per_request ?? $globalValue;
+    }
+
+    public function getAllowOverlap($globalValue)
+    {
+        return $this->local_allow_overlap ?? $globalValue;
     }
 }

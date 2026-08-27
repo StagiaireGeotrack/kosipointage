@@ -146,6 +146,43 @@
                         @endif
                     </dd>
 
+                    <dt class="col-sm-3">{{ __('Délai de prévenance') }}</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-secondary">{{ $leaveType->min_notice_days ?? 0 }} jour(s)</span>
+                        @if($hasOverride && isset($resolved->min_notice_days) && $resolved->min_notice_days != ($leaveType->min_notice_days ?? 0))
+                            <br><small class="text-muted">Valeur globale : {{ $leaveType->min_notice_days ?? 0 }}</small>
+                        @endif
+                    </dd>
+
+                    <dt class="col-sm-3">{{ __('Durée maximale par demande') }}</dt>
+                    <dd class="col-sm-9">
+                        @if($leaveType->max_duration_per_request)
+                            <span class="badge bg-warning text-dark">{{ $leaveType->max_duration_per_request }} jour(s)</span>
+                        @else
+                            <span class="text-muted">Illimité</span>
+                        @endif
+                        @if($hasOverride && isset($resolved->max_duration_per_request) && $resolved->max_duration_per_request != $leaveType->max_duration_per_request)
+                            <br><small class="text-muted">Valeur globale : {{ $leaveType->max_duration_per_request ?? 'Illimité' }}</small>
+                        @endif
+                    </dd>
+
+                    <dt class="col-sm-3">{{ __('Chevauchements autorisés') }}</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge {{ ($leaveType->allow_overlap ?? false) ? 'bg-success' : 'bg-danger' }}">
+                            {{ ($leaveType->allow_overlap ?? false) ? 'Oui' : 'Non' }}
+                        </span>
+                        @if($hasOverride && isset($resolved->allow_overlap) && $resolved->allow_overlap != ($leaveType->allow_overlap ?? false))
+                            <br><small class="text-muted">Valeur globale : {{ ($leaveType->allow_overlap ?? false) ? 'Oui' : 'Non' }}</small>
+                        @endif
+                    </dd>
+
+                    <dt class="col-sm-3">{{ __('Affecte l\'effectif') }}</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge {{ ($leaveType->affects_team_availability ?? true) ? 'bg-success' : 'bg-secondary' }}">
+                            {{ ($leaveType->affects_team_availability ?? true) ? 'Oui' : 'Non' }}
+                        </span>
+                    </dd>
+
                     <dt class="col-sm-3">{{ __('Personnalisable') }}</dt>
                     <dd class="col-sm-9">
                         <span class="badge {{ $leaveType->is_customizable ? 'bg-primary' : 'bg-secondary' }}">
@@ -161,10 +198,10 @@
                     </dd>
 
                     <dt class="col-sm-3">{{ __('Créé le') }}</dt>
-                    <dd class="col-sm-9">{{ $leaveType->created_at->format('d/m/Y H:i') }}</dd>
+                    <dd class="col-sm-9">{{ $leaveType->created_at ? $leaveType->created_at->format('d/m/Y H:i') : 'N/A' }}</dd>
 
                     <dt class="col-sm-3">{{ __('Dernière mise à jour') }}</dt>
-                    <dd class="col-sm-9">{{ $leaveType->updated_at->format('d/m/Y H:i') }}</dd>
+                    <dd class="col-sm-9">{{ $leaveType->updated_at ? $leaveType->updated_at->format('d/m/Y H:i') : 'N/A' }}</dd>
 
                     @if($leaveType->deleted_at)
                         <dt class="col-sm-3">{{ __('Supprimé le') }}</dt>

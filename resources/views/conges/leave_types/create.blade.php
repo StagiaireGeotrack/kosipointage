@@ -17,6 +17,7 @@
                 <form method="POST" action="{{ route('admin.leave-types.store') }}">
                     @csrf
 
+                    <!-- Informations de base -->
                     <div class="row g-3 mb-4">
                         <div class="col-lg-6">
                             <x-input-label for="name" :value="__('Nom du type')" />
@@ -36,6 +37,7 @@
                         </div>
                     </div>
 
+                    <!-- Unités et couleurs -->
                     <div class="row g-3 mb-4">
                         <div class="col-lg-4">
                             <x-input-label for="unit" :value="__('Unité')" />
@@ -72,6 +74,7 @@
                         </div>
                     </div>
 
+                    <!-- Justificatif après durée -->
                     <div class="row g-3 mb-4" id="attachment_days_row" style="{{ old('requires_attachment') == 'after_duration' ? '' : 'display: none;' }}">
                         <div class="col-lg-4">
                             <x-input-label for="requires_attachment_after" :value="__('Nombre de jours avant justificatif')" />
@@ -82,6 +85,7 @@
                         </div>
                     </div>
 
+                    <!-- Gestion du solde -->
                     <div class="row g-3 mb-4">
                         <div class="col-lg-3">
                             <x-input-label for="deducts_balance" :value="__('Déduire du solde')" />
@@ -131,6 +135,57 @@
                         </div>
                     </div>
 
+                    <!-- Règles de validation -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-4">
+                            <x-input-label for="min_notice_days" :value="__('Délai de prévenance (jours)')" />
+                            <x-text-input id="min_notice_days" name="min_notice_days" type="number" 
+                                class="form-control mt-1" :value="old('min_notice_days', 0)" min="0" />
+                            <x-input-error :messages="$errors->get('min_notice_days')" class="mt-2" />
+                            <small class="text-muted">{{ __('Nombre de jours minimum avant le début du congé (0 = aucun délai)') }}</small>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <x-input-label for="max_duration_per_request" :value="__('Durée maximale par demande')" />
+                            <x-text-input id="max_duration_per_request" name="max_duration_per_request" type="number" 
+                                step="0.5" class="form-control mt-1" :value="old('max_duration_per_request')" min="0" />
+                            <x-input-error :messages="$errors->get('max_duration_per_request')" class="mt-2" />
+                            <small class="text-muted">{{ __('Laissez vide pour illimité') }}</small>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <x-input-label for="allow_overlap" :value="__('Autoriser les chevauchements')" />
+                            <div class="mt-1">
+                                <input type="hidden" name="allow_overlap" value="0">
+                                <input type="checkbox" id="allow_overlap" name="allow_overlap" value="1" 
+                                    {{ old('allow_overlap', false) ? 'checked' : '' }} class="form-check-input">
+                                <label for="allow_overlap" class="form-check-label ms-2">
+                                    {{ __('Autoriser') }}
+                                </label>
+                            </div>
+                            <x-input-error :messages="$errors->get('allow_overlap')" class="mt-2" />
+                            <small class="text-muted">{{ __('Permet à un employé d\'avoir plusieurs congés qui se chevauchent') }}</small>
+                        </div>
+                    </div>
+
+                    <!-- Affecte l'effectif -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-4">
+                            <x-input-label for="affects_team_availability" :value="__('Affecte l\'effectif de l\'équipe')" />
+                            <div class="mt-1">
+                                <input type="hidden" name="affects_team_availability" value="0">
+                                <input type="checkbox" id="affects_team_availability" name="affects_team_availability" value="1" 
+                                    {{ old('affects_team_availability', true) ? 'checked' : '' }} class="form-check-input">
+                                <label for="affects_team_availability" class="form-check-label ms-2">
+                                    {{ __('Affecte l\'effectif') }}
+                                </label>
+                            </div>
+                            <x-input-error :messages="$errors->get('affects_team_availability')" class="mt-2" />
+                            <small class="text-muted">{{ __('L\'absence réduit-elle le nombre de personnes disponibles dans l\'équipe ?') }}</small>
+                        </div>
+                    </div>
+
+                    <!-- Site et personnalisation -->
                     @if($sites->count() > 0 && auth()->user()->IsSuperAdmin)
                         <div class="row g-3 mb-4">
                             <div class="col-lg-6">

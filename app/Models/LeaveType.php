@@ -26,6 +26,10 @@ class LeaveType extends Model
         'color',
         'is_active',
         'is_customizable',
+        'min_notice_days',
+        'max_duration_per_request',
+        'allow_overlap',
+        'affects_team_availability',
     ];
 
     protected $casts = [
@@ -33,6 +37,10 @@ class LeaveType extends Model
         'allow_negative_balance' => 'boolean',
         'is_active' => 'boolean',
         'is_customizable' => 'boolean',
+        'affects_team_availability' => 'boolean',
+        'allow_overlap' => 'boolean',
+        'min_notice_days' => 'integer',
+        'max_duration_per_request' => 'decimal:2',
     ];
 
     protected $appends = ['is_global'];
@@ -46,6 +54,11 @@ class LeaveType extends Model
     public function siteSettings()
     {
         return $this->hasMany(SiteLeaveTypeSetting::class, 'leave_type_id');
+    }
+
+    public function siteActivations()
+    {
+        return $this->hasMany(LeaveTypeSiteActivation::class, 'leave_type_id');
     }
 
     // Accessors
@@ -113,5 +126,11 @@ class LeaveType extends Model
     public function settingForSite(int $siteId): ?SiteLeaveTypeSetting
     {
         return $this->siteSettings()->where('site_id', $siteId)->first();
+    }
+
+    public function isActiveForSite(int $siteId): bool
+    {
+        $activation = $this->siteActivations()->where('site_id', $siteId)->first();
+        return $activation ? $activation->is_active : $this->is_active;
     }
 }

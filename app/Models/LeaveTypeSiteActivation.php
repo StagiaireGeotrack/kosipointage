@@ -1,4 +1,5 @@
 <?php
+// app/Models/LeaveTypeSiteActivation.php
 
 namespace App\Models;
 
@@ -28,6 +29,6 @@ class LeaveTypeSiteActivation extends Model
 
     public function site()
     {
-        return $this->belongsTo(EntreprisesSiege::class, 'site_id', 'ID');
+        return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
     }
 }
