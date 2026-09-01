@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 22 juil. 2026 à 08:23
+-- Généré le : mar. 01 sep. 2026 à 16:29
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -413,7 +413,634 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action
 (362, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-18 09:09:42'),
 (363, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-18 09:09:42'),
 (364, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-18 09:09:46'),
-(365, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-18 09:09:46');
+(365, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-18 09:09:46'),
+(366, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:49:29'),
+(367, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:49:29'),
+(368, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:49:43'),
+(369, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:49:43'),
+(370, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:50:31'),
+(371, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:50:31'),
+(372, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 5, 'MALALANIRINA Emile Noeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:51:23'),
+(373, 2, 'admin@geotrack.com', 'simple_admin', 'assign_web_access', 'Employe', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:51:23'),
+(374, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:51:29'),
+(375, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:51:29'),
+(376, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:52:12'),
+(377, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:52:12'),
+(378, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:53:08'),
+(379, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:53:08'),
+(380, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:53:20'),
+(381, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:54:34'),
+(382, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 14:54:34'),
+(383, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:56:14'),
+(384, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:56:14');
+INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action`, `model_type`, `model_id`, `model_label`, `description`, `ip_address`, `user_agent`, `SiegeID`, `created_at`) VALUES
+(385, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Conge', 26, '5', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 14:57:33'),
+(386, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 15:04:06'),
+(387, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 15:04:06'),
+(388, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 15:05:04'),
+(389, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 15:05:04'),
+(390, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 15:25:38'),
+(391, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 15:25:38'),
+(392, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 15:26:14'),
+(393, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 15:26:14'),
+(394, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 15:26:42'),
+(395, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-22 15:26:42'),
+(396, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 15:27:55'),
+(397, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-22 15:27:55'),
+(398, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 07:44:33'),
+(399, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 07:44:33'),
+(400, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 09:17:53'),
+(401, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 09:17:53'),
+(402, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 09:29:18'),
+(403, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-23 09:29:45'),
+(404, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-23 09:29:45'),
+(405, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-23 10:50:00'),
+(406, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-23 10:50:00'),
+(407, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 10:51:16'),
+(408, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 10:51:16'),
+(409, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 14:43:14'),
+(410, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 14:43:14'),
+(411, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 14:43:26'),
+(412, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 14:43:47'),
+(413, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-23 14:43:47'),
+(414, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-28 09:22:07'),
+(415, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-28 09:22:07'),
+(416, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-29 08:14:47'),
+(417, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-29 08:14:47'),
+(418, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-30 16:19:56'),
+(419, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-30 16:19:56'),
+(420, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 07:38:47'),
+(421, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 07:38:47'),
+(422, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-07-31 08:53:26'),
+(423, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-07-31 08:53:26'),
+(424, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 08:54:13'),
+(425, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 08:54:13'),
+(426, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 08:54:34'),
+(427, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 08:54:34'),
+(428, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 09:33:37'),
+(429, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 09:33:37'),
+(430, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 09:35:23'),
+(431, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 09:35:23'),
+(432, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 12:19:54'),
+(433, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 12:19:54'),
+(434, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 12:20:31'),
+(435, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 12:20:31'),
+(436, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 13:40:49'),
+(437, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-07-31 13:40:49'),
+(438, NULL, 'admin@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 13:41:19'),
+(439, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 13:41:41'),
+(440, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-31 13:41:41'),
+(441, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-07-31 13:42:45'),
+(442, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-07-31 13:42:45'),
+(443, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-03 07:35:29'),
+(444, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-03 07:35:29'),
+(445, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-03 08:55:50'),
+(446, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-03 08:55:50'),
+(447, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-03 09:27:44'),
+(448, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-03 09:27:44'),
+(449, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-03 14:41:09'),
+(450, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-03 14:41:09'),
+(451, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-04 07:44:46'),
+(452, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-04 07:44:46'),
+(453, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-04 15:18:04'),
+(454, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-04 15:18:04'),
+(455, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-04 15:18:33'),
+(456, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-04 15:18:33'),
+(457, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 07:40:20'),
+(458, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 07:40:20'),
+(459, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 12:54:33'),
+(460, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 12:54:33'),
+(461, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-05 12:54:55'),
+(462, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-05 12:54:55'),
+(463, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-05 13:16:31'),
+(464, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-05 13:16:31'),
+(465, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 13:16:48'),
+(466, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 13:16:48'),
+(467, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 14:32:40'),
+(468, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 14:32:40'),
+(469, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 14:33:08'),
+(470, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 14:33:27'),
+(471, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-05 14:33:27'),
+(472, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 07:37:44'),
+(473, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 07:37:45'),
+(474, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Employe', 58, 'Emma solo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 08:04:49'),
+(475, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 08:48:19'),
+(476, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 08:48:19'),
+(477, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 08:48:53'),
+(478, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 08:48:53'),
+(479, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 08:58:06'),
+(480, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 08:58:06'),
+(481, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 08:58:35'),
+(482, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 08:58:35'),
+(483, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-06 09:20:48'),
+(484, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-06 09:20:48'),
+(485, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 10:00:03'),
+(486, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 10:00:03'),
+(487, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 10:00:35'),
+(488, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 10:00:35'),
+(489, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 12:18:20'),
+(490, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-06 12:18:20'),
+(491, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:18:54'),
+(492, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:18:54'),
+(493, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 58, 'Emma solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:52:41'),
+(494, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 58, 'Emma solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:53:42'),
+(495, 1, 'admin@kosi-time.com', 'superadmin', 'delete', 'Entreprise', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:53:42'),
+(496, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 58, 'Emma solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:54:25'),
+(497, 1, 'admin@kosi-time.com', 'superadmin', 'reset', 'Entreprise', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:54:25'),
+(498, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 54, 'Emp 1', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:54:36'),
+(499, 1, 'admin@kosi-time.com', 'superadmin', 'delete', 'Entreprise', 54, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:54:36'),
+(500, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 54, 'Emp 1', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:54:54'),
+(501, 1, 'admin@kosi-time.com', 'superadmin', 'reset', 'Entreprise', 54, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 12:54:54'),
+(502, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-06 13:41:43'),
+(503, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-06 13:41:43'),
+(504, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 16:27:50'),
+(505, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 16:27:50'),
+(506, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-06 16:28:28'),
+(507, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-06 16:28:28'),
+(508, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 16:29:56'),
+(509, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-06 16:29:56'),
+(510, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-10 07:38:05'),
+(511, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-10 07:38:05'),
+(512, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-10 07:52:17'),
+(513, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-10 07:52:17'),
+(514, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-10 07:52:44'),
+(515, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-10 07:52:44'),
+(516, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-10 07:53:31'),
+(517, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 1, '2026-08-10 07:53:31'),
+(518, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-10 07:53:51'),
+(519, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-08-10 07:53:51'),
+(520, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-10 12:18:51'),
+(521, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-10 12:18:51'),
+(522, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-10 15:57:53'),
+(523, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-10 15:57:53'),
+(524, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 08:09:09'),
+(525, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 08:09:10'),
+(526, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Employe', 59, 'RASOLOFOMANDIMBY EMILE ODON', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 09:24:49'),
+(527, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 09:28:46'),
+(528, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 09:28:46'),
+(529, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Employe', 60, 'RAKOTONIRINA Manankasina', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 10:03:50'),
+(530, 1, 'admin@kosi-time.com', 'superadmin', 'export_excel', 'Employe', NULL, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-11 10:08:49'),
+(531, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-12 16:36:00'),
+(532, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-12 16:36:00'),
+(533, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-13 07:32:24'),
+(534, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-13 07:32:24'),
+(535, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-13 10:58:35'),
+(536, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-13 10:58:35'),
+(537, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-13 15:57:23'),
+(538, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-13 15:57:23'),
+(539, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-14 07:33:30'),
+(540, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-14 07:33:30'),
+(541, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-14 07:59:26'),
+(542, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-14 07:59:26'),
+(543, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-17 07:39:23'),
+(544, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-17 07:39:23'),
+(545, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-17 09:00:00'),
+(546, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-17 09:00:00'),
+(547, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-17 14:42:27'),
+(548, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-17 14:42:27'),
+(549, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 07:38:23'),
+(550, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 07:38:23'),
+(551, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-18 07:41:15'),
+(552, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-18 07:41:15'),
+(553, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-18 10:56:22'),
+(554, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-18 10:56:22'),
+(555, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 5, 'MALALANIRINA Emile Noeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 12:49:38'),
+(556, 1, 'admin@kosi-time.com', 'superadmin', 'delete', 'LeavePolicyAssignment', 2, 'TST', 'Assignation supprimée', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 12:54:10'),
+(557, 1, 'admin@kosi-time.com', 'superadmin', 'export_excel', 'Report', NULL, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 14:49:58'),
+(558, 1, 'admin@kosi-time.com', 'superadmin', 'export_excel', 'Report', NULL, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 15:48:40'),
+(559, 1, 'admin@kosi-time.com', 'superadmin', 'export_excel', 'Report', NULL, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-18 15:50:22'),
+(560, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 07:54:58'),
+(561, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 07:54:59'),
+(562, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 10:08:33'),
+(563, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 10:08:33'),
+(564, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 1, 'Willy Tarkin', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:13:56'),
+(565, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 10:39:59'),
+(566, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 10:39:59'),
+(567, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 10:40:53'),
+(568, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 10:40:53'),
+(569, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:50:19'),
+(570, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:50:19'),
+(571, NULL, 'unknown', NULL, 'update', 'Employe', 5, 'MALALANIRINA Emile Noeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:50:38'),
+(572, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:50:38'),
+(573, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:50:38'),
+(574, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:54:34'),
+(575, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:54:55'),
+(576, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:55:35'),
+(577, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 10:57:25');
+INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action`, `model_type`, `model_id`, `model_label`, `description`, `ip_address`, `user_agent`, `SiegeID`, `created_at`) VALUES
+(578, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 10:57:42'),
+(579, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:58:08'),
+(580, NULL, 'malalanirinaemile1@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 10:58:23'),
+(581, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:02:20'),
+(582, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:02:41'),
+(583, NULL, 'malalanirinaemile1@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:02:51'),
+(584, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:03:42'),
+(585, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:04:26'),
+(586, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:04:51'),
+(587, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 12:05:17'),
+(588, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 12:05:17'),
+(589, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 12:05:23'),
+(590, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 12:05:23'),
+(591, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:06:07'),
+(592, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:06:07'),
+(593, NULL, 'malalanirnaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:43:53'),
+(594, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:44:00'),
+(595, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:44:07'),
+(596, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:45:39'),
+(597, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:46:17'),
+(598, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:47:58'),
+(599, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:49:40'),
+(600, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:49:41'),
+(601, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:49:48'),
+(602, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:49:48'),
+(603, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:49:51'),
+(604, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:49:51'),
+(605, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:50:14'),
+(606, NULL, 'malalanirnaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:51:13'),
+(607, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:51:25'),
+(608, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:51:43'),
+(609, NULL, 'malalanirinaemile1@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:52:20'),
+(610, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 12:52:35'),
+(611, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:53:39'),
+(612, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:53:47'),
+(613, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 12:54:34'),
+(614, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:11:35'),
+(615, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:13:16'),
+(616, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:13:16'),
+(617, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 13:28:15'),
+(618, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 13:28:15'),
+(619, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:51:42'),
+(620, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:51:42'),
+(621, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:51:53'),
+(622, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:51:53'),
+(623, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:52:02'),
+(624, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 13:52:02'),
+(625, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 14:15:17'),
+(626, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 14:15:17'),
+(627, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 14:15:29'),
+(628, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 14:15:29'),
+(629, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-19 14:49:12'),
+(630, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 15:03:47'),
+(631, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', 1, '2026-08-19 15:03:47'),
+(632, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 15:04:05'),
+(633, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0', NULL, '2026-08-19 15:04:05'),
+(634, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 07:43:06'),
+(635, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 07:43:06'),
+(636, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 07:44:14'),
+(637, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 07:44:14'),
+(638, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 08:25:13'),
+(639, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 08:31:25'),
+(640, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 08:31:32'),
+(641, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 10:48:20'),
+(642, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 10:48:20'),
+(643, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 10:48:27'),
+(644, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 10:48:27'),
+(645, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 10:48:36'),
+(646, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 10:48:36'),
+(647, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'login_success', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:07:34'),
+(648, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'login_success', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:07:34'),
+(649, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'logout', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:53:21'),
+(650, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'logout', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:53:21'),
+(651, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:53:38'),
+(652, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:53:38'),
+(653, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:54:18'),
+(654, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 12:54:18'),
+(655, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 12:54:32'),
+(656, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 12:54:32'),
+(657, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:02:44'),
+(658, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:04:39'),
+(659, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:05:35'),
+(660, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 13:05:44'),
+(661, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 13:05:44'),
+(662, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 13:06:07'),
+(663, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:07:00'),
+(664, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:07:21'),
+(665, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 13:08:06'),
+(666, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:09:15'),
+(667, NULL, 'manager.geotrack@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 13:10:49'),
+(668, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'login_success', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 13:12:11'),
+(669, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'login_success', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 13:12:11'),
+(670, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 13:22:28'),
+(671, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 13:22:28'),
+(672, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'logout', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 14:16:28'),
+(673, 17, 'manager.geotrack@kosi-time.com', 'simple_admin', 'logout', 'Administration', 17, 'manager.geotrack@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 14:16:28'),
+(674, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:17:10'),
+(675, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:17:10'),
+(676, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'EntrepriseSiege', 10, 'test test test', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:17:38'),
+(677, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'EntrepriseSiege', 11, 'fdffdfd', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:17:42'),
+(678, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'EntrepriseSiege', 9, 'N8N', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:17:54'),
+(679, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:25:27'),
+(680, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:25:27'),
+(681, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 14:25:42'),
+(682, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 14:25:42'),
+(683, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 14:33:20'),
+(684, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 14:33:20'),
+(685, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:33:39'),
+(686, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 14:33:39'),
+(687, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 14:34:40'),
+(688, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 14:34:40'),
+(689, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 15:04:25'),
+(690, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-20 15:04:25'),
+(691, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 15:04:41'),
+(692, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 15:04:41'),
+(693, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 15:23:10'),
+(694, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 15:23:10'),
+(695, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 15:23:31'),
+(696, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 15:23:31'),
+(697, NULL, 'malalanirnaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-20 16:07:45'),
+(698, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 16:08:31'),
+(699, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-20 16:08:31'),
+(700, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 16:08:44'),
+(701, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-20 16:08:44'),
+(702, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 07:45:51'),
+(703, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 07:45:51'),
+(704, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-21 07:52:13'),
+(705, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-21 07:52:13'),
+(706, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-21 08:16:19'),
+(707, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-21 08:16:19'),
+(708, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 08:30:12'),
+(709, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 08:30:13'),
+(710, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 08:59:28'),
+(711, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 08:59:28'),
+(712, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 08:59:45'),
+(713, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 08:59:45'),
+(714, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:37:18'),
+(715, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:37:18'),
+(716, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:37:37'),
+(717, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:37:37'),
+(718, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:38:58'),
+(719, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:38:58'),
+(720, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:39:13'),
+(721, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:39:13'),
+(722, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:47:58'),
+(723, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:47:58'),
+(724, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:48:13'),
+(725, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:48:13'),
+(726, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:49:58'),
+(727, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 09:49:58'),
+(728, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:50:12'),
+(729, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 09:50:12'),
+(730, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:29:20'),
+(731, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:29:20'),
+(732, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 13:29:40'),
+(733, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 13:29:40'),
+(734, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-21 13:31:46'),
+(735, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:32:00'),
+(736, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:32:00'),
+(737, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:32:10'),
+(738, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:32:10'),
+(739, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:32:20'),
+(740, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-21 13:32:20'),
+(741, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-24 07:42:08'),
+(742, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-24 07:42:08'),
+(743, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 07:48:10'),
+(744, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 07:48:10'),
+(745, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-24 07:49:23'),
+(746, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-24 07:49:23'),
+(747, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 07:49:31'),
+(748, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 07:49:31'),
+(749, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 08:18:38'),
+(750, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 08:45:18'),
+(751, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 08:45:18'),
+(752, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 08:45:38'),
+(753, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 08:45:38'),
+(754, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 09:21:40'),
+(755, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 09:22:36'),
+(756, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 09:22:36'),
+(757, NULL, 'malalanirnaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-24 13:51:39'),
+(758, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 13:52:35'),
+(759, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 13:52:35'),
+(760, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 14:14:33'),
+(761, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 14:14:33'),
+(762, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-24 14:14:49'),
+(763, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-24 14:14:49'),
+(764, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 14:16:44'),
+(765, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-24 14:16:44'),
+(766, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-24 15:03:40'),
+(767, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-24 15:03:40'),
+(768, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-24 15:04:03'),
+(769, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-24 15:04:03'),
+(770, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-24 15:04:07'),
+(771, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-24 15:04:07'),
+(772, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-26 07:45:03'),
+(773, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-26 07:45:03'),
+(774, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 07:45:22'),
+(775, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 07:45:22'),
+(776, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 08:21:23');
+INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action`, `model_type`, `model_id`, `model_label`, `description`, `ip_address`, `user_agent`, `SiegeID`, `created_at`) VALUES
+(777, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 08:21:23'),
+(778, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-26 08:21:57'),
+(779, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-26 08:21:57'),
+(780, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 13:03:55'),
+(781, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 13:03:55'),
+(782, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 13:10:52'),
+(783, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-26 13:10:52'),
+(784, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-26 13:11:11'),
+(785, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-26 13:11:11'),
+(786, NULL, 'admin@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 07:40:29'),
+(787, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 07:40:48'),
+(788, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 07:40:48'),
+(789, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-27 07:51:28'),
+(790, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-27 07:51:28'),
+(791, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 09:57:46'),
+(792, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 09:57:46'),
+(793, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-27 13:02:24'),
+(794, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-27 13:02:24'),
+(795, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 16:03:59'),
+(796, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 16:03:59'),
+(797, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 16:04:14'),
+(798, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', NULL, '2026-08-27 16:04:14'),
+(799, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-27 16:06:51'),
+(800, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-27 16:06:51'),
+(801, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-27 16:08:01'),
+(802, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 1, '2026-08-27 16:08:01'),
+(803, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-27 16:08:10'),
+(804, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-27 16:08:10'),
+(805, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-27 16:08:15'),
+(806, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-27 16:08:15'),
+(807, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-28 14:46:32'),
+(808, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-28 14:46:48'),
+(809, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-28 14:46:48'),
+(810, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 14:50:06'),
+(811, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 14:50:06'),
+(812, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:09:37'),
+(813, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:09:37'),
+(814, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:10:12'),
+(815, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:10:12'),
+(816, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:11:06'),
+(817, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:11:06'),
+(818, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:11:23'),
+(819, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:11:23'),
+(820, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:45:10'),
+(821, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:45:10'),
+(822, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:45:35'),
+(823, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:45:35'),
+(824, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:47:10'),
+(825, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:47:10'),
+(826, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:49:08'),
+(827, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:49:40'),
+(828, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:49:40'),
+(829, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:57:05'),
+(830, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-28 15:57:05'),
+(831, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:57:25'),
+(832, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:57:25'),
+(833, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:58:45'),
+(834, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:58:51'),
+(835, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 15:58:51'),
+(836, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 15:58:57'),
+(837, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 15:58:57'),
+(838, 18, 'testautreadmin@gmail.com', 'simple_admin', 'create', 'Employe', 61, 'TEST EMPLOYE POUR ASSIGNER UN MANAGER', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 16:17:41'),
+(839, 18, 'testautreadmin@gmail.com', 'simple_admin', 'update', 'Department', 34, 'Service informatique', 'Service mis à jour : Service informatique', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 16:20:15'),
+(840, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 16:26:32'),
+(841, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 16:26:32'),
+(842, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 16:26:59'),
+(843, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 16:26:59'),
+(844, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 16, 'Tarkin Willy', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 16:28:21'),
+(845, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 16:28:28'),
+(846, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-28 16:28:28'),
+(847, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 16:28:44'),
+(848, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-28 16:28:44'),
+(849, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 08:39:37'),
+(850, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 08:39:37'),
+(851, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 08:39:54'),
+(852, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 08:39:54'),
+(853, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 08:50:08'),
+(854, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 08:50:08'),
+(855, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 08:52:35'),
+(856, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 08:52:35'),
+(857, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 08:52:42'),
+(858, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 08:52:42'),
+(859, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 08:52:52'),
+(860, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 08:52:52'),
+(861, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 09:20:59'),
+(862, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 09:20:59'),
+(863, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:21:10'),
+(864, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:21:10'),
+(865, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 62, 'RAHARIMANANA ALEX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 09:29:24'),
+(866, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 62, 'RAHARIMANANA ALEX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 09:31:05'),
+(867, 2, 'admin@geotrack.com', 'simple_admin', 'assign_web_access', 'Employe', 62, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 09:31:05'),
+(868, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:31:15'),
+(869, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:31:15'),
+(870, NULL, 'alex@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:31:25'),
+(871, NULL, 'admin@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:32:52'),
+(872, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:33:06'),
+(873, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:33:06'),
+(874, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 62, 'RAHARIMANANA ALEX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:34:00'),
+(875, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:34:09'),
+(876, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:34:09'),
+(877, NULL, 'unknown', NULL, 'login_success', 'Administration', 62, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:34:28'),
+(878, NULL, 'unknown', NULL, 'login_success', 'Administration', 62, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 09:34:29'),
+(879, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:45:46'),
+(880, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:45:46'),
+(881, 18, 'testautreadmin@gmail.com', 'simple_admin', 'update', 'Employe', 61, 'TEST EMPLOYE POUR ASSIGNER UN MANAGER', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:57:37'),
+(882, 18, 'testautreadmin@gmail.com', 'simple_admin', 'assign_web_access', 'Employe', 61, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 09:57:37'),
+(883, 18, 'testautreadmin@gmail.com', 'simple_admin', 'update', 'Employe', 16, 'Tarkin Willy', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:14:28'),
+(884, 18, 'testautreadmin@gmail.com', 'simple_admin', 'assign_web_access', 'Employe', 16, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:14:28'),
+(885, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:14:50'),
+(886, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:14:50'),
+(887, NULL, 'testautreadminrun@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:14:56'),
+(888, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:15:36'),
+(889, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:15:36'),
+(890, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Administration', 4, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:16:50'),
+(891, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:16:56'),
+(892, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:16:56'),
+(893, NULL, 'testautreadminrun@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:17:10'),
+(894, NULL, 'testautreadminrun@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:17:20'),
+(895, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:17:44'),
+(896, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:17:44'),
+(897, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:18:42'),
+(898, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:18:42'),
+(899, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 10:19:30'),
+(900, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 1, '2026-08-31 10:19:30'),
+(901, NULL, 'unknown', NULL, 'login_success', 'Administration', 62, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 10:19:48'),
+(902, NULL, 'unknown', NULL, 'login_success', 'Administration', 62, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 10:19:48'),
+(903, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:22:48'),
+(904, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:22:48'),
+(905, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:25:11'),
+(906, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:25:11'),
+(907, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 62, 'RAHARIMANANA ALEX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:26:07'),
+(908, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:27:08'),
+(909, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:27:08'),
+(910, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:27:33'),
+(911, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:27:33'),
+(912, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:27:55'),
+(913, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:27:55'),
+(914, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:28:00'),
+(915, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:28:00'),
+(916, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:33:04'),
+(917, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:33:04'),
+(918, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:40:35'),
+(919, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:40:35'),
+(920, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:40:50'),
+(921, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:40:50'),
+(922, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 16, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:41:56'),
+(923, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 16, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:41:56'),
+(924, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:46:35'),
+(925, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 10:46:35'),
+(926, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:46:51'),
+(927, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 10:46:51'),
+(928, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 12:01:28'),
+(929, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 12:01:28'),
+(930, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 12:02:44'),
+(931, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 12:02:44'),
+(932, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 12:03:12'),
+(933, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-08-31 12:03:12'),
+(934, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:03:23'),
+(935, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:03:23'),
+(936, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 16, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:07:18'),
+(937, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 16, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:07:18'),
+(938, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:09:42'),
+(939, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:09:42'),
+(940, NULL, 'testautreadminrun@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:09:51'),
+(941, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:19:44'),
+(942, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 12:19:44'),
+(943, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 13:07:45'),
+(944, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 13:07:45'),
+(945, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 13:08:13'),
+(946, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 13:08:27'),
+(947, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 13:08:40'),
+(948, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 13:08:40'),
+(949, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:10:44'),
+(950, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 13:12:22'),
+(951, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 13:12:22'),
+(952, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:18:32'),
+(953, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:18:32'),
+(954, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Employe', 63, 'testemanager', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:20:34'),
+(955, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 64, 'tetsecreeremployedepuis adminsiege', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 13:22:37'),
+(956, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 65, 'tetsecreeremployedepuis adminsiege2', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 13:25:19'),
+(957, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 61, 'TEST EMPLOYE POUR ASSIGNER UN MANAGER', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:30:00'),
+(958, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 16, 'Tarkin Willy', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:32:44'),
+(959, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 62, 'RAHARIMANANA ALEX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 13:33:45'),
+(960, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 14:24:53'),
+(961, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 14:24:53'),
+(962, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 2, '2026-08-31 14:25:02'),
+(963, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 2, '2026-08-31 14:25:02'),
+(964, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 15:22:38'),
+(965, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 15:22:38'),
+(966, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 2, '2026-08-31 15:22:43'),
+(967, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 2, '2026-08-31 15:22:43'),
+(968, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 15:23:21'),
+(969, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 15:23:21'),
+(970, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 15:27:54');
+INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action`, `model_type`, `model_id`, `model_label`, `description`, `ip_address`, `user_agent`, `SiegeID`, `created_at`) VALUES
+(971, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 15:27:54'),
+(972, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 58, 'Emma solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 16:05:10'),
+(973, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 16:22:52'),
+(974, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-08-31 16:22:52'),
+(975, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 16:23:48'),
+(976, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-08-31 16:23:48'),
+(977, NULL, 'admin@kosi-time.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 16:24:14'),
+(978, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 16:24:29'),
+(979, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-08-31 16:24:29'),
+(980, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-01 14:01:28'),
+(981, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-01 14:01:37'),
+(982, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-01 14:01:37'),
+(983, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-01 14:05:43'),
+(984, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-01 14:05:43'),
+(985, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-01 14:10:20'),
+(986, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-01 14:10:20'),
+(987, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 14:10:35'),
+(988, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 14:10:35');
 
 -- --------------------------------------------------------
 
@@ -441,15 +1068,33 @@ CREATE TABLE `administration` (
 --
 
 INSERT INTO `administration` (`ID`, `Identifiant_email`, `Password_`, `IsSuperAdmin`, `IsSeller`, `IsManager`, `SiegeID`, `created_at`, `updated_at`, `remember_token`, `Actived`, `deleted`) VALUES
-(1, 'admin@kosi-time.com', '6bc91c1c4dfceb6e15e70572a95c739ee94433ee', 1, 0, 0, NULL, NULL, NULL, NULL, 1, 0),
-(2, 'admin@geotrack.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 0, 0, 0, 1, NULL, NULL, NULL, 1, 0),
-(4, 'admin@run-telemat.com', 'ee8377fa4b53905f95a64f12a57391a1241089b7', 0, 0, 0, 2, NULL, NULL, NULL, 0, 1),
+(1, 'admin@kosi-time.com', '2a8e1455bec3ce1b71c396d0e9c2cbca58b05f84', 1, 0, 0, NULL, NULL, NULL, NULL, 1, 0),
+(2, 'admin@geotrack.com', '24b891f2915f09661cabc28ddf63f336c8c8f517', 0, 0, 1, 1, NULL, NULL, NULL, 1, 0),
+(4, 'admin@run-telemat.com', 'ee8377fa4b53905f95a64f12a57391a1241089b7', 0, 0, 0, 2, NULL, NULL, NULL, 1, 1),
 (7, 'admin@pro-elec.com', 'b1855e280f37c532d694415842b0ea31fd9f6e0f', 0, 0, 0, 4, NULL, NULL, NULL, 0, 1),
 (8, 'admin@island-food.com', '7d94404e1ca839e241a4dc75602f2df20a367b1a', 0, 0, 0, 3, NULL, NULL, NULL, 0, 1),
 (13, 'admin@sel.com', 'f39077bbae80d8fb5f639e1fd3a422479ae4a725', 1, 1, 0, NULL, '2026-03-06 12:52:42', '2026-03-06 12:52:42', NULL, 1, 0),
 (14, 'adminkosi@gmail.com', 'b7642ee606274722a63f570a1232902bb110cc45', 1, 0, 0, NULL, '2026-03-11 05:19:17', '2026-03-11 05:19:17', NULL, 1, 0),
 (15, 'ad@gmail.com', 'c7c8b6e52f202e0fc0b73ec79c7cf7da5c02a7ab', 1, 0, 0, NULL, '2026-03-11 07:56:46', '2026-03-11 07:56:46', NULL, 1, 0),
-(16, 'admin@manage-sup.com', '9efc51fb58ef74257cf303e2be33660633d34ca9', 1, 0, 1, NULL, '2026-07-15 08:46:40', '2026-07-15 08:46:40', NULL, 1, 0);
+(16, 'admin@manage-sup.com', '9efc51fb58ef74257cf303e2be33660633d34ca9', 1, 0, 1, NULL, '2026-07-15 08:46:40', '2026-07-15 08:46:40', NULL, 1, 0),
+(17, 'manager.geotrack@kosi-time.com', 'cbfdac6008f9cab4083784cbd1874f76618d2a97', 0, 0, 1, 1, '2026-08-20 12:06:03', '2026-08-20 12:06:03', NULL, 1, 0),
+(18, 'testautreadmin@gmail.com', 'c4edb3216ae52510b16f308fe3e5ffcefac11821', 0, 0, 1, 2, '2026-08-28 15:58:45', '2026-08-28 15:58:45', NULL, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin_roles`
+--
+
+CREATE TABLE `admin_roles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `admin_id` int(10) UNSIGNED NOT NULL,
+  `role` enum('superadmin','company_admin','rh','manager','direction') NOT NULL,
+  `company_id` int(10) UNSIGNED DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -474,6 +1119,40 @@ CREATE TABLE `cache_locks` (
   `owner` varchar(255) NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `company_holidays`
+--
+
+CREATE TABLE `company_holidays` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `date` date NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `is_recurring` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Récurrent chaque année',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_customizable` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `company_holidays`
+--
+
+INSERT INTO `company_holidays` (`id`, `site_id`, `date`, `name`, `is_recurring`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 1, '2026-07-14', 'fete de independanceny', 1, 1, 0, '2026-08-21 09:36:44', '2026-08-17 14:41:30', '2026-08-21 09:36:44'),
+(2, NULL, '2026-06-26', 'malagasy', 1, 1, 0, '2026-08-21 09:38:48', '2026-08-17 14:42:52', '2026-08-21 09:38:48'),
+(3, NULL, '2026-07-26', 'malagasy', 1, 1, 0, '2026-08-21 09:38:52', '2026-08-17 14:50:04', '2026-08-21 09:38:52'),
+(4, NULL, '2011-11-11', 'MALALANIRINA', 1, 1, 0, '2026-08-21 09:38:44', '2026-08-17 14:53:07', '2026-08-21 09:38:44'),
+(5, NULL, '2002-08-05', 'ann', 1, 1, 1, '2026-08-21 09:38:39', '2026-08-17 15:01:52', '2026-08-21 09:38:39'),
+(6, 1, '2026-06-26', 'Fete de l\'independance Malagasy 2026', 1, 1, 0, NULL, '2026-08-21 09:40:24', '2026-08-31 14:55:07'),
+(7, 1, '2026-05-01', 'fete de travail', 1, 1, 0, '2026-08-31 14:55:49', '2026-08-21 09:41:31', '2026-08-31 14:55:49'),
+(8, 1, '2026-12-25', 'Noel', 0, 1, 0, NULL, '2026-08-21 12:16:53', '2026-08-21 12:16:53'),
+(9, 1, '2026-01-01', 'jour de l\'an', 1, 1, 0, NULL, '2026-08-21 12:17:38', '2026-08-21 12:17:38');
 
 -- --------------------------------------------------------
 
@@ -503,7 +1182,8 @@ INSERT INTO `conges` (`id`, `employee_id`, `SiegeID`, `date_debut`, `date_fin`, 
 (22, 2, 1, '2026-02-05 08:00:00.000000', '2026-02-05 17:00:00.000000', 'CP', NULL, '2026-02-11 15:05:36'),
 (23, 3, 1, '2026-02-11 08:00:00.000000', '2026-02-11 17:30:00.000000', 'Autres', 'Congé cyclonique', '2026-02-11 15:06:38'),
 (24, 1, 1, '2026-02-12 08:00:00.000000', '2026-02-16 08:00:00.000000', 'Maladie', 'COVID', '2026-02-20 08:49:09'),
-(25, 5, 1, '2026-07-14 00:00:00.000000', '2026-07-25 23:59:00.000000', 'CP', NULL, '2026-05-23 07:47:12');
+(25, 5, 1, '2026-07-14 00:00:00.000000', '2026-07-25 23:59:00.000000', 'CP', NULL, '2026-05-23 07:47:12'),
+(26, 5, 1, '2026-07-27 08:55:00.000000', '2026-07-31 15:55:00.000000', 'CP', NULL, '2026-07-22 14:57:33');
 
 -- --------------------------------------------------------
 
@@ -538,7 +1218,79 @@ INSERT INTO `conge_validations` (`id`, `matricule`, `nom_prenom`, `email`, `tele
 (2, 'EMP-002', 'Marie Kouassi', 'm.kouassi@example.com', '+225 07 12 34 56', 2, '2026-06-09 08:00:00', '2026-06-13 17:00:00', 'en_cours', NULL, NULL, '2026-05-19 13:23:32', NULL, '2026-05-22 13:23:32', '2026-05-22 13:23:32'),
 (3, 'EMP-003', 'Franck Nguyen', 'f.nguyen@example.com', NULL, 3, '2026-05-19 08:00:00', '2026-05-23 17:00:00', 'not_validated', NULL, NULL, '2026-05-02 13:23:32', '2026-05-04 13:23:32', '2026-05-22 13:23:32', '2026-05-22 13:23:32'),
 (4, NULL, 'Aïcha Traoré', 'a.traore@example.com', '+221 77 98 76 54', 1, '2026-07-14 00:00:00', '2026-07-25 23:59:00', 'validated', NULL, NULL, '2026-05-21 13:23:32', '2026-05-23 07:47:12', '2026-05-22 13:23:32', '2026-05-23 07:47:12'),
-(5, 'EMP-005', 'Stéphane Bernard', 's.bernard@example.com', '+33 6 55 44 33 22', 4, '2026-08-03 08:00:00', '2026-08-14 17:00:00', 'validated', NULL, NULL, '2026-05-17 13:23:32', '2026-05-20 13:23:32', '2026-05-22 13:23:32', '2026-05-22 13:23:32');
+(5, 'EMP-005', 'Stéphane Bernard', 's.bernard@example.com', '+33 6 55 44 33 22', 4, '2026-08-03 08:00:00', '2026-08-14 17:00:00', 'validated', NULL, NULL, '2026-05-17 13:23:32', '2026-05-20 13:23:32', '2026-05-22 13:23:32', '2026-05-22 13:23:32'),
+(7, NULL, 'MALALANIRINA Emile Noeline', 'malalanirinaemile2@gmail.com', NULL, 1, '2026-07-27 08:55:00', '2026-07-31 15:55:00', 'validated', 'test', NULL, '2026-07-22 14:55:49', '2026-07-22 14:57:33', '2026-07-22 14:55:49', '2026-07-22 14:57:33');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `departments`
+--
+
+CREATE TABLE `departments` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `manager_employee_id` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `departments`
+--
+
+INSERT INTO `departments` (`id`, `company_id`, `site_id`, `name`, `code`, `manager_employee_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 0, 1, 'service de menage', 'SM', 2, '2026-08-10 14:33:35', '2026-08-11 09:58:23', NULL),
+(2, 0, 4, 'PRODUCTION SARL', 'SARL', NULL, '2026-08-10 14:33:35', '2026-08-11 09:39:07', NULL),
+(3, 0, 4, 'PROELECSARL', 'PRLC', 35, '2026-08-10 14:33:35', '2026-08-20 10:43:26', NULL),
+(4, 0, 1, 'Service electronique', 'SE', NULL, '2026-08-10 14:33:35', '2026-08-11 09:27:14', NULL),
+(8, 0, 1, 'Service informatique', 'SI', 2, '2026-08-10 16:18:53', '2026-08-10 16:18:53', NULL),
+(9, 0, 4, 'Serivice de mise en boite', 'SDMEB', 36, '2026-08-11 09:40:54', '2026-08-11 09:41:09', NULL),
+(10, 0, 1, 'Direction générale', 'DG', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(11, 0, 1, 'Administration', 'ADM', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(12, 0, 1, 'Ressources humaines', 'RH', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(13, 0, 1, 'Comptabilité / Finance', 'CPT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(14, 0, 1, 'Commercial', 'COM', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(15, 0, 1, 'Marketing / Communication', 'MKT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(16, 0, 1, 'Informatique / Système d\'information', 'IT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(17, 0, 1, 'Production', 'PROD', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(18, 0, 1, 'Exploitation', 'EXP', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(19, 0, 1, 'Logistique', 'LOG', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(20, 0, 1, 'Stock / Magasin', 'STK', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(21, 0, 1, 'Maintenance', 'MAINT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(22, 0, 1, 'Technique', 'TECH', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(23, 0, 1, 'Qualité', 'QUAL', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(24, 0, 1, 'QHSE / HSE', 'HSE', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(25, 0, 1, 'Service client', 'SC', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(26, 0, 1, 'Formation', 'FORM', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(27, 0, 1, 'Pédagogie', 'PED', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(28, 0, 1, 'Transport', 'TRANS', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(29, 0, 1, 'Parc automobile', 'PARC', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(30, 0, 1, 'Achats', 'ACH', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(31, 0, 1, 'Sécurité', 'SEC', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(32, 0, 1, 'Entretien', 'ENT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(33, 0, 1, 'Juridique', 'JUR', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(34, 0, 2, 'Service informatique', 'DSI', 61, '2026-08-28 16:03:42', '2026-08-28 16:20:15', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `employee_managers`
+--
+
+CREATE TABLE `employee_managers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `manager_id` int(10) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -548,6 +1300,15 @@ INSERT INTO `conge_validations` (`id`, `matricule`, `nom_prenom`, `email`, `tele
 
 CREATE TABLE `employes` (
   `ID` int(10) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED DEFAULT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `department_id` int(10) UNSIGNED DEFAULT NULL,
+  `job_title_id` int(10) UNSIGNED DEFAULT NULL,
+  `hierarchy_level_id` int(10) UNSIGNED DEFAULT NULL,
+  `manager_id` int(10) UNSIGNED DEFAULT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `employment_status` enum('actif','suspendu','sorti') DEFAULT 'actif',
+  `hire_date` date DEFAULT NULL,
   `Nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `telephone` varchar(255) DEFAULT NULL,
@@ -569,23 +1330,30 @@ CREATE TABLE `employes` (
 -- Déchargement des données de la table `employes`
 --
 
-INSERT INTO `employes` (`ID`, `Nom`, `email`, `telephone`, `password`, `remember_token`, `BadgeID`, `HasBiometricSetup`, `HasFaceSetup`, `FaceEncodingPath`, `Pin`, `num_mat`, `CreatedAt`, `Actived`, `SiegeID`, `deleted`) VALUES
-(1, 'Willy Tarkin', NULL, NULL, NULL, NULL, '96e6195793afdb9f3c54a4ffb7c20c21d37deb0a8b2b819f74473e68af152c95', 0, 0, NULL, NULL, NULL, '2025-08-30 08:03:43', 0, 1, 1),
-(2, 'Solofoniaina Vololonirina Emma Joeline', NULL, NULL, NULL, NULL, 'b2c8a55a9aaa2d903b7732fb1dcc46e027aac65ed4f2098dd7611c3d6723a0ff', 0, 1, 'EMB_V1:fKvq5WM8YQ4XiD8aVRMpXC9ORcn0lamhZlLsYAtfxWG/52gkrn7bC6PrpTfURcxMdhvA7DOwGUPUJNh3fL0R03gaSTcmz9C703QBlH6adOaYXnRL4CO+kWG4y3Tds92AdnifIX3KjSg6316mmP04HaYA6H34nrJ2HkitS5QaToJKRVPVqgMtcDqSd/SfCwbyEv9xnrefWQqnBhPFB1uxFMZEkbr0ZbN0RjPTUESTjs9Xuya4O2wjfJP45SFUQIrWP33FhLz74RIMFCuAHGABewko4Ze+lEpqqTYOSc3wFc/ufohmm0VQoRPLK+84i+5CYQZwtPVEo1oe8Ed1YyuwCpOmg2aTEG1mnujj/sbNfPDp7OTA11feUGQ8bSmEyHLyFDtpQ4UM6LrC1JqFT6tU5/iYewLrwdSNe1hc01vzklqzeHfH4NnKoKwJyCLFZxUG87wfHjvyUpUw0TscZ8bL9NXA3JNLaS8qMaTyrNk5o/2oW5wOMf3iTkPFThx7/wF4HcQAs6R1vAm42fCHi+ZXuCpww4esajA5dlCc1WV4w5LujT2MRdcRY1cG0huVD1DmKGPrV4m4Ik5OQWIpqPqtfOKZxlEsIV8Ntu+juoI8MPL51htBV/RbkbWeYHWDtH1ywLJtgJgwmSgjXrWFeTO60VLdJS+wcExbxQ1d5KA5RxzNYAN8ow4XTv5+FCoam51TO9bbihp3nv31uXDJG6+0HBtF+DqoBR92OWtQCqqtOx+ZwsaR2ccuqjf3kJh42rPHEC6cPgUecqOi/SrJVHvby6cU82OlMoXSxOc4XaqnuWEhil3cjYW2IOb1NyFXBcZaSLxtQGhLHgNmcQAowBz56jq6m8ekxpA1LNksAZWNAf7v24CuQSVdTPO/INpUFgx0bA1H+PolQgBGRHS6kLVZZA1KYz1r9zKs495u36uA1tDPog+sxO5L+TqVyehA+1bPHR7FYaJ7jPfn3N8sWrnGOxWtCAs2I23lxIzI8HyxhwVj8ZDMLjm1EpilTNx920B6ZJ3xWHNyLs9etEc1p4Q9ugFZBK3td/NKKa3Zx0kpQYUuEqLvrk+30HTtklT3Fc/ONi0NjAvq+2S9xnTksRLHqBVU4i1be8k11185wxnYBYsFwInKAACib0EwNbivOzJ3T3wGPdZ2gyj4yuqbKjWYofuPxE9IFEPq2C8NCxZU5xa/0Ktxu4j1K/4SMVD8ZW+BKyh/gLxDmDdEFndW8MbA00G5zz/DdS4hQ2+9psoXAe+E1P6jqitEbukqV8efdbg17KiUJd5ColCOqI5FxYAkDbvSsWpZzI3WwuirKykhoES1AvUB9Fm57dOeIeXdxRgL6QeQFX1MJubAmuaCD6v+lqv5Ht0p6nOy40E8BJ4UU8te/Ao1h3F7aP0Xp4vgJc2j7UUZu0Zv9MbgWjOFUxQmtVTThCFjTFIf0q7Iv3rXpx6jSg070Zzh6oQI8bHXQDpsQPZk2d6Fd57fn8/CjkVMttjKqq0x0MltSazI6c2tmOJhL/+m4zjBfS3Uor7hPkdd/Nunub8h4yjCvlkw8DGBheR3/Bz0fV5Pm7M49KSyTZjFJei/e9e76t4UVA+1RxgeDurDl189H8i/g56S2GWO0XlVj/gC6K51e9la/zGpVD5fai0MOSMXWinqOLS6Y1ZVeAbke2W3D9MmguC+eUguHyIkrgBQUmM7X9g/1CgInJ6+0Motzmt8NHJ5uuXAXGSYjkYtFsRNZ8VATnn/mLsymAqGiARWUiFDQ0YSgS5k01suIpI4+LlG0btV9mkzGOszggSLxh99QxNvjIotSSOwf9lvQ7l0lo7QU9bQQ4ktA0NBsl3ozDuBchRBVd0/QlyZqFiRCOJBUG6BzN/ySV2siCUwX+SgQ2JvIIq/Xe+YpIU6m/FlT5yghxYX0GPWq1UaZ+3dYijI9ewOM7RDZQYDl4rWHzLlgU7uuRX+QkiOGvBXKiHIcg1oxCN5SkMwnTSMau2/Ck05uMAYwC4x03HUfZxEp/MIoVLYviNdYmGoInmwATT6XuOpijCqy23m/Juf/WXAiJLL+Tg5D9HEC9zcZiVWvC6z7G/keDGST3aF+pL0IBqZXXVCci6HclZjjuysm0ijjcg36wKbkQKT8BgOwbqIe/0xfwzxuGD1xdXYwF4j0z0UKXViMxCrinm3xsdaQlN59qVyPAr7F/tg2qvi0WHbMqSY362jA6thR2X0g8FhMCLgiGJI7EtKUpVgZ819C4KqIzT/1cWAVZ3jWDtxD9/XpjOLatoGgbPfBmwwZDCNtV8IkvS7JuKIgNFdYmO3hO+Uzh2Cdll9HSIivkQcZI+CuKg9slNwsETlbxvwJaNKZS4JDhoMrYMGG3U4oHlQaq05ucUrgJz3nKgDDMv5HuIIg1YNyVp35ahUN7aqAv0KCxHNRXUfOSYjISbQwjDnx2b9hjNG1GhXPOqaGmB4rvleiI8wvVczJuiMBMvjWGQspzvvff9xhKErGkU3yUaGkjLF1W50jgYhv7mq61WXs+wM7NnOTbX8xPzzUkpsguaikcqudRIAaMxfvwV7PCvLA1tAp5X8arqd+99q5yGeUBRlWlbz56PEdSB9kwujx/kCzzLxRnypvNQTSwU/nC8Xv7Mo8aIbgWZn8mViDwOX9pJLhGhtbil7prpnM0lYqz0jKb5/NXQYtNEx73CXdTjb/Qbg1S1AbSK2Z4+yjyWwHxNF8O5llj5rskRD84IX2pb4qPzSmOVmhXHErfo7J0DWZXzYIEd+4HK+Swl9', '691f59ef9b5c3e2e905873c5b386645e698d579f4133ee78e75e49e97db7da9b', NULL, '2025-08-29 11:08:29', 0, 1, 1),
-(3, 'Ramarotafika Hedi Franco', 'ramarotafika1999@gmail.com', NULL, '$2y$12$FlXPAxcC01j8tvK73QDBn.K650J995LlnOw73nT9Xj0HDbcO7oDo2', NULL, '3eb5cc214bf67c7e05df5606f27483c7e0d6a1d98ee8f41c2b010065b88475ee', 0, 1, 'EMB_V1:bHrV87lZ+dLSPmpJdSvTSOchiCzjASN7To/xgx4j+vtZfpx9l6vzzdzufMlVQAR99YIrxR2PVQ3Br4OM2kyWGnpxzoBnO2MIU4Sy+a6PNRHJPtkVivR6VZ9YzMrNbo9q+yJmF2ks5RBMBAe3LqY9pyeU/EE/SeaWptEi1s7zCoLxwFnvFhumCnJ6eqzBeEUoJss1e9Bv+rfRggkRw248E8PaoaLXHE9vP5xKsV0DklNMCeqMFFBGW8/ph6mK719fJZXx3RM3wKNP46xD5o8DenPDJ+zzR3ng7+l5nm23LFAqZq5mXMeCpcmmj/G167SXVHSI3Kl1QQPu1GX+3bFZntUlisL6IhgRZcJZoip8lFqgSW8HCBUjnZ4Tfr/M+mFl33UCB29NMYav4NFb0Cm8mlIWYM5GMS91j0GJB/ZZLZCT1bZ589RO50aaqRkyEroZFFvjXB8jmIw/Wkz1wXWLW8IWN84lU/tuk08TsUZtAyAff4oR0wS9OBM/h3KQeyDeRjMIUCPajYD8SYsMeg+ZAEN3rVQW/eBDdAw4IgFjjVwYEdjLeAEkmn+D1XfcbO5HtdEJfML3mQemskguYiyiXmXiFRdz8iPlCooUZkNfXLLhXDYKFxScwesP6t98gSl2h6XuYxjY9DS+AtZ1QV31WaVaVrWJkk33h5WEvbdv/f66PDlS6+At6yXjcZkUbViSiA9arzFLTJc6QK+Ma4nfXYb1HhL2jjyfHlCvgaocjqLhxQz04RmmhOzd/619V/aONmqNt56dPxUC9ztYSirkfrZla9oJ/s+KRAcS8BDOAWloAEwcPDMTRlmaxnFzBqRr3ARkDTr3FCRdE3tYotpLTSW6fAGD04Go34+3qY6NTW2/KNfEKlWFLH3JinJQS70Oa7I+K+DzKUyZfFboZcGOCclvd+vQiWr3DNuMDGNlGc3owCZCEGTrH1sqR/7AIXuGmjRniQr57fLhp1cJofSUtYqqyuS8XRVVEyRFzsaQj5mhfh9FTNz2XGL/MWNSoP20VQP8jHfcJG1KDU/9K8k5YdZgHnTui1vAweP8iO/+dARZ1ZoiIEd+YlcpkFT3sMm0SExC3aq0h77lTpk1tBMsQOXaKEeygr+AQJ2XIzvXNtACqYnJbJH+imomSm113UQnCn2Jo/YJg1POl5f2lYw6ufHkjHFEQVeVFNdKSVtEcPLFro9+juebvF6kWC3T3FSXK3nnpV/FineRmCH8exsw6EEyTQq/nk49ub15hRRSTwnEES8kg9obaUNBbcqdBTSOiyh5kE+WpnQ9o4Q2Dl6MEiFnGfEpG6wxAOwbDJpRXPjKC7ElsLhHpJcBMzijeUUJlbv4z3HWj7fCEraClezrNBS/+YUSREJXmiacOeYSofSdkj2ym3IMnDZMFe/lj1FDbvxtZh3jkbxpp/l1yFVI5l52lZ5KovpxPOx4HaPUZHdJKxjM+wK0PbPZVlw9JORElAGFKpEPXcZ0hIPtmsjUaa3bBYHgBVserM/65tWx0c92+II1XEZ9LQ7amHEveOqRNn4nsQwl0jv0/ImFHDmX1yAN33RUQtXtMeEyPZ3xT7lihf1lrQ6AVo+7Nk+NbsqoI2EGwuslAI7dm/KMBdFO9SBj9UdduqtsV3ZLIljxfKUnApuWIqBl6lYSKxiHyXyCiLAQbTeL0aitKxEj7JDLyMV9MoPCHCSLSFO8sHXBV+QuV0MUglURll4+YpXBlN3J3Q+93sJcvLoAdTUUAxmTjcwULP+AFOQM5NSMI3BG6vBqWSNrO0DNK4dtsykOKlHPbAwZBeBKvaxxgB6BBBy4xWV3iV2RoN2XjgAhZOAHvIQ3h7qEfB5taiFVI4RW5h1kRRpcxnmTnyAbpADtKOYp1i6O5cifgemFnzwqT0kpM5yUG3/jDMS9HR2DJ2EKKX9HDDuaEUhIbYAvCqjQKgNzMAstYJG/tq+K9c/QtxFLzoDQ+dI4QDYH2Tkuz0pF96GFFpyNyj65fEY7xUUKhAb90biVqK3nCbxM8rTnS3jljFOAFjsC7r2uUMyvQFpQYlv0qSLAAUVLtqOngcbJG6VDyyTPRYUxo+v+68/2h2hRkgmnEq0nf8WvBvO6VVD6KO8gunwfOS5oRiWD87lXPFQY1ltYJrdf2+Ix+8cQ1Ogm4WgtGSnJneoAol6UWtYp6QQ5O/UljJU5q4LPWC5bnqTh83xDCUw0XG8EzHqOS/wwbE9kxk7ZDsOqBwThKx9t0JraihMqV1/IElWrw43hq/RASZl6YF6BBLi2sLiezHYO/BtEBfvh2pk56MvMlXMaBJS1a16eOYnlr1aRWeeaSsWGuO4jh4ppO8KDXCukcS+mPKXO9Gxej48RjPYcIh0ASV0Jm3jxjQInBzIy6jYv5WYkgxrUblcm7ZmGEaITSV6/YqFpo3+2SYpEEzUUbYR3y/jG+qD2N+0U8aufLRidWgvIcQj4Zf7zHPWkPpn1OjRwVLwwGGFsyndgEOYKIBNIkOLK1xSxpErYf4YGggjqz5ikjVlYhaUI8u3ym9NJi6sqiHvYeOxpBPrzFFdMcXCwqFoZiXm6Te6yy9Y4iBolBCMfq8O6S0Iy9hSAQ05m9moHTRTpjCR25Wuh0aUM+q0lRyhz2CvgxqrGVkWm5wGBwsmZxN0Ou+i5h8nU/9HpRmmlPqVjnUiEIhId1mzTido8eRe+vobVjCwOvKvFtnYW5bGwaVkDm5t6DnkpC5ff+OuHwem2JvHZ/shhRVehg4yjA+SalA1CIezWJYRHsnUv', '823a2a3dec8c781b4f239bb2c92108a66150bc163d4292d549616478c071d04c', NULL, '2025-08-29 11:00:20', 1, 1, 0),
-(5, 'MALALANIRINA Emile Noeline', NULL, NULL, NULL, NULL, '03e4458621af91d0325724dbe776bf522611b729f4d3d8b0d3e8c1fd07665d31', 0, 0, NULL, NULL, NULL, '2025-08-29 06:49:12', 0, 1, 1),
-(16, 'Tarkin Willy', NULL, NULL, NULL, NULL, '37E8476C', 0, 1, NULL, NULL, NULL, '2025-10-03 14:15:35', 0, 2, 0),
-(17, 'Wilfried Payet', NULL, NULL, NULL, NULL, 'AD5689', 0, 1, NULL, NULL, NULL, '2025-10-04 14:40:43', 0, 2, 0),
-(35, 'abdouroihamane saidal', NULL, NULL, NULL, NULL, 'a57a369aac783150bb22e308627817b7089b3e2badbd383fb4d7ac632236dfab', 0, 0, NULL, NULL, '14', '2025-11-03 14:22:51', 1, 4, 0),
-(36, 'ahmed mohamed roukia', NULL, NULL, NULL, NULL, 'EEB15625', 0, 0, NULL, NULL, NULL, '2025-11-03 14:22:51', 1, 4, 0),
-(37, 'ousseni combo issouf', NULL, NULL, NULL, NULL, 'CE7E4425', 0, 0, NULL, NULL, NULL, '2025-11-03 14:22:51', 1, 4, 0),
-(38, 'ahmed wassim', NULL, NULL, NULL, NULL, 'BE8B3B25', 0, 0, NULL, NULL, NULL, '2025-11-03 14:22:51', 1, 4, 0),
-(39, 'Turpin Pascal', NULL, NULL, NULL, NULL, '047CB69AD01191', 0, 1, NULL, NULL, NULL, '2025-11-05 12:02:13', 0, 2, 0),
-(40, 'Mme Fanja', NULL, NULL, NULL, NULL, '783daa24570d0c2adce279d467ac25367e706fa64bd9284042b49e8e0803fc95', 0, 0, NULL, NULL, NULL, '2026-01-28 05:35:26', 0, 1, 1),
-(42, 'RANDRIAMBELOMANANA Safidinantenaina Nirintsoa Roger', NULL, NULL, NULL, NULL, '9198d215a53452cd296fa04fed7547b2cbddbfff92335fb6796cbb4b81e02c39', 0, 0, NULL, NULL, NULL, '2026-01-30 08:27:00', 0, 1, 1),
-(54, 'Emp 1', NULL, NULL, NULL, NULL, '112233', 1, 0, NULL, NULL, NULL, '2026-02-20 08:11:07', 1, 8, 0),
-(56, 'Emp 3', NULL, NULL, NULL, NULL, '113355', 1, 0, NULL, NULL, NULL, '2026-02-20 08:11:24', 1, 8, 0),
-(57, 'test  ffff', NULL, NULL, NULL, NULL, '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 0, 0, NULL, NULL, '877', '2026-03-09 07:37:24', 1, 1, 0);
+INSERT INTO `employes` (`ID`, `company_id`, `site_id`, `department_id`, `job_title_id`, `hierarchy_level_id`, `manager_id`, `user_id`, `employment_status`, `hire_date`, `Nom`, `email`, `telephone`, `password`, `remember_token`, `BadgeID`, `HasBiometricSetup`, `HasFaceSetup`, `FaceEncodingPath`, `Pin`, `num_mat`, `CreatedAt`, `Actived`, `SiegeID`, `deleted`) VALUES
+(1, 1, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'Willy Tarkin', NULL, NULL, NULL, NULL, '96e6195793afdb9f3c54a4ffb7c20c21d37deb0a8b2b819f74473e68af152c95', 0, 0, NULL, NULL, 'EMP0001', '2025-08-30 08:03:43', 1, 1, 1),
+(2, NULL, 1, 1, 1, 5, 2, 2, 'actif', NULL, 'Solofoniaina Vololonirina Emma Joeline', NULL, NULL, NULL, NULL, 'b2c8a55a9aaa2d903b7732fb1dcc46e027aac65ed4f2098dd7611c3d6723a0ff', 0, 1, 'EMB_V1:fKvq5WM8YQ4XiD8aVRMpXC9ORcn0lamhZlLsYAtfxWG/52gkrn7bC6PrpTfURcxMdhvA7DOwGUPUJNh3fL0R03gaSTcmz9C703QBlH6adOaYXnRL4CO+kWG4y3Tds92AdnifIX3KjSg6316mmP04HaYA6H34nrJ2HkitS5QaToJKRVPVqgMtcDqSd/SfCwbyEv9xnrefWQqnBhPFB1uxFMZEkbr0ZbN0RjPTUESTjs9Xuya4O2wjfJP45SFUQIrWP33FhLz74RIMFCuAHGABewko4Ze+lEpqqTYOSc3wFc/ufohmm0VQoRPLK+84i+5CYQZwtPVEo1oe8Ed1YyuwCpOmg2aTEG1mnujj/sbNfPDp7OTA11feUGQ8bSmEyHLyFDtpQ4UM6LrC1JqFT6tU5/iYewLrwdSNe1hc01vzklqzeHfH4NnKoKwJyCLFZxUG87wfHjvyUpUw0TscZ8bL9NXA3JNLaS8qMaTyrNk5o/2oW5wOMf3iTkPFThx7/wF4HcQAs6R1vAm42fCHi+ZXuCpww4esajA5dlCc1WV4w5LujT2MRdcRY1cG0huVD1DmKGPrV4m4Ik5OQWIpqPqtfOKZxlEsIV8Ntu+juoI8MPL51htBV/RbkbWeYHWDtH1ywLJtgJgwmSgjXrWFeTO60VLdJS+wcExbxQ1d5KA5RxzNYAN8ow4XTv5+FCoam51TO9bbihp3nv31uXDJG6+0HBtF+DqoBR92OWtQCqqtOx+ZwsaR2ccuqjf3kJh42rPHEC6cPgUecqOi/SrJVHvby6cU82OlMoXSxOc4XaqnuWEhil3cjYW2IOb1NyFXBcZaSLxtQGhLHgNmcQAowBz56jq6m8ekxpA1LNksAZWNAf7v24CuQSVdTPO/INpUFgx0bA1H+PolQgBGRHS6kLVZZA1KYz1r9zKs495u36uA1tDPog+sxO5L+TqVyehA+1bPHR7FYaJ7jPfn3N8sWrnGOxWtCAs2I23lxIzI8HyxhwVj8ZDMLjm1EpilTNx920B6ZJ3xWHNyLs9etEc1p4Q9ugFZBK3td/NKKa3Zx0kpQYUuEqLvrk+30HTtklT3Fc/ONi0NjAvq+2S9xnTksRLHqBVU4i1be8k11185wxnYBYsFwInKAACib0EwNbivOzJ3T3wGPdZ2gyj4yuqbKjWYofuPxE9IFEPq2C8NCxZU5xa/0Ktxu4j1K/4SMVD8ZW+BKyh/gLxDmDdEFndW8MbA00G5zz/DdS4hQ2+9psoXAe+E1P6jqitEbukqV8efdbg17KiUJd5ColCOqI5FxYAkDbvSsWpZzI3WwuirKykhoES1AvUB9Fm57dOeIeXdxRgL6QeQFX1MJubAmuaCD6v+lqv5Ht0p6nOy40E8BJ4UU8te/Ao1h3F7aP0Xp4vgJc2j7UUZu0Zv9MbgWjOFUxQmtVTThCFjTFIf0q7Iv3rXpx6jSg070Zzh6oQI8bHXQDpsQPZk2d6Fd57fn8/CjkVMttjKqq0x0MltSazI6c2tmOJhL/+m4zjBfS3Uor7hPkdd/Nunub8h4yjCvlkw8DGBheR3/Bz0fV5Pm7M49KSyTZjFJei/e9e76t4UVA+1RxgeDurDl189H8i/g56S2GWO0XlVj/gC6K51e9la/zGpVD5fai0MOSMXWinqOLS6Y1ZVeAbke2W3D9MmguC+eUguHyIkrgBQUmM7X9g/1CgInJ6+0Motzmt8NHJ5uuXAXGSYjkYtFsRNZ8VATnn/mLsymAqGiARWUiFDQ0YSgS5k01suIpI4+LlG0btV9mkzGOszggSLxh99QxNvjIotSSOwf9lvQ7l0lo7QU9bQQ4ktA0NBsl3ozDuBchRBVd0/QlyZqFiRCOJBUG6BzN/ySV2siCUwX+SgQ2JvIIq/Xe+YpIU6m/FlT5yghxYX0GPWq1UaZ+3dYijI9ewOM7RDZQYDl4rWHzLlgU7uuRX+QkiOGvBXKiHIcg1oxCN5SkMwnTSMau2/Ck05uMAYwC4x03HUfZxEp/MIoVLYviNdYmGoInmwATT6XuOpijCqy23m/Juf/WXAiJLL+Tg5D9HEC9zcZiVWvC6z7G/keDGST3aF+pL0IBqZXXVCci6HclZjjuysm0ijjcg36wKbkQKT8BgOwbqIe/0xfwzxuGD1xdXYwF4j0z0UKXViMxCrinm3xsdaQlN59qVyPAr7F/tg2qvi0WHbMqSY362jA6thR2X0g8FhMCLgiGJI7EtKUpVgZ819C4KqIzT/1cWAVZ3jWDtxD9/XpjOLatoGgbPfBmwwZDCNtV8IkvS7JuKIgNFdYmO3hO+Uzh2Cdll9HSIivkQcZI+CuKg9slNwsETlbxvwJaNKZS4JDhoMrYMGG3U4oHlQaq05ucUrgJz3nKgDDMv5HuIIg1YNyVp35ahUN7aqAv0KCxHNRXUfOSYjISbQwjDnx2b9hjNG1GhXPOqaGmB4rvleiI8wvVczJuiMBMvjWGQspzvvff9xhKErGkU3yUaGkjLF1W50jgYhv7mq61WXs+wM7NnOTbX8xPzzUkpsguaikcqudRIAaMxfvwV7PCvLA1tAp5X8arqd+99q5yGeUBRlWlbz56PEdSB9kwujx/kCzzLxRnypvNQTSwU/nC8Xv7Mo8aIbgWZn8mViDwOX9pJLhGhtbil7prpnM0lYqz0jKb5/NXQYtNEx73CXdTjb/Qbg1S1AbSK2Z4+yjyWwHxNF8O5llj5rskRD84IX2pb4qPzSmOVmhXHErfo7J0DWZXzYIEd+4HK+Swl9', '691f59ef9b5c3e2e905873c5b386645e698d579f4133ee78e75e49e97db7da9b', 'EMP0002', '2025-08-29 11:08:29', 1, 1, 0),
+(3, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'Ramarotafika Hedi Franco', 'ramarotafika1999@gmail.com', NULL, '$2y$12$FlXPAxcC01j8tvK73QDBn.K650J995LlnOw73nT9Xj0HDbcO7oDo2', NULL, '3eb5cc214bf67c7e05df5606f27483c7e0d6a1d98ee8f41c2b010065b88475ee', 0, 1, 'EMB_V1:bHrV87lZ+dLSPmpJdSvTSOchiCzjASN7To/xgx4j+vtZfpx9l6vzzdzufMlVQAR99YIrxR2PVQ3Br4OM2kyWGnpxzoBnO2MIU4Sy+a6PNRHJPtkVivR6VZ9YzMrNbo9q+yJmF2ks5RBMBAe3LqY9pyeU/EE/SeaWptEi1s7zCoLxwFnvFhumCnJ6eqzBeEUoJss1e9Bv+rfRggkRw248E8PaoaLXHE9vP5xKsV0DklNMCeqMFFBGW8/ph6mK719fJZXx3RM3wKNP46xD5o8DenPDJ+zzR3ng7+l5nm23LFAqZq5mXMeCpcmmj/G167SXVHSI3Kl1QQPu1GX+3bFZntUlisL6IhgRZcJZoip8lFqgSW8HCBUjnZ4Tfr/M+mFl33UCB29NMYav4NFb0Cm8mlIWYM5GMS91j0GJB/ZZLZCT1bZ589RO50aaqRkyEroZFFvjXB8jmIw/Wkz1wXWLW8IWN84lU/tuk08TsUZtAyAff4oR0wS9OBM/h3KQeyDeRjMIUCPajYD8SYsMeg+ZAEN3rVQW/eBDdAw4IgFjjVwYEdjLeAEkmn+D1XfcbO5HtdEJfML3mQemskguYiyiXmXiFRdz8iPlCooUZkNfXLLhXDYKFxScwesP6t98gSl2h6XuYxjY9DS+AtZ1QV31WaVaVrWJkk33h5WEvbdv/f66PDlS6+At6yXjcZkUbViSiA9arzFLTJc6QK+Ma4nfXYb1HhL2jjyfHlCvgaocjqLhxQz04RmmhOzd/619V/aONmqNt56dPxUC9ztYSirkfrZla9oJ/s+KRAcS8BDOAWloAEwcPDMTRlmaxnFzBqRr3ARkDTr3FCRdE3tYotpLTSW6fAGD04Go34+3qY6NTW2/KNfEKlWFLH3JinJQS70Oa7I+K+DzKUyZfFboZcGOCclvd+vQiWr3DNuMDGNlGc3owCZCEGTrH1sqR/7AIXuGmjRniQr57fLhp1cJofSUtYqqyuS8XRVVEyRFzsaQj5mhfh9FTNz2XGL/MWNSoP20VQP8jHfcJG1KDU/9K8k5YdZgHnTui1vAweP8iO/+dARZ1ZoiIEd+YlcpkFT3sMm0SExC3aq0h77lTpk1tBMsQOXaKEeygr+AQJ2XIzvXNtACqYnJbJH+imomSm113UQnCn2Jo/YJg1POl5f2lYw6ufHkjHFEQVeVFNdKSVtEcPLFro9+juebvF6kWC3T3FSXK3nnpV/FineRmCH8exsw6EEyTQq/nk49ub15hRRSTwnEES8kg9obaUNBbcqdBTSOiyh5kE+WpnQ9o4Q2Dl6MEiFnGfEpG6wxAOwbDJpRXPjKC7ElsLhHpJcBMzijeUUJlbv4z3HWj7fCEraClezrNBS/+YUSREJXmiacOeYSofSdkj2ym3IMnDZMFe/lj1FDbvxtZh3jkbxpp/l1yFVI5l52lZ5KovpxPOx4HaPUZHdJKxjM+wK0PbPZVlw9JORElAGFKpEPXcZ0hIPtmsjUaa3bBYHgBVserM/65tWx0c92+II1XEZ9LQ7amHEveOqRNn4nsQwl0jv0/ImFHDmX1yAN33RUQtXtMeEyPZ3xT7lihf1lrQ6AVo+7Nk+NbsqoI2EGwuslAI7dm/KMBdFO9SBj9UdduqtsV3ZLIljxfKUnApuWIqBl6lYSKxiHyXyCiLAQbTeL0aitKxEj7JDLyMV9MoPCHCSLSFO8sHXBV+QuV0MUglURll4+YpXBlN3J3Q+93sJcvLoAdTUUAxmTjcwULP+AFOQM5NSMI3BG6vBqWSNrO0DNK4dtsykOKlHPbAwZBeBKvaxxgB6BBBy4xWV3iV2RoN2XjgAhZOAHvIQ3h7qEfB5taiFVI4RW5h1kRRpcxnmTnyAbpADtKOYp1i6O5cifgemFnzwqT0kpM5yUG3/jDMS9HR2DJ2EKKX9HDDuaEUhIbYAvCqjQKgNzMAstYJG/tq+K9c/QtxFLzoDQ+dI4QDYH2Tkuz0pF96GFFpyNyj65fEY7xUUKhAb90biVqK3nCbxM8rTnS3jljFOAFjsC7r2uUMyvQFpQYlv0qSLAAUVLtqOngcbJG6VDyyTPRYUxo+v+68/2h2hRkgmnEq0nf8WvBvO6VVD6KO8gunwfOS5oRiWD87lXPFQY1ltYJrdf2+Ix+8cQ1Ogm4WgtGSnJneoAol6UWtYp6QQ5O/UljJU5q4LPWC5bnqTh83xDCUw0XG8EzHqOS/wwbE9kxk7ZDsOqBwThKx9t0JraihMqV1/IElWrw43hq/RASZl6YF6BBLi2sLiezHYO/BtEBfvh2pk56MvMlXMaBJS1a16eOYnlr1aRWeeaSsWGuO4jh4ppO8KDXCukcS+mPKXO9Gxej48RjPYcIh0ASV0Jm3jxjQInBzIy6jYv5WYkgxrUblcm7ZmGEaITSV6/YqFpo3+2SYpEEzUUbYR3y/jG+qD2N+0U8aufLRidWgvIcQj4Zf7zHPWkPpn1OjRwVLwwGGFsyndgEOYKIBNIkOLK1xSxpErYf4YGggjqz5ikjVlYhaUI8u3ym9NJi6sqiHvYeOxpBPrzFFdMcXCwqFoZiXm6Te6yy9Y4iBolBCMfq8O6S0Iy9hSAQ05m9moHTRTpjCR25Wuh0aUM+q0lRyhz2CvgxqrGVkWm5wGBwsmZxN0Ou+i5h8nU/9HpRmmlPqVjnUiEIhId1mzTido8eRe+vobVjCwOvKvFtnYW5bGwaVkDm5t6DnkpC5ff+OuHwem2JvHZ/shhRVehg4yjA+SalA1CIezWJYRHsnUv', '823a2a3dec8c781b4f239bb2c92108a66150bc163d4292d549616478c071d04c', 'EMP0003', '2025-08-29 11:00:20', 1, 1, 0),
+(5, 1, 1, 16, 1, 1, 2, NULL, 'actif', NULL, 'MALALANIRINA Emile Noeline', 'malalanirinaemile2@gmail.com', NULL, '$2y$12$9S1WZLx1Rt.M1O0b0Am/Q.ty8Vk/l7FiiXdoDRL20Yiizaz3XfLje', 'muAp7jAwqn7ZVe3WIgPmvwEh5zQLJHj4rPfv1p5XSlYB62U4S3ED785QlobR', '03e4458621af91d0325724dbe776bf522611b729f4d3d8b0d3e8c1fd07665d31', 0, 0, NULL, NULL, 'EMP0005', '2025-08-29 06:49:12', 1, 1, 0),
+(16, 2, 2, NULL, 1, 1, 62, NULL, 'actif', NULL, 'Tarkin Willy', 'testautreadminrun@gmail.com', NULL, '$2y$12$p8h7NbYx4yTlyhR65YnePeiOgME/hF7loS03epiKTJzmz0zib7CHu', NULL, '37E8476C', 0, 1, NULL, NULL, 'EMP0016', '2025-10-03 14:15:35', 1, 2, 0),
+(17, NULL, 2, 2, 1, 1, 16, NULL, 'actif', NULL, 'Wilfried Payet', NULL, NULL, NULL, NULL, 'AD5689', 0, 1, NULL, NULL, 'EMP0017', '2025-10-04 14:40:43', 0, 2, 0),
+(35, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'abdouroihamane saidal', NULL, NULL, NULL, NULL, 'a57a369aac783150bb22e308627817b7089b3e2badbd383fb4d7ac632236dfab', 0, 0, NULL, NULL, '14', '2025-11-03 14:22:51', 1, 4, 0),
+(36, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'ahmed mohamed roukia', NULL, NULL, NULL, NULL, 'EEB15625', 0, 0, NULL, NULL, 'EMP0036', '2025-11-03 14:22:51', 1, 4, 0),
+(37, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'ousseni combo issouf', NULL, NULL, NULL, NULL, 'CE7E4425', 0, 0, NULL, NULL, 'EMP0037', '2025-11-03 14:22:51', 1, 4, 0),
+(38, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'ahmed wassim', NULL, NULL, NULL, NULL, 'BE8B3B25', 0, 0, NULL, NULL, 'EMP0038', '2025-11-03 14:22:51', 1, 4, 0),
+(39, NULL, 2, 2, 1, 1, 16, NULL, 'actif', NULL, 'Turpin Pascal', NULL, NULL, NULL, NULL, '047CB69AD01191', 0, 1, NULL, NULL, 'EMP0039', '2025-11-05 12:02:13', 0, 2, 0),
+(40, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'Mme Fanja', NULL, NULL, NULL, NULL, '783daa24570d0c2adce279d467ac25367e706fa64bd9284042b49e8e0803fc95', 0, 0, NULL, NULL, 'EMP0040', '2026-01-28 05:35:26', 0, 1, 1),
+(42, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'RANDRIAMBELOMANANA Safidinantenaina Nirintsoa Roger', NULL, NULL, NULL, NULL, '9198d215a53452cd296fa04fed7547b2cbddbfff92335fb6796cbb4b81e02c39', 0, 0, NULL, NULL, 'EMP0042', '2026-01-30 08:27:00', 0, 1, 1),
+(54, NULL, 8, 4, 1, 1, 54, NULL, 'actif', NULL, 'Emp 1', NULL, NULL, NULL, NULL, '112233', 1, 0, NULL, NULL, 'EMP0054', '2026-02-20 08:11:07', 1, 8, 0),
+(56, NULL, 8, 4, 1, 1, 54, NULL, 'actif', NULL, 'Emp 3', NULL, NULL, NULL, NULL, '113355', 1, 0, NULL, NULL, 'EMP0056', '2026-02-20 08:11:24', 1, 8, 0),
+(57, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'test  ffff', NULL, NULL, NULL, NULL, '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 0, 0, NULL, NULL, '877', '2026-03-09 07:37:24', 1, 1, 0),
+(58, NULL, 1, 12, 242, 1, 2, NULL, 'actif', NULL, 'Emma solofo', NULL, NULL, NULL, NULL, 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 0, 0, NULL, NULL, '22', '2026-08-06 08:04:49', 1, 1, 0),
+(60, 1, 1, 8, 2, 1, 2, NULL, 'actif', '2026-08-12', 'RAKOTONIRINA Manankasina', NULL, NULL, NULL, NULL, 'af3b7a26bddd5de85f59064ba3533a078aef0c8402b6e5533fd70b9c5820b0eb', 0, 0, NULL, NULL, '125487', '2026-08-11 10:03:50', 1, 1, 0),
+(61, 2, 2, 34, 266, NULL, 16, NULL, 'actif', '2023-09-14', 'TEST EMPLOYE POUR ASSIGNER UN MANAGER', 'employerun@gmailcom', NULL, '$2y$12$xZlxRpp93Tdtpk90RXAG/.RD6X0zCDY1KNFIVqT.wpWurxLk.WfD.', NULL, '64800a72cdfd8e7dfe65fbcfb49b04f8858b294c55374d4a30fc1ab8bf676003', 0, 0, NULL, NULL, '1', '2026-08-28 16:17:41', 1, 2, 0),
+(62, 2, 2, NULL, 264, NULL, 16, NULL, 'actif', '2023-12-14', 'RAHARIMANANA ALEX', 'alex@gmail.com', NULL, '$2y$12$xkVBqOzApbnTKxjWe2anSeVTOBjyCEaH42pCcn5i.SQps0o/wNwrK', NULL, '9df33304046cf50b54a3198b2bb6bc5681d9b671ccb99cb6a0961f22b65db37f', 0, 0, NULL, NULL, 'IM 1562', '2026-08-31 09:29:24', 1, 2, 0),
+(63, 2, 2, 34, 236, NULL, 16, NULL, 'actif', '2023-12-14', 'testemanager', NULL, NULL, NULL, NULL, '2680d8152dabba84c80a50e98afbcd84885b01a67ae276fdb1807fb3cfa66abb', 0, 0, NULL, NULL, '13', '2026-08-31 13:20:34', 0, 2, 0),
+(64, 1, 1, 33, 234, NULL, NULL, NULL, 'actif', '2026-07-14', 'tetsecreeremployedepuis adminsiege', NULL, NULL, NULL, NULL, '9718cb0ca7d6704e6683cbc76a45bedd8ad09cd8903b37e77ed9b69e1569bb00', 0, 0, NULL, NULL, 'EMP00161', '2026-08-31 13:22:37', 0, 1, 0),
+(65, 1, 1, 12, 279, NULL, 2, NULL, 'actif', '2023-09-03', 'tetsecreeremployedepuis adminsiege2', NULL, NULL, NULL, NULL, 'f3b47ca7ccc39e01686991ab6b8fcb035bb726f190d996063c72ba2ed040a211', 0, 0, NULL, NULL, '471', '2026-08-31 13:25:19', 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -648,9 +1416,9 @@ INSERT INTO `entreprises_sieges` (`ID`, `Nom`, `Nom_Lieu_Ville`, `Actived`, `Cre
 (3, 'ISLAND FOOD', 'ISLAND FOOD - LA REUNION', 0, '2025-11-04 06:58:50', NULL, 1),
 (4, 'PRO ELEC SARL', 'PRO ELEC SARL - Mayotte', 1, '2025-11-04 06:58:50', NULL, 0),
 (8, 'Réel Electrique TEST', 'TANANARIVO', 1, '2026-02-20 08:09:49', 'ae', 0),
-(9, 'N8N', 'TANANARIVO', 0, '2026-03-11 05:39:01', 'ae', 0),
-(10, 'test test test', NULL, 0, '2026-03-11 07:51:37', 'ad', 0),
-(11, 'fdffdfd', NULL, 0, '2026-03-11 08:49:23', 'ae', 0);
+(9, 'N8N', 'TANANARIVO', 0, '2026-03-11 05:39:01', 'ae', 1),
+(10, 'test test test', NULL, 0, '2026-03-11 07:51:37', 'ad', 1),
+(11, 'fdffdfd', NULL, 0, '2026-03-11 08:49:23', 'ae', 1);
 
 -- --------------------------------------------------------
 
@@ -667,6 +1435,37 @@ CREATE TABLE `failed_jobs` (
   `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `hierarchy_levels`
+--
+
+CREATE TABLE `hierarchy_levels` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `name` varchar(50) NOT NULL,
+  `code` varchar(10) DEFAULT NULL,
+  `rank` int(11) NOT NULL DEFAULT 1,
+  `is_managerial` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `hierarchy_levels`
+--
+
+INSERT INTO `hierarchy_levels` (`id`, `company_id`, `name`, `code`, `rank`, `is_managerial`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 0, 'Employé / Opérationnel', 'N0', 0, 0, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(2, 0, 'Référent / Senior / Chef d\'équipe', 'N1', 1, 0, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(3, 0, 'Superviseur / Encadrement de proximité', 'N2', 2, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(4, 0, 'Responsable de service', 'N3', 3, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(5, 0, 'Manager / Chef de département', 'N4', 4, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(6, 0, 'Directeur', 'N5', 5, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(7, 0, 'Directeur général / Direction', 'N6', 6, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48');
 
 -- --------------------------------------------------------
 
@@ -702,6 +1501,133 @@ CREATE TABLE `job_batches` (
   `created_at` int(11) NOT NULL,
   `finished_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `job_titles`
+--
+
+CREATE TABLE `job_titles` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `name` varchar(100) NOT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `hierarchy_level_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Niveau KOSI associé',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `job_titles`
+--
+
+INSERT INTO `job_titles` (`id`, `company_id`, `name`, `code`, `hierarchy_level_id`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 0, 'Manœuvre / Ouvrier', 'BTP-MAN', 1, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(3, 0, 'Maçon / Électricien / Plombier', 'BTP-ART', 1, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(5, 0, 'Ouvrier qualifié / Chef d\'équipe', 'BTP-OQ', 2, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(7, 0, 'Chef de chantier', 'BTP-CC', 3, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(9, 0, 'Conducteur de travaux', 'BTP-CT', 4, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(11, 0, 'Responsable travaux', 'BTP-RT', 5, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(13, 0, 'Directeur technique / Directeur travaux', 'BTP-DT', 6, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(15, 0, 'Directeur général / Gérant', 'BTP-DG', 7, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
+(63, 0, 'Téléconseiller / Agent', 'CC-AGT', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(65, 0, 'Agent senior / Référent', 'CC-SNR', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(67, 0, 'Team Leader', 'CC-TL', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(69, 0, 'Superviseur', 'CC-SUP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(71, 0, 'Responsable plateau', 'CC-RP', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(73, 0, 'Operations Manager', 'CC-OM', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(75, 0, 'Directeur des opérations', 'CC-DO', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(77, 0, 'Directeur général', 'CC-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(94, 0, 'Formateur', 'FOR-FORM', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(96, 0, 'Assistant administratif', 'FOR-AST', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(98, 0, 'Formateur référent', 'FOR-FR', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(100, 0, 'Coordinateur pédagogique', 'FOR-CP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(102, 0, 'Responsable pédagogique', 'FOR-RP', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(104, 0, 'Responsable administratif', 'FOR-RA', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(106, 0, 'Responsable de centre', 'FOR-RC', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(108, 0, 'Directeur de centre', 'FOR-DC', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(110, 0, 'Directeur général', 'FOR-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(125, 0, 'Vendeur / Caissier / Magasinier', 'COM-VEN', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(127, 0, 'Vendeur senior / Chef de rayon', 'COM-VS', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(129, 0, 'Responsable rayon', 'COM-RR', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(131, 0, 'Responsable magasin', 'COM-RM', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(133, 0, 'Responsable régional', 'COM-RR', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(135, 0, 'Directeur commercial / Directeur réseau', 'COM-DC', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(137, 0, 'Direction générale', 'COM-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(140, 0, 'Ouvrier / Opérateur', 'PROD-OP', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(142, 0, 'Opérateur senior / Chef d\'équipe', 'PROD-OS', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(144, 0, 'Superviseur production', 'PROD-SP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(146, 0, 'Responsable production', 'PROD-RP', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(148, 0, 'Responsable usine', 'PROD-RU', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(150, 0, 'Directeur industriel', 'PROD-DI', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(152, 0, 'Direction générale', 'PROD-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(155, 0, 'Chauffeur / Livreur', 'LOG-CHAUF', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(157, 0, 'Manutentionnaire', 'LOG-MAN', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(159, 0, 'Chef d\'équipe', 'LOG-CE', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(161, 0, 'Chef de parc / Superviseur', 'LOG-CP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(163, 0, 'Responsable exploitation', 'LOG-RE', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(165, 0, 'Responsable logistique', 'LOG-RL', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(167, 0, 'Directeur exploitation', 'LOG-DE', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(169, 0, 'Directeur transport / Directeur opérations', 'LOG-DT', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(171, 0, 'Direction générale', 'LOG-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(186, 0, 'Serveur', 'HOT-SERV', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(188, 0, 'Femme/Valet de chambre', 'HOT-VAL', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(190, 0, 'Commis', 'HOT-COM', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(192, 0, 'Chef de rang / Référent', 'HOT-CR', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(194, 0, 'Maître d\'hôtel / Chef de cuisine', 'HOT-MH', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(196, 0, 'Responsable restauration', 'HOT-RR', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(198, 0, 'Responsable hébergement', 'HOT-RH', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(200, 0, 'Directeur d\'exploitation', 'HOT-DE', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(202, 0, 'Directeur hôtel', 'HOT-DH', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(204, 0, 'Direction générale / Groupe', 'HOT-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(217, 0, 'Employé / Agent', 'GEN-EMP', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(219, 0, 'Agent senior / Référent', 'GEN-AS', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(221, 0, 'Chef d\'équipe / Superviseur', 'GEN-CE', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(223, 0, 'Responsable de service', 'GEN-RS', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(225, 0, 'Manager / Chef de département', 'GEN-MGR', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(227, 0, 'Directeur', 'GEN-DIR', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(229, 0, 'Directeur général', 'GEN-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
+(232, 0, 'Assistant RH', 'RH-AST', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(234, 0, 'Assistant administratif', 'RH-ADM', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(236, 0, 'Chargé de recrutement', 'RH-REC', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(238, 0, 'Responsable RH', 'RH-RH', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(240, 0, 'Manager RH', 'RH-MGR', 5, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(242, 0, 'Directeur RH', 'RH-DIR', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(247, 0, 'Comptable', 'FIN-CPT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(249, 0, 'Assistant comptable', 'FIN-AST', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(251, 0, 'Responsable comptable', 'FIN-RC', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(253, 0, 'Directeur financier', 'FIN-DF', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(262, 0, 'Technicien support', 'IT-SUP', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(264, 0, 'Développeur', 'IT-DEV', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(266, 0, 'Analyste', 'IT-ANA', 3, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(268, 0, 'Chef de projet IT', 'IT-CP', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(270, 0, 'Responsable informatique', 'IT-RI', 5, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(272, 0, 'Directeur technique', 'IT-DT', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(277, 0, 'Assistant marketing', 'MKT-AST', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(279, 0, 'Chargé de communication', 'MKT-COM', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(281, 0, 'Responsable marketing', 'MKT-RM', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(283, 0, 'Directeur marketing', 'MKT-DM', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(292, 0, 'Agent qualité', 'QHSE-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(294, 0, 'Technicien qualité', 'QHSE-TECH', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(296, 0, 'Responsable qualité', 'QHSE-RQ', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(298, 0, 'Responsable QHSE', 'QHSE-RHSE', 5, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(307, 0, 'Acheteur', 'ACH-ACH', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(309, 0, 'Responsable achats', 'ACH-RA', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(311, 0, 'Directeur achats', 'ACH-DA', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(314, 0, 'Technicien maintenance', 'MAINT-TECH', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(316, 0, 'Chef d\'équipe maintenance', 'MAINT-CE', 3, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(318, 0, 'Responsable maintenance', 'MAINT-RM', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(320, 0, 'Directeur maintenance', 'MAINT-DM', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(329, 0, 'Agent de sécurité', 'SEC-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(331, 0, 'Chef d\'équipe sécurité', 'SEC-CE', 3, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(333, 0, 'Responsable sécurité', 'SEC-RS', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(336, 0, 'Conseiller client', 'SC-CONS', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(338, 0, 'Agent service client', 'SC-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(340, 0, 'Responsable service client', 'SC-RSC', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
+(342, 0, 'Directrice RH', 'DRHF', 6, NULL, '2026-08-31 16:07:05', '2026-08-31 16:07:05'),
+(343, 0, 'Directrice RH', 'Directrice', NULL, NULL, '2026-08-31 16:07:50', '2026-08-31 16:07:50');
 
 -- --------------------------------------------------------
 
@@ -745,6 +1671,402 @@ INSERT INTO `jours_non_travailles` (`ID`, `Date`, `Nom`, `Type`, `SiegeID`, `Rec
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `leave_balances`
+--
+
+CREATE TABLE `leave_balances` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `period_id` bigint(20) UNSIGNED NOT NULL,
+  `total_entitled` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Jours acquis',
+  `total_taken` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Jours pris',
+  `total_pending` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Jours en attente',
+  `remaining` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Jours restants',
+  `carryover_from_previous` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Jours reportés',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_balances`
+--
+
+INSERT INTO `leave_balances` (`id`, `employee_id`, `leave_type_id`, `period_id`, `total_entitled`, `total_taken`, `total_pending`, `remaining`, `carryover_from_previous`, `created_at`, `updated_at`) VALUES
+(50, 1, 13, 13, 25.00, 0.00, 0.00, 25.00, 0.00, '2026-08-26 15:00:43', '2026-08-26 15:00:43'),
+(51, 2, 13, 13, 8.00, 0.00, 0.00, 8.00, 0.00, '2026-08-26 15:00:43', '2026-08-26 15:00:43'),
+(52, 3, 13, 13, 25.00, 0.00, 0.00, 25.00, 0.00, '2026-08-26 15:00:43', '2026-08-26 15:00:43'),
+(53, 5, 13, 13, 25.00, 5.00, 0.00, 20.00, 0.00, '2026-08-26 15:00:43', '2026-08-31 08:57:34'),
+(54, 62, 17, 14, 30.00, 0.00, 0.00, 30.00, 0.00, '2026-08-31 10:33:36', '2026-08-31 10:33:36'),
+(55, 5, 14, 15, 30.00, 0.00, 0.00, 30.00, 0.00, '2026-08-31 15:54:22', '2026-08-31 16:02:43');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_balance_transactions`
+--
+
+CREATE TABLE `leave_balance_transactions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `period_id` bigint(20) UNSIGNED NOT NULL,
+  `amount` decimal(10,2) NOT NULL COMMENT 'Montant (positif=credit, negatif=debit)',
+  `type` enum('opening','credit','debit','pending_debit','adjustment','carryover','reversal') NOT NULL,
+  `source` varchar(100) DEFAULT NULL COMMENT 'Source de la transaction',
+  `reference_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'ID de référence (leave_request, import, etc)',
+  `reference_type` varchar(100) DEFAULT NULL COMMENT 'Type de référence',
+  `description` text DEFAULT NULL,
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Données additionnelles' CHECK (json_valid(`metadata`)),
+  `created_by` int(10) UNSIGNED DEFAULT NULL COMMENT 'Qui a créé la transaction',
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_balance_transactions`
+--
+
+INSERT INTO `leave_balance_transactions` (`id`, `employee_id`, `leave_type_id`, `period_id`, `amount`, `type`, `source`, `reference_id`, `reference_type`, `description`, `metadata`, `created_by`, `created_at`) VALUES
+(90, 1, 13, 13, 25.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
+(91, 2, 13, 13, 8.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
+(92, 3, 13, 13, 25.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
+(93, 5, 13, 13, 25.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
+(94, 5, 13, 13, -2.00, 'debit', NULL, 47, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 2, '2026-08-27 16:08:35'),
+(95, 5, 13, 13, 2.00, 'reversal', NULL, 47, 'leave_request', 'Annulation de congé - ', '\"{\\\"type\\\":\\\"reversal\\\",\\\"cancelled_request\\\":true}\"', 5, '2026-08-27 16:09:05'),
+(96, 5, 13, 13, -5.00, 'debit', NULL, 46, 'leave_request', 'Validation de congé - teste', '\"{\\\"type\\\":\\\"debit\\\"}\"', 2, '2026-08-31 08:57:34'),
+(97, 62, 17, 14, 30.00, 'opening', NULL, NULL, NULL, 'solde initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 18, '2026-08-31 10:33:36'),
+(98, 5, 14, 15, 30.00, 'opening', NULL, NULL, NULL, 'solde initial Maladie 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-31 15:54:22'),
+(99, 5, 14, 15, -9.00, 'debit', NULL, 55, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 2, '2026-08-31 15:56:59'),
+(100, 5, 14, 15, 9.00, 'reversal', NULL, 55, 'leave_request', 'Annulation de congé - ', '\"{\\\"type\\\":\\\"reversal\\\",\\\"cancelled_request\\\":true}\"', 5, '2026-08-31 16:02:43');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_import_batches`
+--
+
+CREATE TABLE `leave_import_batches` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `batch_number` varchar(50) NOT NULL COMMENT 'Numéro de lot unique',
+  `type` enum('opening_balance','historical_leave','future_leave') NOT NULL,
+  `status` enum('pending','processing','completed','failed','cancelled') NOT NULL DEFAULT 'pending',
+  `total_records` int(11) DEFAULT 0,
+  `successful_records` int(11) DEFAULT 0,
+  `failed_records` int(11) DEFAULT 0,
+  `errors` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Erreurs par ligne' CHECK (json_valid(`errors`)),
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `created_by` int(10) UNSIGNED DEFAULT NULL,
+  `cancelled_at` timestamp NULL DEFAULT NULL,
+  `completed_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_import_batches`
+--
+
+INSERT INTO `leave_import_batches` (`id`, `site_id`, `batch_number`, `type`, `status`, `total_records`, `successful_records`, `failed_records`, `errors`, `file_name`, `file_path`, `created_by`, `cancelled_at`, `completed_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 'IMP-20260818-2SOMPF', 'opening_balance', 'completed', 0, 0, 72, '[{\"row\":2,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":3,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":4,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":5,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":6,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":7,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":8,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":9,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":10,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":11,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":12,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":13,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":14,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":15,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":16,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":17,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":18,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":19,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":20,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":21,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":22,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":23,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":24,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":25,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":2,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":3,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":4,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":5,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":6,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":7,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":8,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":9,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":10,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":11,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":12,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":13,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":14,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":15,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":16,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":17,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":18,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":19,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":20,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":21,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":22,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":23,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":24,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":25,\"field\":\"code_conge\",\"message\":\"Le code cong\\u00e9 est obligatoire.\"},{\"row\":2,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":3,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":4,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":5,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":6,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":7,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":8,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":9,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":10,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":11,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":12,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":13,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":14,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":15,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":16,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":17,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":18,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":19,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":20,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":21,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":22,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":23,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":24,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"},{\"row\":25,\"field\":\"solde\",\"message\":\"Le solde est obligatoire.\"}]', NULL, NULL, 1, NULL, '2026-08-18 15:30:48', '2026-08-18 15:30:48', '2026-08-18 15:30:48'),
+(2, 1, 'IMP-20260818-fBMdV3', 'opening_balance', 'completed', 0, 0, 1, '[{\"row\":2,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"}]', NULL, NULL, 1, NULL, '2026-08-18 15:48:58', '2026-08-18 15:48:58', '2026-08-18 15:48:58'),
+(3, 1, 'IMP-20260818-VHTYFV', 'opening_balance', 'completed', 0, 0, 1, '[{\"row\":2,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"}]', NULL, NULL, 1, NULL, '2026-08-18 15:51:02', '2026-08-18 15:51:02', '2026-08-18 15:51:02'),
+(4, 1, 'IMP-20260819-YAsJMV', 'opening_balance', 'completed', 31, 0, 31, '[{\"row\":2,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":3,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":4,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":5,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":6,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":7,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":8,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":9,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":10,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":11,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":12,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":13,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":14,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":15,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":16,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":17,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":18,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":19,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":20,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":21,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":22,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":23,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":24,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":25,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":26,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":27,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":28,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":29,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":30,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":31,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":32,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"}]', NULL, NULL, 1, NULL, '2026-08-19 08:48:16', '2026-08-19 08:48:11', '2026-08-19 08:48:16'),
+(5, 1, 'IMP-20260819-63MHha', 'opening_balance', 'completed', 31, 0, 31, '[{\"row\":2,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":3,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":4,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":5,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":6,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":7,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":8,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":9,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":10,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":11,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":12,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":13,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":14,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":15,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":16,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":17,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":18,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":19,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":20,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":21,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":22,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":23,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":24,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":25,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":26,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":27,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":28,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":29,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":30,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":31,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"},{\"row\":32,\"field\":\"matricule\",\"message\":\"Le matricule est obligatoire.\"}]', NULL, NULL, 1, NULL, '2026-08-19 08:50:56', '2026-08-19 08:50:56', '2026-08-19 08:50:56'),
+(6, 1, 'IMP-20260819-9ifrNh', 'opening_balance', 'completed', 5, 3, 2, '[{\"row\":3,\"field\":\"code_conge\",\"message\":\"Type de cong\\u00e9 \'RTT\' non trouv\\u00e9.\"},{\"row\":5,\"field\":\"matricule\",\"message\":\"Employ\\u00e9 \'EMP0004\' non trouv\\u00e9 dans ce si\\u00e8ge.\"}]', NULL, NULL, 1, NULL, '2026-08-19 08:59:16', '2026-08-19 08:59:16', '2026-08-19 08:59:16'),
+(7, 1, 'IMP-20260819-vqlhbY', 'opening_balance', 'completed', 5, 4, 1, '[{\"row\":5,\"field\":\"matricule\",\"message\":\"Employ\\u00e9 \'EMP0004\' non trouv\\u00e9 dans ce si\\u00e8ge.\"}]', NULL, NULL, 1, NULL, '2026-08-19 09:00:09', '2026-08-19 09:00:09', '2026-08-19 09:00:09'),
+(8, 1, 'IMP-20260819-3hfzo8', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-19 09:00:56', '2026-08-19 09:00:56', '2026-08-19 09:00:56'),
+(9, 1, 'IMP-20260819-VfGC1V', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-19 09:14:39', '2026-08-19 09:14:39', '2026-08-19 09:14:39'),
+(10, 1, 'IMP-20260819-m3rAhb', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-19 09:18:52', '2026-08-19 09:18:52', '2026-08-19 09:18:52'),
+(11, 1, 'IMP-20260819-nsHocS', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-19 09:19:25', '2026-08-19 09:19:25', '2026-08-19 09:19:25'),
+(12, 1, 'IMP-20260819-zw6vsL', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-19 09:23:56', '2026-08-19 09:23:56', '2026-08-19 09:23:56'),
+(13, 1, 'IMP-20260819-ynoRtj', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-19 09:25:19', '2026-08-19 09:25:19', '2026-08-19 09:25:19'),
+(14, 1, 'IMP-20260819-knEhBx', 'opening_balance', 'completed', 4, 3, 1, '[{\"row\":4,\"field\":\"solde\",\"message\":\"Solde d\\u00e9j\\u00e0 existant pour Ramarotafika Hedi Franco\"}]', NULL, NULL, 1, NULL, '2026-08-19 09:31:18', '2026-08-19 09:31:18', '2026-08-19 09:31:18'),
+(15, 1, 'IMP-20260819-8AbH3v', 'opening_balance', 'completed', 4, 0, 4, '[{\"row\":2,\"field\":\"solde\",\"message\":\"Solde d\\u00e9j\\u00e0 existant pour Willy Tarkin\"},{\"row\":3,\"field\":\"solde\",\"message\":\"Solde d\\u00e9j\\u00e0 existant pour Solofoniaina Vololonirina Emma Joeline\"},{\"row\":4,\"field\":\"solde\",\"message\":\"Solde d\\u00e9j\\u00e0 existant pour Ramarotafika Hedi Franco\"},{\"row\":5,\"field\":\"solde\",\"message\":\"Solde d\\u00e9j\\u00e0 existant pour MALALANIRINA Emile Noeline\"}]', NULL, NULL, 1, NULL, '2026-08-19 13:54:45', '2026-08-19 13:54:44', '2026-08-19 13:54:45'),
+(16, 1, 'IMP-20260821-Sfndw5', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-21 12:30:42', '2026-08-21 12:30:39', '2026-08-21 12:30:42'),
+(17, 1, 'IMP-20260824-wIderV', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 10:47:56', '2026-08-24 10:47:52', '2026-08-24 10:47:56'),
+(18, 1, 'IMP-20260824-DRD1KF', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 10:50:41', '2026-08-24 10:50:41', '2026-08-24 10:50:41'),
+(19, 1, 'IMP-20260824-IFNm37', 'opening_balance', 'completed', 4, 0, 4, '[{\"row\":2,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"},{\"row\":3,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"},{\"row\":4,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"},{\"row\":5,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"}]', NULL, NULL, 2, NULL, '2026-08-24 12:29:29', '2026-08-24 12:29:25', '2026-08-24 12:29:29'),
+(20, 1, 'IMP-20260824-UcMjy7', 'opening_balance', 'completed', 4, 0, 4, '[{\"row\":2,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"},{\"row\":3,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"},{\"row\":4,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"},{\"row\":5,\"field\":\"G\\u00e9n\\u00e9ral\",\"message\":\"Method Illuminate\\\\Database\\\\Eloquent\\\\Collection::orWhere does not exist.\"}]', NULL, NULL, 2, NULL, '2026-08-24 12:31:16', '2026-08-24 12:31:16', '2026-08-24 12:31:16'),
+(21, 1, 'IMP-20260824-OLYyuj', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 12:32:45', '2026-08-24 12:32:45', '2026-08-24 12:32:45'),
+(22, 1, 'IMP-20260824-Qocb3Z', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 12:33:34', '2026-08-24 12:33:34', '2026-08-24 12:33:34'),
+(23, 1, 'IMP-20260824-iwmjG7', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 12:35:03', '2026-08-24 12:35:03', '2026-08-24 12:35:03'),
+(24, 1, 'IMP-20260824-ue7wG5', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 12:49:43', '2026-08-24 12:49:42', '2026-08-24 12:49:43'),
+(25, 1, 'IMP-20260824-Oyqwvp', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-24 13:04:02', '2026-08-24 13:04:02', '2026-08-24 13:04:02'),
+(26, 1, 'IMP-20260826-0yjEfy', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 1, NULL, '2026-08-26 08:08:03', '2026-08-26 08:08:00', '2026-08-26 08:08:03'),
+(27, 1, 'IMP-20260826-XYEoGF', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-26 09:27:27', '2026-08-26 09:27:27', '2026-08-26 09:27:27'),
+(28, 1, 'IMP-20260826-FBj2mD', 'opening_balance', 'completed', 4, 4, 0, '[]', NULL, NULL, 2, NULL, '2026-08-26 15:00:43', '2026-08-26 15:00:40', '2026-08-26 15:00:43');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_periods`
+--
+
+CREATE TABLE `leave_periods` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `submission_deadline` date DEFAULT NULL COMMENT 'Date limite de pose',
+  `allow_rollover` tinyint(1) NOT NULL DEFAULT 0,
+  `max_rollover_days` int(11) DEFAULT NULL,
+  `rollover_expiry_date` date DEFAULT NULL COMMENT 'Expiration des jours reportés',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `status` enum('preparing','open','closed') NOT NULL DEFAULT 'preparing',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_customizable` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_periods`
+--
+
+INSERT INTO `leave_periods` (`id`, `site_id`, `leave_type_id`, `name`, `start_date`, `end_date`, `submission_deadline`, `allow_rollover`, `max_rollover_days`, `rollover_expiry_date`, `is_default`, `status`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(13, 1, 13, 'Periode année 2026-2027', '2026-09-01', '2026-12-30', '2026-09-11', 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-08-21 12:14:41', '2026-08-31 14:53:58'),
+(14, 2, 17, 'Conge paye RUN 2026-2027', '2026-09-01', '2026-11-30', '2026-10-31', 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-08-31 10:29:48', '2026-08-31 10:29:48'),
+(15, 1, 14, 'Periode année 2026-2027 Maladie', '2026-01-01', '2026-12-31', NULL, 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-08-31 15:36:26', '2026-08-31 15:36:26');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_policies`
+--
+
+CREATE TABLE `leave_policies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `leave_type_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `calculation_method` enum('working_days','business_days','hours') NOT NULL DEFAULT 'working_days',
+  `reference_schedule_id` int(10) UNSIGNED DEFAULT NULL,
+  `holiday_handling` enum('skip','count','split') NOT NULL DEFAULT 'skip',
+  `rounding_rule` enum('none','half_day','full_day','quarter_hour','half_hour') NOT NULL DEFAULT 'none',
+  `weekend_days` enum('saturday_sunday','friday_saturday','sunday_only','none') NOT NULL DEFAULT 'saturday_sunday',
+  `exclude_holidays` tinyint(1) NOT NULL DEFAULT 1,
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `is_customizable` tinyint(1) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `updated_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_policies`
+--
+
+INSERT INTO `leave_policies` (`id`, `site_id`, `leave_type_id`, `name`, `calculation_method`, `reference_schedule_id`, `holiday_handling`, `rounding_rule`, `weekend_days`, `exclude_holidays`, `is_default`, `is_customizable`, `is_active`, `created_by`, `updated_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(3, 1, NULL, 'Politique Standar  CP', 'business_days', NULL, 'skip', 'none', 'sunday_only', 1, 0, 0, 1, NULL, NULL, NULL, '2026-08-21 12:04:59', '2026-08-24 10:05:28'),
+(4, 1, NULL, 'Politique Standar Maladie', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 0, 0, 1, NULL, NULL, NULL, '2026-08-21 12:05:50', '2026-08-21 12:05:50'),
+(5, NULL, NULL, 'Politique par défaut (auto-créée)', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 1, 0, 1, NULL, NULL, NULL, '2026-08-24 08:06:55', '2026-08-24 08:06:55'),
+(6, 1, NULL, 'Politique Standar  Sans solde', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 0, 0, 1, NULL, NULL, NULL, '2026-08-31 14:34:17', '2026-08-31 14:34:17');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_policy_assignments`
+--
+
+CREATE TABLE `leave_policy_assignments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `leave_policy_id` bigint(20) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED DEFAULT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `department_id` int(10) UNSIGNED DEFAULT NULL,
+  `job_title_id` int(10) UNSIGNED DEFAULT NULL,
+  `hierarchy_level_id` int(10) UNSIGNED DEFAULT NULL,
+  `employee_id` int(10) UNSIGNED DEFAULT NULL,
+  `priority` int(11) NOT NULL DEFAULT 0 COMMENT 'Plus haut = prioritaire',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `assignment_type` enum('individual','department','site','company','global') DEFAULT 'individual',
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `created_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `updated_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_policy_assignments`
+--
+
+INSERT INTO `leave_policy_assignments` (`id`, `leave_policy_id`, `company_id`, `site_id`, `department_id`, `job_title_id`, `hierarchy_level_id`, `employee_id`, `priority`, `is_active`, `assignment_type`, `start_date`, `end_date`, `created_by`, `updated_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(12, 3, NULL, 1, NULL, NULL, NULL, NULL, 50, 1, 'site', NULL, NULL, NULL, NULL, NULL, '2026-08-24 10:06:12', '2026-08-24 10:06:12'),
+(13, 4, NULL, 1, NULL, NULL, NULL, 5, 50, 1, 'individual', NULL, NULL, NULL, NULL, NULL, '2026-08-31 15:55:12', '2026-08-31 15:55:12'),
+(14, 4, NULL, 1, NULL, NULL, NULL, NULL, 50, 1, 'site', NULL, NULL, NULL, NULL, NULL, '2026-09-01 14:12:01', '2026-09-01 14:12:01');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_requests`
+--
+
+CREATE TABLE `leave_requests` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `period_id` bigint(20) UNSIGNED NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `duration` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `status` enum('draft','pending','approved','rejected','cancelled') NOT NULL DEFAULT 'draft',
+  `submitted_at` timestamp NULL DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `attachment_path` varchar(255) DEFAULT NULL,
+  `approved_by` int(10) UNSIGNED DEFAULT NULL,
+  `approved_at` timestamp NULL DEFAULT NULL,
+  `rejected_by` int(10) UNSIGNED DEFAULT NULL,
+  `rejected_at` timestamp NULL DEFAULT NULL,
+  `rejection_reason` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `balance_impact` tinyint(1) DEFAULT 1 COMMENT 'La demande impacte-t-elle le solde ? (false pour les imports historiques)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_requests`
+--
+
+INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type_id`, `period_id`, `start_date`, `end_date`, `duration`, `status`, `submitted_at`, `reason`, `comment`, `attachment_path`, `approved_by`, `approved_at`, `rejected_by`, `rejected_at`, `rejection_reason`, `created_at`, `updated_at`, `deleted_at`, `balance_impact`) VALUES
+(46, 5, 13, 13, '2026-10-17', '2026-10-22', 5.00, 'approved', NULL, 'teste', NULL, NULL, 2, '2026-08-31 08:57:34', NULL, NULL, NULL, '2026-08-27 13:09:51', '2026-08-31 08:57:34', NULL, 1),
+(47, 5, 13, 13, '2026-09-11', '2026-09-12', 2.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-27 16:08:35', NULL, NULL, NULL, '2026-08-27 13:48:37', '2026-08-27 16:09:05', NULL, 1),
+(48, 5, 13, 13, '2026-09-13', '2026-09-15', 2.00, 'draft', NULL, 'test', 'test', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-27 15:45:55', '2026-08-27 15:45:55', NULL, 1),
+(49, 62, 13, 13, '2026-12-10', '2026-12-16', 6.00, 'draft', NULL, NULL, 'test autre utilisateur', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 09:37:39', '2026-08-31 10:42:38', '2026-08-31 10:42:38', 1),
+(50, 62, 17, 14, '2026-09-11', '2026-09-14', 2.00, 'draft', NULL, 'TEST VER AUTRE ADMIN', 'TEST POUR VOIR OU LE DEMANDE A ETE ENVOYER', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:43:23', '2026-08-31 10:48:39', '2026-08-31 10:48:39', 1),
+(51, 62, 17, 14, '2026-10-10', '2026-10-14', 3.00, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:45:38', '2026-08-31 10:46:00', NULL, 1),
+(52, 62, 17, 14, '2026-11-12', '2026-11-13', 2.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:49:20', '2026-08-31 10:49:20', NULL, 1),
+(53, 62, 17, 14, '2026-09-15', '2026-09-25', 9.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 12:36:57', '2026-08-31 12:36:57', NULL, 1),
+(54, 5, 13, 13, '2026-11-11', '2026-11-30', 17.00, 'pending', NULL, NULL, 'TEST', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 15:31:52', '2026-08-31 15:31:52', NULL, 1),
+(55, 5, 14, 15, '2026-09-14', '2026-09-24', 9.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-31 15:56:59', NULL, NULL, NULL, '2026-08-31 15:56:25', '2026-08-31 16:02:43', NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_request_attachments`
+--
+
+CREATE TABLE `leave_request_attachments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `leave_request_id` bigint(20) UNSIGNED NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `mime_type` varchar(100) DEFAULT NULL,
+  `uploaded_by` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_request_attachments`
+--
+
+INSERT INTO `leave_request_attachments` (`id`, `leave_request_id`, `file_name`, `file_path`, `file_size`, `mime_type`, `uploaded_by`, `created_at`, `updated_at`) VALUES
+(14, 51, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/51/1788173138_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-08-31 10:45:39', '2026-08-31 10:45:39'),
+(15, 52, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/52/1788173360_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-08-31 10:49:20', '2026-08-31 10:49:20'),
+(16, 55, 'Capture d’écran 2026-06-09 154545.png', 'leave_attachments/55/1788191785_Capture d’écran 2026-06-09 154545.png', 246849, 'image/png', ' ', '2026-08-31 15:56:26', '2026-08-31 15:56:26');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_types`
+--
+
+CREATE TABLE `leave_types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `unit` enum('days','half_days','hours') NOT NULL DEFAULT 'days',
+  `deducts_balance` tinyint(1) NOT NULL DEFAULT 1,
+  `requires_attachment` enum('never','always','after_duration') NOT NULL DEFAULT 'never',
+  `requires_attachment_after` int(11) DEFAULT NULL,
+  `allow_negative_balance` tinyint(1) NOT NULL DEFAULT 0,
+  `max_negative_limit` int(11) DEFAULT NULL,
+  `color` varchar(7) NOT NULL DEFAULT '#10B981',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_customizable` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `min_notice_days` int(11) DEFAULT 0 COMMENT 'Délai de prévenance en jours',
+  `max_duration_per_request` decimal(8,2) DEFAULT NULL COMMENT 'Durée maximale par demande',
+  `allow_overlap` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Autoriser les chevauchements',
+  `accrual_type` enum('manual','monthly_fixed','yearly_fixed','schedule_based') DEFAULT 'manual' COMMENT 'Type d''acquisition du solde',
+  `accrual_amount` decimal(8,2) DEFAULT NULL COMMENT 'Montant de l''acquisition',
+  `affects_team_availability` tinyint(1) DEFAULT 1 COMMENT 'L''absence affecte-t-elle l''effectif de l''équipe ?'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_types`
+--
+
+INSERT INTO `leave_types` (`id`, `site_id`, `name`, `code`, `unit`, `deducts_balance`, `requires_attachment`, `requires_attachment_after`, `allow_negative_balance`, `max_negative_limit`, `color`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`, `min_notice_days`, `max_duration_per_request`, `allow_overlap`, `accrual_type`, `accrual_amount`, `affects_team_availability`) VALUES
+(13, 1, 'Conge paye', 'CP', 'days', 1, 'never', NULL, 0, NULL, '#85d96d', 1, 1, NULL, '2026-08-21 12:00:05', '2026-08-31 15:30:57', 15, 17.00, 0, 'manual', NULL, 1),
+(14, 1, 'MALADIE', 'MLD', 'days', 0, 'always', NULL, 0, NULL, '#ee1111', 1, 1, NULL, '2026-08-21 12:01:26', '2026-08-31 15:58:19', 0, NULL, 1, 'manual', NULL, 1),
+(15, NULL, 'TST conge', 'TST', 'days', 1, 'never', NULL, 0, NULL, '#b7104a', 1, 1, '2026-08-27 10:43:46', '2026-08-27 10:34:55', '2026-08-27 10:43:46', 0, NULL, 0, 'manual', NULL, 1),
+(16, NULL, 'TST', 'test', 'days', 1, 'never', NULL, 0, NULL, '#10B981', 1, 0, '2026-08-27 12:25:07', '2026-08-27 10:44:12', '2026-08-27 12:25:07', 0, NULL, 0, 'manual', NULL, 1),
+(17, 2, 'Congé payés Run telemat', 'CPR', 'days', 1, 'always', NULL, 0, NULL, '#10B981', 1, 0, NULL, '2026-08-31 09:54:38', '2026-08-31 09:54:38', 10, 15.00, 0, 'manual', NULL, 1),
+(18, 1, 'Sans solde', 'SS', 'days', 0, 'never', NULL, 1, 2, '#10B981', 1, 0, '2026-08-31 14:24:01', '2026-08-31 14:22:30', '2026-08-31 14:24:01', 2, 3.00, 0, 'manual', NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_type_site_activations`
+--
+
+CREATE TABLE `leave_type_site_activations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_workflows`
+--
+
+CREATE TABLE `leave_workflows` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `steps` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Structure: [{"role": "manager", "order": 1, "label": "Validation Manager"}, {"role": "hr", "order": 2, "label": "Validation RH"}]' CHECK (json_valid(`steps`)),
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `is_customizable` tinyint(1) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_workflows`
+--
+
+INSERT INTO `leave_workflows` (`id`, `site_id`, `name`, `description`, `steps`, `is_default`, `is_customizable`, `is_active`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'rien', 'rie', '[{\"order\":1,\"role\":\"manager\",\"label\":\"Validation Manager\",\"description\":\"Le manager valide la demande\"},{\"order\":2,\"role\":\"hr\",\"label\":\"Validation RH\",\"description\":\"Le service RH approuve la demande\"},{\"order\":3,\"role\":\"manager\",\"label\":\"validation\",\"description\":\"f\"}]', 0, 1, 1, NULL, '2026-08-17 16:39:11', '2026-08-17 16:39:11');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `migrations`
 --
 
@@ -769,7 +2091,65 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2026_05_22_000000_create_conge_validations_table', 5),
 (9, '2026_05_22_000001_add_siege_id_to_conge_validations_table', 6),
 (10, '2026_07_15_070309_add_is_manager_to_administration_table', 7),
-(11, '2026_07_16_123321_add_auth_fields_to_employes_table', 8);
+(11, '2026_07_16_123321_add_auth_fields_to_employes_table', 8),
+(20, '2026_07_28_000001_create_employee_managers_table', 9),
+(21, '2026_07_28_000002_create_employee_meta_table', 9),
+(22, '2026_07_28_000003_create_admin_roles_table', 9),
+(23, '2026_07_28_000004_create_leave_types_table', 9),
+(24, '2026_07_28_000005_create_leave_policies_table', 9),
+(25, '2026_07_28_000006_create_leave_policy_assignments_table', 9),
+(26, '2026_07_28_000007_create_leave_periods_table', 9),
+(27, '2026_07_28_000008_create_company_holidays_table', 9),
+(28, '2026_07_28_000009_create_leave_balance_transactions_table', 9),
+(29, '2026_07_28_000010_create_leave_import_batches_table', 9),
+(30, '2026_07_29_093331_create_personal_access_tokens_table', 10),
+(31, '2026_07_29_124100_add_entreprise_siege_id_to_leave_settings_tables', 11),
+(32, '2026_07_30_152316_alter_leave_policies_add_rules_isactive_unique', 12),
+(33, '2026_07_30_153223_migrate_leave_types_to_policies', 13),
+(34, '2026_07_30_155215_make_company_id_nullable_in_leave_types', 14),
+(35, '2026_07_30_161021_clean_leave_types_columns', 15),
+(36, '2026_08_03_082922_create_rule_fields_table', 16),
+(37, '2026_08_03_083005_create_policy_values_table', 16),
+(38, '2026_08_03_134359_create_calculation_rules_table', 17),
+(39, '2026_08_05_092626_add_checkbox_to_rule_fields_field_type_enum', 18),
+(40, '2026_08_05_093227_add_checkbox_to_rule_fields_enum', 19);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL COMMENT 'ID de l''utilisateur (administration.ID)',
+  `type` varchar(50) NOT NULL COMMENT 'leave_pending, leave_approved, leave_rejected',
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `leave_request_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `type`, `title`, `message`, `leave_request_id`, `is_read`, `read_at`, `created_at`, `updated_at`) VALUES
+(69, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de Conge paye du 17/10/2026 au 22/10/2026 (5.0 jours)', 46, 0, NULL, '2026-08-27 13:09:51', '2026-08-27 13:09:51'),
+(70, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de Conge paye du 11/09/2026 au 12/09/2026 (2.0 jours)', 47, 0, NULL, '2026-08-27 13:48:37', '2026-08-27 13:48:37'),
+(71, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de Conge paye du 11/09/2026 au 12/09/2026 a été approuvée.', 47, 0, NULL, '2026-08-27 16:08:35', '2026-08-27 16:08:35'),
+(72, 2, 'leave_cancelled', ' Congé annulé', 'Votre congé de Conge paye du 11/09/2026 au 12/09/2026 a été annulé. Vos jours ont été recrédités.', 47, 0, NULL, '2026-08-27 16:09:05', '2026-08-27 16:09:05'),
+(73, 2, 'leave_cancelled_manager', ' Congé annulé par l\'employé', 'MALALANIRINA Emile Noeline a annulé son congé de Conge paye du 11/09/2026 au 12/09/2026.', 47, 0, NULL, '2026-08-27 16:09:05', '2026-08-27 16:09:05'),
+(74, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de Conge paye du 17/10/2026 au 22/10/2026 a été approuvée.', 46, 0, NULL, '2026-08-31 08:57:34', '2026-08-31 08:57:34'),
+(75, 18, 'leave_pending', ' Nouvelle demande de congé', 'RAHARIMANANA ALEX a soumis une demande de Congé payés Run telemat du 10/10/2026 au 14/10/2026 (3.0 jours)', 51, 0, NULL, '2026-08-31 10:46:00', '2026-08-31 10:46:00'),
+(76, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de Conge paye du 11/11/2026 au 30/11/2026 (17.0 jours)', 54, 0, NULL, '2026-08-31 15:31:52', '2026-08-31 15:31:52'),
+(77, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de MALADIE du 14/09/2026 au 24/09/2026 (9.0 jours)', 55, 0, NULL, '2026-08-31 15:56:35', '2026-08-31 15:56:35'),
+(78, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de MALADIE du 14/09/2026 au 24/09/2026 a été approuvée.', 55, 0, NULL, '2026-08-31 15:56:59', '2026-08-31 15:56:59'),
+(79, 2, 'leave_cancelled', ' Congé annulé', 'Votre congé de MALADIE du 14/09/2026 au 24/09/2026 a été annulé. Vos jours ont été recrédités.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43'),
+(80, 2, 'leave_cancelled_manager', ' Congé annulé par l\'employé', 'MALALANIRINA Emile Noeline a annulé son congé de MALADIE du 14/09/2026 au 24/09/2026.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43');
 
 -- --------------------------------------------------------
 
@@ -781,6 +2161,25 @@ CREATE TABLE `password_reset_tokens` (
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` text NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2199,8 +3598,124 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('6FqMoW2UPsb0IQbEOBUWdtPtMBRXm5sAyuzTFEMC', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiMk5oVzliS2xpZ1hVamdPYW1ocW85UkZuYlY1aFk1WUpqeTBnWlQ4ViI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9zdy5qcyI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1784365789),
-('sWP5G1ureTvCEmgM6VSrCaG2BYKPJwdUML55qNMX', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiS1gyakpEN09ZQ2x4Qm5SSElsSHd3SWljSVN4cFJERjZaZGFQYVdwOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9wb3J0YWlsL3BvaW50YWdlcyI7czo1OiJyb3V0ZSI7czoxNzoiZW1wbG95ZS5wb2ludGFnZXMiO31zOjM6InVybCI7YTowOnt9czo1NDoibG9naW5fZW1wbG95ZV81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjM7fQ==', 1784297431);
+('f6vl9sP26gVCp8Soi8x43a4vTHcEzFif79qN3a2D', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibmU1NVU3VVhXUUtGMzNlTEoyck4waXgwYXNMTHZySUt2WEtQUnV4TCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MTIzOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZW1wbG95ZS9jYWxlbmRhci9ldmVudHM/ZW5kPTIwMjYtMTAtMTJUMDAlM0EwMCUzQTAwJTJCMDElM0EwMCZzdGFydD0yMDI2LTA4LTMxVDAwJTNBMDAlM0EwMCUyQjAxJTNBMDAiO3M6NToicm91dGUiO3M6MjM6ImVtcGxveWUuY2FsZW5kYXIuZXZlbnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1NDoibG9naW5fZW1wbG95ZV81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjU7czoxMToiZW1wbG95ZWVfaWQiO2k6NTt9', 1788271303),
+('jC76XQ1eBQAZySR6PuKqyLbE9Mhi3b7ljj6Ki9w9', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYWdoaXVqTzU2MVB2OFdZZzJ2U214cm1KZmgwdjNFRWNVaWMzVEhrNSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9sZWF2ZS1wb2xpY3ktYXNzaWdubWVudHMiO3M6NToicm91dGUiO3M6MzY6ImFkbWluLmxlYXZlLXBvbGljeS1hc3NpZ25tZW50cy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1788271922);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `site_company_holiday_settings`
+--
+
+CREATE TABLE `site_company_holiday_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `company_holiday_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `name` varchar(255) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `is_recurring` tinyint(1) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `is_active` tinyint(1) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `site_leave_periods`
+--
+
+CREATE TABLE `site_leave_periods` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `leave_period_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(100) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `submission_deadline` date DEFAULT NULL,
+  `allow_rollover` tinyint(1) DEFAULT NULL COMMENT 'NULL = hérite',
+  `max_rollover_days` int(11) DEFAULT NULL,
+  `rollover_expiry_date` date DEFAULT NULL,
+  `is_default` tinyint(1) DEFAULT NULL,
+  `status` enum('preparing','open','closed') DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `site_leave_policy_settings`
+--
+
+CREATE TABLE `site_leave_policy_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `leave_policy_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `calculation_method` enum('working_days','business_days','hours') DEFAULT NULL,
+  `reference_schedule_id` int(10) UNSIGNED DEFAULT NULL,
+  `holiday_handling` enum('skip','count','split') DEFAULT NULL,
+  `rounding_rule` enum('none','half_day','full_day','quarter_hour','half_hour') DEFAULT NULL,
+  `weekend_days` enum('saturday_sunday','friday_saturday','sunday_only','none') DEFAULT NULL,
+  `exclude_holidays` tinyint(1) DEFAULT NULL,
+  `is_default` tinyint(1) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `site_leave_type_settings`
+--
+
+CREATE TABLE `site_leave_type_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `is_enabled` tinyint(1) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `local_name` varchar(100) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `local_color` varchar(7) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `local_requires_attachment` enum('never','always','after_duration') DEFAULT NULL,
+  `local_requires_attachment_after` int(11) DEFAULT NULL,
+  `local_allow_negative_balance` tinyint(1) DEFAULT NULL,
+  `local_max_negative_limit` int(11) DEFAULT NULL,
+  `local_min_notice_days` int(11) DEFAULT NULL,
+  `local_max_duration_per_request` decimal(8,2) DEFAULT NULL,
+  `local_allow_overlap` tinyint(1) DEFAULT NULL,
+  `local_deducts_balance` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `site_leave_workflow_settings`
+--
+
+CREATE TABLE `site_leave_workflow_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED NOT NULL,
+  `leave_workflow_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(100) DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `description` text DEFAULT NULL COMMENT 'NULL = hérite du global',
+  `steps` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'NULL = hérite du global' CHECK (json_valid(`steps`)),
+  `is_default` tinyint(1) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `site_leave_workflow_settings`
+--
+
+INSERT INTO `site_leave_workflow_settings` (`id`, `site_id`, `leave_workflow_id`, `name`, `description`, `steps`, `is_default`, `is_active`, `created_at`, `updated_at`) VALUES
+(2, 1, 1, 'Validation standar', NULL, '[{\"order\":1,\"role\":\"director\",\"label\":\"Validation Directeur\",\"description\":\"DR\"},{\"order\":2,\"role\":\"hr\",\"label\":\"Validation RH\",\"description\":\"Le service RH approuve la demande\"},{\"order\":3,\"role\":\"manager\",\"label\":\"validation\",\"description\":\"\"}]', 0, 1, '2026-08-21 12:21:10', '2026-08-21 12:21:10');
 
 -- --------------------------------------------------------
 
@@ -2218,6 +3733,25 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `v_leave_balance_anomalies`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `v_leave_balance_anomalies` (
+`employee_id` int(10) unsigned
+,`leave_type_id` bigint(20) unsigned
+,`period_id` bigint(20) unsigned
+,`transaction_count` bigint(21)
+,`total_opening` decimal(32,2)
+,`total_carryover` decimal(32,2)
+,`total_adjustment_positive` decimal(32,2)
+,`total_debits` decimal(32,2)
+,`total_reversals` decimal(32,2)
+,`total_credits_remaining` decimal(32,2)
+);
 
 -- --------------------------------------------------------
 
@@ -2273,6 +3807,15 @@ DROP TABLE IF EXISTS `rapports_jour_nuit`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rapports_jour_nuit`  AS SELECT `pointages`.`SiegeID` AS `SiegeID`, `pointages`.`employee_id` AS `employee_id`, CASE WHEN cast(min(`pointages`.`timestamp_`) as time) between '00:00:00' and '06:59:59' THEN cast(min(`pointages`.`timestamp_`) as date) - interval 1 day ELSE cast(min(`pointages`.`timestamp_`) as date) END AS `date_pointage`, CASE WHEN cast(min(`pointages`.`timestamp_`) as time) >= '21:00:00' OR cast(min(`pointages`.`timestamp_`) as time) <= '06:59:59' THEN 'NUIT' ELSE 'JOUR' END AS `type_travail`, date_format(min(case when `pointages`.`type_` = 'entry' then `pointages`.`timestamp_` end),'%H:%i:%s') AS `heure_entree`, CASE WHEN cast(min(`pointages`.`timestamp_`) as time) >= '21:00:00' OR cast(min(`pointages`.`timestamp_`) as time) <= '06:59:59' THEN concat(coalesce(date_format(max(case when `pointages`.`type_` = 'exit' and (cast(`pointages`.`timestamp_` as time) between '22:00:00' and '23:59:59' or cast(`pointages`.`timestamp_` as time) between '00:00:00' and '03:00:00') then `pointages`.`timestamp_` end),'%H:%i:%s'),''),case when max(case when `pointages`.`type_` = 'exit' and (cast(`pointages`.`timestamp_` as time) between '22:00:00' and '23:59:59' or cast(`pointages`.`timestamp_` as time) between '00:00:00' and '03:00:00') then `pointages`.`timestamp_` end) is not null and min(case when `pointages`.`type_` = 'entry' and (cast(`pointages`.`timestamp_` as time) between '23:00:00' and '23:59:59' or cast(`pointages`.`timestamp_` as time) between '00:00:00' and '04:00:00') then `pointages`.`timestamp_` end) is not null then concat(' - ',date_format(min(case when `pointages`.`type_` = 'entry' and (cast(`pointages`.`timestamp_` as time) between '23:00:00' and '23:59:59' or cast(`pointages`.`timestamp_` as time) between '00:00:00' and '04:00:00') then `pointages`.`timestamp_` end),'%H:%i:%s')) else '' end) ELSE concat(coalesce(date_format(max(case when `pointages`.`type_` = 'exit' and cast(`pointages`.`timestamp_` as time) < '14:00:00' then `pointages`.`timestamp_` end),'%H:%i:%s'),''),case when max(case when `pointages`.`type_` = 'exit' and cast(`pointages`.`timestamp_` as time) < '14:00:00' then `pointages`.`timestamp_` end) is not null and min(case when `pointages`.`type_` = 'entry' and cast(`pointages`.`timestamp_` as time) > '12:00:00' then `pointages`.`timestamp_` end) is not null then concat(' - ',date_format(min(case when `pointages`.`type_` = 'entry' and cast(`pointages`.`timestamp_` as time) > '12:00:00' then `pointages`.`timestamp_` end),'%H:%i:%s')) else '' end) END AS `pause_dejeuner`, CASE WHEN cast(min(`pointages`.`timestamp_`) as date) <> cast(max(`pointages`.`timestamp_`) as date) THEN concat(date_format(max(case when `pointages`.`type_` = 'exit' then `pointages`.`timestamp_` end),'%H:%i:%s'),' (+1j)') ELSE date_format(max(case when `pointages`.`type_` = 'exit' then `pointages`.`timestamp_` end),'%H:%i:%s') END AS `heure_sortie`, sec_to_time(case when cast(min(`pointages`.`timestamp_`) as date) <> cast(max(`pointages`.`timestamp_`) as date) then timestampdiff(SECOND,min(case when `pointages`.`type_` = 'entry' then `pointages`.`timestamp_` end),max(case when `pointages`.`type_` = 'exit' then `pointages`.`timestamp_` end)) else coalesce(sum(case when `pointages`.`type_` = 'exit' then time_to_sec(cast(`pointages`.`timestamp_` as time)) else 0 end) - sum(case when `pointages`.`type_` = 'entry' then time_to_sec(cast(`pointages`.`timestamp_` as time)) else 0 end),0) end) AS `total_heure_journee` FROM `pointages` GROUP BY `pointages`.`SiegeID`, `pointages`.`employee_id`, CASE WHEN cast(`pointages`.`timestamp_` as time) between '00:00:00' and '06:59:59' THEN cast(`pointages`.`timestamp_` as date) - interval 1 day ELSE cast(`pointages`.`timestamp_` as date) END, CASE WHEN cast(`pointages`.`timestamp_` as time) >= '21:00:00' OR cast(`pointages`.`timestamp_` as time) <= '06:59:59' THEN 'NUIT' ELSE 'JOUR' END ;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `v_leave_balance_anomalies`
+--
+DROP TABLE IF EXISTS `v_leave_balance_anomalies`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_leave_balance_anomalies`  AS SELECT `lbt`.`employee_id` AS `employee_id`, `lbt`.`leave_type_id` AS `leave_type_id`, `lbt`.`period_id` AS `period_id`, count(0) AS `transaction_count`, sum(case when `lbt`.`type` = 'opening' then `lbt`.`amount` else 0 end) AS `total_opening`, sum(case when `lbt`.`type` = 'carryover' then `lbt`.`amount` else 0 end) AS `total_carryover`, sum(case when `lbt`.`type` = 'adjustment' and `lbt`.`amount` > 0 then `lbt`.`amount` else 0 end) AS `total_adjustment_positive`, sum(case when `lbt`.`type` = 'debit' then abs(`lbt`.`amount`) else 0 end) AS `total_debits`, sum(case when `lbt`.`type` = 'reversal' then `lbt`.`amount` else 0 end) AS `total_reversals`, sum(case when `lbt`.`type` = 'credit' and `lbt`.`amount` > 0 then `lbt`.`amount` else 0 end) AS `total_credits_remaining` FROM `leave_balance_transactions` AS `lbt` GROUP BY `lbt`.`employee_id`, `lbt`.`leave_type_id`, `lbt`.`period_id` HAVING `total_credits_remaining` > 0 ;
+
 --
 -- Index pour les tables déchargées
 --
@@ -2295,6 +3838,14 @@ ALTER TABLE `administration`
   ADD KEY `fk_sieges_administration` (`SiegeID`);
 
 --
+-- Index pour la table `admin_roles`
+--
+ALTER TABLE `admin_roles`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `admin_roles_admin_id_is_active_index` (`admin_id`,`is_active`),
+  ADD KEY `admin_roles_company_id_role_is_active_index` (`company_id`,`role`,`is_active`);
+
+--
 -- Index pour la table `cache`
 --
 ALTER TABLE `cache`
@@ -2305,6 +3856,15 @@ ALTER TABLE `cache`
 --
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
+
+--
+-- Index pour la table `company_holidays`
+--
+ALTER TABLE `company_holidays`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `company_holidays_site_id_index` (`site_id`),
+  ADD KEY `company_holidays_date_index` (`date`),
+  ADD KEY `company_holidays_site_date_index` (`site_id`,`date`);
 
 --
 -- Index pour la table `conges`
@@ -2322,12 +3882,35 @@ ALTER TABLE `conge_validations`
   ADD KEY `conge_validations_siegeid_foreign` (`SiegeID`);
 
 --
+-- Index pour la table `departments`
+--
+ALTER TABLE `departments`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_dept_site_code` (`site_id`,`code`),
+  ADD KEY `fk_dept_site` (`site_id`),
+  ADD KEY `departments_deleted_at_index` (`deleted_at`);
+
+--
+-- Index pour la table `employee_managers`
+--
+ALTER TABLE `employee_managers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `employee_managers_manager_id_foreign` (`manager_id`),
+  ADD KEY `employee_managers_company_id_is_active_index` (`company_id`,`is_active`),
+  ADD KEY `employee_managers_employee_id_is_active_index` (`employee_id`,`is_active`);
+
+--
 -- Index pour la table `employes`
 --
 ALTER TABLE `employes`
   ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `employes_email_unique` (`email`),
-  ADD KEY `fk_sieges_Employes` (`SiegeID`);
+  ADD KEY `fk_sieges_Employes` (`SiegeID`),
+  ADD KEY `fk_emp_site` (`site_id`),
+  ADD KEY `fk_emp_dept` (`department_id`),
+  ADD KEY `fk_emp_job` (`job_title_id`),
+  ADD KEY `fk_emp_hlvl` (`hierarchy_level_id`),
+  ADD KEY `fk_emp_mgr` (`manager_id`);
 
 --
 -- Index pour la table `entreprises`
@@ -2350,6 +3933,12 @@ ALTER TABLE `failed_jobs`
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
+-- Index pour la table `hierarchy_levels`
+--
+ALTER TABLE `hierarchy_levels`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index pour la table `jobs`
 --
 ALTER TABLE `jobs`
@@ -2363,6 +3952,13 @@ ALTER TABLE `job_batches`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Index pour la table `job_titles`
+--
+ALTER TABLE `job_titles`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `job_titles_hierarchy_level_id_index` (`hierarchy_level_id`);
+
+--
 -- Index pour la table `jours_non_travailles`
 --
 ALTER TABLE `jours_non_travailles`
@@ -2372,16 +3968,139 @@ ALTER TABLE `jours_non_travailles`
   ADD KEY `jours_non_travailles_actived_index` (`Actived`);
 
 --
+-- Index pour la table `leave_balances`
+--
+ALTER TABLE `leave_balances`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `employee_type_period_unique` (`employee_id`,`leave_type_id`,`period_id`),
+  ADD KEY `leave_balances_employee_index` (`employee_id`),
+  ADD KEY `leave_balances_type_index` (`leave_type_id`),
+  ADD KEY `leave_balances_period_index` (`period_id`);
+
+--
+-- Index pour la table `leave_balance_transactions`
+--
+ALTER TABLE `leave_balance_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lbt_employee_index` (`employee_id`),
+  ADD KEY `lbt_type_index` (`leave_type_id`),
+  ADD KEY `lbt_period_index` (`period_id`),
+  ADD KEY `lbt_employee_period_index` (`employee_id`,`period_id`),
+  ADD KEY `lbt_reference_index` (`reference_id`,`reference_type`);
+
+--
+-- Index pour la table `leave_import_batches`
+--
+ALTER TABLE `leave_import_batches`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `batch_number_unique` (`batch_number`),
+  ADD KEY `site_import_index` (`site_id`);
+
+--
+-- Index pour la table `leave_periods`
+--
+ALTER TABLE `leave_periods`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lper_site_index` (`site_id`),
+  ADD KEY `lper_type_index` (`leave_type_id`),
+  ADD KEY `lper_main_index` (`site_id`,`leave_type_id`,`status`,`is_active`);
+
+--
+-- Index pour la table `leave_policies`
+--
+ALTER TABLE `leave_policies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leave_policies_site_id_index` (`site_id`),
+  ADD KEY `leave_policies_name_index` (`name`),
+  ADD KEY `leave_policies_site_active_index` (`site_id`,`is_active`);
+
+--
+-- Index pour la table `leave_policy_assignments`
+--
+ALTER TABLE `leave_policy_assignments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lpa_policy_index` (`leave_policy_id`),
+  ADD KEY `lpa_employee_index` (`employee_id`),
+  ADD KEY `lpa_department_index` (`department_id`),
+  ADD KEY `lpa_job_title_index` (`job_title_id`),
+  ADD KEY `lpa_hierarchy_index` (`hierarchy_level_id`),
+  ADD KEY `lpa_site_index` (`site_id`),
+  ADD KEY `lpa_company_index` (`company_id`);
+
+--
+-- Index pour la table `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lr_employee_index` (`employee_id`),
+  ADD KEY `lr_type_index` (`leave_type_id`),
+  ADD KEY `lr_period_index` (`period_id`),
+  ADD KEY `lr_status_index` (`status`),
+  ADD KEY `lr_dates_index` (`start_date`,`end_date`);
+
+--
+-- Index pour la table `leave_request_attachments`
+--
+ALTER TABLE `leave_request_attachments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lra_request_index` (`leave_request_id`);
+
+--
+-- Index pour la table `leave_types`
+--
+ALTER TABLE `leave_types`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `leave_types_code_site_id_unique` (`code`,`site_id`),
+  ADD KEY `leave_types_site_id_is_active_index` (`site_id`,`is_active`),
+  ADD KEY `leave_types_deleted_at_index` (`deleted_at`);
+
+--
+-- Index pour la table `leave_type_site_activations`
+--
+ALTER TABLE `leave_type_site_activations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ltsa_site_leave_unique` (`site_id`,`leave_type_id`),
+  ADD KEY `leave_type_site_activations_leave_type_id_foreign` (`leave_type_id`);
+
+--
+-- Index pour la table `leave_workflows`
+--
+ALTER TABLE `leave_workflows`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leave_workflows_site_id_index` (`site_id`),
+  ADD KEY `leave_workflows_name_index` (`name`),
+  ADD KEY `leave_workflows_site_active_index` (`site_id`,`is_active`);
+
+--
 -- Index pour la table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Index pour la table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_user_id_index` (`user_id`),
+  ADD KEY `notifications_is_read_index` (`is_read`),
+  ADD KEY `notifications_created_at_index` (`created_at`),
+  ADD KEY `notifications_leave_request_id_index` (`leave_request_id`);
+
+--
 -- Index pour la table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
+
+--
+-- Index pour la table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`),
+  ADD KEY `personal_access_tokens_expires_at_index` (`expires_at`);
 
 --
 -- Index pour la table `pointages`
@@ -2418,6 +4137,50 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Index pour la table `site_company_holiday_settings`
+--
+ALTER TABLE `site_company_holiday_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `site_holiday_unique` (`site_id`,`company_holiday_id`),
+  ADD KEY `site_company_holiday_id_index` (`company_holiday_id`);
+
+--
+-- Index pour la table `site_leave_periods`
+--
+ALTER TABLE `site_leave_periods`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `site_period_unique` (`site_id`,`leave_period_id`),
+  ADD KEY `site_period_period_index` (`leave_period_id`),
+  ADD KEY `site_period_active_index` (`site_id`,`is_active`);
+
+--
+-- Index pour la table `site_leave_policy_settings`
+--
+ALTER TABLE `site_leave_policy_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `site_policy_unique` (`site_id`,`leave_policy_id`),
+  ADD KEY `site_policy_policy_index` (`leave_policy_id`),
+  ADD KEY `site_policy_active_index` (`site_id`,`is_active`);
+
+--
+-- Index pour la table `site_leave_type_settings`
+--
+ALTER TABLE `site_leave_type_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `site_type_unique` (`site_id`,`leave_type_id`),
+  ADD KEY `site_type_type_index` (`leave_type_id`),
+  ADD KEY `site_type_site_active_index` (`site_id`,`is_enabled`);
+
+--
+-- Index pour la table `site_leave_workflow_settings`
+--
+ALTER TABLE `site_leave_workflow_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `site_workflow_unique` (`site_id`,`leave_workflow_id`),
+  ADD KEY `site_workflow_workflow_index` (`leave_workflow_id`),
+  ADD KEY `site_workflow_active_index` (`site_id`,`is_active`);
+
+--
 -- Index pour la table `users`
 --
 ALTER TABLE `users`
@@ -2432,31 +4195,55 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=366;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=989;
 
 --
 -- AUTO_INCREMENT pour la table `administration`
 --
 ALTER TABLE `administration`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT pour la table `admin_roles`
+--
+ALTER TABLE `admin_roles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `company_holidays`
+--
+ALTER TABLE `company_holidays`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT pour la table `conges`
 --
 ALTER TABLE `conges`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT pour la table `conge_validations`
 --
 ALTER TABLE `conge_validations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT pour la table `departments`
+--
+ALTER TABLE `departments`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+
+--
+-- AUTO_INCREMENT pour la table `employee_managers`
+--
+ALTER TABLE `employee_managers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `employes`
 --
 ALTER TABLE `employes`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT pour la table `entreprises`
@@ -2477,10 +4264,22 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `hierarchy_levels`
+--
+ALTER TABLE `hierarchy_levels`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT pour la table `jobs`
 --
 ALTER TABLE `jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `job_titles`
+--
+ALTER TABLE `job_titles`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=344;
 
 --
 -- AUTO_INCREMENT pour la table `jours_non_travailles`
@@ -2489,10 +4288,88 @@ ALTER TABLE `jours_non_travailles`
   MODIFY `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
+-- AUTO_INCREMENT pour la table `leave_balances`
+--
+ALTER TABLE `leave_balances`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
+--
+-- AUTO_INCREMENT pour la table `leave_balance_transactions`
+--
+ALTER TABLE `leave_balance_transactions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+
+--
+-- AUTO_INCREMENT pour la table `leave_import_batches`
+--
+ALTER TABLE `leave_import_batches`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT pour la table `leave_periods`
+--
+ALTER TABLE `leave_periods`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT pour la table `leave_policies`
+--
+ALTER TABLE `leave_policies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT pour la table `leave_policy_assignments`
+--
+ALTER TABLE `leave_policy_assignments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT pour la table `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
+--
+-- AUTO_INCREMENT pour la table `leave_request_attachments`
+--
+ALTER TABLE `leave_request_attachments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT pour la table `leave_types`
+--
+ALTER TABLE `leave_types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT pour la table `leave_type_site_activations`
+--
+ALTER TABLE `leave_type_site_activations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `leave_workflows`
+--
+ALTER TABLE `leave_workflows`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT pour la table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+
+--
+-- AUTO_INCREMENT pour la table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `pointages`
@@ -2513,6 +4390,36 @@ ALTER TABLE `seller_sieges`
   MODIFY `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT pour la table `site_company_holiday_settings`
+--
+ALTER TABLE `site_company_holiday_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `site_leave_periods`
+--
+ALTER TABLE `site_leave_periods`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `site_leave_policy_settings`
+--
+ALTER TABLE `site_leave_policy_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `site_leave_type_settings`
+--
+ALTER TABLE `site_leave_type_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `site_leave_workflow_settings`
+--
+ALTER TABLE `site_leave_workflow_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
@@ -2529,6 +4436,18 @@ ALTER TABLE `administration`
   ADD CONSTRAINT `fk_sieges_administration` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Contraintes pour la table `admin_roles`
+--
+ALTER TABLE `admin_roles`
+  ADD CONSTRAINT `admin_roles_admin_id_foreign` FOREIGN KEY (`admin_id`) REFERENCES `administration` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `company_holidays`
+--
+ALTER TABLE `company_holidays`
+  ADD CONSTRAINT `company_holidays_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
 -- Contraintes pour la table `conges`
 --
 ALTER TABLE `conges`
@@ -2540,6 +4459,14 @@ ALTER TABLE `conges`
 --
 ALTER TABLE `conge_validations`
   ADD CONSTRAINT `conge_validations_siegeid_foreign` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `employee_managers`
+--
+ALTER TABLE `employee_managers`
+  ADD CONSTRAINT `employee_managers_company_id_foreign` FOREIGN KEY (`company_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `employee_managers_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `employee_managers_manager_id_foreign` FOREIGN KEY (`manager_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `employes`
@@ -2554,10 +4481,87 @@ ALTER TABLE `entreprises`
   ADD CONSTRAINT `fk_sieges_company` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Contraintes pour la table `job_titles`
+--
+ALTER TABLE `job_titles`
+  ADD CONSTRAINT `job_titles_hierarchy_level_id_foreign` FOREIGN KEY (`hierarchy_level_id`) REFERENCES `hierarchy_levels` (`id`) ON DELETE SET NULL;
+
+--
 -- Contraintes pour la table `jours_non_travailles`
 --
 ALTER TABLE `jours_non_travailles`
   ADD CONSTRAINT `jours_non_travailles_siegeid_foreign` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_balances`
+--
+ALTER TABLE `leave_balances`
+  ADD CONSTRAINT `lb_employee_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lb_period_foreign` FOREIGN KEY (`period_id`) REFERENCES `leave_periods` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lb_type_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_balance_transactions`
+--
+ALTER TABLE `leave_balance_transactions`
+  ADD CONSTRAINT `lbt_employee_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lbt_period_foreign` FOREIGN KEY (`period_id`) REFERENCES `leave_periods` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lbt_type_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_periods`
+--
+ALTER TABLE `leave_periods`
+  ADD CONSTRAINT `lper_leave_type_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lper_site_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_policy_assignments`
+--
+ALTER TABLE `leave_policy_assignments`
+  ADD CONSTRAINT `lpa_policy_foreign` FOREIGN KEY (`leave_policy_id`) REFERENCES `leave_policies` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  ADD CONSTRAINT `lr_employee_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lr_period_foreign` FOREIGN KEY (`period_id`) REFERENCES `leave_periods` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lr_type_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_request_attachments`
+--
+ALTER TABLE `leave_request_attachments`
+  ADD CONSTRAINT `lra_request_foreign` FOREIGN KEY (`leave_request_id`) REFERENCES `leave_requests` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_types`
+--
+ALTER TABLE `leave_types`
+  ADD CONSTRAINT `leave_types_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE SET NULL;
+
+--
+-- Contraintes pour la table `leave_type_site_activations`
+--
+ALTER TABLE `leave_type_site_activations`
+  ADD CONSTRAINT `leave_type_site_activations_leave_type_id_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `leave_type_site_activations_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ltsa_leave_type_id_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ltsa_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_workflows`
+--
+ALTER TABLE `leave_workflows`
+  ADD CONSTRAINT `leave_workflows_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `notifications_leave_request_id_foreign` FOREIGN KEY (`leave_request_id`) REFERENCES `leave_requests` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `administration` (`ID`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `pointages`
@@ -2573,6 +4577,34 @@ ALTER TABLE `pointages`
 ALTER TABLE `seller_sieges`
   ADD CONSTRAINT `seller_sieges_sellerid_foreign` FOREIGN KEY (`SellerID`) REFERENCES `administration` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `seller_sieges_siegeid_foreign` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `site_company_holiday_settings`
+--
+ALTER TABLE `site_company_holiday_settings`
+  ADD CONSTRAINT `sch_holiday_foreign` FOREIGN KEY (`company_holiday_id`) REFERENCES `company_holidays` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `sch_site_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `site_leave_periods`
+--
+ALTER TABLE `site_leave_periods`
+  ADD CONSTRAINT `slp_period_foreign` FOREIGN KEY (`leave_period_id`) REFERENCES `leave_periods` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `slp_site_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `site_leave_type_settings`
+--
+ALTER TABLE `site_leave_type_settings`
+  ADD CONSTRAINT `slt_site_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `slt_type_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `site_leave_workflow_settings`
+--
+ALTER TABLE `site_leave_workflow_settings`
+  ADD CONSTRAINT `sw_site_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `sw_workflow_foreign` FOREIGN KEY (`leave_workflow_id`) REFERENCES `leave_workflows` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
