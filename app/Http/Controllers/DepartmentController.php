@@ -45,6 +45,7 @@ class DepartmentController extends Controller
     {
         $sites = EntrepriseSiege::orderBy('Nom')->get();
         
+        // Récupérer les employés du site de l'admin connecté
         $adminSiegeId = auth()->user()->SiegeID ?? null;
         if ($adminSiegeId) {
             $employes = Employe::where('SiegeID', $adminSiegeId)
@@ -85,17 +86,18 @@ class DepartmentController extends Controller
 
         $department = Department::create($validated);
 
-        // Log simplifié
+        // ✅ CORRIGÉ : log avec une chaîne, pas un tableau
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'create',
                 'Department',
                 $department->id,
-                ['name' => $department->name]
+                $department->name, // ✅ Maintenant c'est une chaîne
+                'Service créé : ' . $department->name . ' (' . ($department->code ?? '') . ')'
             );
         }
 
-        return redirect()->route('departments.index')
+        return redirect()->route('admin.departments.index')
             ->with('success', 'Service créé avec succès.');
     }
 
@@ -114,6 +116,8 @@ class DepartmentController extends Controller
     public function edit(Department $department)
     {
         $sites = EntrepriseSiege::orderBy('Nom')->get();
+        
+        // ✅ CORRIGÉ : Récupérer TOUS les employés du site (pas seulement ceux du site de l'admin)
         $employes = Employe::where('SiegeID', $department->site_id)
             ->where('Actived', 1)
             ->where('deleted', 0)
@@ -150,17 +154,18 @@ class DepartmentController extends Controller
 
         $department->update($validated);
 
-        // Log simplifié
+        // ✅ CORRIGÉ : log avec une chaîne
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'update',
                 'Department',
                 $department->id,
-                ['name' => $department->name]
+                $department->name,
+                'Service mis à jour : ' . $department->name
             );
         }
 
-        return redirect()->route('departments.index')
+        return redirect()->route('admin.departments.index')
             ->with('success', 'Service mis à jour avec succès.');
     }
 
@@ -175,17 +180,18 @@ class DepartmentController extends Controller
 
         $department->delete();
 
-        // Log simplifié
+        // ✅ CORRIGÉ : log avec une chaîne
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'delete',
                 'Department',
                 $department->id,
-                ['name' => $department->name]
+                $department->name,
+                'Service supprimé : ' . $department->name
             );
         }
 
-        return redirect()->route('departments.index')
+        return redirect()->route('admin.departments.index')
             ->with('success', 'Service supprimé avec succès.');
     }
 
@@ -197,20 +203,20 @@ class DepartmentController extends Controller
         $department = Department::withTrashed()->findOrFail($id);
         $department->restore();
 
-        // Log simplifié
+        // ✅ CORRIGÉ : log avec une chaîne
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'restore',
                 'Department',
                 $department->id,
-                ['name' => $department->name]
+                $department->name,
+                'Service restauré : ' . $department->name
             );
         }
 
-        return redirect()->route('departments.index')
+        return redirect()->route('admin.departments.index')
             ->with('success', 'Service restauré avec succès.');
     }
-    
 
     /**
      * Export Excel

@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 <i class="bi bi-plus-circle"></i> {{ __('Nouveau Niveau Hiérarchique') }}
             </h2>
-            <a href="{{ route('hierarchy-levels.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.hierarchy-levels.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
             </a>
         </div>
@@ -14,7 +14,7 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="{{ route('hierarchy-levels.store') }}">
+                <form method="POST" action="{{ route('admin.hierarchy-levels.store') }}">
                     @csrf
 
                     <div class="row g-3">
@@ -86,7 +86,7 @@
                         <x-primary-button class="btn btn-primary">
                             <i class="bi bi-save"></i> {{ __('Créer') }}
                         </x-primary-button>
-                        <a href="{{ route('hierarchy-levels.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('admin.hierarchy-levels.index') }}" class="btn btn-secondary">
                             {{ __('Annuler') }}
                         </a>
                     </div>

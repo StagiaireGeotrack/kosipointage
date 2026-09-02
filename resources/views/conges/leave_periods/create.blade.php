@@ -74,15 +74,7 @@
                             <x-input-error :messages="$errors->get('status')" class="mt-2" />
                         </div>
 
-                        <div class="col-lg-4">
-                            <x-input-label for="is_default" :value="__('Période par défaut')" />
-                            <div class="mt-1">
-                                <input type="hidden" name="is_default" value="0">
-                                <input type="checkbox" id="is_default" name="is_default" value="1" {{ old('is_default') ? 'checked' : '' }} class="form-check-input">
-                                <label for="is_default" class="form-check-label ms-2">{{ __('Définir comme période par défaut') }}</label>
-                            </div>
-                            <x-input-error :messages="$errors->get('is_default')" class="mt-2" />
-                        </div>
+                        
 
                         <div class="col-lg-4">
                             <x-input-label for="is_active" :value="__('Actif')" />

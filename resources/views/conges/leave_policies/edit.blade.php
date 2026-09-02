@@ -125,9 +125,7 @@
                                     <option value="business_days" {{ old('calculation_method', $override->calculation_method ?? $leavePolicy->calculation_method) == 'business_days' ? 'selected' : '' }}>
                                         Jours ouvrables (Lundi-Samedi)
                                     </option>
-                                    <option value="hours" {{ old('calculation_method', $override->calculation_method ?? $leavePolicy->calculation_method) == 'hours' ? 'selected' : '' }}>
-                                        Heures
-                                    </option>
+                                    
                                 </select>
                                 <x-input-error :messages="$errors->get('calculation_method')" class="mt-2" />
                                 @if($hasOverride && !$isSuperAdmin && $leavePolicy->calculation_method)
@@ -176,9 +174,7 @@
                                     <option value="count" {{ old('holiday_handling', $override->holiday_handling ?? $leavePolicy->holiday_handling) == 'count' ? 'selected' : '' }}>
                                         Compter comme des jours travaillés
                                     </option>
-                                    <option value="split" {{ old('holiday_handling', $override->holiday_handling ?? $leavePolicy->holiday_handling) == 'split' ? 'selected' : '' }}>
-                                        Séparer (demi-journées)
-                                    </option>
+                                    
                                 </select>
                                 <x-input-error :messages="$errors->get('holiday_handling')" class="mt-2" />
                                 @if($hasOverride && !$isSuperAdmin && $leavePolicy->holiday_handling)
@@ -215,21 +211,7 @@
                                 @endif
                             </div>
 
-                            <div class="col-lg-4">
-                                <x-input-label for="reference_schedule_id" :value="__('Planning de référence')" />
-                                <input 
-                                    id="reference_schedule_id" 
-                                    name="reference_schedule_id" 
-                                    type="number" 
-                                    class="form-control mt-1 @error('reference_schedule_id') is-invalid @enderror" 
-                                    value="{{ old('reference_schedule_id', $override->reference_schedule_id ?? $leavePolicy->reference_schedule_id) }}"
-                                    placeholder="{{ __('ID du planning (optionnel)') }}" />
-                                <x-input-error :messages="$errors->get('reference_schedule_id')" class="mt-2" />
-                                <small class="text-muted">{{ __('Laissez vide si non applicable') }}</small>
-                                @if($hasOverride && !$isSuperAdmin && $leavePolicy->reference_schedule_id)
-                                    <small class="d-block text-muted">Valeur globale : {{ $leavePolicy->reference_schedule_id }}</small>
-                                @endif
-                            </div>
+                           
                         </div>
 
                         <div class="row g-3 mb-4">
@@ -250,22 +232,7 @@
                                 @endif
                             </div>
 
-                            <div class="col-lg-3">
-                                <x-input-label for="is_default" :value="__('Politique par défaut')" />
-                                <div class="mt-1">
-                                    <input type="hidden" name="is_default" value="0">
-                                    <input type="checkbox" id="is_default" name="is_default" value="1" 
-                                        {{ old('is_default', $override->is_default ?? $leavePolicy->is_default) ? 'checked' : '' }} 
-                                        class="form-check-input">
-                                    <label for="is_default" class="form-check-label ms-2">
-                                        {{ __('Définir par défaut') }}
-                                    </label>
-                                </div>
-                                <x-input-error :messages="$errors->get('is_default')" class="mt-2" />
-                                @if($hasOverride && !$isSuperAdmin && $leavePolicy->is_default !== null)
-                                    <small class="d-block text-muted">Valeur globale : {{ $leavePolicy->is_default ? 'Oui' : 'Non' }}</small>
-                                @endif
-                            </div>
+                           
 
                             <div class="col-lg-3">
                                 <x-input-label for="is_active" :value="__('Actif')" />

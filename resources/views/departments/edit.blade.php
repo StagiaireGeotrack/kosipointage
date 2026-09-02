@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 {{ __('Modifier le Service') }} : {{ $department->name }}
             </h2>
-            <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.departments.index') }}" class="btn btn-secondary">
                 {{ __('Retour à la liste') }}
             </a>
         </div>
@@ -14,7 +14,7 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="{{ route('departments.update', $department) }}">
+                <form method="POST" action="{{ route('admin.departments.update', $department) }}">
                     @csrf
                     @method('PUT')
 
@@ -70,7 +70,7 @@
                         <x-primary-button class="btn btn-primary">
                             {{ __('Mettre à jour') }}
                         </x-primary-button>
-                        <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('admin.departments.index') }}" class="btn btn-secondary">
                             {{ __('Annuler') }}
                         </a>
                     </div>

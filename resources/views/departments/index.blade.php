@@ -1,4 +1,3 @@
-
 {{-- resources/views/departments/index.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
@@ -6,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 <i class="bi bi-building"></i> {{ __('Gestion des Services') }}
             </h2>
-            <a href="{{ route('departments.create') }}" class="btn btn-primary">
+            <a href="{{ route('admin.departments.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> {{ __('Nouveau service') }}
             </a>
         </div>
@@ -16,7 +15,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <!-- Filtres -->
-                <form action="{{ route('departments.index') }}" method="GET" class="mb-4">
+                <form action="{{ route('admin.departments.index') }}" method="GET" class="mb-4">
                     <div class="row g-3 mb-3">
                         <div class="col-12 col-sm-6 col-md-4">
                             <x-input-label for="site_id" :value="__('Siège')" />
@@ -41,7 +40,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> {{ __('Valider') }}
                         </button>
-                        <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('admin.departments.index') }}" class="btn btn-secondary">
                             <i class="bi bi-arrow-counterclockwise"></i> {{ __('Réinitialiser') }}
                         </a>
                     </div>
@@ -112,7 +111,7 @@
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
                                             <!-- Bouton Voir -->
-                                            <a href="{{ route('departments.show', $dept) }}" 
+                                            <a href="{{ route('admin.departments.show', $dept) }}" 
                                                class="text-primary" title="Voir">
                                                 <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -122,7 +121,7 @@
 
                                             <!-- Bouton Modifier -->
                                             @if(!$dept->trashed())
-                                                <a href="{{ route('departments.edit', $dept) }}" 
+                                                <a href="{{ route('admin.departments.edit', $dept) }}" 
                                                    class="text-warning" title="Modifier">
                                                     <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -141,7 +140,7 @@
                                                     </svg>
                                                 </button>
                                                 <form id="delete-form-{{ $dept->id }}" 
-                                                      action="{{ route('departments.destroy', $dept) }}" 
+                                                      action="{{ route('admin.departments.destroy', $dept) }}" 
                                                       method="POST" style="display: none;">
                                                     @csrf
                                                     @method('DELETE')
@@ -157,7 +156,7 @@
                                                     </svg>
                                                 </button>
                                                 <form id="restore-form-{{ $dept->id }}" 
-                                                      action="{{ route('departments.restore', $dept->id) }}" 
+                                                      action="{{ route('admin.departments.restore', $dept->id) }}" 
                                                       method="POST" style="display: none;">
                                                     @csrf
                                                     @method('PATCH')

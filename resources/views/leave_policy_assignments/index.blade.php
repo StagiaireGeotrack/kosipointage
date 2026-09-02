@@ -21,6 +21,13 @@
                     </div>
                 @endif
 
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
                 <!-- Filtres -->
                 <form action="{{ route('admin.leave-policy-assignments.index') }}" method="GET" class="mb-4">
                     <div class="row g-3">
@@ -78,22 +85,30 @@
                                     </td>
                                     <td class="align-middle">
                                         @php
-                                            $targetName = '';
+                                            $targetType = '';
+                                            $targetLabel = '';
                                             if ($assignment->employee_id) {
-                                                $targetName = '👤 ' . ($assignment->employee->Nom ?? 'N/A');
+                                                $targetType = 'Employé';
+                                                $targetLabel = $assignment->employee->Nom ?? 'N/A';
                                             } elseif ($assignment->department_id) {
-                                                $targetName = '🏢 ' . ($assignment->department->name ?? 'N/A');
+                                                $targetType = 'Service';
+                                                $targetLabel = $assignment->department->name ?? 'N/A';
                                             } elseif ($assignment->job_title_id) {
-                                                $targetName = '💼 ' . ($assignment->jobTitle->name ?? 'N/A');
+                                                $targetType = 'Poste';
+                                                $targetLabel = $assignment->jobTitle->name ?? 'N/A';
                                             } elseif ($assignment->hierarchy_level_id) {
-                                                $targetName = '📊 ' . ($assignment->hierarchyLevel->code ?? 'N/A');
+                                                $targetType = 'Niveau KOSI';
+                                                $targetLabel = $assignment->hierarchyLevel->code ?? 'N/A';
                                             } elseif ($assignment->site_id) {
-                                                $targetName = '🏛️ ' . ($assignment->site->Nom ?? 'N/A');
+                                                $targetType = 'Siège';
+                                                $targetLabel = $assignment->site->Nom ?? 'N/A';
                                             } else {
-                                                $targetName = '🌍 Global';
+                                                $targetType = 'Global';
+                                                $targetLabel = 'Tous';
                                             }
                                         @endphp
-                                        <span class="badge bg-info">{{ $targetName }}</span>
+                                        <span class="badge bg-secondary">{{ $targetType }}</span>
+                                        <span>{{ $targetLabel }}</span>
                                     </td>
                                     <td class="align-middle">
                                         @php
@@ -116,21 +131,27 @@
                                         @endif
                                     </td>
                                     <td class="align-middle">
-                                        <div class="d-flex gap-2">
+                                        <div class="btn-group" role="group">
+                                            <!-- Bouton Voir -->
                                             <a href="{{ route('admin.leave-policy-assignments.show', $assignment) }}" 
-                                               class="text-primary" title="Voir">
+                                               class="btn btn-sm btn-outline-primary" title="Voir">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+
+                                            <!-- Bouton Modifier -->
                                             <a href="{{ route('admin.leave-policy-assignments.edit', $assignment) }}" 
-                                               class="text-warning" title="Modifier">
+                                               class="btn btn-sm btn-outline-warning" title="Modifier">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button type="button" class="btn btn-link text-danger p-0 border-0" 
+
+                                            <!-- Bouton Supprimer -->
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
                                                     onclick="if(confirm('Voulez-vous vraiment supprimer cette assignation ?')) {
                                                         document.getElementById('delete-form-{{ $assignment->id }}').submit();
                                                     }" title="Supprimer">
                                                 <i class="bi bi-trash"></i>
                                             </button>
+                                            
                                             <form id="delete-form-{{ $assignment->id }}" 
                                                   action="{{ route('admin.leave-policy-assignments.destroy', $assignment) }}" 
                                                   method="POST" style="display: none;">

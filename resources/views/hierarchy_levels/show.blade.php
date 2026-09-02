@@ -6,10 +6,10 @@
                 <i class="bi bi-layers"></i> {{ __('Détails du Niveau') }} : {{ $hierarchyLevel->code }}
             </h2>
             <div>
-                <a href="{{ route('hierarchy-levels.edit', $hierarchyLevel) }}" class="btn btn-warning">
+                <a href="{{ route('admin.hierarchy-levels.edit', $hierarchyLevel) }}" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> {{ __('Modifier') }}
                 </a>
-                <a href="{{ route('hierarchy-levels.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.hierarchy-levels.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
                 </a>
             </div>
@@ -23,7 +23,7 @@
                     <div class="alert alert-danger">
                         <i class="bi bi-exclamation-triangle"></i>
                         {{ __('Ce niveau a été supprimé le ') . $hierarchyLevel->deleted_at->format('d/m/Y H:i') }}
-                        <form action="{{ route('hierarchy-levels.restore', $hierarchyLevel->id) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.hierarchy-levels.restore', $hierarchyLevel->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-sm btn-success ms-2">
@@ -101,7 +101,7 @@
                 @if(!$hierarchyLevel->trashed())
                     <div class="mt-3 pt-3 border-top">
                         <div class="d-flex gap-2">
-                            <a href="{{ route('hierarchy-levels.edit', $hierarchyLevel) }}" class="btn btn-warning">
+                            <a href="{{ route('admin.hierarchy-levels.edit', $hierarchyLevel) }}" class="btn btn-warning">
                                 {{ __('Modifier') }}
                             </a>
                             @if($hierarchyLevel->employees->count() == 0)
@@ -111,7 +111,7 @@
                                         }">
                                     {{ __('Supprimer') }}
                                 </button>
-                                <form id="delete-form" action="{{ route('hierarchy-levels.destroy', $hierarchyLevel) }}" method="POST" style="display: none;">
+                                <form id="delete-form" action="{{ route('admin.hierarchy-levels.destroy', $hierarchyLevel) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
                                 </form>

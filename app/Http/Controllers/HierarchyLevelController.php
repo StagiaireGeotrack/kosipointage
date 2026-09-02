@@ -30,7 +30,6 @@ class HierarchyLevelController extends Controller
 
         $levels = $query->orderBy('rank')->paginate(15);
 
-        // CHEMIN CORRIGÉ : sans admin.
         return view('hierarchy_levels.index', compact('levels'));
     }
 
@@ -39,7 +38,6 @@ class HierarchyLevelController extends Controller
      */
     public function create()
     {
-        // CHEMIN CORRIGÉ : sans admin.
         return view('hierarchy_levels.create');
     }
 
@@ -69,8 +67,8 @@ class HierarchyLevelController extends Controller
             );
         }
 
-        // CHEMIN CORRIGÉ : sans admin.
-        return redirect()->route('hierarchy-levels.index')
+        // ✅ CORRIGÉ : ajout du préfixe admin.
+        return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique créé avec succès.');
     }
 
@@ -80,7 +78,6 @@ class HierarchyLevelController extends Controller
     public function show(HierarchyLevel $hierarchyLevel)
     {
         $hierarchyLevel->load(['employees']);
-        // CHEMIN CORRIGÉ : sans admin.
         return view('hierarchy_levels.show', compact('hierarchyLevel'));
     }
 
@@ -89,7 +86,6 @@ class HierarchyLevelController extends Controller
      */
     public function edit(HierarchyLevel $hierarchyLevel)
     {
-        // CHEMIN CORRIGÉ : sans admin.
         return view('hierarchy_levels.edit', compact('hierarchyLevel'));
     }
 
@@ -118,8 +114,8 @@ class HierarchyLevelController extends Controller
             );
         }
 
-        // CHEMIN CORRIGÉ : sans admin.
-        return redirect()->route('hierarchy-levels.index')
+        // ✅ CORRIGÉ : ajout du préfixe admin.
+        return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique mis à jour avec succès.');
     }
 
@@ -143,8 +139,8 @@ class HierarchyLevelController extends Controller
             );
         }
 
-        // CHEMIN CORRIGÉ : sans admin.
-        return redirect()->route('hierarchy-levels.index')
+        // ✅ CORRIGÉ : ajout du préfixe admin.
+        return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique supprimé avec succès.');
     }
 
@@ -165,8 +161,8 @@ class HierarchyLevelController extends Controller
             );
         }
 
-        // CHEMIN CORRIGÉ : sans admin.
-        return redirect()->route('hierarchy-levels.index')
+        // ✅ CORRIGÉ : ajout du préfixe admin.
+        return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique restauré avec succès.');
     }
 

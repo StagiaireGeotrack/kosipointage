@@ -197,44 +197,49 @@
             </a>
 
             {{-- ==================== ORGANISATION RH ==================== --}}
-            @if(!$isSeller)
-            @php
-                $isOrgOpen = request()->routeIs('departments.*') 
-                          || request()->routeIs('job-titles.*') 
-                          || request()->routeIs('hierarchy-levels.*');
-            @endphp
-            <details class="sidebar-group" {{ $isOrgOpen ? 'open' : '' }}>
-                <summary class="sidebar-link sidebar-group-title {{ $isOrgOpen ? 'active' : '' }}">
-                    <i class="bi bi-diagram-3"></i>
-                    <span>{{ __('Organisation') }}</span>
-                    <i class="bi bi-chevron-down small chevron"></i>
-                </summary>
+           {{-- ==================== ORGANISATION RH ==================== --}}
+@if(!$isSeller)
+@php
+    // CORRECTION : Ajouter le préfixe admin.
+    $isOrgOpen = request()->routeIs('admin.departments.*') 
+              || request()->routeIs('admin.job-titles.*') 
+              || request()->routeIs('admin.hierarchy-levels.*');
+@endphp
+<details class="sidebar-group" {{ $isOrgOpen ? 'open' : '' }}>
+    <summary class="sidebar-link sidebar-group-title {{ $isOrgOpen ? 'active' : '' }}">
+        <i class="bi bi-diagram-3"></i>
+        <span>{{ __('Organisation') }}</span>
+        <i class="bi bi-chevron-down small chevron"></i>
+    </summary>
 
-                @if(Route::has('departments.index'))
-                <a href="{{ route('departments.index') }}"
-                   class="sidebar-link sidebar-sub {{ request()->routeIs('departments.*') ? 'active' : '' }}">
-                    <i class="bi bi-building-check"></i>
-                    <span>{{ __('Services') }}</span>
-                </a>
-                @endif
+    {{-- Services --}}
+    @if(Route::has('admin.departments.index'))
+    <a href="{{ route('admin.departments.index') }}"
+       class="sidebar-link sidebar-sub {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
+        <i class="bi bi-building-check"></i>
+        <span>{{ __('Services') }}</span>
+    </a>
+    @endif
 
-                @if(Route::has('job-titles.index'))
-                <a href="{{ route('job-titles.index') }}"
-                   class="sidebar-link sidebar-sub {{ request()->routeIs('job-titles.*') ? 'active' : '' }}">
-                    <i class="bi bi-person-badge"></i>
-                    <span>{{ __('Postes') }}</span>
-                </a>
-                @endif
+    {{-- Postes --}}
+    @if(Route::has('admin.job-titles.index'))
+    <a href="{{ route('admin.job-titles.index') }}"
+       class="sidebar-link sidebar-sub {{ request()->routeIs('admin.job-titles.*') ? 'active' : '' }}">
+        <i class="bi bi-person-badge"></i>
+        <span>{{ __('Postes') }}</span>
+    </a>
+    @endif
 
-                @if(Route::has('hierarchy-levels.index'))
-                <a href="{{ route('hierarchy-levels.index') }}"
-                   class="sidebar-link sidebar-sub {{ request()->routeIs('hierarchy-levels.*') ? 'active' : '' }}">
-                    <i class="bi bi-layers"></i>
-                    <span>{{ __('Niveaux') }}</span>
-                </a>
-                @endif
-            </details>
-            @endif
+    {{-- Niveaux --}}
+    @if(Route::has('admin.hierarchy-levels.index'))
+    <a href="{{ route('admin.hierarchy-levels.index') }}"
+       class="sidebar-link sidebar-sub {{ request()->routeIs('admin.hierarchy-levels.*') ? 'active' : '' }}">
+        <i class="bi bi-layers"></i>
+        <span>{{ __('Niveaux') }}</span>
+    </a>
+    @endif
+</details>
+@endif
 
             {{-- Sections INTERDITES aux vendeurs --}}
             @if(!$isSeller)

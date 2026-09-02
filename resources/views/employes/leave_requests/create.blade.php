@@ -292,16 +292,16 @@ function updatePeriodInfo() {
         status: selectedOption.dataset.status,
         is_active: selectedOption.dataset.isActive === '1',
         allow_rollover: selectedOption.dataset.allowRollover === '1',
-        submission_deadline: selectedOption.dataset.submissionDeadline || null // ✅ AJOUTÉ
+        submission_deadline: selectedOption.dataset.submissionDeadline || null //  AJOUTÉ
     };
     
-    console.log('📌 Période sélectionnée:', selectedPeriodData);
+    console.log(' Période sélectionnée:', selectedPeriodData);
     
     const startFormatted = formatDate(selectedPeriodData.start_date);
     const endFormatted = formatDate(selectedPeriodData.end_date);
     
     // Afficher la période
-    let periodText = `📅 Période: ${startFormatted} - ${endFormatted}`;
+    let periodText = ` Période: ${startFormatted} - ${endFormatted}`;
     
     // ✅ AFFICHER LA DATE LIMITE DE POSE
     let deadlineText = '';
@@ -312,7 +312,7 @@ function updatePeriodInfo() {
         const today = new Date();
         isDeadlineExpired = today > deadline;
         
-        deadlineText = `<br>📅 Date limite de pose: ${formatDate(selectedPeriodData.submission_deadline)}`;
+        deadlineText = `<br> Date limite de pose: ${formatDate(selectedPeriodData.submission_deadline)}`;
         if (isDeadlineExpired) {
             deadlineText += ' ❌ (Dépassée)';
         } else {
@@ -330,20 +330,20 @@ function updatePeriodInfo() {
     if (selectedPeriodData.status === 'open' && selectedPeriodData.is_active) {
         // ✅ VÉRIFIER LA DATE LIMITE
         if (isDeadlineExpired) {
-            statusText = '🔒 Période expirée - Date limite dépassée';
+            statusText = ' Période expirée - Date limite dépassée';
             statusClass = 'text-danger';
         } else {
-            statusText = '✅ Période ouverte - Vous pouvez faire une demande';
+            statusText = ' Période ouverte - Vous pouvez faire une demande';
             statusClass = 'text-success';
         }
     } else if (selectedPeriodData.status === 'preparing') {
-        statusText = '⏳ Période en préparation - Les demandes ne sont pas encore ouvertes';
+        statusText = ' Période en préparation - Les demandes ne sont pas encore ouvertes';
         statusClass = 'text-warning';
     } else if (selectedPeriodData.status === 'closed') {
-        statusText = '🔒 Période fermée - Les demandes ne sont plus acceptées';
+        statusText = ' Période fermée - Les demandes ne sont plus acceptées';
         statusClass = 'text-danger';
     } else {
-        statusText = `⏳ Statut inconnu: "${selectedPeriodData.status}"`;
+        statusText = `Statut inconnu: "${selectedPeriodData.status}"`;
         statusClass = 'text-secondary';
     }
     

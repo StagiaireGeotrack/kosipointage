@@ -668,58 +668,128 @@ class LeaveRequestController extends Controller
         return view('employes.leave_requests.show', compact('request', 'attachmentStatus'));
     }
 
-    public function edit($id)
-    {
+   public function edit($id)
+{
+    $employee = $this->getEmployee();
+    
+    if (!$employee) {
+        return redirect()->route('employe.login')
+            ->with('error', 'Aucun employé associé à ce compte.');
+    }
+    
+    $request = LeaveRequest::where('employee_id', $employee->ID)
+        ->where('status', 'draft')
+        ->with(['leaveType', 'attachments'])
+        ->findOrFail($id);
+    
+    $userSiteId = $employee->SiegeID;
+    
+    $leaveTypes = LeaveType::where('is_active', true)
+        ->where(function ($q) use ($userSiteId) {
+            $q->where('site_id', $userSiteId)
+              ->orWhereNull('site_id');
+        })
+        ->orderBy('name')
+        ->get();
+    
+    // ✅ Récupérer toutes les périodes
+    $periods = LeavePeriod::where('is_active', true)
+        ->where(function ($q) use ($userSiteId) {
+            $q->where('site_id', $userSiteId)
+              ->orWhereNull('site_id');
+        })
+        ->orderBy('start_date', 'desc')
+        ->get();
+    
+    // ✅ Grouper par type de congé
+    $allPeriods = $periods->groupBy('leave_type_id')
+        ->map(function ($periods) {
+            return $periods->map(function ($period) {
+                return [
+                    'id' => $period->id,
+                    'name' => $period->name,
+                    'type_name' => $period->leaveType->name ?? 'Type inconnu',
+                    'start_date' => $period->start_date->format('Y-m-d'),
+                    'end_date' => $period->end_date->format('Y-m-d'),
+                    'submission_deadline' => $period->submission_deadline?->format('Y-m-d'),
+                    'status' => $period->status,
+                    'is_active' => $period->is_active,
+                    'allow_rollover' => $period->allow_rollover,
+                    'is_default' => $period->is_default,
+                ];
+            });
+        });
+    
+    $attachmentStatus = $this->leaveRequestService->getAttachmentsStatus($id);
+    
+    // ✅ Passer les deux variables
+    return view('employes.leave_requests.edit', compact(
+        'request', 
+        'leaveTypes', 
+        'periods',        // ← Ajouté pour compatibilité
+        'allPeriods',     // ← Pour le nouveau format
+        'attachmentStatus'
+    ));
+}
+/**
+ * ✅ Récupère le statut des pièces jointes (AJAX)
+ */
+public function getAttachmentsStatus($id)
+{
+    try {
         $employee = $this->getEmployee();
         
         if (!$employee) {
-            return redirect()->route('employe.login')
-                ->with('error', 'Aucun employé associé à ce compte.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Employé non trouvé'
+            ], 401);
         }
         
-        $request = LeaveRequest::where('employee_id', $employee->ID)
-            ->where('status', 'draft')
-            ->with(['leaveType', 'attachments'])
+        $leaveRequest = LeaveRequest::where('employee_id', $employee->ID)
             ->findOrFail($id);
         
-        $userSiteId = $employee->SiegeID;
+        $leaveType = LeaveType::find($leaveRequest->leave_type_id);
         
-        $leaveTypes = LeaveType::where('is_active', true)
-            ->where(function ($q) use ($userSiteId) {
-                $q->where('site_id', $userSiteId)
-                  ->orWhereNull('site_id');
-            })
-            ->orderBy('name')
-            ->get();
+        $attachmentsCount = LeaveRequestAttachment::where('leave_request_id', $id)->count();
+        $hasAttachments = $attachmentsCount > 0;
         
-        $allPeriods = LeavePeriod::where('is_active', true)
-            ->where(function ($q) use ($userSiteId) {
-                $q->where('site_id', $userSiteId)
-                  ->orWhereNull('site_id');
-            })
-            ->orderBy('start_date', 'desc')
-            ->get()
-            ->groupBy('leave_type_id')
-            ->map(function ($periods) {
-                return $periods->map(function ($period) {
-                    return [
-                        'id' => $period->id,
-                        'name' => $period->name,
-                        'start_date' => $period->start_date->format('Y-m-d'),
-                        'end_date' => $period->end_date->format('Y-m-d'),
-                        'submission_deadline' => $period->submission_deadline?->format('Y-m-d'),
-                        'status' => $period->status,
-                        'is_active' => $period->is_active,
-                        'allow_rollover' => $period->allow_rollover,
-                        'is_default' => $period->is_default,
-                    ];
-                });
-            });
+        // Vérifier si des pièces sont requises
+        $isRequired = false;
+        $message = 'Aucune pièce justificative requise';
         
-        $attachmentStatus = $this->leaveRequestService->getAttachmentsStatus($id);
+        if ($leaveType) {
+            if ($leaveType->requires_attachment == 'always') {
+                $isRequired = true;
+                $message = 'Pièce justificative obligatoire pour ce type de congé';
+            } elseif ($leaveType->requires_attachment == 'after_duration') {
+                $threshold = $leaveType->requires_attachment_after ?? 3;
+                if ($leaveRequest->duration > $threshold) {
+                    $isRequired = true;
+                    $message = "Pièce justificative requise (durée > {$threshold} jours)";
+                }
+            }
+        }
         
-        return view('employes.leave_requests.edit', compact('request', 'leaveTypes', 'allPeriods', 'attachmentStatus'));
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'attachments_required' => $isRequired,
+                'has_attachments' => $hasAttachments,
+                'count' => $attachmentsCount,
+                'message' => $message,
+                'can_submit' => !$isRequired || $hasAttachments,
+            ]
+        ]);
+        
+    } catch (\Exception $e) {
+        \Log::error('Erreur getAttachmentsStatus: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * ✅ Mettre à jour une demande de congé - AVEC TOUTES LES VALIDATIONS

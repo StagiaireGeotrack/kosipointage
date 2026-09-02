@@ -142,8 +142,6 @@
                                 <select id="unit" name="unit" class="form-select mt-1" 
                                     {{ $hasOverride && !$isSuperAdmin ? 'disabled' : '' }}>
                                     <option value="days" {{ old('unit', $leaveType->unit) == 'days' ? 'selected' : '' }}>Jours</option>
-                                    <option value="half_days" {{ old('unit', $leaveType->unit) == 'half_days' ? 'selected' : '' }}>Demi-journées</option>
-                                    <option value="hours" {{ old('unit', $leaveType->unit) == 'hours' ? 'selected' : '' }}>Heures</option>
                                 </select>
                                 @if($hasOverride && !$isSuperAdmin)
                                     <input type="hidden" name="unit" value="{{ $leaveType->unit }}">

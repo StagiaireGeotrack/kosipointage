@@ -44,8 +44,7 @@
                             <span class="text-danger">*</span>
                             <select id="unit" name="unit" class="form-select mt-1" required>
                                 <option value="days" {{ old('unit') == 'days' ? 'selected' : '' }}>Jours</option>
-                                <option value="half_days" {{ old('unit') == 'half_days' ? 'selected' : '' }}>Demi-journées</option>
-                                <option value="hours" {{ old('unit') == 'hours' ? 'selected' : '' }}>Heures</option>
+                                
                             </select>
                             <x-input-error :messages="$errors->get('unit')" class="mt-2" />
                         </div>

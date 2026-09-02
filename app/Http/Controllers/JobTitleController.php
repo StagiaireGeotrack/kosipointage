@@ -61,12 +61,14 @@ class JobTitleController extends Controller
 
         $jobTitle = JobTitle::create($validated);
 
+        // ✅ CORRIGÉ : 4ème paramètre = chaîne de caractères
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'create',
                 'JobTitle',
                 $jobTitle->id,
-                ['name' => $jobTitle->name]
+                $jobTitle->name,  // ← CHAÎNE, pas un tableau !
+                'Poste créé : ' . $jobTitle->name . ' (' . ($jobTitle->code ?? 'sans code') . ')'
             );
         }
 
@@ -105,12 +107,14 @@ class JobTitleController extends Controller
 
         $jobTitle->update($validated);
 
+        // ✅ CORRIGÉ : 4ème paramètre = chaîne de caractères
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'update',
                 'JobTitle',
                 $jobTitle->id,
-                ['name' => $jobTitle->name]
+                $jobTitle->name,  // ← CHAÎNE, pas un tableau !
+                'Poste mis à jour : ' . $jobTitle->name
             );
         }
 
@@ -129,12 +133,14 @@ class JobTitleController extends Controller
 
         $jobTitle->delete();
 
+        // ✅ CORRIGÉ : 4ème paramètre = chaîne de caractères
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'delete',
                 'JobTitle',
                 $jobTitle->id,
-                ['name' => $jobTitle->name]
+                $jobTitle->name,  // ← CHAÎNE, pas un tableau !
+                'Poste supprimé : ' . $jobTitle->name
             );
         }
 
@@ -150,12 +156,14 @@ class JobTitleController extends Controller
         $jobTitle = JobTitle::withTrashed()->findOrFail($id);
         $jobTitle->restore();
 
+        // ✅ CORRIGÉ : 4ème paramètre = chaîne de caractères
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'restore',
                 'JobTitle',
                 $jobTitle->id,
-                ['name' => $jobTitle->name]
+                $jobTitle->name,  // ← CHAÎNE, pas un tableau !
+                'Poste restauré : ' . $jobTitle->name
             );
         }
 

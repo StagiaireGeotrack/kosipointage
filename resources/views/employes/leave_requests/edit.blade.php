@@ -48,9 +48,21 @@
                             <span class="text-danger">*</span>
                             <select id="period_id" name="period_id" class="form-select mt-1" required>
                                 <option value="">{{ __('Sélectionnez une période') }}</option>
+                                @php
+                                    // Récupérer les périodes si la variable n'existe pas
+                                    if (!isset($periods) || $periods->isEmpty()) {
+                                        $periods = \App\Models\LeavePeriod::where('is_active', true)
+                                            ->where(function($q) use ($employee) {
+                                                $q->where('site_id', $employee->SiegeID ?? 1)
+                                                  ->orWhereNull('site_id');
+                                            })
+                                            ->orderBy('start_date', 'desc')
+                                            ->get();
+                                    }
+                                @endphp
                                 @foreach($periods as $period)
                                     <option value="{{ $period->id }}" {{ old('period_id', $request->period_id) == $period->id ? 'selected' : '' }}>
-                                        {{ $period->name }} ({{ $period->start_date->format('d/m/Y') }} - {{ $period->end_date->format('d/m/Y') }})
+                                        {{ $period->name }} ({{ \Carbon\Carbon::parse($period->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($period->end_date)->format('d/m/Y') }})
                                     </option>
                                 @endforeach
                             </select>
@@ -108,7 +120,7 @@
                         </div>
                     </div>
 
-                    {{-- ✅ Affichage du statut des pièces justificatives --}}
+                    {{-- Affichage du statut des pièces justificatives --}}
                     <div class="row g-3 mt-2">
                         <div class="col-md-12">
                             <div id="attachment_status_container" class="alert alert-warning" style="display: none;">
@@ -148,15 +160,17 @@
         const durationDetails = document.getElementById('duration_details');
         const requestId = document.getElementById('request_id').value;
 
-        // ✅ Éléments pour les pièces justificatives
+        // Éléments pour les pièces justificatives
         const attachmentStatusContainer = document.getElementById('attachment_status_container');
         const attachmentStatusMessage = document.getElementById('attachment_status_message');
 
         function calculateDurationForDraft() {
             const startDate = startDateInput.value;
             const endDate = endDateInput.value;
+            const leaveTypeId = leaveTypeSelect.value;
+            const periodId = periodSelect.value;
 
-            // ✅ Vérifier que les dates sont valides
+            // Vérifier que les dates sont valides
             if (!startDate || !endDate) {
                 durationDisplay.innerHTML = '<span class="text-muted">-- jours</span>';
                 durationHidden.value = '0';
@@ -164,21 +178,23 @@
                 return;
             }
 
-            // ✅ Vérifier que la date de fin n'est pas avant la date de début
+            // Vérifier que la date de fin n'est pas avant la date de début
             if (new Date(endDate) < new Date(startDate)) {
-                durationDisplay.innerHTML = '<span class="text-danger">⚠️ Date de fin antérieure</span>';
+                durationDisplay.innerHTML = '<span class="text-danger">Date de fin antérieure</span>';
                 durationHidden.value = '0';
                 durationDetails.style.display = 'none';
                 return;
             }
 
-            durationDisplay.innerHTML = '<span class="text-warning">⏳ Calcul en cours...</span>';
+            durationDisplay.innerHTML = '<span class="text-warning"><i class="bi bi-hourglass-split"></i> Calcul en cours...</span>';
 
-            // ✅ Utiliser GET avec la route spécifique pour les brouillons
+            // Utiliser GET avec la route spécifique pour les brouillons
             const url = `/employe/leave-requests/${requestId}/calculate-duration`;
             const params = new URLSearchParams({
                 start_date: startDate,
-                end_date: endDate
+                end_date: endDate,
+                leave_type_id: leaveTypeId,
+                period_id: periodId
             });
 
             fetch(`${url}?${params.toString()}`, {
@@ -196,19 +212,24 @@
             })
             .then(data => {
                 if (data.success) {
-                    // ✅ Afficher la durée
-                    durationDisplay.innerHTML = `<span class="text-success fw-bold">${data.duration_formatted}</span>`;
+                    // Afficher la durée
+                    durationDisplay.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle"></i> ${data.duration_formatted}</span>`;
                     durationHidden.value = data.duration;
                     
-                    // ✅ Afficher les détails si disponibles
+                    // Afficher les détails si disponibles
                     if (data.details) {
-                        durationDetails.innerHTML = data.details;
+                        let detailsHtml = '<ul class="list-unstyled mb-0">';
+                        for (const [key, value] of Object.entries(data.details)) {
+                            detailsHtml += `<li><strong>${key}:</strong> ${value}</li>`;
+                        }
+                        detailsHtml += '</ul>';
+                        durationDetails.innerHTML = detailsHtml;
                         durationDetails.style.display = 'block';
                     } else {
                         durationDetails.style.display = 'none';
                     }
 
-                    // ✅ Gérer le statut des pièces justificatives
+                    // Gérer le statut des pièces justificatives
                     if (data.attachments) {
                         if (data.attachments.required) {
                             attachmentStatusContainer.style.display = 'block';
@@ -217,14 +238,14 @@
                                 attachmentStatusContainer.className = 'alert alert-success';
                                 attachmentStatusMessage.innerHTML = `
                                     <i class="bi bi-check-circle"></i> 
-                                    ${data.attachments.message} (${data.attachments.count} pièce(s) jointe(s))
+                                    ${data.attachments.message} (${data.attachments.count} piece(s) jointe(s))
                                 `;
                             } else {
                                 attachmentStatusContainer.className = 'alert alert-danger';
                                 attachmentStatusMessage.innerHTML = `
                                     <i class="bi bi-exclamation-triangle"></i> 
                                     ${data.attachments.message}
-                                    <br><small class="text-muted">Veuillez ajouter une pièce justificative avant de soumettre.</small>
+                                    <br><small class="text-muted">Veuillez ajouter une piece justificative avant de soumettre.</small>
                                 `;
                             }
                         } else {
@@ -232,37 +253,82 @@
                         }
                     }
                 } else {
-                    durationDisplay.innerHTML = `<span class="text-danger">⚠️ ${data.message || 'Erreur de calcul'}</span>`;
+                    durationDisplay.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-circle"></i> ${data.message || 'Erreur de calcul'}</span>`;
                     durationHidden.value = '0';
                     durationDetails.style.display = 'none';
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                durationDisplay.innerHTML = `<span class="text-danger">❌ Erreur de calcul: ${error.message}</span>`;
+                durationDisplay.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle"></i> Erreur de calcul: ${error.message}</span>`;
                 durationHidden.value = '0';
                 durationDetails.style.display = 'none';
             });
         }
 
-        // ✅ Écouter les changements sur les dates
+        // Écouter les changements sur les dates
         startDateInput.addEventListener('change', calculateDurationForDraft);
         startDateInput.addEventListener('input', calculateDurationForDraft);
         endDateInput.addEventListener('change', calculateDurationForDraft);
         endDateInput.addEventListener('input', calculateDurationForDraft);
 
-        // ✅ Recalculer quand le type de congé ou la période change
+        // Recalculer quand le type de congé ou la période change
         leaveTypeSelect.addEventListener('change', calculateDurationForDraft);
         periodSelect.addEventListener('change', calculateDurationForDraft);
 
-        // ✅ Calculer au chargement de la page
+        // Calculer au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
             // Attendre un peu que tout soit chargé
             setTimeout(calculateDurationForDraft, 100);
         });
 
-        // ✅ Afficher le statut des pièces au chargement
-        function checkAttachmentsStatus() {
+        // Afficher le statut des pièces au chargement
+        // ✅ Utiliser la route correcte
+function checkAttachmentsStatus() {
+    // Utiliser la route nommée si elle existe
+    const url = '/employe/leave-requests/' + requestId + '/attachments/status';
+    
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP error! status: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.data) {
+            const status = data.data;
+            if (status.attachments_required) {
+                attachmentStatusContainer.style.display = 'block';
+                if (status.has_attachments) {
+                    attachmentStatusContainer.className = 'alert alert-success';
+                    attachmentStatusMessage.innerHTML = `
+                        <i class="bi bi-check-circle"></i> 
+                        ${status.message} (${status.count} piece(s) jointe(s))
+                    `;
+                } else {
+                    attachmentStatusContainer.className = 'alert alert-danger';
+                    attachmentStatusMessage.innerHTML = `
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        ${status.message}
+                        <br><small class="text-muted">Veuillez ajouter une piece justificative avant de soumettre.</small>
+                    `;
+                }
+            } else {
+                attachmentStatusContainer.style.display = 'none';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Erreur statut pieces:', error);
+    });
+}
             fetch(`/employe/leave-requests/${requestId}/attachments/status`, {
                 method: 'GET',
                 headers: {
@@ -280,14 +346,14 @@
                             attachmentStatusContainer.className = 'alert alert-success';
                             attachmentStatusMessage.innerHTML = `
                                 <i class="bi bi-check-circle"></i> 
-                                ${status.message} (${status.count} pièce(s) jointe(s))
+                                ${status.message} (${status.count} piece(s) jointe(s))
                             `;
                         } else {
                             attachmentStatusContainer.className = 'alert alert-danger';
                             attachmentStatusMessage.innerHTML = `
                                 <i class="bi bi-exclamation-triangle"></i> 
                                 ${status.message}
-                                <br><small class="text-muted">Veuillez ajouter une pièce justificative avant de soumettre.</small>
+                                <br><small class="text-muted">Veuillez ajouter une piece justificative avant de soumettre.</small>
                             `;
                         }
                     } else {
@@ -296,16 +362,16 @@
                 }
             })
             .catch(error => {
-                console.error('Erreur statut pièces:', error);
+                console.error('Erreur statut pieces:', error);
             });
         }
 
-        // ✅ Vérifier le statut des pièces au chargement
+        // Vérifier le statut des pièces au chargement
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(checkAttachmentsStatus, 200);
         });
 
-        // ✅ Validation avant soumission
+        // Validation avant soumission
         document.querySelector('form').addEventListener('submit', function(e) {
             const submitButton = e.submitter;
             
@@ -317,14 +383,14 @@
                     const isSuccess = statusContainer.className.includes('alert-success');
                     if (!isSuccess) {
                         e.preventDefault();
-                        alert('❌ Veuillez ajouter une pièce justificative avant de soumettre la demande.');
+                        alert('Veuillez ajouter une piece justificative avant de soumettre la demande.');
                         return false;
                     }
                 }
             }
         });
 
-        // ✅ Fonction pour mettre à jour le statut des pièces après ajout/suppression
+        // Fonction pour mettre à jour le statut des pièces après ajout/suppression
         window.updateAttachmentsStatus = function() {
             setTimeout(checkAttachmentsStatus, 500);
             setTimeout(calculateDurationForDraft, 500);

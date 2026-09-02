@@ -38,9 +38,7 @@
                                 <option value="business_days" {{ old('calculation_method') == 'business_days' ? 'selected' : '' }}>
                                     Jours ouvrables (Lundi-Samedi)
                                 </option>
-                                <option value="hours" {{ old('calculation_method') == 'hours' ? 'selected' : '' }}>
-                                    Heures
-                                </option>
+                                
                             </select>
                             <x-input-error :messages="$errors->get('calculation_method')" class="mt-2" />
                         </div>
@@ -77,9 +75,7 @@
                                 <option value="count" {{ old('holiday_handling') == 'count' ? 'selected' : '' }}>
                                     Compter comme des jours travaillés
                                 </option>
-                                <option value="split" {{ old('holiday_handling') == 'split' ? 'selected' : '' }}>
-                                    Séparer (demi-journées)
-                                </option>
+                               
                             </select>
                             <x-input-error :messages="$errors->get('holiday_handling')" class="mt-2" />
                         </div>
@@ -91,31 +87,16 @@
                                 <option value="none" {{ old('rounding_rule') == 'none' ? 'selected' : '' }}>
                                     Aucun arrondi
                                 </option>
-                                <option value="half_day" {{ old('rounding_rule') == 'half_day' ? 'selected' : '' }}>
-                                    Demi-journée
-                                </option>
+                               
                                 <option value="full_day" {{ old('rounding_rule') == 'full_day' ? 'selected' : '' }}>
                                     Journée entière
                                 </option>
-                                <option value="quarter_hour" {{ old('rounding_rule') == 'quarter_hour' ? 'selected' : '' }}>
-                                    Quart d'heure
-                                </option>
-                                <option value="half_hour" {{ old('rounding_rule') == 'half_hour' ? 'selected' : '' }}>
-                                    Demi-heure
-                                </option>
+                                
                             </select>
                             <x-input-error :messages="$errors->get('rounding_rule')" class="mt-2" />
                         </div>
 
-                        <div class="col-lg-4">
-                            <x-input-label for="reference_schedule_id" :value="__('Planning de référence')" />
-                            <x-text-input id="reference_schedule_id" name="reference_schedule_id" type="number" 
-                                class="form-control mt-1" :value="old('reference_schedule_id')" 
-                                placeholder="{{ __('ID du planning (optionnel)') }}" />
-                            <x-input-error :messages="$errors->get('reference_schedule_id')" class="mt-2" />
-                            <small class="text-muted">{{ __('Laissez vide si non applicable') }}</small>
-                        </div>
-                    </div>
+                       
 
                     <div class="row g-3 mb-4">
                         <div class="col-lg-3">
@@ -131,19 +112,7 @@
                             <x-input-error :messages="$errors->get('exclude_holidays')" class="mt-2" />
                         </div>
 
-                        <div class="col-lg-3">
-                            <x-input-label for="is_default" :value="__('Politique par défaut')" />
-                            <div class="mt-1">
-                                <input type="hidden" name="is_default" value="0">
-                                <input type="checkbox" id="is_default" name="is_default" value="1" 
-                                    {{ old('is_default') ? 'checked' : '' }} class="form-check-input">
-                                <label for="is_default" class="form-check-label ms-2">
-                                    {{ __('Définir par défaut') }}
-                                </label>
-                            </div>
-                            <x-input-error :messages="$errors->get('is_default')" class="mt-2" />
-                        </div>
-
+                        
                         <div class="col-lg-3">
                             <x-input-label for="is_active" :value="__('Actif')" />
                             <div class="mt-1">
@@ -157,19 +126,7 @@
                             <x-input-error :messages="$errors->get('is_active')" class="mt-2" />
                         </div>
 
-                        <div class="col-lg-3">
-                            <x-input-label for="is_customizable" :value="__('Personnalisable par siège')" />
-                            <div class="mt-1">
-                                <input type="hidden" name="is_customizable" value="0">
-                                <input type="checkbox" id="is_customizable" name="is_customizable" value="1" 
-                                    {{ old('is_customizable') ? 'checked' : '' }} class="form-check-input">
-                                <label for="is_customizable" class="form-check-label ms-2">
-                                    {{ __('Personnalisable') }}
-                                </label>
-                            </div>
-                            <x-input-error :messages="$errors->get('is_customizable')" class="mt-2" />
-                            <small class="text-muted">{{ __('Permet aux admins de siège de personnaliser') }}</small>
-                        </div>
+                        
                     </div>
 
                     @if($sites->count() > 0 && auth()->user()->IsSuperAdmin)

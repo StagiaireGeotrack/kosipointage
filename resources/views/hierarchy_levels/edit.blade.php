@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 <i class="bi bi-pencil"></i> {{ __('Modifier le Niveau') }} : {{ $hierarchyLevel->code }}
             </h2>
-            <a href="{{ route('hierarchy-levels.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.hierarchy-levels.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
             </a>
         </div>
@@ -18,7 +18,7 @@
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle"></i>
                         {{ __('Ce niveau a été supprimé le ') . $hierarchyLevel->deleted_at->format('d/m/Y H:i') }}
-                        <form action="{{ route('hierarchy-levels.restore', $hierarchyLevel->id) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.hierarchy-levels.restore', $hierarchyLevel->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-sm btn-success ms-2">
@@ -28,7 +28,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('hierarchy-levels.update', $hierarchyLevel) }}">
+                <form method="POST" action="{{ route('admin.hierarchy-levels.update', $hierarchyLevel) }}">
                     @csrf
                     @method('PUT')
 
@@ -101,7 +101,7 @@
                         <x-primary-button class="btn btn-primary">
                             <i class="bi bi-save"></i> {{ __('Mettre à jour') }}
                         </x-primary-button>
-                        <a href="{{ route('hierarchy-levels.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('admin.hierarchy-levels.index') }}" class="btn btn-secondary">
                             {{ __('Annuler') }}
                         </a>
                     </div>

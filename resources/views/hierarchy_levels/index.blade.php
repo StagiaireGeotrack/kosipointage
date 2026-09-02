@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 <i class="bi bi-layers"></i> {{ __('Niveaux Hiérarchiques KOSI') }}
             </h2>
-            <a href="{{ route('hierarchy-levels.create') }}" class="btn btn-primary">
+            <a href="{{ route('admin.hierarchy-levels.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> {{ __('Nouveau niveau') }}
             </a>
         </div>
@@ -69,7 +69,7 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
-                                            <a href="{{ route('hierarchy-levels.show', $level) }}" 
+                                            <a href="{{ route('admin.hierarchy-levels.show', $level) }}" 
                                                class="text-primary" title="Voir">
                                                 <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -78,7 +78,7 @@
                                             </a>
 
                                             @if(!$level->trashed())
-                                                <a href="{{ route('hierarchy-levels.edit', $level) }}" 
+                                                <a href="{{ route('admin.hierarchy-levels.edit', $level) }}" 
                                                    class="text-warning" title="Modifier">
                                                     <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -96,7 +96,7 @@
                                                     </svg>
                                                 </button>
                                                 <form id="delete-form-{{ $level->id }}" 
-                                                      action="{{ route('hierarchy-levels.destroy', $level) }}" 
+                                                      action="{{ route('admin.hierarchy-levels.destroy', $level) }}" 
                                                       method="POST" style="display: none;">
                                                     @csrf
                                                     @method('DELETE')
@@ -111,7 +111,7 @@
                                                     </svg>
                                                 </button>
                                                 <form id="restore-form-{{ $level->id }}" 
-                                                      action="{{ route('hierarchy-levels.restore', $level->id) }}" 
+                                                      action="{{ route('admin.hierarchy-levels.restore', $level->id) }}" 
                                                       method="POST" style="display: none;">
                                                     @csrf
                                                     @method('PATCH')

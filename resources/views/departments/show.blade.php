@@ -6,10 +6,10 @@
                 <i class="bi bi-building"></i> {{ __('Détails du Service') }} : {{ $department->name }}
             </h2>
             <div>
-                <a href="{{ route('departments.edit', $department) }}" class="btn btn-warning">
+                <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> {{ __('Modifier') }}
                 </a>
-                <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.departments.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
                 </a>
             </div>
@@ -23,7 +23,7 @@
                     <div class="alert alert-danger">
                         <i class="bi bi-exclamation-triangle"></i>
                         {{ __('Ce service a été supprimé le ') . $department->deleted_at->format('d/m/Y H:i') }}
-                        <form action="{{ route('departments.restore', $department->id) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.departments.restore', $department->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-sm btn-success ms-2">
@@ -98,7 +98,7 @@
                 @if(!$department->trashed())
                     <div class="mt-3 pt-3 border-top">
                         <div class="d-flex gap-2">
-                            <a href="{{ route('departments.edit', $department) }}" class="btn btn-warning">
+                            <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-warning">
                                 {{ __('Modifier') }}
                             </a>
                             @php
@@ -111,7 +111,7 @@
                                         }">
                                     {{ __('Supprimer') }}
                                 </button>
-                                <form id="delete-form" action="{{ route('departments.destroy', $department) }}" method="POST" style="display: none;">
+                                <form id="delete-form" action="{{ route('admin.departments.destroy', $department) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
                                 </form>

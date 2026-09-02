@@ -5,7 +5,7 @@
             <h2 class="fw-semibold fs-4 text-dark mb-0">
                 {{ __('Nouveau Service') }}
             </h2>
-            <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.departments.index') }}" class="btn btn-secondary">
                 {{ __('Retour à la liste') }}
             </a>
         </div>
@@ -14,7 +14,7 @@
     <div class="p-2">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="{{ route('departments.store') }}">
+                <form method="POST" action="{{ route('admin.departments.store') }}">
                     @csrf
 
                     <div class="row g-3 mb-4">
@@ -69,7 +69,7 @@
                         <x-primary-button class="btn btn-primary">
                             {{ __('Créer') }}
                         </x-primary-button>
-                        <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('admin.departments.index') }}" class="btn btn-secondary">
                             {{ __('Annuler') }}
                         </a>
                     </div>
