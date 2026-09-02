@@ -1,5 +1,4 @@
 <?php
-// app/Models/Department.php
 
 namespace App\Models;
 
@@ -12,12 +11,12 @@ class Department extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'departments';
-    
+
     protected $fillable = [
-        'company_id', 
-        'site_id', 
-        'name', 
-        'code', 
+        'company_id',
+        'site_id',
+        'name',
+        'code',
         'manager_employee_id'
     ];
 
@@ -39,6 +38,12 @@ class Department extends Model
     public function employes()
     {
         return $this->hasMany(Employe::class, 'department_id');
+    }
+
+    // NOUVELLE RELATION : les postes rattachés à ce service
+    public function jobTitles()
+    {
+        return $this->hasMany(JobTitle::class, 'department_id');
     }
 
     // ============ ACCESSORS ============
@@ -82,8 +87,8 @@ class Department extends Model
     protected static function boot()
     {
         parent::boot();
-        
-        // Ajouter un scope global pour le multi-tenant
+
+        // Scope multi-tenant
         static::addGlobalScope('site', function ($query) {
             $user = auth()->user();
             if ($user && !$user->IsSuperAdmin && $user->SiegeID) {

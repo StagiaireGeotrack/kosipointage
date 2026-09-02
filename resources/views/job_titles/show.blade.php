@@ -1,4 +1,4 @@
-{{-- resources/views/admin/job-titles/show.blade.php --}}
+{{-- resources/views/job_titles/show.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -49,6 +49,17 @@
                                     <span class="text-muted">{{ $jobTitle->hierarchyLevel->name }}</span>
                                 @else
                                     <span class="text-muted">Non défini</span>
+                                @endif
+                            </dd>
+
+                            {{-- NOUVEAU : Service --}}
+                            <dt class="col-sm-4 fw-bold">{{ __('Service') }}</dt>
+                            <dd class="col-sm-8">
+                                @if($jobTitle->department)
+                                    <span class="badge bg-info">{{ $jobTitle->department->name }}</span>
+                                    <small class="text-muted">({{ $jobTitle->department->site?->Nom ?? 'Site inconnu' }})</small>
+                                @else
+                                    <span class="text-muted">{{ __('Aucun service') }}</span>
                                 @endif
                             </dd>
 
@@ -143,7 +154,7 @@
                                 {{ __('Modifier') }}
                             </a>
                             @if($jobTitle->employes->count() == 0)
-                                <button type="button" class="btn btn-danger" 
+                                <button type="button" class="btn btn-danger"
                                         onclick="if(confirm('Voulez-vous vraiment supprimer ce poste ?')) {
                                             document.getElementById('delete-form').submit();
                                         }">

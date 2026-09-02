@@ -1,4 +1,4 @@
-{{-- resources/views/admin/job-titles/edit.blade.php --}}
+{{-- resources/views/job_titles/edit.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -36,14 +36,14 @@
                         <div class="col-md-6">
                             <x-input-label for="name" :value="__('Nom du poste')" />
                             <span class="text-danger">*</span>
-                            <x-text-input id="name" name="name" type="text" class="form-control mt-1" 
+                            <x-text-input id="name" name="name" type="text" class="form-control mt-1"
                                 :value="old('name', $jobTitle->name)" placeholder="{{ __('Ex: Technicien, Vendeur...') }}" required />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
                         <div class="col-md-6">
                             <x-input-label for="code" :value="__('Code')" />
-                            <x-text-input id="code" name="code" type="text" class="form-control mt-1" 
+                            <x-text-input id="code" name="code" type="text" class="form-control mt-1"
                                 :value="old('code', $jobTitle->code)" placeholder="{{ __('Ex: TECH, VEN...') }}" />
                             <x-input-error :messages="$errors->get('code')" class="mt-2" />
                             <small class="text-muted">{{ __('Code court pour identifier le poste') }}</small>
@@ -51,7 +51,8 @@
                     </div>
 
                     <div class="row g-3 mt-2">
-                        <div class="col-md-12">
+                        {{-- Niveau KOSI --}}
+                        <div class="col-md-6">
                             <x-input-label for="hierarchy_level_id" :value="__('Niveau KOSI')" />
                             <select id="hierarchy_level_id" name="hierarchy_level_id" class="form-select mt-1">
                                 <option value="">{{ __('Non défini') }}</option>
@@ -64,12 +65,27 @@
                             <x-input-error :messages="$errors->get('hierarchy_level_id')" class="mt-2" />
                             <small class="text-muted">{{ __('Niveau hiérarchique KOSI associé à ce poste') }}</small>
                         </div>
+
+                        {{-- NOUVEAU : Service --}}
+                        <div class="col-md-6">
+                            <x-input-label for="department_id" :value="__('Service')" />
+                            <select id="department_id" name="department_id" class="form-select mt-1">
+                                <option value="">{{ __('Aucun service') }}</option>
+                                @foreach($departments as $dept)
+                                    <option value="{{ $dept->id }}" {{ old('department_id', $jobTitle->department_id) == $dept->id ? 'selected' : '' }}>
+                                        {{ $dept->name }} ({{ $dept->site?->Nom ?? 'Site inconnu' }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('department_id')" class="mt-2" />
+                            <small class="text-muted">{{ __('Service auquel appartient ce poste (optionnel)') }}</small>
+                        </div>
                     </div>
 
                     <div class="row g-3 mt-3">
                         <div class="col-12">
                             <div class="alert alert-info">
-                                <i class="bi bi-info-circle"></i> 
+                                <i class="bi bi-info-circle"></i>
                                 <strong>Exemples de postes par niveau KOSI :</strong>
                                 <ul class="mb-0 mt-1">
                                     <li><strong>N0</strong> - Agent, ouvrier, opérateur, formateur, vendeur, chauffeur, serveur</li>
