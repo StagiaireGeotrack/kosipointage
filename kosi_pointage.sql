@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 01 sep. 2026 à 16:29
+-- Généré le : mer. 02 sep. 2026 à 10:36
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -1040,7 +1040,13 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action
 (985, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-01 14:10:20'),
 (986, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-01 14:10:20'),
 (987, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 14:10:35'),
-(988, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 14:10:35');
+(988, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 14:10:35'),
+(989, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Department', 35, 'Service informatique 2.0', 'Service créé : Service informatique 2.0 (SRI)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 15:10:47'),
+(990, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 345, 'Directrice RH', 'Poste créé : Directrice RH (DRH GEO)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 15:16:05'),
+(991, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 346, 'Directrice RH FEMME', 'Poste créé : Directrice RH FEMME (DRF)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 15:16:58'),
+(992, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:21:15'),
+(993, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:21:15'),
+(994, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Department', 12, 'Ressources humaines', 'Service mis à jour : Ressources humaines', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:25:29');
 
 -- --------------------------------------------------------
 
@@ -1089,7 +1095,7 @@ INSERT INTO `administration` (`ID`, `Identifiant_email`, `Password_`, `IsSuperAd
 CREATE TABLE `admin_roles` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `admin_id` int(10) UNSIGNED NOT NULL,
-  `role` enum('superadmin','company_admin','rh','manager','direction') NOT NULL,
+  `role` enum('superadmin','company_admin','rh','manager','direction','drh') NOT NULL,
   `company_id` int(10) UNSIGNED DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -1252,7 +1258,7 @@ INSERT INTO `departments` (`id`, `company_id`, `site_id`, `name`, `code`, `manag
 (9, 0, 4, 'Serivice de mise en boite', 'SDMEB', 36, '2026-08-11 09:40:54', '2026-08-11 09:41:09', NULL),
 (10, 0, 1, 'Direction générale', 'DG', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (11, 0, 1, 'Administration', 'ADM', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
-(12, 0, 1, 'Ressources humaines', 'RH', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
+(12, 0, 1, 'Ressources humaines', 'RH', 2, '2026-08-18 09:15:33', '2026-09-02 08:25:29', NULL),
 (13, 0, 1, 'Comptabilité / Finance', 'CPT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (14, 0, 1, 'Commercial', 'COM', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (15, 0, 1, 'Marketing / Communication', 'MKT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
@@ -1274,7 +1280,8 @@ INSERT INTO `departments` (`id`, `company_id`, `site_id`, `name`, `code`, `manag
 (31, 0, 1, 'Sécurité', 'SEC', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (32, 0, 1, 'Entretien', 'ENT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (33, 0, 1, 'Juridique', 'JUR', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
-(34, 0, 2, 'Service informatique', 'DSI', 61, '2026-08-28 16:03:42', '2026-08-28 16:20:15', NULL);
+(34, 0, 2, 'Service informatique', 'DSI', 61, '2026-08-28 16:03:42', '2026-08-28 16:20:15', NULL),
+(35, 0, 1, 'Service informatique 2.0', 'SRI', 2, '2026-09-01 15:10:47', '2026-09-01 15:10:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -1627,7 +1634,10 @@ INSERT INTO `job_titles` (`id`, `company_id`, `name`, `code`, `hierarchy_level_i
 (338, 0, 'Agent service client', 'SC-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
 (340, 0, 'Responsable service client', 'SC-RSC', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
 (342, 0, 'Directrice RH', 'DRHF', 6, NULL, '2026-08-31 16:07:05', '2026-08-31 16:07:05'),
-(343, 0, 'Directrice RH', 'Directrice', NULL, NULL, '2026-08-31 16:07:50', '2026-08-31 16:07:50');
+(343, 0, 'Directrice RH', 'Directrice', NULL, NULL, '2026-08-31 16:07:50', '2026-08-31 16:07:50'),
+(344, 0, 'Directrice RH', 'DRH', 6, NULL, '2026-09-01 15:11:44', '2026-09-01 15:11:44'),
+(345, 0, 'Directrice RH', 'DRH GEO', 6, NULL, '2026-09-01 15:16:04', '2026-09-01 15:16:04'),
+(346, 0, 'Directrice RH FEMME', 'DRF', 6, NULL, '2026-09-01 15:16:58', '2026-09-01 15:16:58');
 
 -- --------------------------------------------------------
 
@@ -1933,24 +1943,27 @@ CREATE TABLE `leave_requests` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `balance_impact` tinyint(1) DEFAULT 1 COMMENT 'La demande impacte-t-elle le solde ? (false pour les imports historiques)'
+  `balance_impact` tinyint(1) DEFAULT 1 COMMENT 'La demande impacte-t-elle le solde ? (false pour les imports historiques)',
+  `workflow_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `workflow_step` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `leave_requests`
 --
 
-INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type_id`, `period_id`, `start_date`, `end_date`, `duration`, `status`, `submitted_at`, `reason`, `comment`, `attachment_path`, `approved_by`, `approved_at`, `rejected_by`, `rejected_at`, `rejection_reason`, `created_at`, `updated_at`, `deleted_at`, `balance_impact`) VALUES
-(46, 5, 13, 13, '2026-10-17', '2026-10-22', 5.00, 'approved', NULL, 'teste', NULL, NULL, 2, '2026-08-31 08:57:34', NULL, NULL, NULL, '2026-08-27 13:09:51', '2026-08-31 08:57:34', NULL, 1),
-(47, 5, 13, 13, '2026-09-11', '2026-09-12', 2.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-27 16:08:35', NULL, NULL, NULL, '2026-08-27 13:48:37', '2026-08-27 16:09:05', NULL, 1),
-(48, 5, 13, 13, '2026-09-13', '2026-09-15', 2.00, 'draft', NULL, 'test', 'test', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-27 15:45:55', '2026-08-27 15:45:55', NULL, 1),
-(49, 62, 13, 13, '2026-12-10', '2026-12-16', 6.00, 'draft', NULL, NULL, 'test autre utilisateur', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 09:37:39', '2026-08-31 10:42:38', '2026-08-31 10:42:38', 1),
-(50, 62, 17, 14, '2026-09-11', '2026-09-14', 2.00, 'draft', NULL, 'TEST VER AUTRE ADMIN', 'TEST POUR VOIR OU LE DEMANDE A ETE ENVOYER', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:43:23', '2026-08-31 10:48:39', '2026-08-31 10:48:39', 1),
-(51, 62, 17, 14, '2026-10-10', '2026-10-14', 3.00, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:45:38', '2026-08-31 10:46:00', NULL, 1),
-(52, 62, 17, 14, '2026-11-12', '2026-11-13', 2.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:49:20', '2026-08-31 10:49:20', NULL, 1),
-(53, 62, 17, 14, '2026-09-15', '2026-09-25', 9.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 12:36:57', '2026-08-31 12:36:57', NULL, 1),
-(54, 5, 13, 13, '2026-11-11', '2026-11-30', 17.00, 'pending', NULL, NULL, 'TEST', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 15:31:52', '2026-08-31 15:31:52', NULL, 1),
-(55, 5, 14, 15, '2026-09-14', '2026-09-24', 9.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-31 15:56:59', NULL, NULL, NULL, '2026-08-31 15:56:25', '2026-08-31 16:02:43', NULL, 1);
+INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type_id`, `period_id`, `start_date`, `end_date`, `duration`, `status`, `submitted_at`, `reason`, `comment`, `attachment_path`, `approved_by`, `approved_at`, `rejected_by`, `rejected_at`, `rejection_reason`, `created_at`, `updated_at`, `deleted_at`, `balance_impact`, `workflow_id`, `workflow_step`) VALUES
+(46, 5, 13, 13, '2026-10-17', '2026-10-22', 5.00, 'approved', NULL, 'teste', NULL, NULL, 2, '2026-08-31 08:57:34', NULL, NULL, NULL, '2026-08-27 13:09:51', '2026-08-31 08:57:34', NULL, 1, NULL, 0),
+(47, 5, 13, 13, '2026-09-11', '2026-09-12', 2.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-27 16:08:35', NULL, NULL, NULL, '2026-08-27 13:48:37', '2026-08-27 16:09:05', NULL, 1, NULL, 0),
+(48, 5, 13, 13, '2026-09-13', '2026-09-15', 2.00, 'draft', NULL, 'test', 'test', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-27 15:45:55', '2026-08-27 15:45:55', NULL, 1, NULL, 0),
+(49, 62, 13, 13, '2026-12-10', '2026-12-16', 6.00, 'draft', NULL, NULL, 'test autre utilisateur', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 09:37:39', '2026-08-31 10:42:38', '2026-08-31 10:42:38', 1, NULL, 0),
+(50, 62, 17, 14, '2026-09-11', '2026-09-14', 2.00, 'draft', NULL, 'TEST VER AUTRE ADMIN', 'TEST POUR VOIR OU LE DEMANDE A ETE ENVOYER', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:43:23', '2026-08-31 10:48:39', '2026-08-31 10:48:39', 1, NULL, 0),
+(51, 62, 17, 14, '2026-10-10', '2026-10-14', 3.00, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:45:38', '2026-08-31 10:46:00', NULL, 1, NULL, 0),
+(52, 62, 17, 14, '2026-11-12', '2026-11-13', 2.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:49:20', '2026-08-31 10:49:20', NULL, 1, NULL, 0),
+(53, 62, 17, 14, '2026-09-15', '2026-09-25', 9.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 12:36:57', '2026-08-31 12:36:57', NULL, 1, NULL, 0),
+(54, 5, 13, 13, '2026-11-11', '2026-11-30', 17.00, 'pending', NULL, NULL, 'TEST', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 15:31:52', '2026-08-31 15:31:52', NULL, 1, NULL, 0),
+(55, 5, 14, 15, '2026-09-14', '2026-09-24', 9.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-31 15:56:59', NULL, NULL, NULL, '2026-08-31 15:56:25', '2026-08-31 16:02:43', NULL, 1, NULL, 0),
+(56, 5, 14, 15, '2026-09-01', '2026-09-03', 3.00, 'approved', NULL, 'je suis malade', NULL, NULL, 2, '2026-09-01 14:46:44', NULL, NULL, NULL, '2026-09-01 14:46:17', '2026-09-01 14:46:44', NULL, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1977,7 +1990,8 @@ CREATE TABLE `leave_request_attachments` (
 INSERT INTO `leave_request_attachments` (`id`, `leave_request_id`, `file_name`, `file_path`, `file_size`, `mime_type`, `uploaded_by`, `created_at`, `updated_at`) VALUES
 (14, 51, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/51/1788173138_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-08-31 10:45:39', '2026-08-31 10:45:39'),
 (15, 52, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/52/1788173360_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-08-31 10:49:20', '2026-08-31 10:49:20'),
-(16, 55, 'Capture d’écran 2026-06-09 154545.png', 'leave_attachments/55/1788191785_Capture d’écran 2026-06-09 154545.png', 246849, 'image/png', ' ', '2026-08-31 15:56:26', '2026-08-31 15:56:26');
+(16, 55, 'Capture d’écran 2026-06-09 154545.png', 'leave_attachments/55/1788191785_Capture d’écran 2026-06-09 154545.png', 246849, 'image/png', ' ', '2026-08-31 15:56:26', '2026-08-31 15:56:26'),
+(17, 56, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/56/1788273977_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-09-01 14:46:17', '2026-09-01 14:46:17');
 
 -- --------------------------------------------------------
 
@@ -2016,7 +2030,7 @@ CREATE TABLE `leave_types` (
 
 INSERT INTO `leave_types` (`id`, `site_id`, `name`, `code`, `unit`, `deducts_balance`, `requires_attachment`, `requires_attachment_after`, `allow_negative_balance`, `max_negative_limit`, `color`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`, `min_notice_days`, `max_duration_per_request`, `allow_overlap`, `accrual_type`, `accrual_amount`, `affects_team_availability`) VALUES
 (13, 1, 'Conge paye', 'CP', 'days', 1, 'never', NULL, 0, NULL, '#85d96d', 1, 1, NULL, '2026-08-21 12:00:05', '2026-08-31 15:30:57', 15, 17.00, 0, 'manual', NULL, 1),
-(14, 1, 'MALADIE', 'MLD', 'days', 0, 'always', NULL, 0, NULL, '#ee1111', 1, 1, NULL, '2026-08-21 12:01:26', '2026-08-31 15:58:19', 0, NULL, 1, 'manual', NULL, 1),
+(14, 1, 'MALADIE', 'MLD', 'days', 1, 'always', NULL, 0, NULL, '#ee1111', 1, 1, NULL, '2026-08-21 12:01:26', '2026-09-01 14:47:28', 0, NULL, 1, 'manual', NULL, 1),
 (15, NULL, 'TST conge', 'TST', 'days', 1, 'never', NULL, 0, NULL, '#b7104a', 1, 1, '2026-08-27 10:43:46', '2026-08-27 10:34:55', '2026-08-27 10:43:46', 0, NULL, 0, 'manual', NULL, 1),
 (16, NULL, 'TST', 'test', 'days', 1, 'never', NULL, 0, NULL, '#10B981', 1, 0, '2026-08-27 12:25:07', '2026-08-27 10:44:12', '2026-08-27 12:25:07', 0, NULL, 0, 'manual', NULL, 1),
 (17, 2, 'Congé payés Run telemat', 'CPR', 'days', 1, 'always', NULL, 0, NULL, '#10B981', 1, 0, NULL, '2026-08-31 09:54:38', '2026-08-31 09:54:38', 10, 15.00, 0, 'manual', NULL, 1),
@@ -2149,7 +2163,9 @@ INSERT INTO `notifications` (`id`, `user_id`, `type`, `title`, `message`, `leave
 (77, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de MALADIE du 14/09/2026 au 24/09/2026 (9.0 jours)', 55, 0, NULL, '2026-08-31 15:56:35', '2026-08-31 15:56:35'),
 (78, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de MALADIE du 14/09/2026 au 24/09/2026 a été approuvée.', 55, 0, NULL, '2026-08-31 15:56:59', '2026-08-31 15:56:59'),
 (79, 2, 'leave_cancelled', ' Congé annulé', 'Votre congé de MALADIE du 14/09/2026 au 24/09/2026 a été annulé. Vos jours ont été recrédités.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43'),
-(80, 2, 'leave_cancelled_manager', ' Congé annulé par l\'employé', 'MALALANIRINA Emile Noeline a annulé son congé de MALADIE du 14/09/2026 au 24/09/2026.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43');
+(80, 2, 'leave_cancelled_manager', ' Congé annulé par l\'employé', 'MALALANIRINA Emile Noeline a annulé son congé de MALADIE du 14/09/2026 au 24/09/2026.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43'),
+(81, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de MALADIE du 01/09/2026 au 03/09/2026 (3.0 jours)', 56, 0, NULL, '2026-09-01 14:46:21', '2026-09-01 14:46:21'),
+(82, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de MALADIE du 01/09/2026 au 03/09/2026 a été approuvée.', 56, 0, NULL, '2026-09-01 14:46:44', '2026-09-01 14:46:44');
 
 -- --------------------------------------------------------
 
@@ -3598,8 +3614,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('f6vl9sP26gVCp8Soi8x43a4vTHcEzFif79qN3a2D', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibmU1NVU3VVhXUUtGMzNlTEoyck4waXgwYXNMTHZySUt2WEtQUnV4TCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MTIzOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZW1wbG95ZS9jYWxlbmRhci9ldmVudHM/ZW5kPTIwMjYtMTAtMTJUMDAlM0EwMCUzQTAwJTJCMDElM0EwMCZzdGFydD0yMDI2LTA4LTMxVDAwJTNBMDAlM0EwMCUyQjAxJTNBMDAiO3M6NToicm91dGUiO3M6MjM6ImVtcGxveWUuY2FsZW5kYXIuZXZlbnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1NDoibG9naW5fZW1wbG95ZV81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjU7czoxMToiZW1wbG95ZWVfaWQiO2k6NTt9', 1788271303),
-('jC76XQ1eBQAZySR6PuKqyLbE9Mhi3b7ljj6Ki9w9', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYWdoaXVqTzU2MVB2OFdZZzJ2U214cm1KZmgwdjNFRWNVaWMzVEhrNSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9sZWF2ZS1wb2xpY3ktYXNzaWdubWVudHMiO3M6NToicm91dGUiO3M6MzY6ImFkbWluLmxlYXZlLXBvbGljeS1hc3NpZ25tZW50cy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1788271922);
+('f6vl9sP26gVCp8Soi8x43a4vTHcEzFif79qN3a2D', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibmU1NVU3VVhXUUtGMzNlTEoyck4waXgwYXNMTHZySUt2WEtQUnV4TCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9lbXBsb3llL2xlYXZlLXJlcXVlc3RzL2NyZWF0ZSI7czo1OiJyb3V0ZSI7czoyOToiZW1wbG95ZS5sZWF2ZS1yZXF1ZXN0cy5jcmVhdGUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjU0OiJsb2dpbl9lbXBsb3llXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NTtzOjExOiJlbXBsb3llZV9pZCI7aTo1O30=', 1788274334),
+('jC76XQ1eBQAZySR6PuKqyLbE9Mhi3b7ljj6Ki9w9', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYWdoaXVqTzU2MVB2OFdZZzJ2U214cm1KZmgwdjNFRWNVaWMzVEhrNSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9sZWF2ZS13b3JrZmxvd3MiO3M6NToicm91dGUiO3M6Mjc6ImFkbWluLmxlYXZlLXdvcmtmbG93cy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1788279800),
+('z09SlbuQ0wpJjz7wp8uLWT99PaUhLc3a15rZy4jt', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiek81UHNtaDlqSUYzcXVPemc4WjZUVkJtSU9QWUJBdlZJVTN4OXk4UiI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjU5OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYWRtaW4vZGVwYXJ0bWVudHM/c2VhcmNoPVJIJnNpdGVfaWQ9MSI7czo1OiJyb3V0ZSI7czoyMzoiYWRtaW4uZGVwYXJ0bWVudHMuaW5kZXgiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1788337539);
 
 -- --------------------------------------------------------
 
@@ -4195,7 +4212,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=989;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=995;
 
 --
 -- AUTO_INCREMENT pour la table `administration`
@@ -4231,7 +4248,7 @@ ALTER TABLE `conge_validations`
 -- AUTO_INCREMENT pour la table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT pour la table `employee_managers`
@@ -4279,7 +4296,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT pour la table `job_titles`
 --
 ALTER TABLE `job_titles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=344;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=347;
 
 --
 -- AUTO_INCREMENT pour la table `jours_non_travailles`
@@ -4327,13 +4344,13 @@ ALTER TABLE `leave_policy_assignments`
 -- AUTO_INCREMENT pour la table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT pour la table `leave_request_attachments`
 --
 ALTER TABLE `leave_request_attachments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT pour la table `leave_types`
@@ -4363,7 +4380,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT pour la table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT pour la table `personal_access_tokens`
