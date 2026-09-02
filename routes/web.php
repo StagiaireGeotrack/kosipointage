@@ -41,6 +41,7 @@ use App\Http\Controllers\Manager\ManagerLeaveRequestController;
 use App\Http\Controllers\Employe\EmployeNotificationController;
 use App\Http\Controllers\Api\LeaveDurationController;
 
+
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
 
@@ -348,6 +349,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('job-titles/{id}/restore', [JobTitleController::class, 'restore'])->name('job-titles.restore');
         Route::get('job-titles-export/excel', [JobTitleController::class, 'exportExcel'])->name('job-titles.export.excel');
         Route::get('job-titles-export/pdf', [JobTitleController::class, 'exportPdf'])->name('job-titles.export.pdf');
+
+Route::get('/get-job-titles-by-department', [EmployeController::class, 'getJobTitlesByDepartment'])
+    ->name('get.job-titles.by.department')
+    ->middleware('auth');
         
         Route::resource('hierarchy-levels', HierarchyLevelController::class);
         Route::patch('hierarchy-levels/{id}/restore', [HierarchyLevelController::class, 'restore'])->name('hierarchy-levels.restore');

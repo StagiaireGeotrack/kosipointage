@@ -53,32 +53,68 @@
                             <div class="card-body row">
 
                                 <!-- Service -->
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="department_id">Service</label>
-                                    <select name="department_id" id="department_id" class="form-select @error('department_id') is-invalid @enderror">
-                                        <option value="">-- Non classé --</option>
-                                        @foreach($departments as $dept)
-                                            <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
-                                                {{ $dept->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error :messages="$errors->get('department_id')" class="mt-2" />
-                                </div>
+                               {{-- resources/views/employes/create.blade.php --}}
 
-                                <!-- Poste -->
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="job_title_id">Poste</label>
-                                    <select name="job_title_id" id="job_title_id" class="form-select @error('job_title_id') is-invalid @enderror">
-                                        <option value="">-- Non défini --</option>
-                                        @foreach($jobTitles as $jt)
-                                            <option value="{{ $jt->id }}" {{ old('job_title_id') == $jt->id ? 'selected' : '' }}>
-                                                {{ $jt->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error :messages="$errors->get('job_title_id')" class="mt-2" />
-                                </div>
+<!-- Sélection du service -->
+<div class="col-md-6">
+    <x-input-label for="department_id" :value="__('Service')" />
+    <select id="department_id" name="department_id" class="form-select">
+        <option value="">{{ __('Aucun service') }}</option>
+        @foreach($departments as $dept)
+            <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
+                {{ $dept->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<!-- Sélection du poste -->
+<div class="col-md-6">
+    <x-input-label for="job_title_id" :value="__('Poste')" />
+    <select id="job_title_id" name="job_title_id" class="form-select">
+        <option value="">{{ __('Aucun poste') }}</option>
+        @foreach($jobTitles as $job)
+            <option value="{{ $job->id }}" {{ old('job_title_id') == $job->id ? 'selected' : '' }}>
+                {{ $job->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.getElementById('department_id');
+    const jobTitleSelect = document.getElementById('job_title_id');
+
+    function loadJobTitles(departmentId) {
+        // Si aucun service, on peut charger tous les postes (ou vider)
+        let url = '{{ route("admin.get.job-titles.by.department") }}?department_id=' + (departmentId || '');
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                jobTitleSelect.innerHTML = '<option value="">{{ __("Aucun poste") }}</option>';
+                data.forEach(job => {
+                    const option = document.createElement('option');
+                    option.value = job.id;
+                    option.textContent = job.name;
+                    jobTitleSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
+
+    departmentSelect.addEventListener('change', function() {
+        loadJobTitles(this.value);
+    });
+
+    // Charger initialement si un service est pré-sélectionné
+    if (departmentSelect.value) {
+        loadJobTitles(departmentSelect.value);
+    }
+});
+</script>
+@endpush
 
                                 <!-- Niveau Hiérarchique -->
                                 <div class="col-md-6 form-group mb-3">

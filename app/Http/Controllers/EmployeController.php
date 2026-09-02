@@ -195,6 +195,34 @@ class EmployeController extends Controller
         ));
     }
 
+public function getJobTitlesByDepartment(Request $request)
+{
+    $departmentId = $request->input('department_id');
+    $user = auth()->user();
+
+    $query = JobTitle::query();
+
+    if ($departmentId) {
+        // Vérifier que le service existe (et appartient au site si non superadmin)
+        $department = Department::find($departmentId);
+        if ($department && ($user->IsSuperAdmin || $department->site_id == $user->SiegeID)) {
+            $query->where('department_id', $departmentId);
+        } else {
+            return response()->json([]);
+        }
+    } else {
+        // Si aucun service, on peut renvoyer tous les postes du site (ou tous pour super-admin)
+        if (!$user->IsSuperAdmin && $user->SiegeID) {
+            $query->whereHas('department', function($q) use ($user) {
+                $q->where('site_id', $user->SiegeID);
+            })->orWhereNull('department_id');
+        }
+    }
+
+    $jobTitles = $query->orderBy('name')->get(['id', 'name']);
+    return response()->json($jobTitles);
+}
+
     /* =========================================================
        UPDATE - CORRIGÉ
        ========================================================= */
@@ -250,6 +278,7 @@ public function update(EmployeRequest $request, $id)
             'site_id' => $employe->site_id,
         ];
     }
+    
     // ==================================================
     // SUPER ADMIN : peut tout modifier
     // ==================================================
