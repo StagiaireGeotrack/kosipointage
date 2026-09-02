@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/DepartmentController.php
 
 namespace App\Http\Controllers;
 
@@ -11,19 +10,14 @@ use App\Services\ActivityLogService;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Affiche la liste des services
-     */
     public function index(Request $request)
     {
         $query = Department::with(['site', 'managerEmployee', 'employes']);
 
-        // Filtre par siège
         if ($request->filled('site_id')) {
             $query->where('site_id', $request->site_id);
         }
 
-        // Recherche
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -38,14 +32,9 @@ class DepartmentController extends Controller
         return view('departments.index', compact('departments', 'sites'));
     }
 
-    /**
-     * Formulaire de création
-     */
     public function create()
     {
         $sites = EntrepriseSiege::orderBy('Nom')->get();
-        
-        // Récupérer les employés du site de l'admin connecté
         $adminSiegeId = auth()->user()->SiegeID ?? null;
         if ($adminSiegeId) {
             $employes = Employe::where('SiegeID', $adminSiegeId)
@@ -60,9 +49,6 @@ class DepartmentController extends Controller
         return view('departments.create', compact('sites', 'employes'));
     }
 
-    /**
-     * Enregistre un nouveau service
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -72,7 +58,6 @@ class DepartmentController extends Controller
             'manager_employee_id' => 'nullable|exists:employes,ID',
         ]);
 
-        // Vérifier si le code est unique par siège
         if ($request->filled('code')) {
             $exists = Department::where('site_id', $request->site_id)
                 ->where('code', $request->code)
@@ -86,13 +71,12 @@ class DepartmentController extends Controller
 
         $department = Department::create($validated);
 
-        // ✅ CORRIGÉ : log avec une chaîne, pas un tableau
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'create',
                 'Department',
                 $department->id,
-                $department->name, // ✅ Maintenant c'est une chaîne
+                $department->name,
                 'Service créé : ' . $department->name . ' (' . ($department->code ?? '') . ')'
             );
         }
@@ -101,23 +85,16 @@ class DepartmentController extends Controller
             ->with('success', 'Service créé avec succès.');
     }
 
-    /**
-     * Affiche les détails d'un service
-     */
     public function show(Department $department)
     {
-        $department->load(['site', 'managerEmployee', 'employes']);
+        // 🔥 Chargement des postes en plus
+        $department->load(['site', 'managerEmployee', 'employes', 'jobTitles']);
         return view('departments.show', compact('department'));
     }
 
-    /**
-     * Formulaire de modification
-     */
     public function edit(Department $department)
     {
         $sites = EntrepriseSiege::orderBy('Nom')->get();
-        
-        // ✅ CORRIGÉ : Récupérer TOUS les employés du site (pas seulement ceux du site de l'admin)
         $employes = Employe::where('SiegeID', $department->site_id)
             ->where('Actived', 1)
             ->where('deleted', 0)
@@ -127,9 +104,6 @@ class DepartmentController extends Controller
         return view('departments.edit', compact('department', 'sites', 'employes'));
     }
 
-    /**
-     * Met à jour un service
-     */
     public function update(Request $request, Department $department)
     {
         $validated = $request->validate([
@@ -139,7 +113,6 @@ class DepartmentController extends Controller
             'manager_employee_id' => 'nullable|exists:employes,ID',
         ]);
 
-        // Vérifier si le code est unique par siège
         if ($request->filled('code')) {
             $exists = Department::where('site_id', $request->site_id)
                 ->where('code', $request->code)
@@ -154,7 +127,6 @@ class DepartmentController extends Controller
 
         $department->update($validated);
 
-        // ✅ CORRIGÉ : log avec une chaîne
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'update',
@@ -169,18 +141,18 @@ class DepartmentController extends Controller
             ->with('success', 'Service mis à jour avec succès.');
     }
 
-    /**
-     * Supprime un service (soft delete)
-     */
     public function destroy(Department $department)
     {
+        // 🔥 Empêcher la suppression si des employés OU des postes sont attachés
         if ($department->employes()->count() > 0) {
             return back()->with('error', 'Impossible de supprimer : des employés sont encore dans ce service.');
+        }
+        if ($department->jobTitles()->count() > 0) {
+            return back()->with('error', 'Impossible de supprimer : des postes sont rattachés à ce service.');
         }
 
         $department->delete();
 
-        // ✅ CORRIGÉ : log avec une chaîne
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'delete',
@@ -195,15 +167,11 @@ class DepartmentController extends Controller
             ->with('success', 'Service supprimé avec succès.');
     }
 
-    /**
-     * Restaure un service supprimé
-     */
     public function restore($id)
     {
         $department = Department::withTrashed()->findOrFail($id);
         $department->restore();
 
-        // ✅ CORRIGÉ : log avec une chaîne
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
                 'restore',
@@ -218,37 +186,13 @@ class DepartmentController extends Controller
             ->with('success', 'Service restauré avec succès.');
     }
 
-    /**
-     * Export Excel
-     */
     public function exportExcel(Request $request)
     {
-        $query = Department::with(['site', 'managerEmployee', 'employes']);
-        
-        if ($request->filled('site_id')) {
-            $query->where('site_id', $request->site_id);
-        }
-
-        $departments = $query->get();
-
-        // Logique d'export à implémenter
         return back()->with('info', 'Export Excel en cours de développement.');
     }
 
-    /**
-     * Export PDF
-     */
     public function exportPdf(Request $request)
     {
-        $query = Department::with(['site', 'managerEmployee', 'employes']);
-        
-        if ($request->filled('site_id')) {
-            $query->where('site_id', $request->site_id);
-        }
-
-        $departments = $query->get();
-
-        // Logique d'export à implémenter
         return back()->with('info', 'Export PDF en cours de développement.');
     }
 }

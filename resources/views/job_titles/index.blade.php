@@ -1,4 +1,4 @@
-{{-- resources/views/admin/job-titles/index.blade.php --}}
+{{-- resources/views/job_titles/index.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -31,12 +31,12 @@
                 <!-- Filtres -->
                 <form action="{{ route('admin.job-titles.index') }}" method="GET" class="mb-4">
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <x-input-label for="search" :value="__('Recherche')" />
                             <x-text-input id="search" name="search" type="text" class="form-control mt-1" 
                                 :value="request('search')" placeholder="{{ __('Nom ou code') }}" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <x-input-label for="hierarchy_level_id" :value="__('Niveau KOSI')" />
                             <select id="hierarchy_level_id" name="hierarchy_level_id" class="form-select mt-1">
                                 <option value="">{{ __('Tous') }}</option>
@@ -47,13 +47,27 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 d-flex align-items-end">
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">
+
+                        {{-- NOUVEAU FILTRE : Service --}}
+                        <div class="col-md-3">
+                            <x-input-label for="department_id" :value="__('Service')" />
+                            <select id="department_id" name="department_id" class="form-select mt-1">
+                                <option value="">{{ __('Tous les services') }}</option>
+                                @foreach($departments as $dept)
+                                    <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>
+                                        {{ $dept->name }} ({{ $dept->site?->Nom ?? 'Site inconnu' }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-end">
+                            <div class="d-flex gap-2 w-100">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
                                     <i class="bi bi-search"></i> {{ __('Valider') }}
                                 </button>
                                 <a href="{{ route('admin.job-titles.index') }}" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-counterclockwise"></i> {{ __('Réinitialiser') }}
+                                    <i class="bi bi-arrow-counterclockwise"></i>
                                 </a>
                             </div>
                         </div>
@@ -67,6 +81,7 @@
                                 <th class="text-uppercase small fw-semibold text-secondary">{{ __('Nom') }}</th>
                                 <th class="text-uppercase small fw-semibold text-secondary">{{ __('Code') }}</th>
                                 <th class="text-uppercase small fw-semibold text-secondary">{{ __('Niveau KOSI') }}</th>
+                                <th class="text-uppercase small fw-semibold text-secondary">{{ __('Service') }}</th>  {{-- NOUVELLE COLONNE --}}
                                 <th class="text-uppercase small fw-semibold text-secondary">{{ __('Employés') }}</th>
                                 <th class="text-uppercase small fw-semibold text-secondary">{{ __('Actions') }}</th>
                             </tr>
@@ -91,6 +106,14 @@
                                             <small class="text-muted">{{ $jt->hierarchyLevel->name }}</small>
                                         @else
                                             <span class="text-muted">Non défini</span>
+                                        @endif
+                                    </td>
+                                    <td class="align-middle">
+                                        @if($jt->department)
+                                            <span class="badge bg-info">{{ $jt->department->name }}</span>
+                                            <small class="text-muted">({{ $jt->department->site?->Nom ?? 'Site inconnu' }})</small>
+                                        @else
+                                            <span class="text-muted">Aucun</span>
                                         @endif
                                     </td>
                                     <td class="align-middle text-center">
@@ -151,7 +174,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4">
+                                    <td colspan="6" class="text-center py-4">
                                         <div class="text-muted">
                                             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                             <p>{{ __('Aucun poste défini') }}</p>

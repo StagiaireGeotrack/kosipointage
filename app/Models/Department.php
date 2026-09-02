@@ -1,5 +1,4 @@
 <?php
-// app/Models/Department.php
 
 namespace App\Models;
 
@@ -39,6 +38,12 @@ class Department extends Model
     public function employes()
     {
         return $this->hasMany(Employe::class, 'department_id');
+    }
+
+    // NOUVELLE RELATION : les postes rattachés à ce service
+    public function jobTitles()
+    {
+        return $this->hasMany(JobTitle::class, 'department_id');
     }
 
     // ============ ACCESSORS ============
@@ -83,7 +88,7 @@ class Department extends Model
     {
         parent::boot();
         
-        // Ajouter un scope global pour le multi-tenant
+        // Scope multi-tenant
         static::addGlobalScope('site', function ($query) {
             $user = auth()->user();
             if ($user && !$user->IsSuperAdmin && $user->SiegeID) {

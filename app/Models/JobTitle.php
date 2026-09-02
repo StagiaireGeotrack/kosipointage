@@ -1,5 +1,4 @@
 <?php
-// app/Models/JobTitle.php
 
 namespace App\Models;
 
@@ -17,7 +16,8 @@ class JobTitle extends Model
         'company_id', 
         'name', 
         'code',
-        'hierarchy_level_id'  // <-- AJOUTER CETTE COLONNE
+        'hierarchy_level_id',
+        'department_id',   // <-- AJOUT
     ];
 
     protected $casts = [
@@ -25,25 +25,23 @@ class JobTitle extends Model
     ];
 
     // ============ RELATIONS ============
-    
-    /**
-     * Relation avec les employés
-     */
     public function employes()
     {
         return $this->hasMany(Employe::class, 'job_title_id');
     }
 
-    /**
-     * Relation avec le niveau hiérarchique KOSI
-     */
     public function hierarchyLevel()
     {
         return $this->belongsTo(HierarchyLevel::class, 'hierarchy_level_id');
     }
 
+    // NOUVELLE RELATION : le service auquel appartient ce poste
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
     // ============ ACCESSORS ============
-    
     public function getLevelNameAttribute()
     {
         return $this->hierarchyLevel?->name ?? 'Non défini';
@@ -59,11 +57,20 @@ class JobTitle extends Model
         return $this->employes()->count();
     }
 
+    public function getDepartmentNameAttribute()
+    {
+        return $this->department?->name ?? 'Non défini';
+    }
+
     // ============ SCOPES ============
-    
     public function scopeByLevel($query, $levelId)
     {
         return $query->where('hierarchy_level_id', $levelId);
+    }
+
+    public function scopeByDepartment($query, $departmentId)
+    {
+        return $query->where('department_id', $departmentId);
     }
 
     public function scopeSearch($query, $search)

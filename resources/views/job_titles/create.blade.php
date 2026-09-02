@@ -1,4 +1,4 @@
-{{-- resources/views/admin/job-titles/create.blade.php --}}
+{{-- resources/views/job_titles/create.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="row g-3 mt-2">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <x-input-label for="hierarchy_level_id" :value="__('Niveau KOSI')" />
                             <select id="hierarchy_level_id" name="hierarchy_level_id" class="form-select mt-1">
                                 <option value="">{{ __('Non défini') }}</option>
@@ -48,6 +48,21 @@
                             </select>
                             <x-input-error :messages="$errors->get('hierarchy_level_id')" class="mt-2" />
                             <small class="text-muted">{{ __('Niveau hiérarchique KOSI associé à ce poste') }}</small>
+                        </div>
+
+                        {{-- NOUVEAU CHAMP : Service --}}
+                        <div class="col-md-6">
+                            <x-input-label for="department_id" :value="__('Service')" />
+                            <select id="department_id" name="department_id" class="form-select mt-1">
+                                <option value="">{{ __('Aucun service') }}</option>
+                                @foreach($departments as $dept)
+                                    <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
+                                        {{ $dept->name }} ({{ $dept->site?->Nom ?? 'Site inconnu' }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('department_id')" class="mt-2" />
+                            <small class="text-muted">{{ __('Service auquel appartient ce poste (optionnel)') }}</small>
                         </div>
                     </div>
 
