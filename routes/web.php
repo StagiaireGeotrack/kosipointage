@@ -20,6 +20,7 @@ use App\Http\Controllers\AllDashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EventPointageController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\LeaveRoleController;
 use App\Http\Controllers\LeavePolicyController;
 use App\Http\Controllers\RuleFieldController;
 use App\Http\Controllers\CalculationRuleController;
@@ -296,6 +297,8 @@ Route::middleware('auth')->group(function () {
     // ADMIN / CONGÉS — Paramétrage
     // ==========================================
     Route::prefix('admin')->name('admin.')->group(function () {
+            Route::resource('leave-roles', LeaveRoleController::class);
+
         
         // ===== LEAVE TYPES =====
         Route::resource('leave-types', LeaveTypeController::class);

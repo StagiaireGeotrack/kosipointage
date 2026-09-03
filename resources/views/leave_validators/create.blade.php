@@ -47,17 +47,18 @@
                         @error('employee_id') <div class="text-danger small">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Rôle <span class="text-danger">*</span></label>
-                        <select name="role" id="role" class="form-select" required>
-                            <option value="">-- Sélectionnez un rôle --</option>
-                            <option value="manager" {{ old('role') == 'manager' ? 'selected' : '' }}>Manager</option>
-                            <option value="rh" {{ old('role') == 'rh' ? 'selected' : '' }}>RH</option>
-                            <option value="drh" {{ old('role') == 'drh' ? 'selected' : '' }}>DRH</option>
-                            <option value="direction" {{ old('role') == 'direction' ? 'selected' : '' }}>Direction</option>
-                        </select>
-                        @error('role') <div class="text-danger small">{{ $message }}</div> @enderror
-                    </div>
+                   <div class="mb-3">
+    <label for="role" class="form-label">Rôle <span class="text-danger">*</span></label>
+    <select name="role" id="role" class="form-select" required>
+        <option value="">-- Sélectionnez un rôle --</option>
+        @foreach($roles as $role)
+            <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                {{ $role->label }}
+            </option>
+        @endforeach
+    </select>
+    @error('role') <div class="text-danger small">{{ $message }}</div> @enderror
+</div>
 
                     <div class="mb-3 form-check">
                         <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{ old('is_active', true) ? 'checked' : '' }}>

@@ -9,6 +9,8 @@ use App\Services\LeaveRequestService;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use App\Models\LeaveApproval;
+use App\Services\LeaveBalanceService;
+use App\Models\LeaveType;
 
 
 class ManagerLeaveRequestController extends Controller
@@ -111,19 +113,21 @@ class ManagerLeaveRequestController extends Controller
 // Ajouter les imports
 
 
+// app/Http/Controllers/Manager/ManagerLeaveRequestController.php
+
+
+
 public function approve($id)
 {
     try {
         $user = auth()->user();
-        $admin = $user; // ou récupérer l'employé lié à l'admin
-
-        // ✅ Récupérer l'employé associé à cet admin (si admin est lié à un employé)
         $approverEmployeeId = $user->employee_id ?? null;
+        
         if (!$approverEmployeeId) {
-            throw new \Exception('Vous n\'êtes pas lié à un employé. Contactez l\'administrateur.');
+            throw new \Exception('Vous n\'êtes pas lié à un employé.');
         }
 
-        // ✅ Récupérer l'approbation en cours
+        // Récupérer l'approbation en cours
         $approval = LeaveApproval::where('is_current', true)
             ->where('status', 'pending')
             ->where('approver_id', $approverEmployeeId)
@@ -149,11 +153,14 @@ public function approve($id)
         if ($nextApproval) {
             $nextApproval->is_current = true;
             $nextApproval->save();
-            $leaveRequest->status = 'pending'; // toujours en attente
+            $leaveRequest->status = 'pending';
         } else {
-            // Toutes les étapes sont approuvées
+            // ✅ TOUTES LES ÉTAPES SONT APPROUVÉES
             $leaveRequest->status = 'approved';
             $leaveRequest->approved_at = now();
+            
+            // ✅ DÉDUIRE LE SOLDE (UNIQUEMENT SI LE TYPE DE CONGÉ DÉDUIT LE SOLDE)
+            $this->deductBalance($leaveRequest);
         }
         $leaveRequest->save();
 
@@ -163,6 +170,55 @@ public function approve($id)
     } catch (\Exception $e) {
         return back()->with('error', $e->getMessage());
     }
+}
+
+/**
+ * ✅ DÉDUIRE LE SOLDE DE L'EMPLOYÉ
+ * La logique est ici, pas dans le service
+ */
+private function deductBalance($leaveRequest)
+{
+    $leaveType = LeaveType::find($leaveRequest->leave_type_id);
+    
+    // ❌ Ne pas déduire si le type ne déduit pas le solde
+    if (!$leaveType || !$leaveType->deducts_balance) {
+        \Log::info('Congé approuvé SANS déduction de solde', [
+            'request_id' => $leaveRequest->id,
+            'employee_id' => $leaveRequest->employee_id,
+            'leave_type' => $leaveType?->name ?? 'inconnu',
+            'reason' => 'Ce type de congé ne déduit pas le solde (deducts_balance=0)'
+        ]);
+        return;
+    }
+
+    // ✅ Vérifier le solde disponible
+    $balanceService = app(LeaveBalanceService::class);
+    $availableBalance = $balanceService->getAvailableBalance(
+        $leaveRequest->employee_id,
+        $leaveRequest->leave_type_id,
+        $leaveRequest->period_id
+    );
+
+    if ($availableBalance < $leaveRequest->duration) {
+        throw new \Exception('Solde insuffisant pour cette demande. (Disponible: ' . $availableBalance . ' jours)');
+    }
+
+    // ✅ DÉBITER LE SOLDE
+    $balanceService->debitBalance(
+        $leaveRequest->employee_id,
+        $leaveRequest->leave_type_id,
+        $leaveRequest->period_id,
+        $leaveRequest->duration,
+        $leaveRequest->id,
+        'Validation de congé - ' . ($leaveRequest->reason ?? '')
+    );
+
+    \Log::info('Solde débité pour le congé approuvé', [
+        'request_id' => $leaveRequest->id,
+        'employee_id' => $leaveRequest->employee_id,
+        'leave_type' => $leaveType?->name ?? 'inconnu',
+        'duration' => $leaveRequest->duration
+    ]);
 }
 
 public function reject(Request $request, $id)

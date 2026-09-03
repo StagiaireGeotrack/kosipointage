@@ -150,65 +150,72 @@
     </div>
 
     @push("scripts")
-    <script>
-        let stepCounter = 0;
-       const roleOptions = {
-    'manager': 'Manager',
-    'rh': 'RH',
-    'drh': 'DRH',
-    'direction': 'Direction'
-};;
+<script>
+    let stepCounter = 0;
+    
+    // Récupérer les rôles depuis PHP
+    const roles = @json($roles);
+    
+    // Construire le mapping role -> label pour le fallback
+    const roleOptions = {};
+    roles.forEach(r => {
+        roleOptions[r.name] = r.label;
+    });
 
-        function addStep(data = null) {
-            const container = document.getElementById('steps-container');
-            const noStepsMsg = document.getElementById('no-steps-msg');
-            if (noStepsMsg) noStepsMsg.remove();
+    function addStep(data = null) {
+        const container = document.getElementById('steps-container');
+        const noStepsMsg = document.getElementById('no-steps-msg');
+        if (noStepsMsg) noStepsMsg.remove();
 
-            stepCounter++;
+        stepCounter++;
 
-            const order = data?.order || stepCounter;
-            const role = data?.role || 'manager';
-            const label = data?.label || '';
-            const description = data?.description || '';
+        const order = data?.order || stepCounter;
+        const role = data?.role || 'manager';
+        const label = data?.label || '';
+        const description = data?.description || '';
 
-            const stepHtml = `
-                <div class="step-item border rounded p-3 mb-3" data-step-id="${stepCounter}">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1">
-                            <div class="row g-3">
-                                <div class="col-md-2">
-                                    <label class="form-label small fw-bold">Ordre</label>
-                                    <input type="number" class="form-control step-order" value="${order}" min="1" readonly>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small fw-bold">Rôle</label>
-                                   <select class="form-select step-role">
-    <option value="manager" ${role === 'manager' ? 'selected' : ''}>Manager</option>
-    <option value="rh" ${role === 'rh' ? 'selected' : ''}>RH</option>
-    <option value="drh" ${role === 'drh' ? 'selected' : ''}>DRH</option>
-    <option value="direction" ${role === 'direction' ? 'selected' : ''}>Direction</option>
-</select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label small fw-bold">Label</label>
-                                    <input type="text" class="form-control step-label" value="${label}" placeholder="Ex: Validation Manager">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small fw-bold">Description</label>
-                                    <input type="text" class="form-control step-description" value="${description}" placeholder="Description courte">
-                                </div>
+        // Générer les options des rôles dynamiquement
+        const roleOptionsHtml = roles.map(r => 
+            `<option value="${r.name}" ${role === r.name ? 'selected' : ''}>${r.label}</option>`
+        ).join('');
+
+        const stepHtml = `
+            <div class="step-item border rounded p-3 mb-3" data-step-id="${stepCounter}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold">Ordre</label>
+                                <input type="number" class="form-control step-order" value="${order}" min="1" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Rôle</label>
+                                <select class="form-select step-role">
+                                    ${roleOptionsHtml}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Label</label>
+                                <input type="text" class="form-control step-label" value="${label}" placeholder="Ex: Validation Manager">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Description</label>
+                                <input type="text" class="form-control step-description" value="${description}" placeholder="Description courte">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeStep(this)">
-                            <i class="bi bi-trash"></i>
-                        </button>
                     </div>
+                    <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeStep(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
-            `;
+            </div>
+        `;
 
-            container.insertAdjacentHTML('beforeend', stepHtml);
-            updateStepsInput();
-        }
+        container.insertAdjacentHTML('beforeend', stepHtml);
+        updateStepsInput();
+    }
+
+
 
         function removeStep(button) {
             const stepItem = button.closest('.step-item');

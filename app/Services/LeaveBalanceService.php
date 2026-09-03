@@ -151,49 +151,59 @@ class LeaveBalanceService
     /**
      * ✅ Débiter le solde d'un employé (prise de congé) - AVEC VÉRIFICATION
      */
-    public function debitBalance($employeeId, $leaveTypeId, $periodId, $amount, $referenceId = null, $description = null)
-    {
-        // ✅ Vérifier si un débit existe déjà pour cette référence
-        if ($referenceId) {
-            $existing = LeaveBalanceTransaction::where('reference_id', $referenceId)
-                ->where('reference_type', 'leave_request')
-                ->where('type', 'debit')
-                ->first();
-
-            if ($existing) {
-                Log::warning('Débit déjà existant pour cette demande', [
-                    'reference_id' => $referenceId,
-                    'existing_id' => $existing->id
-                ]);
-                return $existing;
-            }
-        }
-
-        // ✅ Vérifier le solde avant débit
-        $balance = LeaveBalance::where('employee_id', $employeeId)
-            ->where('leave_type_id', $leaveTypeId)
-            ->where('period_id', $periodId)
+   /**
+ * ✅ DÉBITER LE SOLDE D'UN EMPLOYÉ (prise de congé)
+ */
+public function debitBalance($employeeId, $leaveTypeId, $periodId, $amount, $referenceId = null, $description = null)
+{
+    // ✅ Vérifier si un débit existe déjà pour cette référence
+    if ($referenceId) {
+        $existing = LeaveBalanceTransaction::where('reference_id', $referenceId)
+            ->where('reference_type', 'leave_request')
+            ->where('type', 'debit')
             ->first();
 
-        if ($balance && $balance->remaining < $amount) {
-            $leaveType = LeaveType::find($leaveTypeId);
-            if (!$leaveType || !$leaveType->allow_negative_balance) {
-                throw new \Exception('Solde insuffisant pour ce type de congé.');
-            }
+        if ($existing) {
+            // 🔥 Vérifier si le solde a déjà été déduit
+            // Si le débit existe, on met simplement à jour le solde
+            Log::info('Débit déjà existant, mise à jour du solde', [
+                'reference_id' => $referenceId,
+                'transaction_id' => $existing->id,
+                'amount' => $existing->amount
+            ]);
+            
+            // ✅ Mettre à jour le solde (au cas où)
+            $this->updateBalance($employeeId, $leaveTypeId, $periodId);
+            
+            return $existing;
         }
-
-        return $this->createTransaction(
-            $employeeId,
-            $leaveTypeId,
-            $periodId,
-            -$amount, // ✅ Montant négatif pour un débit
-            'debit',
-            $description ?? 'Débit suite à validation de congé',
-            $referenceId,
-            'leave_request',
-            ['type' => 'debit']
-        );
     }
+
+    // ✅ Vérifier le solde avant débit
+    $balance = LeaveBalance::where('employee_id', $employeeId)
+        ->where('leave_type_id', $leaveTypeId)
+        ->where('period_id', $periodId)
+        ->first();
+
+    if ($balance && $balance->remaining < $amount) {
+        $leaveType = LeaveType::find($leaveTypeId);
+        if (!$leaveType || !$leaveType->allow_negative_balance) {
+            throw new \Exception('Solde insuffisant pour ce type de congé.');
+        }
+    }
+
+    return $this->createTransaction(
+        $employeeId,
+        $leaveTypeId,
+        $periodId,
+        -$amount,
+        'debit',
+        $description ?? 'Débit suite à validation de congé',
+        $referenceId,
+        'leave_request',
+        ['type' => 'debit']
+    );
+}
 
     /**
      * ✅ ANNULER un débit (reversal) - NOUVELLE MÉTHODE

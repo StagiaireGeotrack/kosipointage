@@ -71,7 +71,7 @@
                                                             <div class="modal-body">
                                                                 <div class="mb-3">
                                                                     <label class="form-label">{{ __('Motif du refus') }} <span class="text-danger">*</span></label>
-                                                                    <textarea name="reason" class="form-control" rows="3" required></textarea>
+                                                                    <textarea name="rejection_reason" class="form-control" rows="3" required placeholder="Expliquez le motif du refus..."></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">

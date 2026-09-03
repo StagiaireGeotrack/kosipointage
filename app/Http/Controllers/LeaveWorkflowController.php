@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 
 use App\Models\EntrepriseSiege;
 use App\Models\LeaveWorkflow;
+use App\Models\LeaveRole;
+
 use App\Models\SiteLeaveWorkflowSetting;
 use App\Models\LeaveType;
 use App\Services\LeaveWorkflowResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class LeaveWorkflowController extends Controller
 {
@@ -123,7 +126,8 @@ class LeaveWorkflowController extends Controller
     $this->authorize('create', LeaveWorkflow::class);
     $sites = $this->isSuperAdmin() ? EntrepriseSiege::orderBy('nom')->get() : collect();
     $leaveTypes = LeaveType::where('is_active', 1)->orderBy('name')->get();
-    return view('conges.leave_workflows.create', compact('sites', 'leaveTypes'));
+    $roles = LeaveRole::where('is_active', true)->orderBy('name')->get();
+    return view('conges.leave_workflows.create', compact('sites', 'leaveTypes', 'roles'));
 }
 
     public function store(Request $request)
@@ -192,13 +196,14 @@ class LeaveWorkflowController extends Controller
     $this->authorize('update', $leaveWorkflow);
     $sites = $this->isSuperAdmin() ? EntrepriseSiege::orderBy('nom')->get() : collect();
     $leaveTypes = LeaveType::where('is_active', 1)->orderBy('name')->get();
+    $roles = LeaveRole::where('is_active', true)->orderBy('name')->get();
     $override = null;
     if (!$this->isSuperAdmin() && $leaveWorkflow->isGlobal() && $leaveWorkflow->is_customizable) {
         $override = SiteLeaveWorkflowSetting::where('site_id', $this->getUserSiteId())
             ->where('leave_workflow_id', $leaveWorkflow->id)
             ->first();
     }
-    return view('conges.leave_workflows.edit', compact('leaveWorkflow', 'sites', 'leaveTypes', 'override'));
+    return view('conges.leave_workflows.edit', compact('leaveWorkflow', 'sites', 'leaveTypes', 'roles', 'override'));
 }
 
     public function update(Request $request, LeaveWorkflow $leaveWorkflow)
