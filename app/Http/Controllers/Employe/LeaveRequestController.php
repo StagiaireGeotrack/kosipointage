@@ -1330,19 +1330,40 @@ private function applyWorkflow($leaveRequest)
             continue;
         }
 
-        $validator = LeaveValidator::where('site_id', $employee->SiegeID)
-            ->where('role', $role)
-            ->where('is_active', true)
-            ->first();
+        $approverId = null;
 
-        if (!$validator) {
-            throw new \Exception("Aucun validateur trouvé pour le rôle : {$role}.");
+        // ✅ Étape "manager" : utiliser le manager direct de l'employé
+        if ($role === 'manager') {
+            $approverId = $employee->manager_id;
+            if (!$approverId) {
+                // Fallback : chercher un validateur avec le rôle "manager"
+                $validator = LeaveValidator::where('site_id', $employee->SiegeID)
+                    ->where('role', 'manager')
+                    ->where('is_active', true)
+                    ->first();
+                if ($validator) {
+                    $approverId = $validator->employee_id;
+                } else {
+                    throw new \Exception("L'employé n'a pas de manager direct et aucun validateur 'manager' n'est défini pour ce site.");
+                }
+            }
+        } else {
+            // ✅ Autres rôles (rh, drh, direction, etc.) : utiliser LeaveValidator
+            $validator = LeaveValidator::where('site_id', $employee->SiegeID)
+                ->where('role', $role)
+                ->where('is_active', true)
+                ->first();
+            if (!$validator) {
+                throw new \Exception("Aucun validateur trouvé pour le rôle : {$role}.");
+            }
+            $approverId = $validator->employee_id;
         }
 
+        // Créer l'approbation
         LeaveApproval::create([
             'leave_request_id' => $leaveRequest->id,
             'workflow_step_id' => null,
-            'approver_id' => $validator->employee_id,
+            'approver_id' => $approverId,
             'step_order' => $index + 1,
             'status' => 'pending',
             'is_current' => ($index === 0),

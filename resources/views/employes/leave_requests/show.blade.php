@@ -82,33 +82,54 @@
 
                 <!-- Workflow (affichage pour l'employé) -->
                 <div class="mt-3 pt-3 border-top">
-                    <h6>{{ __('Workflow de validation') }}</h6>
-                    @if($request->approvals->isNotEmpty())
-                        <ul class="list-group">
-                            @foreach($request->approvals as $step)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong>Étape {{ $step->step_order }}</strong> : 
-                                        {{ $step->step ? $step->step->name : ($step->step_order == 1 ? 'Manager' : 'RH/Direction') }}
-                                    </div>
-                                    <div>
-                                        @if($step->status == 'pending' && $step->is_current)
-                                            <span class="badge bg-warning">En cours</span>
-                                        @elseif($step->status == 'approved')
-                                            <span class="badge bg-success">Approuvé</span>
-                                        @elseif($step->status == 'rejected')
-                                            <span class="badge bg-danger">Refusé</span>
-                                        @else
-                                            <span class="badge bg-secondary">En attente</span>
-                                        @endif
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="text-muted">{{ __('Aucune étape de validation définie.') }}</p>
-                    @endif
-                </div>
+    <h6>{{ __('Workflow de validation') }}</h6>
+    @if($request->approvals->isNotEmpty())
+        <ul class="list-group">
+            @php
+                // Récupérer les labels des étapes depuis le workflow JSON
+                $workflowSteps = [];
+                if ($request->workflow && $request->workflow->steps) {
+                    $steps = is_string($request->workflow->steps) ? json_decode($request->workflow->steps, true) : $request->workflow->steps;
+                    foreach ($steps as $s) {
+                        $workflowSteps[$s['order']] = $s['label'] ?? $s['role'] ?? 'Étape ' . $s['order'];
+                    }
+                }
+                // Fallback si les labels ne sont pas disponibles
+                $defaultLabels = [
+                    1 => 'Manager',
+                    2 => 'RH',
+                    3 => 'DRH',
+                    4 => 'Direction',
+                ];
+            @endphp
+            @foreach($request->approvals as $step)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Étape {{ $step->step_order }}</strong> : 
+                        {{ $workflowSteps[$step->step_order] ?? $defaultLabels[$step->step_order] ?? 'Étape ' . $step->step_order }}
+                        <br>
+                        <small class="text-muted">
+                            Approbateur : {{ $step->approver->Nom ?? 'N/A' }}
+                        </small>
+                    </div>
+                    <div>
+                        @if($step->status == 'pending' && $step->is_current)
+                            <span class="badge bg-warning">En cours</span>
+                        @elseif($step->status == 'approved')
+                            <span class="badge bg-success">Approuvé</span>
+                        @elseif($step->status == 'rejected')
+                            <span class="badge bg-danger">Refusé</span>
+                        @else
+                            <span class="badge bg-secondary">En attente</span>
+                        @endif
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p class="text-muted">{{ __('Aucune étape de validation définie.') }}</p>
+    @endif
+</div>
 
                 <!-- Pièces jointes -->
                 <div class="mt-4 pt-3 border-top">

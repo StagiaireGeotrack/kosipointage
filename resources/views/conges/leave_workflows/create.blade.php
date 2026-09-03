@@ -152,12 +152,12 @@
     @push("scripts")
     <script>
         let stepCounter = 0;
-        const roleOptions = {
-            'manager': 'Manager',
-            'hr': 'RH',
-            'director': 'Directeur',
-            'admin': 'Administrateur'
-        };
+       const roleOptions = {
+    'manager': 'Manager',
+    'rh': 'RH',
+    'drh': 'DRH',
+    'direction': 'Direction'
+};;
 
         function addStep(data = null) {
             const container = document.getElementById('steps-container');
@@ -182,12 +182,12 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label small fw-bold">Rôle</label>
-                                    <select class="form-select step-role">
-                                        <option value="manager" ${role === 'manager' ? 'selected' : ''}>Manager</option>
-                                        <option value="hr" ${role === 'hr' ? 'selected' : ''}>RH</option>
-                                        <option value="director" ${role === 'director' ? 'selected' : ''}>Directeur</option>
-                                        <option value="admin" ${role === 'admin' ? 'selected' : ''}>Administrateur</option>
-                                    </select>
+                                   <select class="form-select step-role">
+    <option value="manager" ${role === 'manager' ? 'selected' : ''}>Manager</option>
+    <option value="rh" ${role === 'rh' ? 'selected' : ''}>RH</option>
+    <option value="drh" ${role === 'drh' ? 'selected' : ''}>DRH</option>
+    <option value="direction" ${role === 'direction' ? 'selected' : ''}>Direction</option>
+</select>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label small fw-bold">Label</label>
