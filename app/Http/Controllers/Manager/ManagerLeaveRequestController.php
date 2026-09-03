@@ -8,6 +8,8 @@ use App\Models\Employe;
 use App\Services\LeaveRequestService;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use App\Models\LeaveApproval;
+
 
 class ManagerLeaveRequestController extends Controller
 {
@@ -25,65 +27,56 @@ class ManagerLeaveRequestController extends Controller
     /**
      * Afficher les demandes en attente (PAS les brouillons)
      */
-    public function index(Request $request)
-    {
-        $user = auth()->user();
-        $managerId = $user->ID ?? $user->id ?? null;
+   public function index(Request $request)
+{
+    $user = auth()->user();
+    $approverEmployeeId = $user->employee_id ?? null;
 
-        if (!$managerId) {
-            abort(403, 'Utilisateur non authentifié.');
-        }
-
-        // Récupérer les employés du manager
-        $employees = Employe::where('manager_id', $managerId)
-            ->orWhere('user_id', $managerId)
-            ->pluck('ID')
-            ->toArray();
-
-        // Si aucun employé, prendre tous les employés du site
-        if (empty($employees)) {
-            $employees = Employe::where('SiegeID', $user->SiegeID)
-                ->pluck('ID')
-                ->toArray();
-        }
-
-        // ✅ Ne récupérer QUE les demandes en attente (pending) et approuvées
-        $query = LeaveRequest::whereIn('employee_id', $employees)
-            ->whereIn('status', ['pending', 'approved', 'rejected']) // ✅ Exclure les brouillons
-            ->with(['employee', 'leaveType']);
-
-        // Filtrer par statut si demandé
-        if ($request->has('status') && $request->status != 'all') {
-            $query->where('status', $request->status);
-        }
-
-        $leaveRequests = $query->orderBy('created_at', 'desc')->paginate(20);
-
-        // Statistiques
-        $pendingCount = LeaveRequest::whereIn('employee_id', $employees)
-            ->where('status', 'pending')
-            ->count();
-            
-        $approvedCount = LeaveRequest::whereIn('employee_id', $employees)
-            ->where('status', 'approved')
-            ->count();
-            
-        $rejectedCount = LeaveRequest::whereIn('employee_id', $employees)
-            ->where('status', 'rejected')
-            ->count();
-            
-        $totalCount = LeaveRequest::whereIn('employee_id', $employees)
-            ->whereIn('status', ['pending', 'approved', 'rejected'])
-            ->count();
-
-        return view('manager.leave_requests.index', compact(
-            'leaveRequests',
-            'pendingCount',
-            'approvedCount',
-            'rejectedCount',
-            'totalCount'
-        ));
+    if (!$approverEmployeeId) {
+        abort(403, 'Vous n\'êtes pas lié à un employé.');
     }
+
+    // ✅ Récupérer les approbations en attente (is_current = true) pour ce manager
+    $pendingApprovals = LeaveApproval::where('approver_id', $approverEmployeeId)
+        ->where('is_current', true)
+        ->where('status', 'pending')
+        ->with(['leaveRequest' => function($q) {
+            $q->with(['employee', 'leaveType']);
+        }])
+        ->orderBy('created_at', 'desc')
+        ->paginate(20);
+
+    // On récupère les demandes correspondantes
+    $leaveRequests = $pendingApprovals->map(function($approval) {
+        return $approval->leaveRequest;
+    });
+
+    // Statistiques (toujours en utilisant les approbations de ce manager)
+    $pendingCount = LeaveApproval::where('approver_id', $approverEmployeeId)
+        ->where('status', 'pending')
+        ->where('is_current', true)
+        ->count();
+
+    $approvedCount = LeaveApproval::where('approver_id', $approverEmployeeId)
+        ->where('status', 'approved')
+        ->count();
+
+    $rejectedCount = LeaveApproval::where('approver_id', $approverEmployeeId)
+        ->where('status', 'rejected')
+        ->count();
+
+    $totalCount = LeaveApproval::where('approver_id', $approverEmployeeId)
+        ->count();
+
+    return view('manager.leave_requests.index', compact(
+        'leaveRequests',
+        'pendingCount',
+        'approvedCount',
+        'rejectedCount',
+        'totalCount',
+        'pendingApprovals' // pour avoir les approbations si besoin
+    ));
+}
 
     /**
      * Afficher une demande spécifique
@@ -113,48 +106,100 @@ class ManagerLeaveRequestController extends Controller
     /**
      * Approuver une demande
      */
-    public function approve($id)
-    {
-        try {
-            $user = auth()->user();
-            $approverId = $user->ID ?? $user->id ?? null;
+    // app/Http/Controllers/Manager/ManagerLeaveRequestController.php
 
-            if (!$approverId) {
-                throw new \Exception('Utilisateur non authentifié.');
-            }
+// Ajouter les imports
 
-            $this->leaveRequestService->approveRequest($id, $approverId);
 
-            return redirect()->route('manager.leave-requests.index')
-                ->with('success', 'Demande approuvée avec succès.');
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+public function approve($id)
+{
+    try {
+        $user = auth()->user();
+        $admin = $user; // ou récupérer l'employé lié à l'admin
+
+        // ✅ Récupérer l'employé associé à cet admin (si admin est lié à un employé)
+        $approverEmployeeId = $user->employee_id ?? null;
+        if (!$approverEmployeeId) {
+            throw new \Exception('Vous n\'êtes pas lié à un employé. Contactez l\'administrateur.');
         }
-    }
 
-    /**
-     * Rejeter une demande
-     */
-    public function reject(Request $request, $id)
-    {
-        try {
-            $user = auth()->user();
-            $rejecterId = $user->ID ?? $user->id ?? null;
+        // ✅ Récupérer l'approbation en cours
+        $approval = LeaveApproval::where('is_current', true)
+            ->where('status', 'pending')
+            ->where('approver_id', $approverEmployeeId)
+            ->whereHas('leaveRequest', function ($q) {
+                $q->whereIn('status', ['pending']);
+            })
+            ->findOrFail($id);
 
-            if (!$rejecterId) {
-                throw new \Exception('Utilisateur non authentifié.');
-            }
+        // Marquer comme approuvée
+        $approval->status = 'approved';
+        $approval->approved_at = now();
+        $approval->is_current = false;
+        $approval->save();
 
-            $request->validate([
-                'rejection_reason' => 'required|string|min:3|max:500'
-            ]);
+        $leaveRequest = $approval->leaveRequest;
 
-            $this->leaveRequestService->rejectRequest($id, $rejecterId, $request->rejection_reason);
+        // Passer à l'étape suivante
+        $nextApproval = LeaveApproval::where('leave_request_id', $leaveRequest->id)
+            ->where('step_order', '>', $approval->step_order)
+            ->orderBy('step_order')
+            ->first();
 
-            return redirect()->route('manager.leave-requests.index')
-                ->with('success', 'Demande refusée avec succès.');
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+        if ($nextApproval) {
+            $nextApproval->is_current = true;
+            $nextApproval->save();
+            $leaveRequest->status = 'pending'; // toujours en attente
+        } else {
+            // Toutes les étapes sont approuvées
+            $leaveRequest->status = 'approved';
+            $leaveRequest->approved_at = now();
         }
+        $leaveRequest->save();
+
+        return redirect()->route('manager.leave-requests.index')
+            ->with('success', 'Demande approuvée avec succès.');
+
+    } catch (\Exception $e) {
+        return back()->with('error', $e->getMessage());
     }
+}
+
+public function reject(Request $request, $id)
+{
+    try {
+        $request->validate(['rejection_reason' => 'required|string|min:3|max:500']);
+
+        $user = auth()->user();
+        $approverEmployeeId = $user->employee_id ?? null;
+        if (!$approverEmployeeId) {
+            throw new \Exception('Vous n\'êtes pas lié à un employé.');
+        }
+
+        $approval = LeaveApproval::where('is_current', true)
+            ->where('status', 'pending')
+            ->where('approver_id', $approverEmployeeId)
+            ->whereHas('leaveRequest', function ($q) {
+                $q->whereIn('status', ['pending']);
+            })
+            ->findOrFail($id);
+
+        $approval->status = 'rejected';
+        $approval->rejected_at = now();
+        $approval->is_current = false;
+        $approval->rejection_reason = $request->rejection_reason;
+        $approval->save();
+
+        $leaveRequest = $approval->leaveRequest;
+        $leaveRequest->status = 'rejected';
+        $leaveRequest->rejection_reason = $request->rejection_reason;
+        $leaveRequest->save();
+
+        return redirect()->route('manager.leave-requests.index')
+            ->with('success', 'Demande refusée avec succès.');
+
+    } catch (\Exception $e) {
+        return back()->with('error', $e->getMessage());
+    }
+}
 }

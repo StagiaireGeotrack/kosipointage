@@ -1,3 +1,4 @@
+{{-- resources/views/manager/leave_requests/show.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -79,6 +80,40 @@
                     </div>
                 </div>
 
+                <!-- Workflow -->
+                <div class="mt-3 pt-3 border-top">
+                    <h6>Workflow de validation</h6>
+                    @if($leaveRequest->approvals->isNotEmpty())
+                        <ul class="list-group">
+                            @foreach($leaveRequest->approvals as $step)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Étape {{ $step->step_order }}</strong> : 
+                                        {{ $step->step ? $step->step->name : ($step->step_order == 1 ? 'Manager' : 'RH/Direction') }}
+                                        <br>
+                                        <small class="text-muted">
+                                            Approbateur : {{ $step->approver->Nom ?? 'N/A' }}
+                                        </small>
+                                    </div>
+                                    <div>
+                                        @if($step->status == 'pending' && $step->is_current)
+                                            <span class="badge bg-warning">En cours</span>
+                                        @elseif($step->status == 'approved')
+                                            <span class="badge bg-success">Approuvé le {{ $step->approved_at ? $step->approved_at->format('d/m/Y H:i') : '' }}</span>
+                                        @elseif($step->status == 'rejected')
+                                            <span class="badge bg-danger">Refusé</span>
+                                        @else
+                                            <span class="badge bg-secondary">En attente</span>
+                                        @endif
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-muted">Aucune étape de validation définie.</p>
+                    @endif
+                </div>
+
                 <!-- Pièces jointes -->
                 @if($leaveRequest->attachments->isNotEmpty())
                     <div class="mt-3 pt-3 border-top">
@@ -88,7 +123,7 @@
                                 <span>{{ $attachment->file_name }}</span>
                                 <a href="{{ route('employe.leave-requests.download-attachment', $attachment->id) }}" 
                                    class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-download"></i>Telecharger
+                                    <i class="bi bi-download"></i> Télécharger
                                 </a>
                             </div>
                         @endforeach
@@ -99,7 +134,7 @@
                 @if($leaveRequest->status == 'pending')
                     <div class="mt-3 pt-3 border-top">
                         <div class="d-flex gap-2">
-                            <form action="{{ route('manager.leave-requests.approve', $leaveRequest->id) }}" method="POST">
+                            <form action="{{ route('manager.leave-requests.approve', $leaveRequest->currentApproval->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-success">
                                     <i class="bi bi-check-circle"></i> Approuver
@@ -135,7 +170,7 @@
     <div class="modal fade" id="rejectModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('manager.leave-requests.reject', $leaveRequest->id) }}" method="POST">
+                <form action="{{ route('manager.leave-requests.reject', $leaveRequest->currentApproval->id) }}" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Refuser la demande</h5>

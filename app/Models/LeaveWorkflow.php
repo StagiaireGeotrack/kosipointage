@@ -1,19 +1,17 @@
 <?php
-// app/Models/LeaveWorkflow.php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LeaveWorkflow extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'leave_workflows';
 
     protected $fillable = [
+        'leave_type_id',
         'site_id',
         'name',
         'description',
@@ -21,6 +19,7 @@ class LeaveWorkflow extends Model
         'is_default',
         'is_customizable',
         'is_active',
+        'deleted_at',
     ];
 
     protected $casts = [
@@ -28,99 +27,127 @@ class LeaveWorkflow extends Model
         'is_default' => 'boolean',
         'is_customizable' => 'boolean',
         'is_active' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
 
-    protected $appends = ['is_global'];
+    // ============ RELATIONS ============
 
-    // Relations
+    /**
+     * Relation avec le site (siège)
+     */
     public function site()
     {
-        return $this->belongsTo(EntrepriseSiege::class, 'site_id', 'ID');
+        return $this->belongsTo(EntrepriseSiege::class, 'site_id');
     }
 
-    public function siteSettings()
+    /**
+     * Relation avec le type de congé
+     */
+    public function leaveType()
     {
-        return $this->hasMany(SiteLeaveWorkflowSetting::class, 'leave_workflow_id');
+        return $this->belongsTo(LeaveType::class, 'leave_type_id');
     }
 
-    // Accessors
-    public function getIsGlobalAttribute(): bool
+    /**
+     * Relation avec les étapes du workflow
+     */
+    public function steps()
     {
-        return is_null($this->site_id);
+        return $this->hasMany(LeaveWorkflowStep::class)->orderBy('step_order');
     }
 
-    public function getStepsCountAttribute(): int
-    {
-        return count($this->steps ?? []);
-    }
+    // ============ ACCESSORS ============
 
-    public function getStepRolesAttribute(): string
-    {
-        if (empty($this->steps)) return 'Aucune étape';
-        
-        $roles = array_map(function($step) {
-            return $step['label'] ?? $step['role'] ?? 'Étape ' . ($step['order'] ?? '');
-        }, $this->steps);
-        
-        return implode(' → ', $roles);
-    }
-
-    // Scopes
-    public function scopeVisibleForUser($query, $user)
-    {
-        if ($user && $user->IsSuperAdmin == 1) {
-            return $query;
-        }
-
-        $siteId = $user ? $user->SiegeID : null;
-
-        return $query->where(function ($q) use ($siteId) {
-            $q->whereNull('site_id')
-              ->orWhere('site_id', $siteId);
-        });
-    }
-
-    public function scopeGlobal($query)
-    {
-        return $query->whereNull('site_id');
-    }
-
-    public function scopeForSite($query, int $siteId)
-    {
-        return $query->where('site_id', $siteId);
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    public function scopeDefault($query)
-    {
-        return $query->where('is_default', true);
-    }
-
-    // Helpers
+    /**
+     * Vérifier si le workflow est global (sans site)
+     */
     public function isGlobal(): bool
     {
         return is_null($this->site_id);
     }
 
-    public function settingForSite(int $siteId): ?SiteLeaveWorkflowSetting
+    /**
+     * Récupérer les étapes sous forme de tableau (décodé depuis JSON)
+     */
+    public function getStepsArrayAttribute(): array
     {
-        return $this->siteSettings()->where('site_id', $siteId)->first();
+        if (is_array($this->steps)) {
+            return $this->steps;
+        }
+        if (is_string($this->steps)) {
+            return json_decode($this->steps, true) ?: [];
+        }
+        return [];
     }
 
-    public function getFirstStepRole(): ?string
+    /**
+     * Compter le nombre d'étapes
+     */
+    public function getStepsCountAttribute(): int
     {
-        if (empty($this->steps)) return null;
-        return $this->steps[0]['role'] ?? null;
+        return count($this->steps_array);
     }
 
-    public function getLastStepRole(): ?string
+    /**
+     * Obtenir le chemin des étapes (ex: "Manager → RH → Direction → Validé")
+     */
+    public function getStepsPathAttribute(): string
     {
-        if (empty($this->steps)) return null;
-        $last = end($this->steps);
-        return $last['role'] ?? null;
+        $steps = $this->steps_array;
+        if (empty($steps)) {
+            return 'Aucune étape';
+        }
+        $labels = [];
+        foreach ($steps as $step) {
+            $labels[] = $step['label'] ?? $step['role'] ?? 'Étape';
+        }
+        $labels[] = 'Validé';
+        return implode(' → ', $labels);
+    }
+
+    // ============ SCOPES ============
+
+    /**
+     * Scope : filtre les workflows visibles pour un utilisateur donné.
+     * - SuperAdmin voit tout.
+     * - Admin simple voit les globaux + ceux de son site.
+     */
+    public function scopeVisibleForUser($query, $user)
+    {
+        if (!$user) {
+            return $query;
+        }
+
+        $isSuperAdmin = $user->IsSuperAdmin ?? false;
+        if ($isSuperAdmin) {
+            return $query;
+        }
+
+        $siteId = $user->SiegeID ?? null;
+        if ($siteId) {
+            return $query->where(function ($q) use ($siteId) {
+                $q->whereNull('site_id')
+                  ->orWhere('site_id', $siteId);
+            });
+        }
+
+        // Si l'utilisateur n'a pas de site, on ne lui montre que les globaux
+        return $query->whereNull('site_id');
+    }
+
+    /**
+     * Scope : actif
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope : par site
+     */
+    public function scopeBySite($query, $siteId)
+    {
+        return $query->where('site_id', $siteId);
     }
 }

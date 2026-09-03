@@ -76,18 +76,41 @@
                                 <dt class="col-sm-4 fw-bold">{{ __('Date d\'approbation') }}</dt>
                                 <dd class="col-sm-8">{{ $request->approved_at->format('d/m/Y H:i') }}</dd>
                             @endif
-
-                            @if($request->approver)
-                                <dt class="col-sm-4 fw-bold">{{ __('Approbateur') }}</dt>
-                                <dd class="col-sm-8">{{ $request->approver->name ?? 'N/A' }}</dd>
-                            @endif
                         </dl>
                     </div>
                 </div>
 
-                <!-- ============================================ -->
-                <!-- ÉTAPE 6 : SECTION PIÈCES JOINTES               -->
-                <!-- ============================================ -->
+                <!-- Workflow (affichage pour l'employé) -->
+                <div class="mt-3 pt-3 border-top">
+                    <h6>{{ __('Workflow de validation') }}</h6>
+                    @if($request->approvals->isNotEmpty())
+                        <ul class="list-group">
+                            @foreach($request->approvals as $step)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Étape {{ $step->step_order }}</strong> : 
+                                        {{ $step->step ? $step->step->name : ($step->step_order == 1 ? 'Manager' : 'RH/Direction') }}
+                                    </div>
+                                    <div>
+                                        @if($step->status == 'pending' && $step->is_current)
+                                            <span class="badge bg-warning">En cours</span>
+                                        @elseif($step->status == 'approved')
+                                            <span class="badge bg-success">Approuvé</span>
+                                        @elseif($step->status == 'rejected')
+                                            <span class="badge bg-danger">Refusé</span>
+                                        @else
+                                            <span class="badge bg-secondary">En attente</span>
+                                        @endif
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-muted">{{ __('Aucune étape de validation définie.') }}</p>
+                    @endif
+                </div>
+
+                <!-- Pièces jointes -->
                 <div class="mt-4 pt-3 border-top">
                     <h5 class="mb-3">
                         <i class="bi bi-paperclip"></i> {{ __('Pièces jointes') }}
@@ -99,7 +122,6 @@
                             @foreach($request->attachments as $attachment)
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
                                     <div class="d-flex align-items-center gap-2">
-                                        <!-- Icône selon le type de fichier -->
                                         @php
                                             $icon = 'bi-file';
                                             if (str_contains($attachment->mime_type, 'pdf')) {
@@ -129,23 +151,20 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-    <!-- Bouton Télécharger avec texte -->
-    <a href="{{ route('employe.leave-requests.download-attachment', $attachment->id) }}" 
-       class="btn btn-sm btn-outline-primary" 
-       title="Télécharger {{ $attachment->file_name }}"
-       target="_blank">
-        <i class="bi bi-download"></i> Télécharger
-    </a>
-    
-    <!-- Bouton Supprimer avec texte (uniquement pour brouillon ou en attente) -->
-    @if($request->status == 'draft' || $request->status == 'pending')
-        <button onclick="deleteAttachment({{ $attachment->id }})" 
-                class="btn btn-sm btn-outline-danger" 
-                title="Supprimer {{ $attachment->file_name }}">
-            <i class="bi bi-trash"></i> Supprimer
-        </button>
-    @endif
-</div>
+                                        <a href="{{ route('employe.leave-requests.download-attachment', $attachment->id) }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           title="Télécharger {{ $attachment->file_name }}"
+                                           target="_blank">
+                                            <i class="bi bi-download"></i> Télécharger
+                                        </a>
+                                        @if($request->status == 'draft' || $request->status == 'pending')
+                                            <button onclick="deleteAttachment({{ $attachment->id }})" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    title="Supprimer {{ $attachment->file_name }}">
+                                                <i class="bi bi-trash"></i> Supprimer
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -156,7 +175,7 @@
                         </div>
                     @endif
                     
-                    <!-- Formulaire d'upload (uniquement pour brouillon ou en attente) -->
+                    <!-- Formulaire d'upload -->
                     @if($request->status == 'draft' || $request->status == 'pending')
                         <div class="mt-3 p-3" style="background-color: #f8f9fa; border-radius: 6px; border: 2px dashed #dee2e6;">
                             <form id="attachmentForm" enctype="multipart/form-data">
@@ -185,7 +204,6 @@
                                         </button>
                                     </div>
                                 </div>
-                                <!-- Barre de progression -->
                                 <div id="uploadProgress" class="mt-2" style="display: none;">
                                     <div class="progress">
                                         <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
@@ -203,7 +221,6 @@
                 <!-- Boutons d'action -->
                 <div class="mt-3 pt-3 border-top">
                     <div class="d-flex gap-2 flex-wrap">
-                        <!-- Bouton Éditer (uniquement pour les brouillons) -->
                         @if($request->status == 'draft')
                             <a href="{{ route('employe.leave-requests.edit', $request->id) }}" 
                                class="btn" style="background-color: #f59e0b; color: #fff; border: none; border-radius: 6px; padding: 8px 20px;" 
@@ -212,7 +229,6 @@
                             </a>
                         @endif
 
-                        <!-- Bouton Soumettre (uniquement pour les brouillons) -->
                         @if($request->status == 'draft')
                             <form action="{{ route('employe.leave-requests.submit', $request->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -222,7 +238,6 @@
                             </form>
                         @endif
 
-                        <!-- Bouton Supprimer (uniquement pour les brouillons) -->
                         @if($request->status == 'draft')
                             <form action="{{ route('employe.leave-requests.destroy', $request->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -233,7 +248,6 @@
                             </form>
                         @endif
 
-                        <!-- Bouton Annuler (uniquement pour les approuvés) -->
                         @if($request->status == 'approved')
                             <form action="{{ route('employe.leave-requests.cancel-approved', $request->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -243,7 +257,6 @@
                             </form>
                         @endif
 
-                        <!-- Bouton Retour -->
                         <a href="{{ route('employe.leave-requests.index') }}" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> {{ __('Retour') }}
                         </a>
@@ -253,32 +266,21 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- ÉTAPE 7 : JAVASCRIPT POUR L'UPLOAD            -->
-    <!-- ============================================ -->
+    <!-- Scripts upload (inchangés) -->
     @push('scripts')
     <script>
-        /**
-         * Uploader une pièce jointe
-         */
         function uploadAttachment() {
             const fileInput = document.getElementById('attachment');
             const file = fileInput.files[0];
-            
-            // Vérifier si un fichier est sélectionné
             if (!file) {
                 alert('Veuillez sélectionner un fichier');
                 return;
             }
-            
-            // Vérifier la taille du fichier (5MB max)
             if (file.size > 5 * 1024 * 1024) {
                 alert('Le fichier est trop volumineux. Taille maximale: 5MB');
                 fileInput.value = '';
                 return;
             }
-            
-            // Vérifier l'extension
             const allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'txt'];
             const extension = file.name.split('.').pop().toLowerCase();
             if (!allowedExtensions.includes(extension)) {
@@ -286,13 +288,9 @@
                 fileInput.value = '';
                 return;
             }
-            
-            // Préparer le formulaire
             const formData = new FormData();
             formData.append('attachment', file);
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-            
-            // Afficher la barre de progression
             const progressDiv = document.getElementById('uploadProgress');
             const progressBar = document.getElementById('progressBar');
             const statusText = document.getElementById('uploadStatus');
@@ -300,34 +298,24 @@
             progressBar.style.width = '0%';
             progressBar.textContent = '0%';
             statusText.textContent = 'Téléchargement en cours...';
-            
-            // Désactiver le bouton
             const uploadBtn = document.querySelector('button[onclick="uploadAttachment()"]');
             uploadBtn.disabled = true;
             uploadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Envoi...';
-            
-            // Envoyer la requête avec suivi de progression
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '{{ route("employe.leave-requests.upload-attachment", $request->id) }}');
-            
-            // Suivi de la progression
             xhr.upload.addEventListener('progress', function(e) {
                 if (e.lengthComputable) {
                     const percentComplete = Math.round((e.loaded / e.total) * 100);
                     progressBar.style.width = percentComplete + '%';
                     progressBar.textContent = percentComplete + '%';
-                    
                     if (percentComplete < 100) {
                         statusText.textContent = 'Téléchargement... ' + percentComplete + '%';
                     }
                 }
             });
-            
-            // Gérer la réponse
             xhr.onload = function() {
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = '<i class="bi bi-cloud-upload"></i> Ajouter';
-                
                 if (xhr.status === 200) {
                     try {
                         const response = JSON.parse(xhr.responseText);
@@ -336,8 +324,6 @@
                             progressBar.textContent = '100%';
                             statusText.textContent = '✅ ' + response.message;
                             statusText.style.color = '#22c55e';
-                            
-                            // Recharger la page après 1 seconde
                             setTimeout(function() {
                                 location.reload();
                             }, 1000);
@@ -363,12 +349,8 @@
                         statusText.style.color = '';
                     }, 3000);
                 }
-                
-                // Réinitialiser le champ fichier
                 fileInput.value = '';
             };
-            
-            // Gérer les erreurs réseau
             xhr.onerror = function() {
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = '<i class="bi bi-cloud-upload"></i> Ajouter';
@@ -381,78 +363,59 @@
                 }, 3000);
                 fileInput.value = '';
             };
-            
-            // Envoyer la requête
             xhr.send(formData);
         }
-        
-        /**
-         * Supprimer une pièce jointe
-         */
-        /**
- * Supprimer une pièce jointe
- */
-function deleteAttachment(id) {
-    if (!confirm('Supprimer cette pièce jointe définitivement ?')) {
-        return;
-    }
-    
-    // Désactiver le bouton
-    const deleteBtn = document.querySelector(`button[onclick="deleteAttachment(${id})"]`);
-    if (deleteBtn) {
-        deleteBtn.disabled = true;
-        deleteBtn.innerHTML = '<i class="bi bi-hourglass-split"></i>';
-    }
-    
-    // Construire l'URL avec l'ID
-    const url = '{{ route("employe.leave-requests.delete-attachment", ":id") }}'.replace(':id', id);
-    
-    fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Recharger la page
-            location.reload();
-        } else {
-            alert('Erreur: ' + (data.message || 'Erreur lors de la suppression'));
-            if (deleteBtn) {
-                deleteBtn.disabled = false;
-                deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+
+        function deleteAttachment(id) {
+            if (!confirm('Supprimer cette pièce jointe définitivement ?')) {
+                return;
             }
+            const deleteBtn = document.querySelector(`button[onclick="deleteAttachment(${id})"]`);
+            if (deleteBtn) {
+                deleteBtn.disabled = true;
+                deleteBtn.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+            }
+            const url = '{{ route("employe.leave-requests.delete-attachment", ":id") }}'.replace(':id', id);
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Erreur: ' + (data.message || 'Erreur lors de la suppression'));
+                    if (deleteBtn) {
+                        deleteBtn.disabled = false;
+                        deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+                    }
+                }
+            })
+            .catch(error => {
+                alert('Erreur réseau lors de la suppression');
+                if (deleteBtn) {
+                    deleteBtn.disabled = false;
+                    deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+                }
+            });
         }
-    })
-    .catch(error => {
-        alert('Erreur réseau lors de la suppression');
-        if (deleteBtn) {
-            deleteBtn.disabled = false;
-            deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
-        }
-    });
-}
-        /**
-         * Vérifier les fichiers avant l'upload (drag & drop)
-         */
+
         document.addEventListener('DOMContentLoaded', function() {
             const fileInput = document.getElementById('attachment');
             if (fileInput) {
                 fileInput.addEventListener('change', function() {
                     const file = this.files[0];
                     if (file) {
-                        // Vérifier la taille
                         if (file.size > 5 * 1024 * 1024) {
                             alert('Le fichier est trop volumineux (max 5MB)');
                             this.value = '';
                             return;
                         }
-                        
-                        // Afficher le nom du fichier
                         const fileName = file.name;
                         const fileSize = (file.size / 1024 / 1024).toFixed(2);
                         console.log(`Fichier sélectionné: ${fileName} (${fileSize} MB)`);
@@ -460,10 +423,7 @@ function deleteAttachment(id) {
                 });
             }
         });
-        
-        /**
-         * Drag & Drop pour l'upload
-         */
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('attachmentForm');
             if (form) {
@@ -475,26 +435,21 @@ function deleteAttachment(id) {
                             e.stopPropagation();
                         });
                     });
-                    
                     dropZone.addEventListener('dragover', function(e) {
                         this.style.borderColor = '#4f8a8b';
                         this.style.backgroundColor = '#e8f5e9';
                     });
-                    
                     dropZone.addEventListener('dragleave', function(e) {
                         this.style.borderColor = '#dee2e6';
                         this.style.backgroundColor = '#f8f9fa';
                     });
-                    
                     dropZone.addEventListener('drop', function(e) {
                         this.style.borderColor = '#dee2e6';
                         this.style.backgroundColor = '#f8f9fa';
-                        
                         const files = e.dataTransfer.files;
                         if (files.length > 0) {
                             const fileInput = document.getElementById('attachment');
                             fileInput.files = files;
-                            // Déclencher l'upload automatiquement
                             uploadAttachment();
                         }
                     });

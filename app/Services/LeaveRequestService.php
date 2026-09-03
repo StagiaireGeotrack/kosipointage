@@ -9,9 +9,6 @@ use App\Models\LeaveBalance;
 use App\Models\LeaveBalanceTransaction;
 use App\Models\LeaveType;
 use App\Models\Employe;
-use App\Models\LeaveWorkflow;
-use App\Models\SiteLeaveWorkflowSetting;
-use App\Models\Administration;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -135,7 +132,6 @@ class LeaveRequestService
      * Soumettre une demande (draft → pending)
      * ✅ VALIDATION OBLIGATOIRE DES PIÈCES ICI
      * ✅ VÉRIFICATION DU SOLDE UNIQUEMENT SI deducts_balance = TRUE
-     * ✅ DÉMARRAGE DU WORKFLOW DE VALIDATION
      */
     public function submitRequest($requestId)
     {
@@ -175,33 +171,24 @@ class LeaveRequestService
             ]);
         }
 
-        // ✅ Récupérer le workflow applicable
-        $workflow = $this->getWorkflowForEmployee($request->employee_id);
-        $steps = json_decode($workflow->steps, true);
-        if (empty($steps)) {
-            throw new \Exception('Aucune étape de validation configurée dans le workflow.');
-        }
-
-        $firstStep = $steps[0];
-        $responsibles = $this->getResponsiblesForStep($request->employee, $firstStep);
-
-        DB::transaction(function () use ($request, $workflow, $firstStep, $responsibles) {
+        DB::transaction(function () use ($request) {
             $request->status = 'pending';
-            $request->workflow_id = $workflow->id;       // À ajouter dans la migration
-            $request->workflow_step = 0;                 // Index de l'étape en cours
             $request->save();
 
-            // Envoyer les notifications aux responsables de la première étape
-            $this->notifyStep($request, $firstStep, $responsibles);
+            try {
+                $this->notificationService->notifyManager($request);
+            } catch (\Exception $e) {
+                Log::error('Erreur notification: ' . $e->getMessage());
+            }
         });
 
         return $request;
     }
 
     /**
-     * Approuver une demande (pending → progression ou approved)
+     * Approuver une demande (pending → approved)
      * ✅ VALIDATION OBLIGATOIRE DES PIÈCES ICI
-     * ✅ AVANCEMENT DU WORKFLOW
+     * ✅ DÉBIT DU SOLDE UNIQUEMENT SI deducts_balance = TRUE
      */
     public function approveRequest($requestId, $approvedBy, $comment = null)
     {
@@ -214,97 +201,70 @@ class LeaveRequestService
         // ✅ VALIDATION OBLIGATOIRE DES PIÈCES À L'APPROBATION
         $this->validateRequestAttachments($request);
 
-        // Récupérer le workflow et l'étape courante
-        $workflow = LeaveWorkflow::find($request->workflow_id);
-        if (!$workflow) {
-            throw new \Exception('Workflow introuvable.');
-        }
-        $steps = json_decode($workflow->steps, true);
-        $currentStepIndex = $request->workflow_step ?? 0;
-        $currentStep = $steps[$currentStepIndex] ?? null;
-
-        if (!$currentStep) {
-            throw new \Exception('Étape de validation invalide.');
-        }
-
-        // Vérifier que l'approbateur a le rôle requis pour cette étape
-        $this->checkApproverRole($request, $currentStep, $approvedBy);
-
-        // Déterminer si c'est la dernière étape
-        $nextStepIndex = $currentStepIndex + 1;
-        $isLastStep = !isset($steps[$nextStepIndex]);
-
-        DB::transaction(function () use ($request, $approvedBy, $comment, $isLastStep, $nextStepIndex, $steps) {
-            if ($isLastStep) {
-                // Dernière étape : validation finale, on débite le solde (si le type le permet)
-                $this->finalizeApproval($request, $approvedBy, $comment);
-            } else {
-                // Il reste des étapes : on avance
-                $request->workflow_step = $nextStepIndex;
-                $request->save();
-
-                // Notifier les responsables de la prochaine étape
-                $nextStep = $steps[$nextStepIndex];
-                $responsibles = $this->getResponsiblesForStep($request->employee, $nextStep);
-                $this->notifyStep($request, $nextStep, $responsibles);
-            }
-        });
-
-        return $request;
-    }
-
-    /**
-     * Finalise l'approbation (dernière étape)
-     */
-    protected function finalizeApproval($request, $approvedBy, $comment)
-    {
+        // ✅ Récupérer le type de congé
         $leaveType = $request->leaveType;
         $deductsBalance = $leaveType && $leaveType->deducts_balance;
 
+        // ✅ Vérifier le solde UNIQUEMENT si le type DÉDUIT le solde
         if ($deductsBalance) {
-            // Vérification solde une dernière fois
             $availableBalance = $this->balanceService->getAvailableBalance(
                 $request->employee_id,
                 $request->leave_type_id,
                 $request->period_id
             );
+
             if ($availableBalance < $request->duration) {
-                if (!$leaveType->allow_negative_balance) {
-                    throw new \Exception('Solde insuffisant pour cette demande.');
+                if (!$leaveType || !$leaveType->allow_negative_balance) {
+                    throw new \Exception('Solde insuffisant pour cette demande. (Disponible: ' . $availableBalance . ' jours)');
                 }
             }
-
-            $this->balanceService->debitBalance(
-                $request->employee_id,
-                $request->leave_type_id,
-                $request->period_id,
-                $request->duration,
-                $request->id,
-                'Validation de congé - ' . ($request->reason ?? '')
-            );
-
-            Log::info('Solde débité pour le congé approuvé', [
-                'request_id' => $request->id,
-                'employee_id' => $request->employee_id,
-                'leave_type' => $leaveType?->name ?? 'inconnu',
-                'duration' => $request->duration
-            ]);
-        } else {
-            Log::info('Congé approuvé SANS déduction de solde', [
-                'request_id' => $request->id,
-                'employee_id' => $request->employee_id,
-                'leave_type' => $leaveType?->name ?? 'inconnu'
-            ]);
         }
 
-        $request->status = 'approved';
-        $request->approved_by = $approvedBy;
-        $request->approved_at = now();
-        $request->comment = $comment;
-        $request->save();
+        DB::transaction(function () use ($request, $approvedBy, $comment, $deductsBalance, $leaveType) {
+            // ✅ DÉBITER UNIQUEMENT SI deducts_balance = TRUE
+            if ($deductsBalance) {
+                $this->balanceService->debitBalance(
+                    $request->employee_id,
+                    $request->leave_type_id,
+                    $request->period_id,
+                    $request->duration,
+                    $request->id,
+                    'Validation de congé - ' . ($request->reason ?? '')
+                );
 
-        // Notifier l'employé
-        $this->notificationService->notifyEmployeeApproved($request);
+                Log::info('Solde débité pour le congé approuvé', [
+                    'request_id' => $request->id,
+                    'employee_id' => $request->employee_id,
+                    'leave_type' => $leaveType?->name ?? 'inconnu',
+                    'duration' => $request->duration,
+                    'deducts_balance' => $deductsBalance
+                ]);
+            } else {
+                // ✅ Pas de débit (Maladie, Sans solde, etc.)
+                Log::info('Congé approuvé SANS déduction de solde', [
+                    'request_id' => $request->id,
+                    'employee_id' => $request->employee_id,
+                    'leave_type' => $leaveType?->name ?? 'inconnu',
+                    'duration' => $request->duration,
+                    'deducts_balance' => $deductsBalance,
+                    'reason' => 'Ce type de congé ne déduit pas le solde (deducts_balance=0)'
+                ]);
+            }
+
+            $request->status = 'approved';
+            $request->approved_by = $approvedBy;
+            $request->approved_at = now();
+            $request->comment = $comment;
+            $request->save();
+
+            try {
+                $this->notificationService->notifyEmployeeApproved($request);
+            } catch (\Exception $e) {
+                Log::error('Erreur notification approbation: ' . $e->getMessage());
+            }
+        });
+
+        return $request;
     }
 
     /**
@@ -459,6 +419,7 @@ class LeaveRequestService
     /**
      * ✅ VALIDATION DES PIÈCES POUR UNE DEMANDE EXISTANTE
      * Lit la valeur de requires_attachment dans leave_types
+     * ⚠️ Cette méthode est appelée UNIQUEMENT à la soumission et à l'approbation
      */
     protected function validateRequestAttachments($request)
     {
@@ -491,7 +452,9 @@ class LeaveRequestService
                 }
             }
         }
-        // 🟢 CAS 3 : requires_attachment = 'never' → Aucune pièce requise (ne rien faire)
+
+        // 🟢 CAS 3 : requires_attachment = 'never' → Aucune pièce requise
+        // Ne rien faire
     }
 
     /**
@@ -616,7 +579,7 @@ class LeaveRequestService
     }
 
     // ============================================
-    // MÉTHODES EXISTANTES (conservées)
+    // MÉTHODES EXISTANTES
     // ============================================
 
     public function getEmployeeRequests($employeeId)
@@ -702,118 +665,5 @@ class LeaveRequestService
                 ? 'Ce type de congé déduira le solde à l\'approbation' 
                 : 'Ce type de congé ne déduit PAS le solde'
         ];
-    }
-
-    // ============================================
-    // MÉTHODES DE WORKFLOW (ajoutées)
-    // ============================================
-
-    /**
-     * Récupère le workflow applicable pour un employé
-     * Priorité : site spécifique → global → défaut
-     */
-    protected function getWorkflowForEmployee(int $employeeId): LeaveWorkflow
-    {
-        $employee = Employe::find($employeeId);
-        $siteId = $employee->SiegeID;
-
-        // 1. Workflow spécifique au site
-        $siteSetting = SiteLeaveWorkflowSetting::where('site_id', $siteId)
-                        ->where('is_active', true)
-                        ->with('workflow')
-                        ->first();
-
-        if ($siteSetting && $siteSetting->workflow) {
-            return $siteSetting->workflow;
-        }
-
-        // 2. Workflow global par défaut
-        $default = LeaveWorkflow::where('is_default', true)
-                    ->where('is_active', true)
-                    ->first();
-
-        if ($default) {
-            return $default;
-        }
-
-        throw new \Exception('Aucun workflow de validation configuré pour cet employé.');
-    }
-
-    /**
-     * Récupère les IDs des responsables (table administration) pour une étape donnée
-     */
-    protected function getResponsiblesForStep(Employe $employee, array $step): array
-    {
-        $role = $step['role'] ?? 'manager';
-        $adminIds = [];
-
-        switch ($role) {
-            case 'manager':
-                $managerId = $employee->manager_id;
-                if ($managerId) {
-                    $manager = Employe::find($managerId);
-                    if ($manager && $manager->user_id) {
-                        $adminIds[] = $manager->user_id;
-                    } else {
-                        // Fallback : chercher un admin manager du même site
-                        $admin = Administration::where('SiegeID', $employee->SiegeID)
-                                    ->where('IsManager', 1)
-                                    ->first();
-                        if ($admin) $adminIds[] = $admin->ID;
-                    }
-                }
-                break;
-
-            case 'hr':
-                // Chercher un admin avec IsManager = 1 sur le même site (ou un rôle RH dédié)
-                $admins = Administration::where('SiegeID', $employee->SiegeID)
-                            ->where('IsManager', 1)
-                            ->get();
-                foreach ($admins as $admin) {
-                    $adminIds[] = $admin->ID;
-                }
-                break;
-
-            case 'director':
-                // Manager du manager
-                $manager = Employe::find($employee->manager_id);
-                if ($manager && $manager->manager_id) {
-                    $director = Employe::find($manager->manager_id);
-                    if ($director && $director->user_id) {
-                        $adminIds[] = $director->user_id;
-                    }
-                }
-                break;
-
-            default:
-                // Rôle non reconnu, on lève une exception
-                throw new \Exception("Rôle d'approbation non géré : {$role}");
-        }
-
-        return array_unique($adminIds);
-    }
-
-    /**
-     * Vérifie que l'approbateur a le rôle requis pour l'étape
-     */
-    protected function checkApproverRole(LeaveRequest $request, array $step, $approverId)
-    {
-        $authorizedIds = $this->getResponsiblesForStep($request->employee, $step);
-        if (!in_array($approverId, $authorizedIds)) {
-            throw new \Exception('Vous n\'êtes pas autorisé à valider cette étape.');
-        }
-    }
-
-    /**
-     * Envoie une notification aux responsables de l'étape
-     */
-    protected function notifyStep(LeaveRequest $request, array $step, array $adminIds)
-    {
-        $message = "Nouvelle demande de congé en attente de validation (" . ($step['label'] ?? 'étape') . ")";
-        foreach ($adminIds as $adminId) {
-            // Créer une notification dans la table notifications
-            // Vous pouvez adapter selon votre NotificationService
-            $this->notificationService->notifyManager($request, $adminId, $message);
-        }
     }
 }

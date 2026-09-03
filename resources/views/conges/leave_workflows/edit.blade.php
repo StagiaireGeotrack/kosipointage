@@ -122,6 +122,24 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="row g-3 mb-4">
+    <div class="col-lg-12">
+        <x-input-label for="leave_type_id" :value="__('Type de congé')" />
+        <select id="leave_type_id" name="leave_type_id" class="form-select mt-1">
+            <option value="">{{ __('Aucun (général)') }}</option>
+            @foreach($leaveTypes as $type)
+                <option value="{{ $type->id }}" {{ old('leave_type_id', $leaveWorkflow->leave_type_id) == $type->id ? 'selected' : '' }}>
+                    {{ $type->name }} ({{ $type->code }})
+                </option>
+            @endforeach
+        </select>
+        <x-input-error :messages="$errors->get('leave_type_id')" class="mt-2" />
+        <small class="text-muted">{{ __('Associez ce workflow à un type de congé spécifique. Laissez vide pour un workflow général.') }}</small>
+        @if($hasOverride && !$isSuperAdmin && $leaveWorkflow->leave_type_id)
+            <small class="text-muted">Valeur globale : {{ $leaveWorkflow->leaveType->name ?? 'Non défini' }}</small>
+        @endif
+    </div>
+</div>
 
                         <!-- Gestion des étapes -->
                         <div class="row g-3 mb-4">

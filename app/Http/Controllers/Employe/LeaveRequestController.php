@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\LeaveRequestAttachment;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\LeaveWorkflow;
+use App\Models\LeaveValidator;
+use App\Models\LeaveApproval;
+
 
 class LeaveRequestController extends Controller
 {
@@ -628,11 +632,17 @@ class LeaveRequestController extends Controller
                 }
             }
 
-            if ($request->has('submit')) {
-                $this->leaveRequestService->submitRequest($leaveRequest->id);
-                return redirect()->route('employe.leave-requests.index')
-                    ->with('success', 'Demande soumise avec succès.');
-            }
+         if ($request->has('submit')) {
+    try {
+        $this->applyWorkflow($leaveRequest);
+        // Notifier le manager (optionnel)
+        return redirect()->route('employe.leave-requests.index')
+            ->with('success', 'Demande soumise avec succès.');
+    } catch (\Exception $e) {
+        return back()->withErrors(['error' => $e->getMessage()])->withInput();
+    }
+
+}
 
             return redirect()->route('employe.leave-requests.show', $leaveRequest->id)
                 ->with('success', 'Demande créée avec succès.');
@@ -953,17 +963,96 @@ public function getAttachmentsStatus($id)
         }
     }
 
-    public function submit($id)
-    {
-        try {
-            $this->leaveRequestService->submitRequest($id);
-            return redirect()->route('employe.leave-requests.index')
-                ->with('success', 'Demande soumise avec succès.');
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }
-    }
+    // app/Http/Controllers/Employe/LeaveRequestController.php
 
+// Ajouter les imports en haut
+
+// app/Http/Controllers/Employe/LeaveRequestController.php
+
+
+
+// app/Http/Controllers/Employe/LeaveRequestController.php
+
+
+public function submit($id)
+{
+    try {
+        $employee = $this->getEmployee();
+        if (!$employee) {
+            return redirect()->route('employe.login')
+                ->with('error', 'Aucun employé associé à ce compte.');
+        }
+
+        $leaveRequest = LeaveRequest::where('employee_id', $employee->ID)->findOrFail($id);
+
+        if ($leaveRequest->status != 'draft') {
+            return back()->with('error', 'Cette demande n\'est plus modifiable.');
+        }
+
+        // ✅ 1. Trouver le workflow associé au type de congé et au site
+        $workflow = LeaveWorkflow::where('leave_type_id', $leaveRequest->leave_type_id)
+            ->where(function ($q) use ($employee) {
+                $q->where('site_id', $employee->SiegeID)
+                  ->orWhereNull('site_id');
+            })
+            ->where('is_active', true)
+            ->first();
+
+        if (!$workflow) {
+            return back()->with('error', 'Aucun workflow configuré pour ce type de congé.');
+        }
+
+        // ✅ 2. Récupérer les étapes (JSON dans le champ `steps`)
+        $steps = is_string($workflow->steps) ? json_decode($workflow->steps, true) : ($workflow->steps ?? []);
+        if (empty($steps)) {
+            return back()->with('error', 'Le workflow ne contient pas d\'étapes.');
+        }
+
+        // ✅ 3. Pour chaque étape, trouver le validateur
+        foreach ($steps as $index => $step) {
+            $role = $step['role'] ?? null;
+            if (!$role) {
+                continue;
+            }
+
+            $validator = LeaveValidator::where('site_id', $employee->SiegeID)
+                ->where('role', $role)
+                ->where('is_active', true)
+                ->first();
+
+            if (!$validator) {
+                return back()->with('error', "Aucun validateur trouvé pour le rôle : {$role}.");
+            }
+
+            LeaveApproval::create([
+                'leave_request_id' => $leaveRequest->id,
+                'workflow_step_id' => null, // optionnel si vous utilisez une table `leave_workflow_steps`
+                'approver_id' => $validator->employee_id,
+                'step_order' => $index + 1,
+                'status' => 'pending',
+                'is_current' => ($index === 0),
+            ]);
+        }
+
+        // ✅ 4. Mettre à jour la demande
+        $leaveRequest->status = 'pending';
+        $leaveRequest->submitted_at = now();
+        $leaveRequest->workflow_id = $workflow->id;
+        $leaveRequest->workflow_step = 0; // pas utilisé
+        $leaveRequest->save();
+
+        // ✅ 5. Notifier le premier approbateur (déjà fait ?)
+        // Vous pouvez garder l'appel à la notification existante ou la supprimer si elle n'est pas nécessaire.
+
+        // Redirection
+        return redirect()->route('employe.leave-requests.show', $leaveRequest->id)
+            ->with('success', 'Demande soumise avec succès.');
+
+    } catch (\Exception $e) {
+        \Log::error('Erreur soumission: ' . $e->getMessage());
+        return back()->with('error', 'Erreur lors de la soumission : ' . $e->getMessage());
+    }
+}
     public function destroy($id)
     {
         $employee = $this->getEmployee();
@@ -1205,7 +1294,66 @@ public function getAttachmentsStatus($id)
 
     /**
      * ✅ Récupérer le solde d'un employé
-     */
+     /**
+ * Appliquer le workflow à une demande soumise
+ */
+private function applyWorkflow($leaveRequest)
+{
+    // Vérifier si des approbations existent déjà
+    $existingApprovals = LeaveApproval::where('leave_request_id', $leaveRequest->id)->count();
+    if ($existingApprovals > 0) {
+        // Les approbations existent déjà, on ne les recrée pas
+        return;
+    }
+
+    $employee = $leaveRequest->employee;
+    $workflow = LeaveWorkflow::where('leave_type_id', $leaveRequest->leave_type_id)
+        ->where(function ($q) use ($employee) {
+            $q->where('site_id', $employee->SiegeID)
+              ->orWhereNull('site_id');
+        })
+        ->where('is_active', true)
+        ->first();
+
+    if (!$workflow) {
+        throw new \Exception('Aucun workflow configuré pour ce type de congé.');
+    }
+
+    $steps = is_string($workflow->steps) ? json_decode($workflow->steps, true) : ($workflow->steps ?? []);
+    if (empty($steps)) {
+        throw new \Exception('Le workflow ne contient pas d\'étapes.');
+    }
+
+    foreach ($steps as $index => $step) {
+        $role = $step['role'] ?? null;
+        if (!$role) {
+            continue;
+        }
+
+        $validator = LeaveValidator::where('site_id', $employee->SiegeID)
+            ->where('role', $role)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$validator) {
+            throw new \Exception("Aucun validateur trouvé pour le rôle : {$role}.");
+        }
+
+        LeaveApproval::create([
+            'leave_request_id' => $leaveRequest->id,
+            'workflow_step_id' => null,
+            'approver_id' => $validator->employee_id,
+            'step_order' => $index + 1,
+            'status' => 'pending',
+            'is_current' => ($index === 0),
+        ]);
+    }
+
+    $leaveRequest->status = 'pending';
+    $leaveRequest->submitted_at = now();
+    $leaveRequest->workflow_id = $workflow->id;
+    $leaveRequest->save();
+}
     public function getBalance(Request $request)
     {
         try {

@@ -89,6 +89,21 @@ public function attachments()
 {
     return $this->hasMany(LeaveRequestAttachment::class);
 }
+// app/Models/LeaveRequest.php (ajouter ces méthodes)
+public function approvals()
+{
+    return $this->hasMany(LeaveApproval::class)->orderBy('step_order');
+}
+
+public function currentApproval()
+{
+    return $this->hasOne(LeaveApproval::class)->where('is_current', true);
+}
+
+public function workflow()
+{
+    return $this->belongsTo(LeaveWorkflow::class);
+}
     public function scopeInDateRange($query, $start, $end)
     {
         return $query->whereBetween('start_date', [$start, $end])

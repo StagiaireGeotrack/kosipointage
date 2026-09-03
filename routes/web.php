@@ -40,6 +40,9 @@ use App\Http\Controllers\Manager\NotificationController;
 use App\Http\Controllers\Manager\ManagerLeaveRequestController;
 use App\Http\Controllers\Employe\EmployeNotificationController;
 use App\Http\Controllers\Api\LeaveDurationController;
+use App\Http\Controllers\LeaveValidatorController;
+use App\Http\Controllers\Employe\LeaveValidationController;
+
 
 
 // Authentification (Breeze)
@@ -324,6 +327,9 @@ Route::middleware('auth')->group(function () {
         Route::get('leave-workflows-export/excel', [LeaveWorkflowController::class, 'exportExcel'])->name('leave-workflows.export.excel');
         Route::get('leave-workflows-export/pdf', [LeaveWorkflowController::class, 'exportPdf'])->name('leave-workflows.export.pdf');
         
+        Route::resource('leave-validators', LeaveValidatorController::class);
+Route::get('leave-validators/get-employees/{site_id}', [LeaveValidatorController::class, 'getEmployeesBySite'])
+    ->name('leave-validators.get-employees');
         // ===== RULE FIELDS =====
         Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])->name('leave-types.rule-fields');
         Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])->name('leave-types.rule-fields.store');
@@ -460,7 +466,9 @@ Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(
     
     // ============================================
     // 4. ROUTES SPÉCIFIQUES AVEC ID (APRÈS LES CRUD DE BASE)
-    // ⚠️ Placer APRÈS les routes CRUD génériques
+    Route::get('validations', [LeaveValidationController::class, 'index'])->name('validations.index');
+Route::post('validations/{id}/approve', [LeaveValidationController::class, 'approve'])->name('validations.approve');
+Route::post('validations/{id}/reject', [LeaveValidationController::class, 'reject'])->name('validations.reject');
     // ============================================
     
     // ✅ Calcul de durée pour un brouillon existant
