@@ -71,14 +71,14 @@ Route::middleware('auth:employe')->group(function () {
 // ============================================
 // REDIRECTION ACCUEIL
 // ============================================
-Route::get('/', function () 
+Route::get('/', function ()
 {
     if (!auth()->check()) {
         return redirect()->route('login');
     }
 
-    $user = auth()->user();    
-    
+    $user = auth()->user();
+
     if ($user->isTrueSuperAdmin()) {
         return redirect()->route('dashboard');
     } elseif ($user->isSimpleAdmin()) {
@@ -86,7 +86,7 @@ Route::get('/', function ()
     } elseif ($user->isSeller()) {
         return redirect()->route('dashboard.seller');
     }
-    
+
     return redirect()->route('sieges.index');
 });
 
@@ -94,16 +94,16 @@ Route::get('/', function ()
 // ✅ ROUTES AUTHENTIFIÉES (Tous les admins)
 // ============================================
 Route::middleware('auth')->group(function () {
-    
+
     // Langue
     Route::get('/language/{locale}', [LanguageController::class, 'changeLanguage'])->name('language.change');
-    
+
     // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile_update_email', [ProfileController::class, 'update_Identifiant_email'])->name('profile.update_Identifiant_email');
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Impersonation
     Route::post('/impersonate-leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
     Route::post('/impersonate-employe-leave', [ImpersonateController::class, 'leaveEmploye'])->name('impersonate.employe.leave');
@@ -116,12 +116,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/simple-admin', [AllDashboardController::class, 'dashboardSimpleAdmin'])
         ->name('dashboard.simple-admin')
         ->middleware('block.sellers');
-    
+
     // ==========================================
     // ROUTES AVEC SIEGE.ACCESS
     // ==========================================
     Route::middleware('siege.access')->group(function () {
-        
+
         // ===== SIÈGES =====
         Route::middleware(['block.sellers', 'block.simple.admin.sieges'])->group(function () {
             Route::get('/sieges/create', [EntrepriseSiegeController::class, 'create'])->name('sieges.create');
@@ -133,12 +133,12 @@ Route::middleware('auth')->group(function () {
             Route::delete('/sieges/reset/{siege}', [EntrepriseSiegeController::class, 'reset'])->name('sieges.reset');
             Route::patch("/update-siege", [EntrepriseSiegeController::class, 'update_siege'])->name('sieges.update_siege');
         });
-        
+
         Route::get('/sieges', [EntrepriseSiegeController::class, 'index'])->name('sieges.index');
         Route::get('/sieges-export/excel', [EntrepriseSiegeController::class, 'exportExcel'])->name('sieges.export.excel');
         Route::get('/sieges-export/pdf', [EntrepriseSiegeController::class, 'exportPdf'])->name('sieges.export.pdf');
         Route::get('/sieges/{siege}', [EntrepriseSiegeController::class, 'show'])->name('sieges.show');
-        
+
         // ===== ENTREPRISES =====
         Route::middleware('block.sellers')->group(function () {
             Route::get('/entreprises/create', [EntrepriseController::class, 'create'])->name('entreprises.create');
@@ -149,14 +149,14 @@ Route::middleware('auth')->group(function () {
             Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
             Route::delete('/entreprises/reset/{entreprise}', [EntrepriseController::class, 'reset'])->name('entreprises.reset');
         });
-        
+
         Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
         Route::get('/entreprises-export/excel', [EntrepriseController::class, 'exportExcel'])->name('entreprises.export.excel');
         Route::get('/entreprises-export/pdf', [EntrepriseController::class, 'exportPdf'])->name('entreprises.export.pdf');
         Route::get('/entreprises/{entreprise}', [EntrepriseController::class, 'show'])->name('entreprises.show');
         Route::get('/entreprises/{id}/logo', [EntrepriseController::class, 'getLogo'])->name('entreprises.logo');
         Route::get('/entreprises/{id}/logo/thumbnail', [EntrepriseController::class, 'getLogoThumbnail'])->name('entreprises.logo.thumbnail');
-        
+
         // ===== EMPLOYÉS =====
         Route::middleware('block.sellers')->group(function () {
             Route::post('/employes/{employe}/assign-web-access', [EmployeController::class, 'assignWebAccess'])->name('employes.assign-web-access');
@@ -169,14 +169,62 @@ Route::middleware('auth')->group(function () {
             Route::delete('/employes/reset/{employe}', [EmployeController::class, 'reset'])->name('employes.reset');
             Route::patch('employes/{id}/reset-pin', [EmployeController::class, 'resetCodePin'])->name('employes.reset-pin');
         });
-        
+
         Route::get('/employes', [EmployeController::class, 'index'])->name('employes.index');
         Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel');
         Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf');
         Route::get('/employes/{employe}', [EmployeController::class, 'show'])->name('employes.show');
         Route::get('/employes/{id}/face', [EmployeController::class, 'getFaceEncoding'])->name('employes.face');
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
-        
+
+        // ============================================
+// PLANNING
+// ============================================
+Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')->name('planning.')->group(function () {
+
+    // Configuration des horaires types
+    Route::prefix('horaires-types')->name('horaires-types.')->group(function () {
+        Route::get('/', [App\Http\Controllers\HoraireTypeController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\HoraireTypeController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\HoraireTypeController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [App\Http\Controllers\HoraireTypeController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'update'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'destroy'])->name('destroy');
+        // API pour charger les postes par service
+        Route::get('/planning/api/job-titles-by-department/{departmentId}', 
+            [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])
+            ->name('planning.api.job-titles-by-department');
+    });
+
+    // Gestion des plannings
+    Route::get('/', [App\Http\Controllers\PlanningController::class, 'index'])->name('index');
+    Route::get('/calendar', [App\Http\Controllers\PlanningController::class, 'index'])->name('calendar');
+    Route::get('/create', [App\Http\Controllers\PlanningController::class, 'create'])->name('create');
+    Route::post('/', [App\Http\Controllers\PlanningController::class, 'store'])->name('store');
+    Route::get('/{id}', [App\Http\Controllers\PlanningController::class, 'show'])->name('show');
+
+    // Événements
+    Route::get('/events', [App\Http\Controllers\PlanningController::class, 'getEvents'])->name('events');
+    Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
+
+    // API AJAX
+    Route::get('/api/employees-by-service/{serviceId}', [App\Http\Controllers\PlanningController::class, 'getEmployeesByService'])->name('api.employees-by-service');
+    Route::get('/api/job-titles-by-department/{departmentId}', [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])->name('api.job-titles-by-department');
+    Route::get('/api/work-schedules-by-job-title/{jobTitleId}', [App\Http\Controllers\PlanningController::class, 'getWorkSchedulesByJobTitle'])->name('api.work-schedules-by-job-title');
+
+    // Exports
+    Route::get('/export/excel', [App\Http\Controllers\PlanningController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export/pdf', [App\Http\Controllers\PlanningController::class, 'exportPdf'])->name('export.pdf');
+});
+
+// ============================================
+// PLANNING - Employé (Mon planning)
+// ============================================
+Route::middleware(['auth:employe'])->prefix('employe/planning')->name('employe.planning.')->group(function () {
+    Route::get('/', [App\Http\Controllers\EmployePlanningController::class, 'index'])->name('index');
+    Route::get('/events', [App\Http\Controllers\EmployePlanningController::class, 'getEvents'])->name('events');
+});
+
         // ===== POINTAGES =====
         Route::middleware('block.sellers')->group(function () {
             Route::get('/pointages', [PointageController::class, 'index'])->name('pointages.index');
@@ -194,7 +242,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/pointages/{id}/photo', [PointageController::class, 'getPhoto'])->name('pointages.photo');
             Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
         });
-        
+
         // ===== RAPPORTS =====
         Route::middleware('block.sellers')->group(function () {
             Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
@@ -247,7 +295,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/evenements/acknowledge/{id}', [EventPointageController::class, 'removeAcknowledge'])->name('evenements.remove-acknowledge');
         });
     });
-    
+
     // ===== ADMINISTRATEURS =====
     Route::middleware('block.sellers')->group(function () {
         Route::get('/administrateurs', [AdministrationController::class, 'index'])->name('administrateurs.index');
@@ -292,37 +340,37 @@ Route::middleware('auth')->group(function () {
     // ADMIN / CONGÉS — Paramétrage
     // ==========================================
     Route::prefix('admin')->name('admin.')->group(function () {
-        
+
         // ===== LEAVE TYPES =====
         Route::resource('leave-types', LeaveTypeController::class);
         Route::patch('leave-types/{id}/restore', [LeaveTypeController::class, 'restore'])->name('leave-types.restore');
         Route::get('leave-types-export/excel', [LeaveTypeController::class, 'exportExcel'])->name('leave-types.export.excel');
         Route::get('leave-types-export/pdf', [LeaveTypeController::class, 'exportPdf'])->name('leave-types.export.pdf');
-        
+
         // ===== LEAVE POLICIES =====
         Route::resource('leave-policies', LeavePolicyController::class);
         Route::patch('leave-policies/{id}/restore', [LeavePolicyController::class, 'restore'])->name('leave-policies.restore');
         Route::get('leave-policies-export/excel', [LeavePolicyController::class, 'exportExcel'])->name('leave-policies.export.excel');
         Route::get('leave-policies-export/pdf', [LeavePolicyController::class, 'exportPdf'])->name('leave-policies.export.pdf');
-        
+
         // ===== LEAVE PERIODS =====
         Route::resource('leave-periods', LeavePeriodController::class);
         Route::patch('leave-periods/{id}/restore', [LeavePeriodController::class, 'restore'])->name('leave-periods.restore');
         Route::get('leave-periods-export/excel', [LeavePeriodController::class, 'exportExcel'])->name('leave-periods.export.excel');
         Route::get('leave-periods-export/pdf', [LeavePeriodController::class, 'exportPdf'])->name('leave-periods.export.pdf');
-        
+
         // ===== COMPANY HOLIDAYS =====
         Route::resource('company-holidays', CompanyHolidayController::class);
         Route::patch('company-holidays/{id}/restore', [CompanyHolidayController::class, 'restore'])->name('company-holidays.restore');
         Route::get('company-holidays-export/excel', [CompanyHolidayController::class, 'exportExcel'])->name('company-holidays.export.excel');
         Route::get('company-holidays-export/pdf', [CompanyHolidayController::class, 'exportPdf'])->name('company-holidays.export.pdf');
-        
+
         // ===== LEAVE WORKFLOWS =====
         Route::resource('leave-workflows', LeaveWorkflowController::class);
         Route::patch('leave-workflows/{id}/restore', [LeaveWorkflowController::class, 'restore'])->name('leave-workflows.restore');
         Route::get('leave-workflows-export/excel', [LeaveWorkflowController::class, 'exportExcel'])->name('leave-workflows.export.excel');
         Route::get('leave-workflows-export/pdf', [LeaveWorkflowController::class, 'exportPdf'])->name('leave-workflows.export.pdf');
-        
+
         // ===== RULE FIELDS =====
         Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])->name('leave-types.rule-fields');
         Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])->name('leave-types.rule-fields.store');
@@ -330,7 +378,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/leave-types/{leaveType}/rule-fields/reorder', [RuleFieldController::class, 'reorder'])->name('leave-types.rule-fields.reorder');
         Route::put('/rule-fields/{ruleField}', [RuleFieldController::class, 'update'])->name('rule-fields.update');
         Route::delete('/rule-fields/{ruleField}', [RuleFieldController::class, 'destroy'])->name('rule-fields.destroy');
-        
+
         // ===== CALCULATION RULES =====
         Route::get('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'index'])->name('leave-types.calculations');
         Route::post('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'store'])->name('leave-types.calculations.store');
@@ -343,12 +391,12 @@ Route::middleware('auth')->group(function () {
         Route::patch('departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
         Route::get('departments-export/excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
         Route::get('departments-export/pdf', [DepartmentController::class, 'exportPdf'])->name('departments.export.pdf');
-        
+
         Route::resource('job-titles', JobTitleController::class);
         Route::patch('job-titles/{id}/restore', [JobTitleController::class, 'restore'])->name('job-titles.restore');
         Route::get('job-titles-export/excel', [JobTitleController::class, 'exportExcel'])->name('job-titles.export.excel');
         Route::get('job-titles-export/pdf', [JobTitleController::class, 'exportPdf'])->name('job-titles.export.pdf');
-        
+
         Route::resource('hierarchy-levels', HierarchyLevelController::class);
         Route::patch('hierarchy-levels/{id}/restore', [HierarchyLevelController::class, 'restore'])->name('hierarchy-levels.restore');
         Route::get('hierarchy-levels-export/excel', [HierarchyLevelController::class, 'exportExcel'])->name('hierarchy-levels.export.excel');
@@ -393,102 +441,102 @@ Route::middleware('auth')->group(function () {
 // ✅ ROUTES POUR LES EMPLOYÉS (employe.)
 // ============================================
 Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(function () {
-    
+
     // ============================================
     // 1. DASHBOARD
     // ============================================
     Route::get('dashboard', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
-    
+
     // ============================================
     // 2. ROUTES SPÉCIFIQUES (SANS PARAMÈTRE {id})
     // ⚠️ DOIVENT ÊTRE AVANT les routes avec {id}
     // ============================================
-    
+
     // ✅ Calcul AJAX de la durée (SANS ID)
     Route::get('leave-requests/calculate-duration', [LeaveRequestController::class, 'calculateDurationAjax'])
         ->name('leave-requests.calculate-duration');
-    
+
     // ✅ Périodes par type de congé
     Route::get('leave-requests/periods/{leaveTypeId}', [LeaveRequestController::class, 'getPeriodsByType'])
         ->name('leave-requests.periods-by-type');
-    
+
     // ✅ Solde de l'employé
     Route::get('leave-requests/balance', [LeaveRequestController::class, 'getBalance'])
         ->name('leave-requests.get-balance');
-    
+
     // ✅ Notifications
     Route::get('notifications', [EmployeNotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [EmployeNotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::get('notifications/unread-count', [EmployeNotificationController::class, 'unreadCount'])->name('notifications.unread');
-    
+
     // ============================================
     // 3. ROUTES CRUD (AVEC PARAMÈTRE {id})
     // ============================================
-    
+
     // Liste des demandes
     Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
-    
+
     // Formulaire de création
     Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
-    
+
     // Enregistrement d'une nouvelle demande
     Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
-    
+
     // Afficher une demande
     Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
-    
+
     // Formulaire d'édition
     Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
-    
+
     // Mettre à jour une demande
     Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
-    
+
     // Supprimer une demande (brouillon)
     Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
-    
+
     // Soumettre une demande
     Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
-    
+
     // Annuler un congé validé
     Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])
         ->name('leave-requests.cancel-approved');
-    
+
     // ============================================
     // 4. ROUTES SPÉCIFIQUES AVEC ID (APRÈS LES CRUD DE BASE)
     // ⚠️ Placer APRÈS les routes CRUD génériques
     // ============================================
-    
+
     // ✅ Calcul de durée pour un brouillon existant
     Route::get('leave-requests/{id}/calculate-duration', [LeaveRequestController::class, 'calculateDurationForDraft'])
         ->name('leave-requests.calculate-duration-draft');
-    
+
     // ✅ Statut des pièces jointes
     Route::get('leave-requests/{id}/attachments/status', [LeaveRequestController::class, 'getAttachmentsStatus'])
         ->name('leave-requests.attachments-status');
-    
+
     // ============================================
     // 5. ROUTES POUR LES PIÈCES JOINTES
     // ============================================
-    
+
     // Upload d'une pièce jointe
     Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])
         ->name('leave-requests.upload-attachment');
-    
+
     // Supprimer une pièce jointe
     Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])
         ->name('leave-requests.delete-attachment');
-    
+
     // Télécharger une pièce jointe
     Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])
         ->name('leave-requests.download-attachment');
-    
+
     // ============================================
     // 6. CALENDRIER
     // ============================================
-    
+
     // Vue du calendrier
     Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
-    
+
     // Événements du calendrier (API)
     Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
 });
@@ -504,15 +552,15 @@ Route::middleware(['auth:employe'])->prefix('portail')->name('portail.')->group(
 // ROUTES POUR LES MANAGERS
 // ============================================
 Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function () {
-    
+
     // Dashboard
     Route::get('dashboard', [ManagerLeaveRequestController::class, 'dashboard'])->name('dashboard');
-    
+
     // Notifications
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread');
-    
+
     // Demandes de congé
     Route::get('leave-requests', [ManagerLeaveRequestController::class, 'index'])->name('leave-requests.index');
     Route::get('leave-requests/{id}', [ManagerLeaveRequestController::class, 'show'])->name('leave-requests.show');
@@ -524,7 +572,7 @@ Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function
 // API / AJAX (Routes pour les appels AJAX)
 // ============================================
 Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
-    
+
     Route::get('/departments-by-site/{siteId}', function ($siteId) {
         return \App\Models\Department::where('site_id', $siteId)
             ->orderBy('name')
