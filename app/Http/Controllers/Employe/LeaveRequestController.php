@@ -1297,12 +1297,17 @@ public function submit($id)
      /**
  * Appliquer le workflow à une demande soumise
  */
+/**
+ * Appliquer le workflow à une demande soumise
+ */
 private function applyWorkflow($leaveRequest)
 {
+    // ✅ VÉRIFIER LES PIÈCES JOINTES AVANT SOUMISSION
+    $this->validateAttachments($leaveRequest);
+
     // Vérifier si des approbations existent déjà
     $existingApprovals = LeaveApproval::where('leave_request_id', $leaveRequest->id)->count();
     if ($existingApprovals > 0) {
-        // Les approbations existent déjà, on ne les recrée pas
         return;
     }
 
@@ -1336,7 +1341,6 @@ private function applyWorkflow($leaveRequest)
         if ($role === 'manager') {
             $approverId = $employee->manager_id;
             if (!$approverId) {
-                // Fallback : chercher un validateur avec le rôle "manager"
                 $validator = LeaveValidator::where('site_id', $employee->SiegeID)
                     ->where('role', 'manager')
                     ->where('is_active', true)
@@ -1348,7 +1352,6 @@ private function applyWorkflow($leaveRequest)
                 }
             }
         } else {
-            // ✅ Autres rôles (rh, drh, direction, etc.) : utiliser LeaveValidator
             $validator = LeaveValidator::where('site_id', $employee->SiegeID)
                 ->where('role', $role)
                 ->where('is_active', true)
@@ -1359,7 +1362,6 @@ private function applyWorkflow($leaveRequest)
             $approverId = $validator->employee_id;
         }
 
-        // Créer l'approbation
         LeaveApproval::create([
             'leave_request_id' => $leaveRequest->id,
             'workflow_step_id' => null,
@@ -1374,6 +1376,54 @@ private function applyWorkflow($leaveRequest)
     $leaveRequest->submitted_at = now();
     $leaveRequest->workflow_id = $workflow->id;
     $leaveRequest->save();
+}
+
+/**
+ * ✅ VALIDER LES PIÈCES JOINTES - LECTURE DEPUIS LA BASE
+ * Les valeurs sont lues depuis leave_types.requires_attachment
+ * 
+ * Valeurs possibles dans la base :
+ * - 'never'    : Aucune pièce requise
+ * - 'always'   : Pièce toujours obligatoire
+ * - 'after_duration' : Pièce obligatoire au-delà d'un seuil (requires_attachment_after)
+ */
+private function validateAttachments($leaveRequest)
+{
+    if (!$leaveRequest || !$leaveRequest->leaveType) {
+        return;
+    }
+
+    $leaveType = $leaveRequest->leaveType;
+    $hasAttachments = $leaveRequest->attachments()->exists();
+    
+    // ✅ Lire la règle depuis la base
+    $rule = $leaveType->requires_attachment;
+
+    // 🔴 CAS 1 : 'always' → Pièce toujours obligatoire
+    if ($rule === 'always') {
+        if (!$hasAttachments) {
+            throw new \Exception(
+                'Le type de congé "' . $leaveType->name . '" requiert une pièce justificative obligatoire.'
+            );
+        }
+        return; // Fin de la validation
+    }
+
+    // 🟡 CAS 2 : 'after_duration' → Pièce obligatoire au-delà d'une durée
+    if ($rule === 'after_duration') {
+        // ✅ Lire le seuil depuis la base
+        $threshold = $leaveType->requires_attachment_after ?? 3;
+        
+        if ($leaveRequest->duration > $threshold && !$hasAttachments) {
+            throw new \Exception(
+                'Les congés de plus de ' . $threshold . ' jours nécessitent une pièce justificative.'
+            );
+        }
+        return; // Fin de la validation
+    }
+
+    // 🟢 CAS 3 : 'never' (ou autre) → Aucune pièce requise
+    // Ne rien faire
 }
     public function getBalance(Request $request)
     {

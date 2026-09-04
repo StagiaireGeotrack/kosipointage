@@ -27,14 +27,14 @@ class LeaveValidationController extends Controller
         $pendingApprovals = LeaveApproval::where('approver_id', $employe->ID)
             ->where('is_current', true)
             ->where('status', 'pending')
-            ->with(['leaveRequest' => fn($q) => $q->with(['employee', 'leaveType', 'period'])])
+            ->with(['leaveRequest' => fn($q) => $q->with(['employee', 'leaveType', 'period', 'attachments', 'approvals'])])
             ->orderBy('created_at', 'asc')
             ->paginate(15);
 
         // Historique des validations
         $history = LeaveApproval::where('approver_id', $employe->ID)
             ->where('status', '!=', 'pending')
-            ->with(['leaveRequest' => fn($q) => $q->with(['employee', 'leaveType'])])
+            ->with(['leaveRequest' => fn($q) => $q->with(['employee', 'leaveType', 'attachments', 'approvals'])])
             ->orderBy('updated_at', 'desc')
             ->paginate(15, ['*'], 'history_page');
 
@@ -49,6 +49,9 @@ class LeaveValidationController extends Controller
         if ($approval->approver_id != $employe->ID || $approval->status != 'pending' || !$approval->is_current) {
             abort(403);
         }
+
+        // ✅ VÉRIFIER LES PIÈCES JOINTES
+        $this->validateAttachments($approval->leaveRequest);
 
         $approval->status = 'approved';
         $approval->approved_at = now();
@@ -65,6 +68,7 @@ class LeaveValidationController extends Controller
             $nextApproval->is_current = true;
             $nextApproval->save();
             $leaveRequest->status = 'pending';
+            $message = 'Demande transmise à l\'étape suivante.';
         } else {
             // ✅ TOUTES LES ÉTAPES SONT APPROUVÉES
             $leaveRequest->status = 'approved';
@@ -72,16 +76,22 @@ class LeaveValidationController extends Controller
             
             // ✅ DÉDUIRE LE SOLDE
             $this->deductBalance($leaveRequest);
+            $message = 'Demande approuvée avec succès.';
         }
         $leaveRequest->save();
 
         return redirect()->route('employe.validations.index')
-            ->with('success', 'Demande approuvée avec succès.');
+            ->with('success', $message);
     }
 
+    /**
+     * ✅ REJETER UNE DEMANDE - NE BLOQUE PAS LE WORKFLOW (sauf dernière étape)
+     */
     public function reject(Request $request, $id)
     {
-        $request->validate(['reason' => 'nullable|string|max:500']);
+        $request->validate([
+            'rejection_reason' => 'required|string|min:3|max:500'
+        ]);
 
         $approval = LeaveApproval::findOrFail($id);
         $employe = Auth::guard('employe')->user();
@@ -90,29 +100,107 @@ class LeaveValidationController extends Controller
             abort(403);
         }
 
+        // ✅ Marquer l'étape comme rejetée
         $approval->status = 'rejected';
         $approval->rejected_at = now();
         $approval->is_current = false;
-        $approval->rejection_reason = $request->input('reason');
+        $approval->rejection_reason = $request->input('rejection_reason');
         $approval->save();
 
         $leaveRequest = $approval->leaveRequest;
-        $leaveRequest->status = 'rejected';
-        $leaveRequest->rejection_reason = $request->input('reason');
+
+        // ✅ Vérifier s'il y a une étape suivante
+        $nextApproval = LeaveApproval::where('leave_request_id', $leaveRequest->id)
+            ->where('step_order', '>', $approval->step_order)
+            ->orderBy('step_order')
+            ->first();
+
+        if ($nextApproval) {
+            // ✅ S'il y a une étape suivante, on continue le workflow
+            $nextApproval->is_current = true;
+            $nextApproval->save();
+            $leaveRequest->status = 'pending';
+            $message = 'Demande transmise à l\'étape suivante avec votre avis.';
+        } else {
+            // ✅ Dernière étape : la demande est définitivement rejetée
+            $leaveRequest->status = 'rejected';
+            $leaveRequest->rejection_reason = $request->input('rejection_reason');
+            $message = 'Demande définitivement rejetée.';
+        }
         $leaveRequest->save();
 
         return redirect()->route('employe.validations.index')
-            ->with('success', 'Demande rejetée.');
+            ->with('success', $message);
     }
 
     /**
-     * ✅ DÉDUIRE LE SOLDE DE L'EMPLOYÉ
+     * ✅ AFFICHER LE DÉTAIL D'UNE DEMANDE
+     */
+    public function show($id)
+    {
+        $employe = Auth::guard('employe')->user();
+        if (!$employe) abort(403);
+
+        $leaveRequest = LeaveRequest::with([
+            'employee', 
+            'leaveType', 
+            'period', 
+            'attachments',
+            'approvals' => function($q) {
+                $q->orderBy('step_order', 'asc');
+            },
+            'approvals.approver'
+        ])->findOrFail($id);
+
+        // Vérifier que l'employé est bien l'approbateur d'une des étapes
+        $isApprover = $leaveRequest->approvals->contains('approver_id', $employe->ID);
+        if (!$isApprover) {
+            abort(403, 'Vous n\'avez pas accès à cette demande.');
+        }
+
+        // Récupérer l'étape actuelle
+        $currentApproval = $leaveRequest->approvals->where('is_current', true)->first();
+
+        return view('employes.validations.show', compact('leaveRequest', 'currentApproval'));
+    }
+
+    /**
+     * ✅ VALIDER LES PIÈCES JOINTES
+     */
+    private function validateAttachments($leaveRequest)
+    {
+        if (!$leaveRequest || !$leaveRequest->leaveType) {
+            return;
+        }
+
+        $leaveType = $leaveRequest->leaveType;
+        $hasAttachments = $leaveRequest->attachments()->exists();
+
+        if ($leaveType->requires_attachment === 'always') {
+            if (!$hasAttachments) {
+                throw new \Exception(
+                    'Le type de congé "' . $leaveType->name . '" requiert une pièce justificative obligatoire.'
+                );
+            }
+        }
+
+        if ($leaveType->requires_attachment === 'after_duration') {
+            $threshold = $leaveType->requires_attachment_after ?? 3;
+            if ($leaveRequest->duration > $threshold && !$hasAttachments) {
+                throw new \Exception(
+                    'Les congés de plus de ' . $threshold . ' jours nécessitent une pièce justificative.'
+                );
+            }
+        }
+    }
+
+    /**
+     * ✅ DÉDUIRE LE SOLDE
      */
     private function deductBalance($leaveRequest)
     {
         $leaveType = LeaveType::find($leaveRequest->leave_type_id);
         
-        // ❌ Ne pas déduire si le type ne déduit pas le solde
         if (!$leaveType || !$leaveType->deducts_balance) {
             \Log::info('Congé approuvé SANS déduction de solde (LeaveValidation)', [
                 'request_id' => $leaveRequest->id,
@@ -123,7 +211,6 @@ class LeaveValidationController extends Controller
             return;
         }
 
-        // ✅ Vérifier le solde disponible
         $balanceService = app(LeaveBalanceService::class);
         $availableBalance = $balanceService->getAvailableBalance(
             $leaveRequest->employee_id,
@@ -141,7 +228,6 @@ class LeaveValidationController extends Controller
             throw new \Exception('Solde insuffisant pour cette demande. (Disponible: ' . $availableBalance . ' jours)');
         }
 
-        // ✅ DÉBITER LE SOLDE
         $balanceService->debitBalance(
             $leaveRequest->employee_id,
             $leaveRequest->leave_type_id,

@@ -35,7 +35,13 @@
                             </thead>
                             <tbody>
                                 @foreach($pendingApprovals as $approval)
-                                    @php $request = $approval->leaveRequest; @endphp
+                                    @php 
+                                        $request = $approval->leaveRequest;
+                                        $previousRejections = $request->approvals()
+                                            ->where('status', 'rejected')
+                                            ->where('step_order', '<', $approval->step_order)
+                                            ->get();
+                                    @endphp
                                     <tr>
                                         <td>{{ $request->employee->Nom ?? 'N/A' }}</td>
                                         <td>
@@ -47,43 +53,74 @@
                                         <td>{{ number_format($request->duration, 1) }} jours</td>
                                         <td>
                                             <span class="badge bg-primary">Étape {{ $approval->step_order }}</span>
+                                            
+                                            {{-- ✅ Afficher les refus précédents --}}
+                                            @if($previousRejections->isNotEmpty())
+                                                <br>
+                                                <div class="mt-1">
+                                                    @foreach($previousRejections as $rej)
+                                                        <span class="badge bg-warning text-dark" title="Avis de l'étape {{ $rej->step_order }}">
+                                                            ⚠️ Étape {{ $rej->step_order }} : refusé
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="bi bi-info-circle"></i> Des avis négatifs ont été émis aux étapes précédentes.
+                                                    <a href="{{ route('employe.validations.show', $request->id) }}" class="text-primary">Voir les détails</a>
+                                                </small>
+                                            @endif
                                         </td>
                                         <td>
-                                            <form action="{{ route('employe.validations.approve', $approval->id) }}" method="POST" style="display:inline-block;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-success">
-                                                    <i class="bi bi-check-circle"></i> Approuver
+                                            <div class="d-flex gap-1">
+                                                <a href="{{ route('employe.validations.show', $request->id) }}" class="btn btn-sm btn-info">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <form action="{{ route('employe.validations.approve', $approval->id) }}" method="POST" style="display:inline-block;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Voulez-vous vraiment approuver cette demande ?')">
+                                                        <i class="bi bi-check-circle"></i> Approuver
+                                                    </button>
+                                                </form>
+                                                
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $approval->id }}">
+                                                    <i class="bi bi-x-circle"></i> Refuser
                                                 </button>
-                                            </form>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $approval->id }}">
-                                                <i class="bi bi-x-circle"></i> Refuser
-                                            </button>
-                                            <!-- Modal Rejet -->
-                                            <div class="modal fade" id="rejectModal{{ $approval->id }}" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="{{ route('employe.validations.reject', $approval->id) }}" method="POST">
-                                                            @csrf
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">{{ __('Refuser la demande') }}</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">{{ __('Motif du refus') }} <span class="text-danger">*</span></label>
-                                                                    <textarea name="rejection_reason" class="form-control" rows="3" required placeholder="Expliquez le motif du refus..."></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
-                                                                <button type="submit" class="btn btn-danger">{{ __('Confirmer le refus') }}</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal Rejet -->
+                                    <div class="modal fade" id="rejectModal{{ $approval->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="{{ route('employe.validations.reject', $approval->id) }}" method="POST">
+                                                    @csrf
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">{{ __('Refuser la demande') }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @if($previousRejections->isNotEmpty())
+                                                            <div class="alert alert-warning mb-3">
+                                                                <strong><i class="bi bi-exclamation-triangle"></i> Avis des étapes précédentes :</strong>
+                                                                @foreach($previousRejections as $rej)
+                                                                    <br>• Étape {{ $rej->step_order }} : {{ $rej->rejection_reason }}
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                        <div class="mb-3">
+                                                            <label class="form-label">{{ __('Motif du refus') }} <span class="text-danger">*</span></label>
+                                                            <textarea name="rejection_reason" class="form-control" rows="3" required placeholder="Expliquez le motif du refus..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+                                                        <button type="submit" class="btn btn-danger">{{ __('Confirmer le refus') }}</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endforeach
                             </tbody>
                         </table>
@@ -138,4 +175,21 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    var target = document.querySelector(this.dataset.bsTarget);
+                    if (!target) {
+                        console.error('Modal target not found:', this.dataset.bsTarget);
+                        alert('Erreur: le modal n\'existe pas.');
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

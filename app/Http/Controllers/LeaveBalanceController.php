@@ -243,29 +243,62 @@ class LeaveBalanceController extends Controller
     }
 
     /**
-     * Ajuster un solde
+     * ✅ Ajuster un solde - Version avec Ajouter / Retirer
      */
     public function adjust(Request $request, $id)
     {
         $balance = LeaveBalance::findOrFail($id);
 
         $request->validate([
-            'amount' => 'required|numeric|not_in:0',
+            'amount' => 'required|numeric|min:0.5',
             'description' => 'required|string|min:3|max:255',
+            'type' => 'required|in:credit,debit', // ✅ AJOUT : type obligatoire
         ]);
 
+        $amount = $request->input('amount');
+        $type = $request->input('type');
+        $description = $request->input('description');
+
         try {
-            $this->balanceService->adjustBalance(
-                $balance->employee_id,
-                $balance->leave_type_id,
-                $balance->period_id,
-                $request->amount,
-                $request->description,
-                ['adjusted_by' => Auth::user()->ID ?? 1]
-            );
+            if ($type === 'debit') {
+                // ✅ Retirer des jours = débit (montant négatif)
+                // Vérifier le solde disponible avant le retrait
+                $available = $balance->remaining - ($balance->total_pending ?? 0);
+                
+                if ($available < $amount) {
+                    // Autoriser quand même, mais avec un avertissement
+                    \Log::warning('Retrait de jours avec solde potentiellement insuffisant', [
+                        'employee_id' => $balance->employee_id,
+                        'available' => $available,
+                        'amount' => $amount
+                    ]);
+                }
+
+                $this->balanceService->debitBalance(
+                    $balance->employee_id,
+                    $balance->leave_type_id,
+                    $balance->period_id,
+                    $amount,
+                    null,
+                    $description . ' (Retrait manuel)'
+                );
+
+                $message = 'Retrait de ' . $amount . ' jours effectué pour ' . $balance->employee->Nom;
+            } else {
+                // ✅ Ajouter des jours = ajustement (montant positif)
+                $this->balanceService->adjustBalance(
+                    $balance->employee_id,
+                    $balance->leave_type_id,
+                    $balance->period_id,
+                    $amount,
+                    $description . ' (Ajout manuel)'
+                );
+
+                $message = 'Ajout de ' . $amount . ' jours effectué pour ' . $balance->employee->Nom;
+            }
 
             return redirect()->route('leave-balances.index')
-                ->with('success', 'Solde ajusté avec succès.');
+                ->with('success', $message);
 
         } catch (\Exception $e) {
             return back()->with('error', 'Erreur: ' . $e->getMessage())->withInput();
@@ -275,73 +308,69 @@ class LeaveBalanceController extends Controller
     /**
      * Formulaire d'import
      */
-public function import()
-{
-    $periods = LeavePeriod::where('is_active', true)->orderBy('start_date')->get();
-    $batches = LeaveImportBatch::where('type', 'opening_balance')
-        ->orderBy('created_at', 'desc')
-        ->paginate(10);
-    
-    // Récupérer les sites pour le Super Admin
-    $sites = EntrepriseSiege::orderBy('Nom')->get();
-    
-    return view('leave_balances.import', compact('periods', 'batches', 'sites'));
-}
+    public function import()
+    {
+        $periods = LeavePeriod::where('is_active', true)->orderBy('start_date')->get();
+        $batches = LeaveImportBatch::where('type', 'opening_balance')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        
+        // Récupérer les sites pour le Super Admin
+        $sites = EntrepriseSiege::orderBy('Nom')->get();
+        
+        return view('leave_balances.import', compact('periods', 'batches', 'sites'));
+    }
+
     /**
      * Importer des soldes
      */
-  /**
- * Importer des soldes
- */
-/**
- * Importer des soldes
- */
-public function storeImport(Request $request)
-{
-    $request->validate([
-        'file' => 'required|file|mimes:xlsx,xls,csv',
-        'period_id' => 'required|exists:leave_periods,id',
-    ]);
+    public function storeImport(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+            'period_id' => 'required|exists:leave_periods,id',
+        ]);
 
-    // FORCER le mode réel (pas de simulation)
-    $simulate = false; // <-- TOUJOURS FALSE
-    $periodId = $request->period_id;
-    
-    // Récupérer le site_id
-    $user = Auth::user();
-    $isSuperAdmin = $user->IsSuperAdmin ?? false;
-    $userSiteId = $user->SiegeID ?? null;
+        // FORCER le mode réel (pas de simulation)
+        $simulate = false;
+        $periodId = $request->period_id;
+        
+        // Récupérer le site_id
+        $user = Auth::user();
+        $isSuperAdmin = $user->IsSuperAdmin ?? false;
+        $userSiteId = $user->SiegeID ?? null;
 
-    if ($isSuperAdmin && $request->filled('site_id')) {
-        $siteId = $request->site_id;
-    } else {
-        $siteId = $userSiteId;
-    }
-
-    if (!$siteId) {
-        return back()->with('error', 'Aucun siège sélectionné.');
-    }
-
-    try {
-        $import = new LeaveBalanceImport($periodId, $siteId, $simulate);
-        Excel::import($import, $request->file('file'));
-
-        $batch = $import->getBatch();
-        $errors = $import->getErrors();
-
-        // Vérifier s'il y a eu des erreurs
-        if ($import->getFailureCount() > 0) {
-            $message = "Import terminé avec des erreurs. " . $import->getSuccessCount() . " soldes créés, " . $import->getFailureCount() . " erreurs.";
-            return redirect()->route('leave-balances.import')->with('warning', $message)->with('import_errors', $errors);
+        if ($isSuperAdmin && $request->filled('site_id')) {
+            $siteId = $request->site_id;
+        } else {
+            $siteId = $userSiteId;
         }
 
-        $message = "Import terminé avec succès. " . $import->getSuccessCount() . " soldes créés.";
-        return redirect()->route('leave-balances.index')->with('success', $message);
+        if (!$siteId) {
+            return back()->with('error', 'Aucun siège sélectionné.');
+        }
 
-    } catch (\Exception $e) {
-        return back()->with('error', 'Erreur lors de l\'import: ' . $e->getMessage());
+        try {
+            $import = new LeaveBalanceImport($periodId, $siteId, $simulate);
+            Excel::import($import, $request->file('file'));
+
+            $batch = $import->getBatch();
+            $errors = $import->getErrors();
+
+            // Vérifier s'il y a eu des erreurs
+            if ($import->getFailureCount() > 0) {
+                $message = "Import terminé avec des erreurs. " . $import->getSuccessCount() . " soldes créés, " . $import->getFailureCount() . " erreurs.";
+                return redirect()->route('leave-balances.import')->with('warning', $message)->with('import_errors', $errors);
+            }
+
+            $message = "Import terminé avec succès. " . $import->getSuccessCount() . " soldes créés.";
+            return redirect()->route('leave-balances.index')->with('success', $message);
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Erreur lors de l\'import: ' . $e->getMessage());
+        }
     }
-}
+
     /**
      * Télécharger le modèle Excel
      */

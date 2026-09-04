@@ -472,6 +472,10 @@ Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(
     Route::get('validations', [LeaveValidationController::class, 'index'])->name('validations.index');
 Route::post('validations/{id}/approve', [LeaveValidationController::class, 'approve'])->name('validations.approve');
 Route::post('validations/{id}/reject', [LeaveValidationController::class, 'reject'])->name('validations.reject');
+    Route::get('validations/{id}', [LeaveValidationController::class, 'show'])->name('validations.show');
+
+
+ 
     // ============================================
     
     // ✅ Calcul de durée pour un brouillon existant

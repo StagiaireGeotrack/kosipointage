@@ -6,13 +6,11 @@ namespace App\Http\Controllers;
 use App\Models\EntrepriseSiege;
 use App\Models\LeaveWorkflow;
 use App\Models\LeaveRole;
-
 use App\Models\SiteLeaveWorkflowSetting;
 use App\Models\LeaveType;
 use App\Services\LeaveWorkflowResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 
 class LeaveWorkflowController extends Controller
 {
@@ -30,7 +28,7 @@ class LeaveWorkflowController extends Controller
     {
         return [
             ['order' => 1, 'role' => 'manager', 'label' => 'Validation Manager', 'description' => 'Le manager valide la demande'],
-            ['order' => 2, 'role' => 'hr', 'label' => 'Validation RH', 'description' => 'Le service RH approuve la demande']
+            ['order' => 2, 'role' => 'rh', 'label' => 'Validation RH', 'description' => 'Le service RH approuve la demande']
         ];
     }
 
@@ -61,74 +59,103 @@ class LeaveWorkflowController extends Controller
     }
 
     public function index(Request $request)
-{
-    $this->authorize('viewAny', LeaveWorkflow::class);
+    {
+        $this->authorize('viewAny', LeaveWorkflow::class);
 
-    $user = Auth::user();
-    $isSuperAdmin = $user && $user->IsSuperAdmin == 1;
-    $userSiteId = $user->SiegeID ?? null;
+        $user = Auth::user();
+        $isSuperAdmin = $user && $user->IsSuperAdmin == 1;
+        $userSiteId = $user->SiegeID ?? null;
 
-    // Requête de base
-    $query = LeaveWorkflow::with(['site', 'leaveType']);
+        // Requête de base
+        $query = LeaveWorkflow::with(['site', 'leaveType']);
 
-    // 🔥 Filtrage selon les droits
-    if (!$isSuperAdmin) {
-        // L'admin simple ne voit que :
-        // - les workflows globaux (site_id null)
-        // - les workflows de son siège (site_id = $userSiteId)
-        $query->where(function ($q) use ($userSiteId) {
-            $q->whereNull('site_id')
-              ->orWhere('site_id', $userSiteId);
-        });
+        // 🔥 Filtrage selon les droits
+        if (!$isSuperAdmin) {
+            $query->where(function ($q) use ($userSiteId) {
+                $q->whereNull('site_id')
+                  ->orWhere('site_id', $userSiteId);
+            });
+        }
+
+        // Filtre recherche
+        if ($request->filled('search')) {
+            $query->where('name', 'LIKE', "%{$request->search}%");
+        }
+
+        if ($request->filled('is_active')) {
+            $query->where('is_active', $request->is_active);
+        }
+
+        // Pagination
+        $workflows = $query->orderBy('name')->paginate(15);
+
+        // 🔥 Résolution des workflows (application des overrides)
+        if (!$isSuperAdmin && $userSiteId) {
+            $resolver = new LeaveWorkflowResolver();
+            $resolvedCollection = $resolver->resolveCollection($workflows->getCollection(), $userSiteId);
+            $workflows->setCollection($resolvedCollection);
+        } else {
+            // Pour superadmin, on transforme en objet stdClass avec les bonnes propriétés
+            $resolvedCollection = $workflows->getCollection()->map(function ($workflow) {
+                $obj = new \stdClass();
+                foreach ($workflow->getAttributes() as $k => $v) {
+                    $obj->{$k} = $v;
+                }
+                $obj->is_global = is_null($workflow->site_id);
+                $obj->site_name = $workflow->site->Nom ?? '—';
+                $obj->is_customizable = $workflow->is_customizable ?? false;
+                $obj->is_overridden = false;
+                $obj->override_id = null;
+                $obj->steps = is_string($workflow->steps) ? json_decode($workflow->steps, true) : ($workflow->steps ?? []);
+                $obj->leave_type_name = $workflow->leaveType->name ?? null;
+                return $obj;
+            });
+            $workflows->setCollection($resolvedCollection);
+        }
+
+        return view('conges.leave_workflows.index', compact('workflows'));
     }
 
-    // Filtre recherche
-    if ($request->filled('search')) {
-        $query->where('name', 'LIKE', "%{$request->search}%");
-    }
-
-    if ($request->filled('is_active')) {
-        $query->where('is_active', $request->is_active);
-    }
-
-    // Pagination
-    $workflows = $query->orderBy('name')->paginate(15);
-
-    // 🔥 Résolution des workflows (application des overrides)
-    if (!$isSuperAdmin && $userSiteId) {
-        $resolver = new LeaveWorkflowResolver();
-        $resolvedCollection = $resolver->resolveCollection($workflows->getCollection(), $userSiteId);
-        $workflows->setCollection($resolvedCollection);
-    } else {
-        // Pour superadmin, on transforme en objet stdClass avec les bonnes propriétés
-        $resolvedCollection = $workflows->getCollection()->map(function ($workflow) {
-            $obj = new \stdClass();
-            foreach ($workflow->getAttributes() as $k => $v) {
-                $obj->{$k} = $v;
-            }
-            $obj->is_global = is_null($workflow->site_id);
-            $obj->site_name = $workflow->site->Nom ?? '—';
-            $obj->is_customizable = $workflow->is_customizable ?? false;
-            $obj->is_overridden = false;
-            $obj->override_id = null;
-            $obj->steps = is_string($workflow->steps) ? json_decode($workflow->steps, true) : ($workflow->steps ?? []);
-            $obj->leave_type_name = $workflow->leaveType->name ?? null;
-            return $obj;
-        });
-        $workflows->setCollection($resolvedCollection);
-    }
-
-    return view('conges.leave_workflows.index', compact('workflows'));
-}
-
+    /**
+     * ✅ CREATE - Filtrer les types de congé et rôles par site
+     */
     public function create()
-{
-    $this->authorize('create', LeaveWorkflow::class);
-    $sites = $this->isSuperAdmin() ? EntrepriseSiege::orderBy('nom')->get() : collect();
-    $leaveTypes = LeaveType::where('is_active', 1)->orderBy('name')->get();
-    $roles = LeaveRole::where('is_active', true)->orderBy('name')->get();
-    return view('conges.leave_workflows.create', compact('sites', 'leaveTypes', 'roles'));
-}
+    {
+        $this->authorize('create', LeaveWorkflow::class);
+        
+        $user = Auth::user();
+        $isSuperAdmin = $this->isSuperAdmin();
+        $userSiteId = $this->getUserSiteId();
+        
+        $sites = $isSuperAdmin ? EntrepriseSiege::orderBy('nom')->get() : collect();
+        
+        // ✅ Filtrer les types de congé selon le site de l'utilisateur
+        $leaveTypes = LeaveType::where('is_active', 1)
+            ->where(function ($q) use ($userSiteId, $isSuperAdmin) {
+                if ($isSuperAdmin) {
+                    return; // SuperAdmin voit tout
+                }
+                // Admin simple : voit les types globaux + ceux de son site
+                $q->whereNull('site_id')
+                  ->orWhere('site_id', $userSiteId);
+            })
+            ->orderBy('name')
+            ->get();
+        
+        // ✅ Filtrer les rôles par site
+        $roles = LeaveRole::where('is_active', true)
+            ->where(function ($q) use ($userSiteId, $isSuperAdmin) {
+                if ($isSuperAdmin) {
+                    return;
+                }
+                $q->whereNull('site_id')
+                  ->orWhere('site_id', $userSiteId);
+            })
+            ->orderBy('name')
+            ->get();
+        
+        return view('conges.leave_workflows.create', compact('sites', 'leaveTypes', 'roles'));
+    }
 
     public function store(Request $request)
     {
@@ -191,20 +218,52 @@ class LeaveWorkflowController extends Controller
         return view('conges.leave_workflows.show', compact('leaveWorkflow', 'resolved'));
     }
 
-   public function edit(LeaveWorkflow $leaveWorkflow)
-{
-    $this->authorize('update', $leaveWorkflow);
-    $sites = $this->isSuperAdmin() ? EntrepriseSiege::orderBy('nom')->get() : collect();
-    $leaveTypes = LeaveType::where('is_active', 1)->orderBy('name')->get();
-    $roles = LeaveRole::where('is_active', true)->orderBy('name')->get();
-    $override = null;
-    if (!$this->isSuperAdmin() && $leaveWorkflow->isGlobal() && $leaveWorkflow->is_customizable) {
-        $override = SiteLeaveWorkflowSetting::where('site_id', $this->getUserSiteId())
-            ->where('leave_workflow_id', $leaveWorkflow->id)
-            ->first();
+    /**
+     * ✅ EDIT - Filtrer les types de congé et rôles par site
+     */
+    public function edit(LeaveWorkflow $leaveWorkflow)
+    {
+        $this->authorize('update', $leaveWorkflow);
+        
+        $user = Auth::user();
+        $isSuperAdmin = $this->isSuperAdmin();
+        $userSiteId = $this->getUserSiteId();
+        
+        $sites = $isSuperAdmin ? EntrepriseSiege::orderBy('nom')->get() : collect();
+        
+        // ✅ Filtrer les types de congé selon le site
+        $leaveTypes = LeaveType::where('is_active', 1)
+            ->where(function ($q) use ($userSiteId, $isSuperAdmin) {
+                if ($isSuperAdmin) {
+                    return;
+                }
+                $q->whereNull('site_id')
+                  ->orWhere('site_id', $userSiteId);
+            })
+            ->orderBy('name')
+            ->get();
+        
+        // ✅ Filtrer les rôles par site
+        $roles = LeaveRole::where('is_active', true)
+            ->where(function ($q) use ($userSiteId, $isSuperAdmin) {
+                if ($isSuperAdmin) {
+                    return;
+                }
+                $q->whereNull('site_id')
+                  ->orWhere('site_id', $userSiteId);
+            })
+            ->orderBy('name')
+            ->get();
+        
+        $override = null;
+        if (!$isSuperAdmin && $leaveWorkflow->isGlobal() && $leaveWorkflow->is_customizable) {
+            $override = SiteLeaveWorkflowSetting::where('site_id', $userSiteId)
+                ->where('leave_workflow_id', $leaveWorkflow->id)
+                ->first();
+        }
+        
+        return view('conges.leave_workflows.edit', compact('leaveWorkflow', 'sites', 'leaveTypes', 'roles', 'override'));
     }
-    return view('conges.leave_workflows.edit', compact('leaveWorkflow', 'sites', 'leaveTypes', 'roles', 'override'));
-}
 
     public function update(Request $request, LeaveWorkflow $leaveWorkflow)
     {

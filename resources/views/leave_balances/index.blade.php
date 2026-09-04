@@ -182,38 +182,70 @@
                                 </tr>
 
                                 <!-- Modal d'ajustement -->
-                                <div class="modal fade" id="adjustModal{{ $balance->id }}" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">{{ __('Ajuster le solde') }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <form method="POST" action="{{ route('leave-balances.adjust', $balance->id) }}">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    <p><strong>{{ $balance->employee->Nom ?? 'N/A' }}</strong> - {{ $balance->leaveType->name ?? 'N/A' }}</p>
-                                                    <p class="text-muted">Solde actuel: <strong>{{ number_format($balance->remaining, 2) }}</strong></p>
+                                <!-- Modal d'ajustement -->
+<div class="modal fade" id="adjustModal{{ $balance->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('Ajuster le solde') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>{{ $balance->employee->Nom ?? 'N/A' }}</strong> - {{ $balance->leaveType->name ?? 'N/A' }}</p>
+                <p class="text-muted">Solde actuel: <strong>{{ number_format($balance->remaining, 2) }}</strong></p>
 
-                                                    <div class="mb-3">
-                                                        <label for="amount" class="form-label">{{ __('Montant') }} <span class="text-danger">*</span></label>
-                                                        <input type="number" step="0.5" name="amount" id="amount" class="form-control" required>
-                                                        <small class="text-muted">Positif = ajouter, Négatif = retirer</small>
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label for="description" class="form-label">{{ __('Motif') }} <span class="text-danger">*</span></label>
-                                                        <input type="text" name="description" id="description" class="form-control" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
-                                                    <button type="submit" class="btn" style="background-color: #5b7f95; color: #fff; border: none; border-radius: 4px;">{{ __('Ajuster') }}</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                <div class="row g-3">
+                    {{-- Formulaire Ajouter (crédit) --}}
+                    <div class="col-md-6">
+                        <div class="card h-100" style="border: 2px solid #22c55e;">
+                            <div class="card-body text-center">
+                                <h6 class="text-success mb-3"><i class="bi bi-plus-circle"></i> Ajouter des jours</h6>
+                                <form method="POST" action="{{ route('leave-balances.adjust', $balance->id) }}">
+                                    @csrf
+                                    <input type="hidden" name="type" value="credit">
+                                    <div class="mb-2">
+                                        <input type="number" step="0.5" name="amount" class="form-control text-center" placeholder="Montant" required min="0.5">
                                     </div>
-                                </div>
+                                    <div class="mb-2">
+                                        <input type="text" name="description" class="form-control" placeholder="Motif (ex: Rattrapage)" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="bi bi-plus-circle"></i> Ajouter
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Formulaire Retirer (débit) --}}
+                    <div class="col-md-6">
+                        <div class="card h-100" style="border: 2px solid #ef4444;">
+                            <div class="card-body text-center">
+                                <h6 class="text-danger mb-3"><i class="bi bi-dash-circle"></i> Retirer des jours</h6>
+                                <form method="POST" action="{{ route('leave-balances.adjust', $balance->id) }}">
+                                    @csrf
+                                    <input type="hidden" name="type" value="debit">
+                                    <div class="mb-2">
+                                        <input type="number" step="0.5" name="amount" class="form-control text-center" placeholder="Montant" required min="0.5">
+                                    </div>
+                                    <div class="mb-2">
+                                        <input type="text" name="description" class="form-control" placeholder="Motif (ex: Correction)" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger w-100">
+                                        <i class="bi bi-dash-circle"></i> Retirer
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Annuler') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
                             @empty
                                 <tr>
                                     <td colspan="8" class="text-center py-4">

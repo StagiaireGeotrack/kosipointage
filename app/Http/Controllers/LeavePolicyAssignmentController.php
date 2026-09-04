@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class LeavePolicyAssignmentController extends Controller
 {
     /**
-     * ✅ Vérification : tout le monde connecté peut accéder (pour tester)
-     * ⚠️ À sécuriser après test
+     * ✅ Vérification des droits avec multi-tenant
      */
     private function checkAccess(): void
     {
@@ -25,45 +24,117 @@ class LeavePolicyAssignmentController extends Controller
             abort(401, 'Vous devez être connecté.');
         }
         
-        // ✅ Autoriser TOUT LE MONDE pour le moment (test)
-        // À remplacer par une vraie vérification après
-        return;
+        // Vérifier que l'utilisateur a accès (SuperAdmin ou Manager)
+        $isSuperAdmin = isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1;
+        $isManager = isset($user->IsManager) && $user->IsManager == 1;
         
-        // OU pour une vraie vérification :
-        // $isSuperAdmin = isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1;
-        // $isSeller = isset($user->IsSeller) && $user->IsSeller == 1;
-        // $isManager = isset($user->IsManager) && $user->IsManager == 1;
-        // 
-        // if (!$isSuperAdmin && !$isSeller && !$isManager) {
-        //     abort(403, 'Vous n\'êtes pas autorisé.');
-        // }
+        if (!$isSuperAdmin && !$isManager) {
+            abort(403, 'Vous n\'êtes pas autorisé.');
+        }
+    }
+
+    /**
+     * ✅ Récupérer le site de l'utilisateur connecté
+     */
+    private function getUserSiteId(): ?int
+    {
+        $user = Auth::user();
+        return $user ? $user->SiegeID : null;
+    }
+
+    /**
+     * ✅ Vérifier si l'utilisateur est SuperAdmin
+     */
+    private function isSuperAdmin(): bool
+    {
+        $user = Auth::user();
+        return $user && isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1;
     }
 
     public function index(Request $request)
     {
         $this->checkAccess();
 
+        $userSiteId = $this->getUserSiteId();
+        $isSuperAdmin = $this->isSuperAdmin();
+
         $query = LeavePolicyAssignment::with(['leavePolicy', 'employee', 'department', 'site'])
             ->orderBy('priority', 'desc');
 
+        // ✅ Filtrer par site pour les non-superadmins
+        if (!$isSuperAdmin && $userSiteId) {
+            $query->where(function ($q) use ($userSiteId) {
+                $q->where('site_id', $userSiteId)
+                  ->orWhereNull('site_id');
+            });
+        }
+
+        // Filtre par politique
         if ($request->filled('leave_policy_id')) {
             $query->where('leave_policy_id', $request->leave_policy_id);
         }
 
-        $assignments = $query->paginate(15);
-        $leavePolicies = LeavePolicy::where('is_active', true)->orderBy('name')->get();
+        // Filtre par site (admin)
+        if ($request->filled('site_id') && $isSuperAdmin) {
+            $query->where('site_id', $request->site_id);
+        }
 
-        return view('leave_policy_assignments.index', compact('assignments', 'leavePolicies'));
+        $assignments = $query->paginate(15);
+        $leavePolicies = LeavePolicy::where('is_active', true)
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where(function ($sub) use ($userSiteId) {
+                    $sub->where('site_id', $userSiteId)
+                        ->orWhereNull('site_id');
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
+        $sites = $isSuperAdmin 
+            ? EntrepriseSiege::orderBy('Nom')->get() 
+            : EntrepriseSiege::where('ID', $userSiteId)->orderBy('Nom')->get();
+
+        return view('leave_policy_assignments.index', compact('assignments', 'leavePolicies', 'sites'));
     }
 
     public function create()
     {
         $this->checkAccess();
 
-        $leavePolicies = LeavePolicy::where('is_active', true)->orderBy('name')->get();
-        $employees = Employe::where('Actived', 1)->where('deleted', 0)->orderBy('Nom')->get();
-        $departments = Department::orderBy('name')->get();
-        $sites = EntrepriseSiege::orderBy('Nom')->get();
+        $userSiteId = $this->getUserSiteId();
+        $isSuperAdmin = $this->isSuperAdmin();
+
+        // ✅ Filtrer les politiques par site
+        $leavePolicies = LeavePolicy::where('is_active', true)
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where(function ($sub) use ($userSiteId) {
+                    $sub->where('site_id', $userSiteId)
+                        ->orWhereNull('site_id');
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
+        // ✅ Filtrer les employés par site
+        $employees = Employe::where('Actived', 1)
+            ->where('deleted', 0)
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where('SiegeID', $userSiteId);
+            })
+            ->orderBy('Nom')
+            ->get();
+
+        // ✅ Filtrer les départements par site
+        $departments = Department::orderBy('name')
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where('site_id', $userSiteId);
+            })
+            ->get();
+
+        // ✅ Filtrer les sites
+        $sites = $isSuperAdmin 
+            ? EntrepriseSiege::orderBy('Nom')->get() 
+            : EntrepriseSiege::where('ID', $userSiteId)->orderBy('Nom')->get();
 
         return view('leave_policy_assignments.create', compact(
             'leavePolicies', 'employees', 'departments', 'sites'
@@ -74,33 +145,66 @@ class LeavePolicyAssignmentController extends Controller
     {
         $this->checkAccess();
 
+        $userSiteId = $this->getUserSiteId();
+        $isSuperAdmin = $this->isSuperAdmin();
+
         $validated = $request->validate([
             'leave_policy_id' => 'required|exists:leave_policies,id',
-            'assignment_type' => 'required|in:individual,department,site,company',
-            'target_id' => 'required|integer',
+            'assignment_type' => 'required|in:individual,department,site,company,global',
+            'target_id' => 'nullable|integer',
             'priority' => 'nullable|integer|min:0|max:100',
             'is_active' => 'nullable|boolean',
+            'site_id' => 'nullable|exists:entreprises_sieges,ID',
         ]);
 
+        // ✅ Déterminer le site de l'assignation
+        $siteId = null;
+        if ($isSuperAdmin && $request->filled('site_id')) {
+            $siteId = $request->site_id;
+        } elseif (!$isSuperAdmin && $userSiteId) {
+            $siteId = $userSiteId;
+        }
+
+        // ✅ Pour les assignations "global", on force site_id = null
+        if ($validated['assignment_type'] === 'global') {
+            $siteId = null;
+        }
+
+        // ✅ Construire les données
+        $data = [
+            'leave_policy_id' => $validated['leave_policy_id'],
+            'assignment_type' => $validated['assignment_type'],
+            'priority' => $validated['priority'] ?? 50,
+            'is_active' => $request->boolean('is_active', true),
+            'site_id' => $siteId,
+        ];
+
+        // ✅ Ajouter la cible selon le type
         $targetColumn = match($validated['assignment_type']) {
             'individual' => 'employee_id',
             'department' => 'department_id',
             'site' => 'site_id',
             'company' => 'company_id',
+            'global' => null,
         };
 
-        $data = [
-            'leave_policy_id' => $validated['leave_policy_id'],
-            $targetColumn => $validated['target_id'],
-            'assignment_type' => $validated['assignment_type'],
-            'priority' => $validated['priority'] ?? 50,
-            'is_active' => $request->boolean('is_active', true),
-        ];
+        if ($targetColumn && $request->filled('target_id')) {
+            $data[$targetColumn] = $request->target_id;
+        }
 
-        // Ajouter le site_id de l'utilisateur connecté
-        $user = Auth::user();
-        if ($user && isset($user->SiegeID) && $user->SiegeID) {
-            $data['site_id'] = $user->SiegeID;
+        // ✅ Vérification des doublons
+        $exists = LeavePolicyAssignment::where('leave_policy_id', $data['leave_policy_id'])
+            ->where('assignment_type', $data['assignment_type'])
+            ->when($targetColumn && isset($data[$targetColumn]), function ($q) use ($targetColumn, $data) {
+                return $q->where($targetColumn, $data[$targetColumn]);
+            })
+            ->when($data['site_id'], function ($q) use ($data) {
+                return $q->where('site_id', $data['site_id']);
+            })
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['target_id' => 'Cette assignation existe déjà.'])->withInput();
         }
 
         $assignment = LeavePolicyAssignment::create($data);
@@ -112,6 +216,13 @@ class LeavePolicyAssignmentController extends Controller
     public function show(LeavePolicyAssignment $leavePolicyAssignment)
     {
         $this->checkAccess();
+        
+        // ✅ Vérifier l'accès au site
+        $userSiteId = $this->getUserSiteId();
+        if (!$this->isSuperAdmin() && $leavePolicyAssignment->site_id && $leavePolicyAssignment->site_id != $userSiteId) {
+            abort(403, 'Vous n\'avez pas accès à cette assignation.');
+        }
+
         return view('leave_policy_assignments.show', compact('leavePolicyAssignment'));
     }
 
@@ -119,10 +230,45 @@ class LeavePolicyAssignmentController extends Controller
     {
         $this->checkAccess();
 
-        $leavePolicies = LeavePolicy::where('is_active', true)->orderBy('name')->get();
-        $employees = Employe::where('Actived', 1)->where('deleted', 0)->orderBy('Nom')->get();
-        $departments = Department::orderBy('name')->get();
-        $sites = EntrepriseSiege::orderBy('Nom')->get();
+        // ✅ Vérifier l'accès au site
+        $userSiteId = $this->getUserSiteId();
+        if (!$this->isSuperAdmin() && $leavePolicyAssignment->site_id && $leavePolicyAssignment->site_id != $userSiteId) {
+            abort(403, 'Vous n\'avez pas accès à cette assignation.');
+        }
+
+        $isSuperAdmin = $this->isSuperAdmin();
+
+        // ✅ Filtrer les politiques par site
+        $leavePolicies = LeavePolicy::where('is_active', true)
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where(function ($sub) use ($userSiteId) {
+                    $sub->where('site_id', $userSiteId)
+                        ->orWhereNull('site_id');
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
+        // ✅ Filtrer les employés par site
+        $employees = Employe::where('Actived', 1)
+            ->where('deleted', 0)
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where('SiegeID', $userSiteId);
+            })
+            ->orderBy('Nom')
+            ->get();
+
+        // ✅ Filtrer les départements par site
+        $departments = Department::orderBy('name')
+            ->when(!$isSuperAdmin && $userSiteId, function ($q) use ($userSiteId) {
+                return $q->where('site_id', $userSiteId);
+            })
+            ->get();
+
+        // ✅ Filtrer les sites
+        $sites = $isSuperAdmin 
+            ? EntrepriseSiege::orderBy('Nom')->get() 
+            : EntrepriseSiege::where('ID', $userSiteId)->orderBy('Nom')->get();
 
         return view('leave_policy_assignments.edit', compact(
             'leavePolicyAssignment', 'leavePolicies', 'employees', 'departments', 'sites'
@@ -132,6 +278,12 @@ class LeavePolicyAssignmentController extends Controller
     public function update(Request $request, LeavePolicyAssignment $leavePolicyAssignment)
     {
         $this->checkAccess();
+
+        // ✅ Vérifier l'accès au site
+        $userSiteId = $this->getUserSiteId();
+        if (!$this->isSuperAdmin() && $leavePolicyAssignment->site_id && $leavePolicyAssignment->site_id != $userSiteId) {
+            abort(403, 'Vous n\'avez pas accès à cette assignation.');
+        }
 
         $validated = $request->validate([
             'leave_policy_id' => 'required|exists:leave_policies,id',
@@ -154,6 +306,13 @@ class LeavePolicyAssignmentController extends Controller
         $this->checkAccess();
 
         $assignment = LeavePolicyAssignment::findOrFail($id);
+        
+        // ✅ Vérifier l'accès au site
+        $userSiteId = $this->getUserSiteId();
+        if (!$this->isSuperAdmin() && $assignment->site_id && $assignment->site_id != $userSiteId) {
+            abort(403, 'Vous n\'avez pas accès à cette assignation.');
+        }
+
         $assignment->is_active = !$assignment->is_active;
         $assignment->save();
 
@@ -164,6 +323,13 @@ class LeavePolicyAssignmentController extends Controller
     public function destroy(LeavePolicyAssignment $leavePolicyAssignment)
     {
         $this->checkAccess();
+
+        // ✅ Vérifier l'accès au site
+        $userSiteId = $this->getUserSiteId();
+        if (!$this->isSuperAdmin() && $leavePolicyAssignment->site_id && $leavePolicyAssignment->site_id != $userSiteId) {
+            abort(403, 'Vous n\'avez pas accès à cette assignation.');
+        }
+
         $leavePolicyAssignment->delete();
 
         return redirect()->route('admin.leave-policy-assignments.index')
