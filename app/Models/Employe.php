@@ -101,6 +101,34 @@ class Employe extends Authenticatable
         return $this->belongsTo(EntrepriseSiege::class, 'SiegeID');
     }
 
+    // ==============================================
+    // RELATIONS POUR LES CONGÉS (AJOUTÉES)
+    // ==============================================
+    
+    /**
+     * Relation avec les demandes de congé (nouveau système LeaveRequest)
+     */
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class, 'employee_id', 'ID');
+    }
+
+    /**
+     * Relation avec les congés (ancien système Conge)
+     */
+    public function conges()
+    {
+        return $this->hasMany(Conge::class, 'employee_id', 'ID');
+    }
+
+    /**
+     * Relation avec les soldes de congés
+     */
+    public function leaveBalances()
+    {
+        return $this->hasMany(LeaveBalance::class, 'employee_id', 'ID');
+    }
+
     // ============ ACCESSORS ============
     public function getDepartmentNameAttribute()
     {

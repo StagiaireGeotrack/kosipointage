@@ -178,6 +178,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
 
         // ============================================
+// ============================================
 // PLANNING
 // ============================================
 Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')->name('planning.')->group(function () {
@@ -190,15 +191,21 @@ Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')
         Route::get('/{id}/edit', [App\Http\Controllers\HoraireTypeController::class, 'edit'])->name('edit');
         Route::put('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'update'])->name('update');
         Route::delete('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'destroy'])->name('destroy');
-        // API pour charger les postes par service
-        Route::get('/planning/api/job-titles-by-department/{departmentId}', 
-            [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])
-            ->name('planning.api.job-titles-by-department');
     });
+
+    // ✅ CORRECTION : API pour charger les postes par service (hors du groupe horaires-types)
+    Route::get('/api/job-titles-by-department/{departmentId}', 
+        [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])
+        ->name('api.job-titles-by-department');
+
+    // ✅ CORRECTION : Détail d'un événement (AJAX)
+    Route::get('/event-detail/{id}/{type}', 
+        [App\Http\Controllers\PlanningController::class, 'getEventDetail'])
+        ->name('event.detail');
 
     // Gestion des plannings
     Route::get('/', [App\Http\Controllers\PlanningController::class, 'index'])->name('index');
-    Route::get('/calendar', [App\Http\Controllers\PlanningController::class, 'index'])->name('calendar');
+    Route::get('/calendar', [App\Http\Controllers\PlanningController::class, 'calendar'])->name('calendar');
     Route::get('/create', [App\Http\Controllers\PlanningController::class, 'create'])->name('create');
     Route::post('/', [App\Http\Controllers\PlanningController::class, 'store'])->name('store');
     Route::get('/{id}', [App\Http\Controllers\PlanningController::class, 'show'])->name('show');
@@ -208,9 +215,13 @@ Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')
     Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
 
     // API AJAX
-    Route::get('/api/employees-by-service/{serviceId}', [App\Http\Controllers\PlanningController::class, 'getEmployeesByService'])->name('api.employees-by-service');
-    Route::get('/api/job-titles-by-department/{departmentId}', [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])->name('api.job-titles-by-department');
-    Route::get('/api/work-schedules-by-job-title/{jobTitleId}', [App\Http\Controllers\PlanningController::class, 'getWorkSchedulesByJobTitle'])->name('api.work-schedules-by-job-title');
+    Route::get('/api/employees-by-service/{serviceId}', 
+        [App\Http\Controllers\PlanningController::class, 'getEmployeesByService'])
+        ->name('api.employees-by-service');
+
+    Route::get('/api/work-schedules-by-job-title/{jobTitleId}', 
+        [App\Http\Controllers\PlanningController::class, 'getWorkSchedulesByJobTitle'])
+        ->name('api.work-schedules-by-job-title');
 
     // Exports
     Route::get('/export/excel', [App\Http\Controllers\PlanningController::class, 'exportExcel'])->name('export.excel');

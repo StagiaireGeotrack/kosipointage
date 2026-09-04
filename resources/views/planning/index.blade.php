@@ -1,394 +1,509 @@
 @extends('layouts.app')
 
-@section('title', 'Planning des employés')
-
 @push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.21/main.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-    .fc-daygrid-day-frame { min-height: 80px !important; }
-    .fc-event { cursor: pointer !important; }
-    .employee-avatar {
+    .planning-scope {
+        font-family: 'Roboto', sans-serif;
+    }
+    .fc-event .fc-event-title {
+        font-size: 12px !important;
+    }
+    .event-avatar {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        color: white;
+        font-weight: 700;
+        font-size: 10px;
+        flex-shrink: 0;
+        margin-right: 4px;
+    }
+    .employee-avatar {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: #3B82F6;
-        color: white;
-        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
         font-size: 14px;
-        margin-right: 6px;
+        color: white;
         flex-shrink: 0;
     }
-    .employee-avatar.small { width: 28px; height: 28px; font-size: 11px; }
-    .employee-avatar.green { background: #22C55E; }
-    .employee-avatar.orange { background: #F59E0B; }
-    .employee-avatar.purple { background: #8B5CF6; }
-    .employee-avatar.red { background: #EF4444; }
-    .filter-section {
-        background: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
+    .schedule-item {
+        transition: all 0.15s ease;
+        cursor: pointer;
     }
-    .stats-card {
-        background: white;
-        padding: 12px 18px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        text-align: center;
+    .schedule-item:hover {
+        transform: scale(1.02);
+        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .stats-card .number { font-size: 24px; font-weight: 700; color: #1F2937; }
-    .stats-card .label { font-size: 13px; color: #6B7280; }
+    .bg-work { background: #DCFCE7; border-color: #86EFAC; color: #166534; }
+    .bg-pause { background: #FEF3C7; border-color: #FCD34D; color: #92400E; }
+    .bg-formation { background: #EDE9FE; border-color: #C4B5FD; color: #5B21B6; }
+    .bg-conge { background: #FEF3C7; border-color: #FCD34D; color: #92400E; }
+    .bg-rtt { background: #FCE7F3; border-color: #F9A8D4; color: #9D174D; }
+    .bg-mission { background: #FFEDD5; border-color: #FDBA74; color: #9A3412; }
+    .bg-maladie { background: #FEE2E2; border-color: #FCA5A5; color: #991B1B; }
+    .bg-absence { background: #DBEAFE; border-color: #93C5FD; color: #1E40AF; }
+    .bg-rest { background: #F1F5F9; border-color: #CBD5E1; color: #475569; }
+    
+    .sticky-left {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+    }
 </style>
 @endpush
 
-@section('header')
-<div class="d-flex justify-content-between align-items-center">
-    <div>
-        <h4 class="fw-bold mb-0">📅 Planning des employés</h4>
-        <span class="text-muted small">Vue semaine</span>
-    </div>
-    <div>
-        <a href="{{ route('planning.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Créer un planning
-        </a>
-        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-            <i class="bi bi-calendar-plus"></i> Ajouter un événement
-        </button>
-    </div>
-</div>
-@endsection
-
 @section('content')
-<div class="container-fluid px-0">
+@php
+    $currentView = request('view', 'timeGridWeek');
+    $currentOffset = (int) request('offset', 0);
+@endphp
 
-    {{-- Filtres --}}
-    <div class="filter-section">
-        <div class="row align-items-end g-3">
-            <div class="col-md-3">
-                <label class="form-label fw-semibold">Service</label>
-                <select id="service-filter" class="form-select">
-                    <option value="">Tous les services</option>
-                    @foreach($services as $service)
-                        <option value="{{ $service->id }}">{{ $service->name }}</option>
-                    @endforeach
-                </select>
+<div class="planning-scope flex flex-col h-full bg-slate-50 text-slate-800 -m-3">
+    <!-- En-tête -->
+    <header class="bg-white border-b border-slate-200 p-4 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <h1 class="text-xl font-bold text-slate-900">📅 Planning des employés</h1>
+                <p class="text-xs text-slate-500">
+                    Vue {{ $currentView === 'dayGridDay' ? 'Jour' : ($currentView === 'dayGridMonth' ? 'Mois' : 'Semaine') }}
+                </p>
             </div>
-            <div class="col-md-3">
-                <label class="form-label fw-semibold">Fonction / Poste</label>
-                <select id="poste-filter" class="form-select">
-                    <option value="">Toutes les fonctions</option>
-                    @foreach($postes as $poste)
-                        <option value="{{ $poste->id }}">{{ $poste->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label fw-semibold">Semaine</label>
-                <input type="week" id="week-picker" class="form-control" value="{{ date('Y-\WW') }}">
-            </div>
-            <div class="col-md-3 text-end">
-                <button id="refresh-calendar" class="btn btn-secondary">
-                    <i class="bi bi-arrow-clockwise"></i> Actualiser
+
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center bg-slate-100 rounded-lg border border-slate-200 p-0.5">
+                    <button class="p-1.5 hover:bg-white rounded-md transition" id="prev-btn">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <div class="flex items-center gap-2 px-3 text-xs font-semibold" id="week-label">
+                        <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+                        @if($currentView === 'dayGridDay')
+                            {{ $days[0]['date'] ?? '--' }}
+                        @elseif($currentView === 'dayGridMonth')
+                            {{ $monthLabel ?? ($days[0]['date'] ?? '--') }}
+                        @else
+                            {{ $days[0]['date'] ?? '--' }} – {{ $days[count($days)-1]['date'] ?? '--' }}
+                        @endif
+                    </div>
+                    <button class="p-1.5 hover:bg-white rounded-md transition" id="next-btn">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <button class="px-3 py-1.5 bg-slate-100 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-200" id="today-btn">
+                    Aujourd'hui
                 </button>
-            </div>
-        </div>
-    </div>
 
-    {{-- Stats --}}
-    <div class="row g-3 mb-4">
-        <div class="col-4 col-md-2">
-            <div class="stats-card">
-                <div class="number" id="stat-employes">0</div>
-                <div class="label">Employés</div>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="stats-card">
-                <div class="number" id="stat-services">0</div>
-                <div class="label">Services</div>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="stats-card">
-                <div class="number" id="stat-evenements">0</div>
-                <div class="label">Événements</div>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="stats-card">
-                <div class="number" id="stat-creneaux">0</div>
-                <div class="label">Créneaux</div>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="stats-card">
-                <div class="number" id="stat-postes">0</div>
-                <div class="label">Postes</div>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="stats-card">
-                <div class="number" id="stat-services-actifs">0</div>
-                <div class="label">Services actifs</div>
-            </div>
-        </div>
-    </div>
+                <div class="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+                    <button class="px-3 py-1.5 rounded-md view-btn {{ $currentView === 'dayGridDay' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white' }}" data-view="dayGridDay">Jour</button>
+                    <button class="px-3 py-1.5 rounded-md view-btn {{ $currentView === 'timeGridWeek' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white' }}" data-view="timeGridWeek">Semaine</button>
+                    <button class="px-3 py-1.5 rounded-md view-btn {{ $currentView === 'dayGridMonth' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white' }}" data-view="dayGridMonth">Mois</button>
+                </div>
 
-    {{-- Calendrier --}}
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div id="calendar"></div>
+                <a href="{{ route('planning.create') }}" class="flex items-center gap-2 px-3.5 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-700">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Créer un planning
+                </a>
+            </div>
         </div>
-    </div>
 
-    {{-- Règles --}}
-    <div class="mt-3 p-3 bg-light rounded border">
-        <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-info-circle text-primary"></i>
-            <span class="text-muted small">
-                <strong>Règles :</strong> Les horaires indiqués sont prévisionnels et seront comparés avec les pointages réels.
+        <!-- Filtres -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex flex-wrap items-center gap-2 flex-1">
+                <select id="service-filter" class="border border-slate-200 rounded-lg text-xs font-medium px-3 py-2 bg-white flex-1 min-w-[140px] max-w-[180px]">
+                    <option value="">Tous les services</option>
+                    @if(isset($servicesData))
+                        @foreach($servicesData as $service)
+                            <option value="{{ $service['id'] }}">{{ $service['name'] }}</option>
+                        @endforeach
+                    @endif
+                </select>
+
+                <div class="relative flex-1 min-w-[180px] max-w-xs">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+                    <input type="text" id="employee-search" placeholder="Rechercher un employé..." class="pl-9 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs w-full focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Légende -->
+        <div class="flex items-center gap-2 overflow-x-auto text-xs pt-1 pb-1 flex-wrap">
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-50 text-green-700 border border-green-200 font-medium whitespace-nowrap">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5"></i> Travail
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-50 text-amber-700 border border-amber-200 font-medium whitespace-nowrap">
+                <i data-lucide="coffee" class="w-3.5 h-3.5"></i> Pause déjeuner
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200 font-medium whitespace-nowrap">
+                <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Formation
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-50 text-amber-600 border border-amber-200 font-medium whitespace-nowrap">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Congé
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-pink-50 text-pink-700 border border-pink-200 font-medium whitespace-nowrap">
+                <i data-lucide="hourglass" class="w-3.5 h-3.5"></i> RTT
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-orange-50 text-orange-700 border border-orange-200 font-medium whitespace-nowrap">
+                <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Déplacement
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-50 text-rose-700 border border-rose-200 font-medium whitespace-nowrap">
+                <i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i> Maladie
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200 font-medium whitespace-nowrap">
+                <i data-lucide="user-x" class="w-3.5 h-3.5"></i> Absence
+            </span>
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 text-slate-600 border border-slate-200 font-medium whitespace-nowrap">
+                <i data-lucide="moon" class="w-3.5 h-3.5"></i> Repos
             </span>
         </div>
-    </div>
-</div>
+    </header>
 
-{{-- Modal Événement --}}
-<div class="modal fade" id="eventModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-calendar-plus"></i> Ajouter un événement</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="eventForm">
-                <div class="modal-body">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Titre *</label>
-                            <input type="text" name="titre" class="form-control" required placeholder="Ex: Formation sécurité">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Type *</label>
-                            <select name="type" class="form-select" required>
-                                <option value="">Sélectionner...</option>
-                                <option value="formation">Formation</option>
-                                <option value="deplacement">Déplacement professionnel</option>
-                                <option value="reunion">Réunion</option>
-                                <option value="conges_exceptionnel">Congé exceptionnel</option>
-                                <option value="autre">Autre</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Couleur</label>
-                            <input type="color" name="couleur" class="form-control form-control-color" value="#8B5CF6">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Début *</label>
-                            <input type="datetime-local" name="debut" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Fin *</label>
-                            <input type="datetime-local" name="fin" class="form-control" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Description</label>
-                            <textarea name="description" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Service concerné</label>
-                            <select name="service_id" class="form-select">
-                                <option value="">Tous les services</option>
-                                @foreach($services as $service)
-                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+    <!-- Planning Content -->
+    <div class="flex-1 overflow-auto p-4 flex gap-4">
+        <!-- Main Planning Table -->
+        <div class="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full border-collapse text-left text-xs" id="planning-table">
+                    <thead>
+                        <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 font-semibold">
+                            <th class="p-3 w-56 sticky-left bg-slate-50">Employé</th>
+                            @if(isset($days))
+                                @foreach($days as $day)
+                                <th class="p-3 text-center border-l border-slate-200 min-w-[130px]">
+                                    {{ $day['short'] }}
+                                    <span class="block text-[10px] font-normal text-slate-400">{{ $day['date'] }}</span>
+                                </th>
                                 @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Poste concerné</label>
-                            <select name="poste_id" class="form-select">
-                                <option value="">Tous les postes</option>
-                                @foreach($postes as $poste)
-                                    <option value="{{ $poste->id }}">{{ $poste->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Employés concernés</label>
-                            <select name="employe_ids[]" class="form-select select2-multi" multiple>
-                                @foreach($employes as $employe)
-                                    <option value="{{ $employe->ID }}">{{ $employe->Nom }} {{ $employe->Prenom ?? '' }}</option>
-                                @endforeach
-                            </select>
-                            <small class="text-muted">Laissez vide pour tous les employés du service/poste</small>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input type="checkbox" name="toute_la_journee" class="form-check-input" id="allDay">
-                                <label class="form-check-label" for="allDay">Toute la journée</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Ajouter l'événement</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100" id="planning-body">
+                        @if(isset($servicesData) && count($servicesData) > 0)
+                            @foreach($servicesData as $service)
+                            <!-- Service Group Row -->
+                            <tr class="bg-slate-50/80 font-bold text-slate-700 border-t border-b border-slate-200 service-group" data-service="{{ $service['id'] }}">
+                                <td colspan="{{ count($days) + 1 }}" class="p-2.5 px-3 sticky-left bg-slate-50/80">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                                        <span>{{ $service['name'] }}</span>
+                                        <span class="text-slate-400 font-normal">({{ $service['count'] }})</span>
+                                    </div>
+                                </td>
+                            </tr>
 
-{{-- Modal Détail --}}
-<div class="modal fade" id="detailModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Détail</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <!-- Employee Schedule Rows -->
+                            @foreach($service['employees'] as $emp)
+                            <tr class="hover:bg-slate-50/50 employee-row" data-employee="{{ $emp['id'] }}" data-service="{{ $service['id'] }}">
+                                <td class="p-3 align-top sticky-left bg-white">
+                                    <div class="flex items-center gap-3">
+                                        @if(filter_var($emp['avatar'] ?? '', FILTER_VALIDATE_URL))
+                                            <img src="{{ $emp['avatar'] }}" class="w-8 h-8 rounded-full object-cover" onerror="this.style.display='none'">
+                                        @endif
+                                        <div class="employee-avatar" style="background: {{ $emp['color'] ?? '#3B82F6' }}">
+                                            {{ $emp['initiales'] ?? '?' }}
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-slate-800 text-xs employee-name">{{ $emp['name'] }}</div>
+                                            <div class="text-[10px] text-slate-400">{{ $emp['role'] ?? 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                @foreach($days as $day)
+                                <td class="p-1 border-l border-slate-100 align-top min-w-[130px]">
+                                    @if(isset($emp['schedule'][$day['date']]))
+                                        <div class="space-y-1">
+                                            @foreach($emp['schedule'][$day['date']] as $item)
+                                                @if($item['type'] === 'work')
+                                                    <div class="schedule-item p-1 rounded bg-green-50 border border-green-200 text-green-800 text-[10px] font-medium flex items-center gap-1" data-id="{{ $item['id'] ?? '' }}" data-type="planning">
+                                                        <i data-lucide="briefcase" class="w-3 h-3 text-green-600 flex-shrink-0"></i> {{ $item['time'] }}
+                                                    </div>
+                                                @elseif($item['type'] === 'pause')
+                                                    <div class="schedule-item p-1 rounded bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-medium flex items-center gap-1" data-id="{{ $item['id'] ?? '' }}" data-type="planning">
+                                                        <i data-lucide="coffee" class="w-3 h-3 text-amber-600 flex-shrink-0"></i> {{ $item['time'] }}
+                                                    </div>
+                                                @elseif($item['type'] === 'formation')
+                                                    <div class="schedule-item p-2 rounded-lg bg-purple-100 border border-purple-200 text-purple-900 text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-purple-600 flex-shrink-0"></i> {{ $item['title'] ?? 'Formation' }}
+                                                        </div>
+                                                        <div class="text-[10px] text-purple-600">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'conge')
+                                                    <div class="schedule-item p-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600 flex-shrink-0"></i> {{ $item['title'] ?? 'Congé' }}
+                                                        </div>
+                                                        <div class="text-[10px] text-amber-600">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'rtt')
+                                                    <div class="schedule-item p-2 rounded-lg bg-pink-50 border border-pink-200 text-pink-900 text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="hourglass" class="w-3.5 h-3.5 text-pink-600 flex-shrink-0"></i> {{ $item['title'] ?? 'RTT' }}
+                                                        </div>
+                                                        <div class="text-[10px] text-pink-600">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'deplacement' || $item['type'] === 'mission')
+                                                    <div class="schedule-item p-2 rounded-lg bg-orange-50 border border-orange-200 text-orange-900 text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="navigation" class="w-3.5 h-3.5 text-orange-600 flex-shrink-0"></i> {{ $item['title'] ?? 'Déplacement' }}
+                                                        </div>
+                                                        <div class="text-[10px] text-orange-600">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'maladie')
+                                                    <div class="schedule-item p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-rose-600 flex-shrink-0"></i> {{ $item['title'] ?? 'Maladie' }}
+                                                        </div>
+                                                        <div class="text-[10px] text-rose-600">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'absence')
+                                                    <div class="schedule-item p-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="user-x" class="w-3.5 h-3.5 text-blue-600 flex-shrink-0"></i> {{ $item['title'] ?? 'Absence' }}
+                                                        </div>
+                                                        <div class="text-[10px] text-blue-600">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'rest')
+                                                    <div class="p-3 text-center text-slate-400 flex items-center justify-center gap-1 text-[11px]">
+                                                        <i data-lucide="moon" class="w-3.5 h-3.5 flex-shrink-0"></i> Repos
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </td>
+                                @endforeach
+                            </tr>
+                            @endforeach
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="8" class="text-center py-8 text-slate-400">
+                                    <i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                                    <p>Aucun planning disponible</p>
+                                    <p class="text-[10px]">Créez un planning ou configurez des horaires types</p>
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
-            <div class="modal-body" id="detailContent"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+
+            <div class="p-3 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
+                Les horaires indiqués sont prévisionnels et seront comparés avec les pointages réels.
             </div>
         </div>
+
+        <!-- Panneau de détail droite -->
+        @include('planning.partials.details-panel')
     </div>
 </div>
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.21/main.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.21/locales/fr.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'fr',
-        initialView: 'timeGridWeek',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        slotMinTime: '06:00:00',
-        slotMaxTime: '22:00:00',
-        height: 'auto',
-        events: function(fetchInfo, successCallback, failureCallback) {
-            var serviceId = document.getElementById('service-filter').value;
-            var posteId = document.getElementById('poste-filter').value;
-            var url = '{{ route("planning.events") }}' +
-                '?start=' + fetchInfo.startStr +
-                '&end=' + fetchInfo.endStr +
-                (serviceId ? '&service_id=' + serviceId : '') +
-                (posteId ? '&poste_id=' + posteId : '');
-            fetch(url).then(r => r.json()).then(data => {
-                updateStats(data);
-                successCallback(data);
-            }).catch(error => failureCallback(error));
-        },
-        eventClick: function(info) {
-            var props = info.event.extendedProps;
-            var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
-            if (props.type === 'planning') {
-                document.getElementById('detailContent').innerHTML = `
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="employee-avatar" style="width:48px;height:48px;font-size:20px;">${props.initiales || '?'}</div>
-                        <div><h6 class="mb-0 fw-bold">${props.employe}</h6>
-                        <span class="badge bg-primary">${props.statut}</span></div>
-                    </div>
-                    <hr>
-                    <div class="row g-2">
-                        <div class="col-6"><strong>Date :</strong></div>
-                        <div class="col-6">${new Date(info.event.start).toLocaleDateString('fr-FR')}</div>
-                        <div class="col-6"><strong>Horaires :</strong></div>
-                        <div class="col-6">${new Date(info.event.start).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})} - ${new Date(info.event.end).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</div>
-                        ${props.commentaire ? `<div class="col-12"><strong>Commentaire :</strong><br><span class="text-muted">${props.commentaire}</span></div>` : ''}
-                        <div class="col-12 mt-2"><a href="{{ url('planning') }}/${props.planning_id}" class="btn btn-sm btn-outline-primary">Voir le planning complet</a></div>
-                    </div>
-                `;
-            } else if (props.type === 'event') {
-                document.getElementById('detailContent').innerHTML = `
-                    <div class="mb-3"><h6 class="fw-bold">${props.titre}</h6>
-                    <span class="badge bg-info">${props.type_event}</span></div>
-                    <hr>
-                    <div class="row g-2">
-                        <div class="col-12"><strong>Description :</strong><br><span class="text-muted">${props.description || 'Aucune description'}</span></div>
-                        <div class="col-6"><strong>Début :</strong></div>
-                        <div class="col-6">${new Date(info.event.start).toLocaleString('fr-FR')}</div>
-                        <div class="col-6"><strong>Fin :</strong></div>
-                        <div class="col-6">${new Date(info.event.end).toLocaleString('fr-FR')}</div>
-                    </div>
-                `;
-            }
-            detailModal.show();
-        },
-        eventDidMount: function(info) {
-            var props = info.event.extendedProps;
-            if (props.type === 'planning' && props.initiales) {
-                var titleEl = info.el.querySelector('.fc-event-title');
-                if (titleEl) {
-                    var avatar = document.createElement('span');
-                    avatar.className = 'employee-avatar small';
-                    avatar.textContent = props.initiales;
-                    avatar.style.marginRight = '6px';
-                    titleEl.prepend(avatar);
-                }
-            }
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
         }
-    });
-    calendar.render();
 
-    function updateStats(events) {
-        var employes = new Set(), services = new Set(), postes = new Set();
-        var evenements = 0, creneaux = 0;
-        events.forEach(event => {
-            var props = event.extendedProps || {};
-            if (props.type === 'planning') {
-                if (props.employe_id) employes.add(props.employe_id);
-                creneaux++;
-            } else if (props.type === 'event') {
-                evenements++;
+        // ============================================================
+        // FILTRES DYNAMIQUES (RECHERCHE + SERVICE)
+        // ============================================================
+        function filterTable() {
+            var selectedService = $('#service-filter').val();
+            var searchQuery = $('#employee-search').val().toLowerCase().trim();
+
+            $('.service-group').each(function() {
+                var serviceId = $(this).data('service');
+                var $serviceRows = $('.employee-row[data-service="' + serviceId + '"]');
+                var visibleCount = 0;
+
+                if (selectedService && serviceId != selectedService) {
+                    $(this).hide();
+                    $serviceRows.hide();
+                    return;
+                }
+
+                $serviceRows.each(function() {
+                    var empName = $(this).find('.employee-name').text().toLowerCase();
+                    if (searchQuery === '' || empName.includes(searchQuery)) {
+                        $(this).show();
+                        visibleCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if (visibleCount > 0) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $('#service-filter').on('change', filterTable);
+        $('#employee-search').on('keyup input', filterTable);
+
+        // ============================================================
+        // NAVIGATION (JOUR / SEMAINE / MOIS + FLECHES)
+        // ============================================================
+        var currentView = "{{ $currentView }}";
+        var currentOffset = {{ $currentOffset }};
+
+        function navigate(view, offset) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('view', view);
+            url.searchParams.set('offset', offset);
+            window.location.href = url.toString();
+        }
+
+        $('#prev-btn').on('click', function() {
+            navigate(currentView, currentOffset - 1);
+        });
+
+        $('#next-btn').on('click', function() {
+            navigate(currentView, currentOffset + 1);
+        });
+
+        $('#today-btn').on('click', function() {
+            navigate(currentView, 0);
+        });
+
+        $('.view-btn').on('click', function() {
+            var newView = $(this).data('view');
+            navigate(newView, 0);
+        });
+
+        // ============================================================
+        // CHARGER LES DÉTAILS D'UN ÉVÉNEMENT (AJAX)
+        // ============================================================
+        $(document).on('click', '.schedule-item', function() {
+            var $this = $(this);
+            var content = $('#detail-content');
+            var eventId = $this.data('id');
+            var eventType = $this.data('type');
+
+            if (eventId && eventType) {
+                content.html('<div class="text-center py-8"><div class="spinner-border text-primary" role="status"></div><p class="text-xs text-slate-400 mt-2">Chargement...</p></div>');
+
+                $.ajax({
+                    url: '/planning/event-detail/' + eventId + '/' + eventType,
+                    method: 'GET',
+                    success: function(data) {
+                        if (data && data.type) {
+                            if (data.type === 'planning') {
+                                content.html(`
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="employee-avatar" style="background: #3B82F6; width:48px; height:48px; font-size:20px;">
+                                            ${data.avatar ? 'AN' : '?'}
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm">${data.employe || 'N/A'}</h4>
+                                            <p class="text-xs text-slate-400">${data.role || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3 text-xs">
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Date</span>
+                                            <span class="col-span-2 font-semibold text-slate-700">${data.date || '-'}</span>
+                                        </div>
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Horaires</span>
+                                            <span class="col-span-2 font-semibold text-slate-700">${data.heure_debut || '-'} - ${data.heure_fin || '-'}</span>
+                                        </div>
+                                        ${data.pause_debut ? `
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Pause</span>
+                                            <span class="col-span-2 font-semibold text-slate-700">${data.pause_debut} - ${data.pause_fin}</span>
+                                        </div>
+                                        ` : ''}
+                                        ${data.commentaire ? `
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Commentaire</span>
+                                            <span class="col-span-2 text-slate-600">${data.commentaire}</span>
+                                        </div>
+                                        ` : ''}
+                                        <div class="grid grid-cols-3 items-center">
+                                            <span class="text-slate-400 font-medium">Statut</span>
+                                            <span class="col-span-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-50 text-green-700 border border-green-200">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> ${data.statut || 'Planifié'}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                `);
+                            } else if (data.type === 'evenement') {
+                                content.html(`
+                                    <div class="flex items-center gap-2 text-${data.type_event === 'formation' ? 'purple' : data.type_event === 'deplacement' ? 'orange' : 'blue'}-600 font-bold text-xs mb-4">
+                                        <i data-lucide="${data.type_event === 'formation' ? 'graduation-cap' : data.type_event === 'deplacement' ? 'navigation' : 'calendar'}" class="w-4 h-4 flex-shrink-0"></i>
+                                        ${data.type_event || 'Événement'}
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-2">${data.titre || 'Sans titre'}</h4>
+                                    <div class="space-y-3 text-xs">
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Début</span>
+                                            <span class="col-span-2 font-semibold text-slate-700">${data.debut || '-'}</span>
+                                        </div>
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Fin</span>
+                                            <span class="col-span-2 font-semibold text-slate-700">${data.fin || '-'}</span>
+                                        </div>
+                                        ${data.description ? `
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Description</span>
+                                            <span class="col-span-2 text-slate-600">${data.description}</span>
+                                        </div>
+                                        ` : ''}
+                                        ${data.employes ? `
+                                        <div class="grid grid-cols-3">
+                                            <span class="text-slate-400 font-medium">Employés</span>
+                                            <span class="col-span-2 text-slate-600">${data.employes}</span>
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                `);
+                            }
+                            if (typeof lucide !== 'undefined') {
+                                lucide.createIcons();
+                            }
+                        } else {
+                            content.html(`
+                                <div class="text-center py-8 text-slate-400">
+                                    <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                                    <p class="text-sm">Aucun détail disponible</p>
+                                </div>
+                            `);
+                            if (typeof lucide !== 'undefined') {
+                                lucide.createIcons();
+                            }
+                        }
+                    },
+                    error: function() {
+                        content.html(`
+                            <div class="text-center py-8 text-slate-400">
+                                <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-2 text-red-300"></i>
+                                <p class="text-sm text-red-600">Erreur de chargement</p>
+                            </div>
+                        `);
+                        if (typeof lucide !== 'undefined') {
+                            lucide.createIcons();
+                        }
+                    }
+                });
             }
         });
-        document.getElementById('stat-employes').textContent = employes.size;
-        document.getElementById('stat-services').textContent = services.size;
-        document.getElementById('stat-postes').textContent = postes.size;
-        document.getElementById('stat-evenements').textContent = evenements;
-        document.getElementById('stat-creneaux').textContent = creneaux;
-        document.getElementById('stat-services-actifs').textContent = services.size;
-    }
-
-    document.getElementById('refresh-calendar').addEventListener('click', function() {
-        calendar.refetchEvents();
     });
-
-    document.getElementById('service-filter').addEventListener('change', function() {
-        calendar.refetchEvents();
-    });
-    document.getElementById('poste-filter').addEventListener('change', function() {
-        calendar.refetchEvents();
-    });
-
-    document.getElementById('eventForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        fetch('{{ route("planning.events.store") }}', {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: formData
-        }).then(r => r.json()).then(data => {
-            if (data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
-                calendar.refetchEvents();
-                this.reset();
-                alert(data.message);
-            }
-        });
-    });
-});
 </script>
 @endpush
