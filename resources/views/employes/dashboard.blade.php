@@ -1,19 +1,35 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <!-- Titre à gauche -->
             <h2 class="fw-semibold fs-4 text-dark mb-0" style="font-family: 'Inter', sans-serif; font-weight: 600;">
                 <i class="bi bi-grid-1x2-fill" style="color: #6c7a89;"></i> {{ __('Tableau de bord') }}
             </h2>
-            <span class="badge" style="background: #eef2f7; color: #4a5568; padding: 8px 16px; border-radius: 8px; font-weight: 500; font-size: 0.85rem;">
-                <i class="bi bi-calendar3"></i> {{ date('d/m/Y') }}
-            </span>
+            <!-- Liens + Date à droite -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <!-- ✅ LIEN POINTAGES -->
+                <a href="{{ route('employe.pointages') }}" class="btn btn-sm" style="background: #f0fff4; color: #38a169; border: 1px solid #c6f6d5; border-radius: 8px; padding: 6px 16px; font-weight: 500; transition: all 0.2s;">
+                    <i class="bi bi-clock-history"></i> Pointages
+                </a>
+                <!-- ✅ LIEN RAPPORT QUOTIDIEN -->
+                <a href="{{ route('employe.rapports') }}" class="btn btn-sm" style="background: #ebf4ff; color: #4299e1; border: 1px solid #bee3f8; border-radius: 8px; padding: 6px 16px; font-weight: 500; transition: all 0.2s;">
+                    <i class="bi bi-calendar-day"></i> Rapport quotidien
+                </a>
+                <!-- ✅ LIEN PROFIL -->
+                <a href="{{ route('employe.profile') }}" class="btn btn-sm" style="background: #fefcbf; color: #975a16; border: 1px solid #f6e05e; border-radius: 8px; padding: 6px 16px; font-weight: 500; transition: all 0.2s;">
+                    <i class="bi bi-person"></i> Profil
+                </a>
+                <!-- ✅ DATE -->
+                <span class="badge" style="background: #eef2f7; color: #4a5568; padding: 8px 16px; border-radius: 8px; font-weight: 500; font-size: 0.85rem;">
+                    <i class="bi bi-calendar3"></i> {{ date('d/m/Y') }}
+                </span>
+            </div>
         </div>
     </x-slot>
 
     <div class="p-3" style="background: #f4f6f9; min-height: 100vh;">
         <!-- Salutation -->
         <div class="mb-4">
-            
             <p style="color: #718096; font-size: 0.95rem;">
                 <i class="bi bi-clock"></i> Aperçu de vos demandes de congé
             </p>
@@ -135,9 +151,7 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SECTION SOLDES (AJOUTÉE ICI)                 -->
-        <!-- ============================================ -->
+        <!-- SECTION SOLDES -->
         @if(isset($balances) && $balances->isNotEmpty())
             <div class="card border-0 mt-4" style="border-radius: 12px; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
                 <div class="card-header bg-transparent border-0 pt-4 pb-0">

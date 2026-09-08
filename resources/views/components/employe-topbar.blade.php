@@ -15,9 +15,7 @@
             <a href="{{ route('employe.rapports') }}" class="text-decoration-none text-dark fw-medium {{ request()->routeIs('employe.rapports') ? 'text-success border-bottom border-success' : 'text-muted' }}">
                 <i class="bi bi-journal-text me-1"></i> Rapports
             </a>
-            <a href="{{ route('employe.conges.index') }}" class="text-decoration-none text-dark fw-medium {{ request()->routeIs('employe.conges.*') ? 'text-success border-bottom border-success' : 'text-muted' }}">
-                <i class="bi bi-calendar-event me-1"></i> Congés
-            </a>
+            
         </nav>
     </div>
 
@@ -59,11 +57,7 @@
                         <i class="bi bi-journal-text me-2"></i> {{ __('Rapports') }}
                     </a>
                 </li>
-                <li>
-                    <a class="dropdown-item d-md-none" href="{{ route('employe.conges.index') }}">
-                        <i class="bi bi-calendar-event me-2"></i> {{ __('Congés') }}
-                    </a>
-                </li>
+                
                 <li class="d-md-none"><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item" href="{{ route('employe.profile') }}">
