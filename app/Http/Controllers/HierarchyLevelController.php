@@ -60,14 +60,14 @@ class HierarchyLevelController extends Controller
 
         if (class_exists(ActivityLogService::class)) {
             ActivityLogService::log(
-                'create',
+                'create',                                    
                 'HierarchyLevel',
-                $level->id,
-                ['name' => $level->name, 'code' => $level->code]
+                (int) $level->id,
+                $level->name,
+                'Création du niveau hiérarchique : ' . $level->name
             );
         }
 
-        // ✅ CORRIGÉ : ajout du préfixe admin.
         return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique créé avec succès.');
     }
@@ -109,12 +109,12 @@ class HierarchyLevelController extends Controller
             ActivityLogService::log(
                 'update',
                 'HierarchyLevel',
-                $hierarchyLevel->id,
-                ['name' => $hierarchyLevel->name, 'code' => $hierarchyLevel->code]
+                (int) $hierarchyLevel->id,
+                $hierarchyLevel->name,
+                'Mise à jour du niveau hiérarchique : ' . $hierarchyLevel->name
             );
         }
 
-        // ✅ CORRIGÉ : ajout du préfixe admin.
         return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique mis à jour avec succès.');
     }
@@ -134,12 +134,12 @@ class HierarchyLevelController extends Controller
             ActivityLogService::log(
                 'delete',
                 'HierarchyLevel',
-                $hierarchyLevel->id,
-                ['name' => $hierarchyLevel->name, 'code' => $hierarchyLevel->code]
+                (int) $hierarchyLevel->id,
+                $hierarchyLevel->name,
+                'Suppression du niveau hiérarchique : ' . $hierarchyLevel->name
             );
         }
 
-        // ✅ CORRIGÉ : ajout du préfixe admin.
         return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique supprimé avec succès.');
     }
@@ -156,12 +156,12 @@ class HierarchyLevelController extends Controller
             ActivityLogService::log(
                 'restore',
                 'HierarchyLevel',
-                $level->id,
-                ['name' => $level->name, 'code' => $level->code]
+                (int) $level->id,
+                $level->name,
+                'Restauration du niveau hiérarchique : ' . $level->name
             );
         }
 
-        // ✅ CORRIGÉ : ajout du préfixe admin.
         return redirect()->route('admin.hierarchy-levels.index')
             ->with('success', 'Niveau hiérarchique restauré avec succès.');
     }
@@ -172,7 +172,7 @@ class HierarchyLevelController extends Controller
     public function exportExcel(Request $request)
     {
         $query = HierarchyLevel::with(['employees']);
-        
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -192,7 +192,7 @@ class HierarchyLevelController extends Controller
     public function exportPdf(Request $request)
     {
         $query = HierarchyLevel::with(['employees']);
-        
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
