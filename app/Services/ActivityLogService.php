@@ -13,7 +13,7 @@ class ActivityLogService
         string $action,
         ?string $modelType = null,
         ?int $modelId = null,
-        ?string $modelLabel = null,
+        array|string|null $modelLabel = null,
         ?string $description = null,
         ?string $userEmail = null,
     ): void {

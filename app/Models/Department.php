@@ -11,12 +11,12 @@ class Department extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'departments';
-    
+
     protected $fillable = [
-        'company_id', 
-        'site_id', 
-        'name', 
-        'code', 
+        'company_id',
+        'site_id',
+        'name',
+        'code',
         'manager_employee_id'
     ];
 
@@ -87,7 +87,11 @@ class Department extends Model
     protected static function boot()
     {
         parent::boot();
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> feature/planning2.0
         // Scope multi-tenant
         static::addGlobalScope('site', function ($query) {
             $user = auth()->user();

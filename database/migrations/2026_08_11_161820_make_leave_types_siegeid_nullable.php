@@ -1,22 +1,26 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.s
+     */
     public function up(): void
     {
-        Schema::table('leave_types', function (Blueprint $table) {
-            $table->unsignedInteger('SiegeID')->nullable()->change();
-        });
+        // La colonne SiegeID n'existe plus dans la table leave_types.
+        // Elle a été supprimée par la migration
+        // 2026_07_30_161021_clean_leave_types_columns.php.
+        //
+        // Cette migration ne doit donc effectuer aucune modification.
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::table('leave_types', function (Blueprint $table) {
-            $table->unsignedInteger('SiegeID')->nullable(false)->change();
-        });
+        // Rien à restaurer.
     }
 };

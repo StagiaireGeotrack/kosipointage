@@ -154,7 +154,7 @@
                                 {{ __('Modifier') }}
                             </a>
                             @if($jobTitle->employes->count() == 0)
-                                <button type="button" class="btn btn-danger" 
+                                <button type="button" class="btn btn-danger"
                                         onclick="if(confirm('Voulez-vous vraiment supprimer ce poste ?')) {
                                             document.getElementById('delete-form').submit();
                                         }">

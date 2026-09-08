@@ -33,7 +33,7 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <x-input-label for="search" :value="__('Recherche')" />
-                            <x-text-input id="search" name="search" type="text" class="form-control mt-1" 
+                            <x-text-input id="search" name="search" type="text" class="form-control mt-1"
                                 :value="request('search')" placeholder="{{ __('Nom ou code') }}" />
                         </div>
                         <div class="col-md-3">
@@ -121,7 +121,7 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex gap-2">
-                                            <a href="{{ route('admin.job-titles.show', $jt) }}" 
+                                            <a href="{{ route('admin.job-titles.show', $jt) }}"
                                                class="text-primary" title="Voir">
                                                 <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -130,7 +130,7 @@
                                             </a>
 
                                             @if(!$jt->trashed())
-                                                <a href="{{ route('admin.job-titles.edit', $jt) }}" 
+                                                <a href="{{ route('admin.job-titles.edit', $jt) }}"
                                                    class="text-warning" title="Modifier">
                                                     <svg class="bi" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -139,7 +139,7 @@
                                             @endif
 
                                             @if(!$jt->trashed() && $jt->employes->count() == 0)
-                                                <button type="button" class="btn btn-link text-danger p-0 border-0" 
+                                                <button type="button" class="btn btn-link text-danger p-0 border-0"
                                                         onclick="if(confirm('Voulez-vous vraiment supprimer ce poste ?')) {
                                                             document.getElementById('delete-form-{{ $jt->id }}').submit();
                                                         }" title="Supprimer">
@@ -147,14 +147,14 @@
                                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                     </svg>
                                                 </button>
-                                                <form id="delete-form-{{ $jt->id }}" 
-                                                      action="{{ route('admin.job-titles.destroy', $jt) }}" 
+                                                <form id="delete-form-{{ $jt->id }}"
+                                                      action="{{ route('admin.job-titles.destroy', $jt) }}"
                                                       method="POST" style="display: none;">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
                                             @elseif($jt->trashed())
-                                                <button type="button" class="btn btn-link text-success p-0 border-0" 
+                                                <button type="button" class="btn btn-link text-success p-0 border-0"
                                                         onclick="if(confirm('Voulez-vous vraiment restaurer ce poste ?')) {
                                                             document.getElementById('restore-form-{{ $jt->id }}').submit();
                                                         }" title="Restaurer">
@@ -162,8 +162,8 @@
                                                         <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
                                                     </svg>
                                                 </button>
-                                                <form id="restore-form-{{ $jt->id }}" 
-                                                      action="{{ route('admin.job-titles.restore', $jt->id) }}" 
+                                                <form id="restore-form-{{ $jt->id }}"
+                                                      action="{{ route('admin.job-titles.restore', $jt->id) }}"
                                                       method="POST" style="display: none;">
                                                     @csrf
                                                     @method('PATCH')

@@ -11,10 +11,10 @@ class JobTitle extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'job_titles';
-    
+
     protected $fillable = [
-        'company_id', 
-        'name', 
+        'company_id',
+        'name',
         'code',
         'hierarchy_level_id',
         'department_id',   // <-- AJOUT

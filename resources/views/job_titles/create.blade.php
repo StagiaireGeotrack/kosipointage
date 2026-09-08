@@ -21,14 +21,14 @@
                         <div class="col-md-6">
                             <x-input-label for="name" :value="__('Nom du poste')" />
                             <span class="text-danger">*</span>
-                            <x-text-input id="name" name="name" type="text" class="form-control mt-1" 
+                            <x-text-input id="name" name="name" type="text" class="form-control mt-1"
                                 :value="old('name')" placeholder="{{ __('Ex: Technicien, Vendeur...') }}" required />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
                         <div class="col-md-6">
                             <x-input-label for="code" :value="__('Code')" />
-                            <x-text-input id="code" name="code" type="text" class="form-control mt-1" 
+                            <x-text-input id="code" name="code" type="text" class="form-control mt-1"
                                 :value="old('code')" placeholder="{{ __('Ex: TECH, VEN...') }}" />
                             <x-input-error :messages="$errors->get('code')" class="mt-2" />
                             <small class="text-muted">{{ __('Code court pour identifier le poste') }}</small>
@@ -69,7 +69,7 @@
                     <div class="row g-3 mt-3">
                         <div class="col-12">
                             <div class="alert alert-info">
-                                <i class="bi bi-info-circle"></i> 
+                                <i class="bi bi-info-circle"></i>
                                 <strong>Exemples de postes par niveau KOSI :</strong>
                                 <ul class="mb-0 mt-1">
                                     <li><strong>N0</strong> - Agent, ouvrier, opérateur, formateur, vendeur, chauffeur, serveur</li>
