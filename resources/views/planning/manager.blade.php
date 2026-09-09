@@ -8,20 +8,25 @@
         font-family: 'Roboto', sans-serif;
     }
     .employee-avatar {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 18px;
+        font-size: 14px;
         color: white;
         flex-shrink: 0;
     }
     .schedule-item {
         transition: all 0.15s ease;
-        cursor: default;
+        cursor: pointer;
+    }
+    .schedule-item:hover {
+        transform: scale(1.02);
+        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .bg-work { background: #DCFCE7; border-color: #86EFAC; color: #166534; }
     .bg-pause { background: #FEF3C7; border-color: #FCD34D; color: #92400E; }
@@ -38,6 +43,15 @@
         left: 0;
         z-index: 10;
     }
+
+    .manager-badge {
+        background: #3B82F6;
+        color: white;
+        font-size: 9px;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-left: 6px;
+    }
 </style>
 @endpush
 
@@ -47,8 +61,8 @@
     <header class="bg-white border-b border-slate-200 p-4 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-                <h1 class="text-xl font-bold text-slate-900">📅 Mon planning</h1>
-                <p class="text-xs text-slate-500">Vue semaine</p>
+                <h1 class="text-xl font-bold text-slate-900">📅 Planning - Vue Manager</h1>
+                <p class="text-xs text-slate-500">Vue semaine - Vous voyez les employés de votre service</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
@@ -76,6 +90,12 @@
                 </button>
             </div>
         </div>
+
+        <!-- Bannière Manager -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-2 text-center text-sm text-blue-700">
+            <i data-lucide="eye" class="w-4 h-4 inline mr-2"></i>
+            Vue manager : vous voyez les employés de votre service
+        </div>
     </header>
 
     <!-- Planning Content -->
@@ -97,66 +117,96 @@
                             @endif
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="hover:bg-slate-50/50">
-                            <td class="p-3 align-top sticky-left bg-white">
-                                <div class="flex items-center gap-3">
-                                    <div class="employee-avatar" style="background: {{ $employeeData['color'] ?? '#3B82F6' }}">
-                                        {{ $employeeData['initiales'] ?? '?' }}
+                    <tbody class="divide-y divide-slate-100">
+                        @if(isset($servicesData) && count($servicesData) > 0)
+                            @foreach($servicesData as $service)
+                            <!-- Service Group Row -->
+                            <tr class="bg-slate-50/80 font-bold text-slate-700 border-t border-b border-slate-200">
+                                <td colspan="8" class="p-2.5 px-3 sticky-left bg-slate-50/80">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                                        <span>{{ $service['name'] }}</span>
+                                        <span class="text-slate-400 font-normal">({{ $service['count'] }})</span>
                                     </div>
-                                    <div>
-                                        <div class="font-semibold text-slate-800 text-xs">{{ $employeeData['name'] }}</div>
-                                        <div class="text-[10px] text-slate-400">{{ $employeeData['role'] ?? 'N/A' }}</div>
+                                </td>
+                            </tr>
+
+                            <!-- Employee Schedule Rows -->
+                            @foreach($service['employees'] as $emp)
+                            <tr class="hover:bg-slate-50/50">
+                                <td class="p-3 align-top sticky-left bg-white">
+                                    <div class="flex items-center gap-3">
+                                        <div class="employee-avatar" style="background: {{ $emp['color'] ?? '#22C55E' }}">
+                                            {{ $emp['initiales'] ?? '?' }}
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-slate-800 text-xs">
+                                                {{ $emp['name'] }}
+                                                @if($emp['is_manager'] ?? false)
+                                                    <span class="manager-badge">Manager</span>
+                                                @endif
+                                            </div>
+                                            <div class="text-[10px] text-slate-400">{{ $emp['role'] ?? 'N/A' }}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            @foreach($days as $day)
-                            <td class="p-1 border-l border-slate-100 align-top min-w-[130px]">
-                                @if(isset($employeeData['schedule'][$day['date']]))
-                                    <div class="space-y-1">
-                                        @foreach($employeeData['schedule'][$day['date']] as $item)
-                                            @if($item['type'] === 'work')
-                                                <div class="p-1 rounded bg-green-50 border border-green-200 text-green-800 text-[10px] font-medium flex items-center gap-1">
-                                                    <i data-lucide="briefcase" class="w-3 h-3 text-green-600 flex-shrink-0"></i> {{ $item['time'] }}
-                                                </div>
-                                            @elseif($item['type'] === 'pause')
-                                                <div class="p-1 rounded bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-medium flex items-center gap-1">
-                                                    <i data-lucide="coffee" class="w-3 h-3 text-amber-600 flex-shrink-0"></i> {{ $item['time'] }}
-                                                </div>
-                                            @elseif($item['type'] === 'conge' || $item['type'] === 'rtt' || $item['type'] === 'maladie' || $item['type'] === 'absence')
-                                                <div class="p-2 rounded-lg {{ $item['type'] === 'conge' ? 'bg-amber-50 border-amber-200 text-amber-900' : ($item['type'] === 'rtt' ? 'bg-pink-50 border-pink-200 text-pink-900' : ($item['type'] === 'maladie' ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-blue-50 border-blue-200 text-blue-900')) }} border text-center">
-                                                    <div class="font-bold text-[11px] flex items-center justify-center gap-1">
-                                                        <i data-lucide="{{ $item['type'] === 'conge' ? 'calendar' : ($item['type'] === 'rtt' ? 'hourglass' : ($item['type'] === 'maladie' ? 'heart-pulse' : 'user-x')) }}" class="w-3.5 h-3.5 flex-shrink-0"></i>
-                                                        {{ $item['title'] ?? 'Absence' }}
+                                </td>
+                                @foreach($days as $day)
+                                <td class="p-1 border-l border-slate-100 align-top min-w-[130px]">
+                                    @if(isset($emp['schedule'][$day['date']]))
+                                        <div class="space-y-1">
+                                            @foreach($emp['schedule'][$day['date']] as $item)
+                                                @if($item['type'] === 'work')
+                                                    <div class="schedule-item p-1 rounded bg-green-50 border border-green-200 text-green-800 text-[10px] font-medium flex items-center gap-1" data-id="{{ $item['id'] ?? '' }}" data-type="planning">
+                                                        <i data-lucide="briefcase" class="w-3 h-3 text-green-600 flex-shrink-0"></i> {{ $item['time'] }}
                                                     </div>
-                                                    <div class="text-[10px]">{{ $item['sub'] ?? '' }}</div>
-                                                </div>
-                                            @elseif($item['type'] === 'formation' || $item['type'] === 'mission')
-                                                <div class="p-2 rounded-lg {{ $item['type'] === 'formation' ? 'bg-purple-100 border-purple-200 text-purple-900' : 'bg-orange-50 border-orange-200 text-orange-900' }} border text-center">
-                                                    <div class="font-bold text-[11px] flex items-center justify-center gap-1">
-                                                        <i data-lucide="{{ $item['type'] === 'formation' ? 'graduation-cap' : 'navigation' }}" class="w-3.5 h-3.5 flex-shrink-0"></i>
-                                                        {{ $item['title'] ?? 'Événement' }}
+                                                @elseif($item['type'] === 'pause')
+                                                    <div class="schedule-item p-1 rounded bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-medium flex items-center gap-1" data-id="{{ $item['id'] ?? '' }}" data-type="planning">
+                                                        <i data-lucide="coffee" class="w-3 h-3 text-amber-600 flex-shrink-0"></i> {{ $item['time'] }}
                                                     </div>
-                                                    <div class="text-[10px]">{{ $item['sub'] ?? '' }}</div>
-                                                </div>
-                                            @elseif($item['type'] === 'rest')
-                                                <div class="p-3 text-center text-slate-400 flex items-center justify-center gap-1 text-[11px]">
-                                                    <i data-lucide="moon" class="w-3.5 h-3.5 flex-shrink-0"></i> Repos
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </td>
+                                                @elseif($item['type'] === 'conge' || $item['type'] === 'rtt' || $item['type'] === 'maladie' || $item['type'] === 'absence')
+                                                    <div class="schedule-item p-2 rounded-lg {{ $item['type'] === 'conge' ? 'bg-amber-50 border-amber-200 text-amber-900' : ($item['type'] === 'rtt' ? 'bg-pink-50 border-pink-200 text-pink-900' : ($item['type'] === 'maladie' ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-blue-50 border-blue-200 text-blue-900')) }} border text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="{{ $item['type'] === 'conge' ? 'calendar' : ($item['type'] === 'rtt' ? 'hourglass' : ($item['type'] === 'maladie' ? 'heart-pulse' : 'user-x')) }}" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                                                            {{ $item['title'] ?? 'Absence' }}
+                                                        </div>
+                                                        <div class="text-[10px]">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'formation' || $item['type'] === 'mission')
+                                                    <div class="schedule-item p-2 rounded-lg {{ $item['type'] === 'formation' ? 'bg-purple-100 border-purple-200 text-purple-900' : 'bg-orange-50 border-orange-200 text-orange-900' }} border text-center" data-id="{{ $item['id'] ?? '' }}" data-type="evenement">
+                                                        <div class="font-bold text-[11px] flex items-center justify-center gap-1">
+                                                            <i data-lucide="{{ $item['type'] === 'formation' ? 'graduation-cap' : 'navigation' }}" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                                                            {{ $item['title'] ?? 'Événement' }}
+                                                        </div>
+                                                        <div class="text-[10px]">{{ $item['sub'] ?? '' }}</div>
+                                                    </div>
+                                                @elseif($item['type'] === 'rest')
+                                                    <div class="p-3 text-center text-slate-400 flex items-center justify-center gap-1 text-[11px]">
+                                                        <i data-lucide="moon" class="w-3.5 h-3.5 flex-shrink-0"></i> Repos
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </td>
+                                @endforeach
+                            </tr>
                             @endforeach
-                        </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="8" class="text-center py-8 text-slate-400">
+                                    <i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                                    <p>Aucun planning disponible pour votre service</p>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
 
             <div class="p-3 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-2">
                 <i data-lucide="info" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                Les horaires indiqués sont prévisionnels et seront comparés avec vos pointages réels.
+                Les horaires indiqués sont prévisionnels et seront comparés avec les pointages réels.
             </div>
         </div>
 

@@ -43,8 +43,7 @@ use App\Http\Controllers\Employe\EmployeNotificationController;
 use App\Http\Controllers\Api\LeaveDurationController;
 use App\Http\Controllers\LeaveValidatorController;
 use App\Http\Controllers\Employe\LeaveValidationController;
-
-
+use App\Http\Controllers\EmployePlanningController; // ✅ AJOUTER CET IMPORT
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -71,6 +70,14 @@ Route::middleware('auth:employe')->group(function () {
     Route::post('/portail/conges', [EmployeCongeController::class, 'store'])->name('employe.conges.store');
     Route::get('/portail/conges/{id}', [EmployeCongeController::class, 'show'])->name('employe.conges.show');
     Route::delete('/portail/conges/{id}', [EmployeCongeController::class, 'destroy'])->name('employe.conges.destroy');
+
+    // ============================================
+    // ✅ PLANNING - Employé (Mon planning) - DÉPLACÉ ICI
+    // ============================================
+    Route::prefix('employe/planning')->name('employe.planning.')->group(function () {
+        Route::get('/', [EmployePlanningController::class, 'index'])->name('index');
+        Route::get('/events', [EmployePlanningController::class, 'getEvents'])->name('events');
+    });
 });
 
 // ============================================
@@ -183,63 +190,54 @@ Route::middleware('auth')->group(function () {
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
 
         // ============================================
-// ============================================
-// PLANNING
-// ============================================
-Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')->name('planning.')->group(function () {
+        // PLANNING (ADMIN)
+        // ============================================
+        Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')->name('planning.')->group(function () {
 
-    // Configuration des horaires types
-    Route::prefix('horaires-types')->name('horaires-types.')->group(function () {
-        Route::get('/', [App\Http\Controllers\HoraireTypeController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\HoraireTypeController::class, 'create'])->name('create');
-        Route::post('/', [App\Http\Controllers\HoraireTypeController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [App\Http\Controllers\HoraireTypeController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'update'])->name('update');
-        Route::delete('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'destroy'])->name('destroy');
-    });
+            // Configuration des horaires types
+            Route::prefix('horaires-types')->name('horaires-types.')->group(function () {
+                Route::get('/', [App\Http\Controllers\HoraireTypeController::class, 'index'])->name('index');
+                Route::get('/create', [App\Http\Controllers\HoraireTypeController::class, 'create'])->name('create');
+                Route::post('/', [App\Http\Controllers\HoraireTypeController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [App\Http\Controllers\HoraireTypeController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'update'])->name('update');
+                Route::delete('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'destroy'])->name('destroy');
+            });
 
-    // ✅ CORRECTION : API pour charger les postes par service (hors du groupe horaires-types)
-    Route::get('/api/job-titles-by-department/{departmentId}', 
-        [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])
-        ->name('api.job-titles-by-department');
+            // API pour charger les postes par service
+            Route::get('/api/job-titles-by-department/{departmentId}',
+                [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])
+                ->name('api.job-titles-by-department');
 
-    // ✅ CORRECTION : Détail d'un événement (AJAX)
-    Route::get('/event-detail/{id}/{type}', 
-        [App\Http\Controllers\PlanningController::class, 'getEventDetail'])
-        ->name('event.detail');
+            // Détail d'un événement (AJAX)
+            Route::get('/event-detail/{id}/{type}',
+                [App\Http\Controllers\PlanningController::class, 'getEventDetail'])
+                ->name('event.detail');
 
-    // Gestion des plannings
-    Route::get('/', [App\Http\Controllers\PlanningController::class, 'index'])->name('index');
-    Route::get('/calendar', [App\Http\Controllers\PlanningController::class, 'calendar'])->name('calendar');
-    Route::get('/create', [App\Http\Controllers\PlanningController::class, 'create'])->name('create');
-    Route::post('/', [App\Http\Controllers\PlanningController::class, 'store'])->name('store');
-    Route::get('/{id}', [App\Http\Controllers\PlanningController::class, 'show'])->name('show');
+            // Gestion des plannings
+            Route::get('/', [App\Http\Controllers\PlanningController::class, 'index'])->name('index');
+            Route::get('/calendar', [App\Http\Controllers\PlanningController::class, 'calendar'])->name('calendar');
+            Route::get('/create', [App\Http\Controllers\PlanningController::class, 'create'])->name('create');
+            Route::post('/', [App\Http\Controllers\PlanningController::class, 'store'])->name('store');
+            Route::get('/{id}', [App\Http\Controllers\PlanningController::class, 'show'])->name('show');
 
-    // Événements
-    Route::get('/events', [App\Http\Controllers\PlanningController::class, 'getEvents'])->name('events');
-    Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
+            // Événements
+            Route::get('/events', [App\Http\Controllers\PlanningController::class, 'getEvents'])->name('events');
+            Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
 
-    // API AJAX
-    Route::get('/api/employees-by-service/{serviceId}', 
-        [App\Http\Controllers\PlanningController::class, 'getEmployeesByService'])
-        ->name('api.employees-by-service');
+            // API AJAX
+            Route::get('/api/employees-by-service/{serviceId}',
+                [App\Http\Controllers\PlanningController::class, 'getEmployeesByService'])
+                ->name('api.employees-by-service');
 
-    Route::get('/api/work-schedules-by-job-title/{jobTitleId}', 
-        [App\Http\Controllers\PlanningController::class, 'getWorkSchedulesByJobTitle'])
-        ->name('api.work-schedules-by-job-title');
+            Route::get('/api/work-schedules-by-job-title/{jobTitleId}',
+                [App\Http\Controllers\PlanningController::class, 'getWorkSchedulesByJobTitle'])
+                ->name('api.work-schedules-by-job-title');
 
-    // Exports
-    Route::get('/export/excel', [App\Http\Controllers\PlanningController::class, 'exportExcel'])->name('export.excel');
-    Route::get('/export/pdf', [App\Http\Controllers\PlanningController::class, 'exportPdf'])->name('export.pdf');
-});
-
-// ============================================
-// PLANNING - Employé (Mon planning)
-// ============================================
-Route::middleware(['auth:employe'])->prefix('employe/planning')->name('employe.planning.')->group(function () {
-    Route::get('/', [App\Http\Controllers\EmployePlanningController::class, 'index'])->name('index');
-    Route::get('/events', [App\Http\Controllers\EmployePlanningController::class, 'getEvents'])->name('events');
-});
+            // Exports
+            Route::get('/export/excel', [App\Http\Controllers\PlanningController::class, 'exportExcel'])->name('export.excel');
+            Route::get('/export/pdf', [App\Http\Controllers\PlanningController::class, 'exportPdf'])->name('export.pdf');
+        });
 
         // ===== POINTAGES =====
         Route::middleware('block.sellers')->group(function () {
@@ -356,13 +354,12 @@ Route::middleware(['auth:employe'])->prefix('employe/planning')->name('employe.p
     // ADMIN / CONGÉS — Paramétrage
     // ==========================================
     Route::prefix('admin')->name('admin.')->group(function () {
-<<<<<<< HEAD
-            Route::resource('leave-roles', LeaveRoleController::class);
+        // ===== LEAVE ROLES =====
+        Route::resource('leave-roles', LeaveRoleController::class);
+        Route::patch('leave-roles/{id}/restore', [LeaveRoleController::class, 'restore'])->name('leave-roles.restore');
+        Route::get('leave-roles-export/excel', [LeaveRoleController::class, 'exportExcel'])->name('leave-roles.export.excel');
+        Route::get('leave-roles-export/pdf', [LeaveRoleController::class, 'exportPdf'])->name('leave-roles.export.pdf');
 
-        
-=======
-
->>>>>>> feature/planning2.0
         // ===== LEAVE TYPES =====
         Route::resource('leave-types', LeaveTypeController::class);
         Route::patch('leave-types/{id}/restore', [LeaveTypeController::class, 'restore'])->name('leave-types.restore');
@@ -392,14 +389,12 @@ Route::middleware(['auth:employe'])->prefix('employe/planning')->name('employe.p
         Route::patch('leave-workflows/{id}/restore', [LeaveWorkflowController::class, 'restore'])->name('leave-workflows.restore');
         Route::get('leave-workflows-export/excel', [LeaveWorkflowController::class, 'exportExcel'])->name('leave-workflows.export.excel');
         Route::get('leave-workflows-export/pdf', [LeaveWorkflowController::class, 'exportPdf'])->name('leave-workflows.export.pdf');
-<<<<<<< HEAD
-        
-        Route::resource('leave-validators', LeaveValidatorController::class);
-Route::get('leave-validators/get-employees/{site_id}', [LeaveValidatorController::class, 'getEmployeesBySite'])
-    ->name('leave-validators.get-employees');
-=======
 
->>>>>>> feature/planning2.0
+        // ===== LEAVE VALIDATORS =====
+        Route::resource('leave-validators', LeaveValidatorController::class);
+        Route::get('leave-validators/get-employees/{site_id}', [LeaveValidatorController::class, 'getEmployeesBySite'])
+            ->name('leave-validators.get-employees');
+
         // ===== RULE FIELDS =====
         Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])->name('leave-types.rule-fields');
         Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])->name('leave-types.rule-fields.store');
@@ -426,13 +421,6 @@ Route::get('leave-validators/get-employees/{site_id}', [LeaveValidatorController
         Route::get('job-titles-export/excel', [JobTitleController::class, 'exportExcel'])->name('job-titles.export.excel');
         Route::get('job-titles-export/pdf', [JobTitleController::class, 'exportPdf'])->name('job-titles.export.pdf');
 
-<<<<<<< HEAD
-Route::get('/get-job-titles-by-department', [EmployeController::class, 'getJobTitlesByDepartment'])
-    ->name('get.job-titles.by.department')
-    ->middleware('auth');
-        
-=======
->>>>>>> feature/planning2.0
         Route::resource('hierarchy-levels', HierarchyLevelController::class);
         Route::patch('hierarchy-levels/{id}/restore', [HierarchyLevelController::class, 'restore'])->name('hierarchy-levels.restore');
         Route::get('hierarchy-levels-export/excel', [HierarchyLevelController::class, 'exportExcel'])->name('hierarchy-levels.export.excel');
@@ -440,9 +428,13 @@ Route::get('/get-job-titles-by-department', [EmployeController::class, 'getJobTi
 
         // ===== LEAVE POLICY ASSIGNMENTS =====
         Route::resource('leave-policy-assignments', LeavePolicyAssignmentController::class);
-        Route::resource('leave-policy-assignments', LeavePolicyAssignmentController::class);
-    Route::patch('leave-policy-assignments/{id}/toggle', [LeavePolicyAssignmentController::class, 'toggle'])
-        ->name('leave-policy-assignments.toggle');
+        Route::patch('leave-policy-assignments/{id}/toggle', [LeavePolicyAssignmentController::class, 'toggle'])
+            ->name('leave-policy-assignments.toggle');
+
+        // ===== AJAX ROUTES =====
+        Route::get('/get-job-titles-by-department', [EmployeController::class, 'getJobTitlesByDepartment'])
+            ->name('get.job-titles.by.department')
+            ->middleware('auth');
     });
 
     // ==========================================
@@ -470,8 +462,6 @@ Route::get('/get-job-titles-by-department', [EmployeController::class, 'getJobTi
             ->name('leave-periods.site-override.destroy');
     });
 });
-
-
 
 // ============================================
 // ✅ ROUTES POUR LES EMPLOYÉS (employe.)
@@ -539,14 +529,11 @@ Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(
 
     // ============================================
     // 4. ROUTES SPÉCIFIQUES AVEC ID (APRÈS LES CRUD DE BASE)
-    Route::get('validations', [LeaveValidationController::class, 'index'])->name('validations.index');
-Route::post('validations/{id}/approve', [LeaveValidationController::class, 'approve'])->name('validations.approve');
-Route::post('validations/{id}/reject', [LeaveValidationController::class, 'reject'])->name('validations.reject');
-    Route::get('validations/{id}', [LeaveValidationController::class, 'show'])->name('validations.show');
-
-
- 
     // ============================================
+    Route::get('validations', [LeaveValidationController::class, 'index'])->name('validations.index');
+    Route::post('validations/{id}/approve', [LeaveValidationController::class, 'approve'])->name('validations.approve');
+    Route::post('validations/{id}/reject', [LeaveValidationController::class, 'reject'])->name('validations.reject');
+    Route::get('validations/{id}', [LeaveValidationController::class, 'show'])->name('validations.show');
 
     // ✅ Calcul de durée pour un brouillon existant
     Route::get('leave-requests/{id}/calculate-duration', [LeaveRequestController::class, 'calculateDurationForDraft'])
@@ -582,6 +569,7 @@ Route::post('validations/{id}/reject', [LeaveValidationController::class, 'rejec
     // Événements du calendrier (API)
     Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
 });
+
 // ============================================
 // ROUTES POUR LE PORTAIL (employé)
 // ============================================
@@ -678,9 +666,6 @@ Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
     Session::put('admin_selected_siege_id', $request->siege_id);
     return back();
 })->name('admin.select-siege');
-
-// routes/web.php - Ajouter dans le groupe admin
-
 
 // ============================================
 // FALLBACK

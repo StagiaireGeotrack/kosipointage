@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 02 sep. 2026 à 10:36
+-- Généré le : mer. 09 sep. 2026 à 10:24
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -1046,7 +1046,302 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action
 (991, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 346, 'Directrice RH FEMME', 'Poste créé : Directrice RH FEMME (DRF)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-01 15:16:58'),
 (992, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:21:15'),
 (993, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:21:15'),
-(994, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Department', 12, 'Ressources humaines', 'Service mis à jour : Ressources humaines', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:25:29');
+(994, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Department', 12, 'Ressources humaines', 'Service mis à jour : Ressources humaines', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 08:25:29'),
+(995, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-02 08:55:34'),
+(996, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-02 08:55:34'),
+(997, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 347, 'test NOUVEAU POSTE AVEC SERVICE', 'Poste créé : test NOUVEAU POSTE AVEC SERVICE (test PAS)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 10:10:05'),
+(998, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'JobTitle', 347, 'test NOUVEAU POSTE AVEC SERVICE', 'Poste mis à jour : test NOUVEAU POSTE AVEC SERVICE', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 10:54:16'),
+(999, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 60, 'RAKOTONIRINA Manankasina', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 10:56:16'),
+(1000, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-02 12:27:50'),
+(1001, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-02 12:27:50'),
+(1002, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 13:18:48'),
+(1003, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 13:18:48'),
+(1004, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-02 13:19:34'),
+(1005, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-02 13:19:34'),
+(1006, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-02 14:28:11'),
+(1007, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-02 14:28:11'),
+(1008, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-02 14:28:26'),
+(1009, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-02 14:28:26'),
+(1010, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-02 15:03:02'),
+(1011, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', NULL, '2026-09-02 15:03:02'),
+(1012, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-02 15:12:05'),
+(1013, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-02 15:12:05'),
+(1014, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 15:12:24'),
+(1015, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-02 15:12:24'),
+(1016, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 07:10:51'),
+(1017, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 07:10:51'),
+(1018, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-03 07:33:21'),
+(1019, NULL, 'unknown', NULL, 'login_success', 'Administration', 5, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-03 07:33:21'),
+(1020, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 58, 'Emma solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:19:36'),
+(1021, 2, 'admin@geotrack.com', 'simple_admin', 'assign_web_access', 'Employe', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:19:36'),
+(1022, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:20:24'),
+(1023, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:20:24'),
+(1024, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 08:20:34'),
+(1025, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 08:20:34'),
+(1026, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:44:58'),
+(1027, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:44:58'),
+(1028, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 5, 'MALALANIRINA Emile Noeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:47:17'),
+(1029, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 5, 'MALALANIRINA Emile Noeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:50:00'),
+(1030, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 3, 'Ramarotafika Hedi Franco', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:53:58'),
+(1031, 2, 'admin@geotrack.com', 'simple_admin', 'assign_web_access', 'Employe', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:53:58'),
+(1032, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:54:15'),
+(1033, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:54:15'),
+(1034, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 08:54:23'),
+(1035, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 08:54:23'),
+(1036, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:55:33'),
+(1037, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:55:33'),
+(1038, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 2, 'Solofoniaina Vololonirina Emma Joeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:57:14'),
+(1039, 2, 'admin@geotrack.com', 'simple_admin', 'assign_web_access', 'Employe', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:57:14'),
+(1040, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:57:44'),
+(1041, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 08:57:44'),
+(1042, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 08:57:51'),
+(1043, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 08:57:51'),
+(1044, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 09:19:36'),
+(1045, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 09:19:36'),
+(1046, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 09:25:48'),
+(1047, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 09:25:48'),
+(1048, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 09:26:05'),
+(1049, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 09:26:05'),
+(1050, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 09:47:41'),
+(1051, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 09:47:41'),
+(1052, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 10:03:07'),
+(1053, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 10:03:07'),
+(1054, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:03:58'),
+(1055, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:03:58'),
+(1056, NULL, 'Emmavalidator@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:04:20'),
+(1057, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:05:54'),
+(1058, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:05:54'),
+(1059, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:06:30'),
+(1060, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:06:30'),
+(1061, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:09:59'),
+(1062, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 10:09:59'),
+(1063, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 10:34:22'),
+(1064, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 10:34:22'),
+(1065, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:03:18'),
+(1066, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:03:18'),
+(1067, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 12:03:30'),
+(1068, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 12:03:30'),
+(1069, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:17:43'),
+(1070, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:17:43'),
+(1071, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:49:41'),
+(1072, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:49:41'),
+(1073, NULL, 'unknown', NULL, 'update', 'Employe', 3, 'Ramarotafika Hedi Franco', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 12:49:56'),
+(1074, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 12:49:56'),
+(1075, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 12:49:56'),
+(1076, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:59:32'),
+(1077, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 12:59:32'),
+(1078, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 2, 'Solofoniaina Vololonirina Emma Joeline', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:12:11'),
+(1079, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:15:29'),
+(1080, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:15:29'),
+(1081, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:16:03'),
+(1082, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:16:03'),
+(1083, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:16:06'),
+(1084, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:16:06'),
+(1085, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-03 14:17:02'),
+(1086, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-03 14:17:02'),
+(1087, NULL, 'Emmavalidator@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:21:02'),
+(1088, NULL, 'Emmavalidator@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-03 14:21:28'),
+(1089, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:24:01'),
+(1090, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:24:01'),
+(1091, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:24:38'),
+(1092, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:24:38'),
+(1093, NULL, 'EmmavalidatorDRH@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-03 14:25:53'),
+(1094, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-03 14:27:26'),
+(1095, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-03 14:27:26'),
+(1096, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:27:46'),
+(1097, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:27:46'),
+(1098, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:41:34'),
+(1099, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:41:34'),
+(1100, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:41:44'),
+(1101, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:41:44'),
+(1102, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-03 14:43:38'),
+(1103, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-03 14:43:38'),
+(1104, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-03 14:44:23'),
+(1105, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-03 14:44:23'),
+(1106, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:45:30'),
+(1107, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-03 14:45:30'),
+(1108, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 14:47:07'),
+(1109, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-03 14:47:22'),
+(1110, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-03 14:47:22'),
+(1111, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:03:48'),
+(1112, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:03:48'),
+(1113, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:05:51'),
+(1114, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:05:56'),
+(1115, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:06:25'),
+(1116, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:06:48'),
+(1117, NULL, 'admin@geotrack.com', NULL, 'login_failed', NULL, NULL, NULL, 'Mot de passe incorrect', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-03 15:31:47'),
+(1118, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-04 07:37:54'),
+(1119, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-04 07:37:54'),
+(1120, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-04 07:51:14'),
+(1121, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-04 07:51:14'),
+(1122, NULL, 'EmmavalidatorDRH@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 07:52:32'),
+(1123, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 07:52:38'),
+(1124, NULL, 'unknown', NULL, 'login_success', 'Administration', 2, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 07:52:38'),
+(1125, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 07:55:02'),
+(1126, NULL, 'unknown', NULL, 'login_success', 'Administration', 3, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 07:55:02'),
+(1127, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-04 07:57:29'),
+(1128, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-04 07:57:29'),
+(1129, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 07:57:42'),
+(1130, NULL, 'unknown', NULL, 'login_success', 'Administration', 58, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 07:57:42'),
+(1131, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 08:02:40'),
+(1132, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 08:02:40'),
+(1133, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 08:03:02'),
+(1134, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 08:03:02'),
+(1135, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 08:03:06'),
+(1136, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 08:03:06'),
+(1137, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 09:47:10'),
+(1138, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 09:47:10'),
+(1139, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-04 09:48:18'),
+(1140, 18, 'testautreadmin@gmail.com', 'simple_admin', 'login_success', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-04 09:48:18'),
+(1141, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 09:50:30'),
+(1142, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 09:50:30'),
+(1143, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-04 10:41:13'),
+(1144, 18, 'testautreadmin@gmail.com', 'simple_admin', 'logout', 'Administration', 18, 'testautreadmin@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 2, '2026-09-04 10:41:13'),
+(1145, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:41:30'),
+(1146, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:41:30'),
+(1147, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'EntrepriseSiege', 12, 'Entreprise A', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:44:05'),
+(1148, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Entreprise', 33, 'SIEGE ENTREPRISE A', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:45:32'),
+(1149, 1, 'admin@kosi-time.com', 'superadmin', 'create', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:47:54'),
+(1150, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:48:03'),
+(1151, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 10:48:03'),
+(1152, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'login_success', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 10:48:10'),
+(1153, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'login_success', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 10:48:10'),
+(1154, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 348, 'Stagiaire Dev Web', 'Poste créé : Stagiaire Dev Web (STG)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 10:50:51'),
+(1155, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 66, 'MALALANIRINA Emile', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 10:52:46'),
+(1156, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'logout', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 12:12:28'),
+(1157, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'logout', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 12:12:28'),
+(1158, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:16:56'),
+(1159, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:16:56'),
+(1160, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 66, 'MALALANIRINA Emile', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:17:28'),
+(1161, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:19:26'),
+(1162, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:19:26'),
+(1163, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'login_success', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 12:20:29'),
+(1164, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'login_success', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 12:20:29'),
+(1165, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 349, 'Responsable RH', 'Poste créé : Responsable RH (RRH)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:24:11'),
+(1166, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 67, 'Emma Solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:25:13');
+INSERT INTO `activity_logs` (`id`, `user_id`, `user_email`, `user_role`, `action`, `model_type`, `model_id`, `model_label`, `description`, `ip_address`, `user_agent`, `SiegeID`, `created_at`) VALUES
+(1167, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 350, 'Lead Dev', 'Poste créé : Lead Dev (LDEV)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:26:26'),
+(1168, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'logout', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 12:27:52'),
+(1169, 19, 'entreprisenouveau@gmail.com', 'simple_admin', 'logout', 'Administration', 19, 'entreprisenouveau@gmail.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 12, '2026-09-04 12:27:52'),
+(1170, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:28:08'),
+(1171, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:28:08'),
+(1172, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 67, 'Emma Solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:28:36'),
+(1173, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 68, 'Franco Hedi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:30:01'),
+(1174, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 68, 'Franco Hedi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:30:38'),
+(1175, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'JobTitle', 351, 'Directeur G', 'Poste créé : Directeur G (DG)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:32:15'),
+(1176, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Employe', 69, 'TARKIN WILLY', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:33:10'),
+(1177, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 69, 'TARKIN WILLY', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:33:38'),
+(1178, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 67, 'Emma Solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:34:05'),
+(1179, 2, 'admin@geotrack.com', 'simple_admin', 'update', 'Employe', 66, 'MALALANIRINA Emile', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 12:34:54'),
+(1180, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:51:25'),
+(1181, 1, 'admin@kosi-time.com', 'superadmin', 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:51:25'),
+(1182, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 67, 'Emma Solofo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:52:42'),
+(1183, 1, 'admin@kosi-time.com', 'superadmin', 'assign_web_access', 'Employe', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:52:42'),
+(1184, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 68, 'Franco Hedi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:53:01'),
+(1185, 1, 'admin@kosi-time.com', 'superadmin', 'assign_web_access', 'Employe', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:53:01'),
+(1186, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 66, 'MALALANIRINA Emile', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:53:13'),
+(1187, 1, 'admin@kosi-time.com', 'superadmin', 'assign_web_access', 'Employe', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:53:13'),
+(1188, 1, 'admin@kosi-time.com', 'superadmin', 'update', 'Employe', 69, 'TARKIN WILLY', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:53:37'),
+(1189, 1, 'admin@kosi-time.com', 'superadmin', 'assign_web_access', 'Employe', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 12:53:37'),
+(1190, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 13:01:26'),
+(1191, 1, 'admin@kosi-time.com', 'superadmin', 'logout', 'Administration', 1, 'admin@kosi-time.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 13:01:26'),
+(1192, NULL, 'unknown', NULL, 'login_success', 'Administration', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 13:01:38'),
+(1193, NULL, 'unknown', NULL, 'login_success', 'Administration', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 13:01:38'),
+(1194, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 13:01:58'),
+(1195, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 13:01:58'),
+(1196, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-04 13:02:22'),
+(1197, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-04 13:02:23'),
+(1198, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 13:04:58'),
+(1199, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 13:04:58'),
+(1200, NULL, 'EmmavalidatorDRH@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 13:05:27'),
+(1201, NULL, 'ceo@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 13:05:50'),
+(1202, NULL, 'ceo@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-04 13:05:56'),
+(1203, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 13:07:31'),
+(1204, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 13:07:31'),
+(1205, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 13:08:49'),
+(1206, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-04 13:08:49'),
+(1207, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 13:46:43'),
+(1208, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 13:46:43'),
+(1209, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-04 13:52:57'),
+(1210, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-04 13:52:57'),
+(1211, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 14:44:40'),
+(1212, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-04 14:44:40'),
+(1213, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:12:38'),
+(1214, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:12:38'),
+(1215, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'Department', 36, 'nouveau service', 'Service créé : nouveau service (nvs)', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:19:41'),
+(1216, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-08 08:28:43'),
+(1217, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-08 08:28:43'),
+(1218, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-08 08:31:29'),
+(1219, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-08 08:31:29'),
+(1220, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:44:43'),
+(1221, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:44:43'),
+(1222, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:44:56'),
+(1223, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 08:44:56'),
+(1224, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-08 08:46:24'),
+(1225, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-08 08:46:24'),
+(1226, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 10:27:44'),
+(1227, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 10:27:44'),
+(1228, 2, 'admin@geotrack.com', 'simple_admin', 'create', 'HierarchyLevel', 16, 'CEOoc', 'Création du niveau hiérarchique : CEOoc', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 10:53:24'),
+(1229, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 15:09:49'),
+(1230, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 15:09:49'),
+(1231, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-08 15:10:08'),
+(1232, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', NULL, '2026-09-08 15:10:08'),
+(1233, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:12:24'),
+(1234, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:12:24'),
+(1235, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-08 15:16:52'),
+(1236, NULL, 'unknown', NULL, 'login_success', 'Administration', 69, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-08 15:16:52'),
+(1237, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:17:25'),
+(1238, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:17:25'),
+(1239, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:19:45'),
+(1240, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:19:45'),
+(1241, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-08 15:20:23'),
+(1242, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-08 15:20:23'),
+(1243, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 15:21:40'),
+(1244, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', 1, '2026-09-08 15:21:40'),
+(1245, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:22:36'),
+(1246, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-08 15:22:36'),
+(1247, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 05:37:08'),
+(1248, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 05:37:08'),
+(1249, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 05:41:25'),
+(1250, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 05:41:25'),
+(1251, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 05:41:44'),
+(1252, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 05:41:44'),
+(1253, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 05:50:24'),
+(1254, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 05:50:31'),
+(1255, NULL, 'unknown', NULL, 'update', 'Employe', 66, 'MALALANIRINA Emile', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:03:38'),
+(1256, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:03:38'),
+(1257, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:03:38'),
+(1258, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:06:38'),
+(1259, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:06:38'),
+(1260, NULL, 'malalanirinaemile2@gmail.com', NULL, 'login_failed', NULL, NULL, NULL, 'Identifiant introuvable', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:10:04'),
+(1261, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-09 06:11:47'),
+(1262, NULL, 'unknown', NULL, 'login_success', 'Administration', 66, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', NULL, '2026-09-09 06:11:47'),
+(1263, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 06:19:07'),
+(1264, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 06:19:07'),
+(1265, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 06:51:54'),
+(1266, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 06:51:54'),
+(1267, NULL, 'unknown', NULL, 'login_success', 'Administration', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:57:12'),
+(1268, NULL, 'unknown', NULL, 'login_success', 'Administration', 68, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 06:57:12'),
+(1269, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:28:36'),
+(1270, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:28:36'),
+(1271, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:28:44'),
+(1272, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:28:44'),
+(1273, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:28:49'),
+(1274, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:28:50'),
+(1275, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:29:09'),
+(1276, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:29:09'),
+(1277, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 07:30:49'),
+(1278, NULL, 'unknown', NULL, 'login_success', 'Administration', 67, NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', NULL, '2026-09-09 07:30:49'),
+(1279, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:39:27'),
+(1280, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:39:27'),
+(1281, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:39:31'),
+(1282, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:39:31'),
+(1283, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:39:33'),
+(1284, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 07:39:33'),
+(1285, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 08:02:10'),
+(1286, 2, 'admin@geotrack.com', 'simple_admin', 'logout', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 08:02:10'),
+(1287, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 08:09:06'),
+(1288, 2, 'admin@geotrack.com', 'simple_admin', 'login_success', 'Administration', 2, 'admin@geotrack.com', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 1, '2026-09-09 08:09:06');
 
 -- --------------------------------------------------------
 
@@ -1084,7 +1379,8 @@ INSERT INTO `administration` (`ID`, `Identifiant_email`, `Password_`, `IsSuperAd
 (15, 'ad@gmail.com', 'c7c8b6e52f202e0fc0b73ec79c7cf7da5c02a7ab', 1, 0, 0, NULL, '2026-03-11 07:56:46', '2026-03-11 07:56:46', NULL, 1, 0),
 (16, 'admin@manage-sup.com', '9efc51fb58ef74257cf303e2be33660633d34ca9', 1, 0, 1, NULL, '2026-07-15 08:46:40', '2026-07-15 08:46:40', NULL, 1, 0),
 (17, 'manager.geotrack@kosi-time.com', 'cbfdac6008f9cab4083784cbd1874f76618d2a97', 0, 0, 1, 1, '2026-08-20 12:06:03', '2026-08-20 12:06:03', NULL, 1, 0),
-(18, 'testautreadmin@gmail.com', 'c4edb3216ae52510b16f308fe3e5ffcefac11821', 0, 0, 1, 2, '2026-08-28 15:58:45', '2026-08-28 15:58:45', NULL, 1, 0);
+(18, 'testautreadmin@gmail.com', 'c4edb3216ae52510b16f308fe3e5ffcefac11821', 0, 0, 1, 2, '2026-08-28 15:58:45', '2026-08-28 15:58:45', NULL, 1, 0),
+(19, 'entreprisenouveau@gmail.com', '1b93baa77c7671a1038a8f27bf5b5feee041999c', 0, 0, 1, 12, '2026-09-04 10:47:54', '2026-09-04 10:47:54', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1150,15 +1446,32 @@ CREATE TABLE `company_holidays` (
 --
 
 INSERT INTO `company_holidays` (`id`, `site_id`, `date`, `name`, `is_recurring`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, '2026-07-14', 'fete de independanceny', 1, 1, 0, '2026-08-21 09:36:44', '2026-08-17 14:41:30', '2026-08-21 09:36:44'),
-(2, NULL, '2026-06-26', 'malagasy', 1, 1, 0, '2026-08-21 09:38:48', '2026-08-17 14:42:52', '2026-08-21 09:38:48'),
-(3, NULL, '2026-07-26', 'malagasy', 1, 1, 0, '2026-08-21 09:38:52', '2026-08-17 14:50:04', '2026-08-21 09:38:52'),
-(4, NULL, '2011-11-11', 'MALALANIRINA', 1, 1, 0, '2026-08-21 09:38:44', '2026-08-17 14:53:07', '2026-08-21 09:38:44'),
-(5, NULL, '2002-08-05', 'ann', 1, 1, 1, '2026-08-21 09:38:39', '2026-08-17 15:01:52', '2026-08-21 09:38:39'),
-(6, 1, '2026-06-26', 'Fete de l\'independance Malagasy 2026', 1, 1, 0, NULL, '2026-08-21 09:40:24', '2026-08-31 14:55:07'),
-(7, 1, '2026-05-01', 'fete de travail', 1, 1, 0, '2026-08-31 14:55:49', '2026-08-21 09:41:31', '2026-08-31 14:55:49'),
-(8, 1, '2026-12-25', 'Noel', 0, 1, 0, NULL, '2026-08-21 12:16:53', '2026-08-21 12:16:53'),
-(9, 1, '2026-01-01', 'jour de l\'an', 1, 1, 0, NULL, '2026-08-21 12:17:38', '2026-08-21 12:17:38');
+(10, 1, '2026-12-25', 'Noel', 1, 1, 0, NULL, '2026-09-04 12:36:29', '2026-09-04 12:36:29'),
+(11, 1, '2026-01-01', 'Jour de l \'an', 1, 1, 0, NULL, '2026-09-04 12:36:55', '2026-09-04 12:36:55'),
+(12, 1, '2026-06-26', 'fete de l\' independance  Malagasy', 1, 1, 0, NULL, '2026-09-04 12:37:40', '2026-09-04 12:37:40');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `comparaisons_planning`
+--
+
+CREATE TABLE `comparaisons_planning` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `planning_detail_id` bigint(20) UNSIGNED NOT NULL,
+  `pointage_id` int(10) UNSIGNED DEFAULT NULL,
+  `heure_debut_prevue` time NOT NULL,
+  `heure_fin_prevue` time NOT NULL,
+  `heure_debut_reelle` time DEFAULT NULL,
+  `heure_fin_reelle` time DEFAULT NULL,
+  `ecart_debut_minutes` int(11) DEFAULT NULL,
+  `ecart_fin_minutes` int(11) DEFAULT NULL,
+  `ecart_total_minutes` int(11) DEFAULT NULL,
+  `statut` enum('ponctuel','retard','avance','absent','pause_manquante','inconnu') NOT NULL DEFAULT 'inconnu',
+  `date_comparaison` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1176,20 +1489,6 @@ CREATE TABLE `conges` (
   `commentaire` text DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `conges`
---
-
-INSERT INTO `conges` (`id`, `employee_id`, `SiegeID`, `date_debut`, `date_fin`, `type_conge`, `commentaire`, `created_at`) VALUES
-(12, 2, 1, '2025-12-20 08:00:00.000000', '2026-01-20 08:00:00.000000', 'CP', 'Congé annuel', '2025-12-23 18:12:51'),
-(13, 3, 1, '2025-12-20 08:00:00.000000', '2026-01-05 08:00:00.000000', 'CP', 'Congé annuel anticipé', '2025-12-23 18:13:47'),
-(21, 1, 1, '2026-01-30 08:00:00.000000', '2026-02-02 08:00:00.000000', 'RTT', NULL, '2026-01-29 08:07:50'),
-(22, 2, 1, '2026-02-05 08:00:00.000000', '2026-02-05 17:00:00.000000', 'CP', NULL, '2026-02-11 15:05:36'),
-(23, 3, 1, '2026-02-11 08:00:00.000000', '2026-02-11 17:30:00.000000', 'Autres', 'Congé cyclonique', '2026-02-11 15:06:38'),
-(24, 1, 1, '2026-02-12 08:00:00.000000', '2026-02-16 08:00:00.000000', 'Maladie', 'COVID', '2026-02-20 08:49:09'),
-(25, 5, 1, '2026-07-14 00:00:00.000000', '2026-07-25 23:59:00.000000', 'CP', NULL, '2026-05-23 07:47:12'),
-(26, 5, 1, '2026-07-27 08:55:00.000000', '2026-07-31 15:55:00.000000', 'CP', NULL, '2026-07-22 14:57:33');
 
 -- --------------------------------------------------------
 
@@ -1281,7 +1580,8 @@ INSERT INTO `departments` (`id`, `company_id`, `site_id`, `name`, `code`, `manag
 (32, 0, 1, 'Entretien', 'ENT', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (33, 0, 1, 'Juridique', 'JUR', NULL, '2026-08-18 09:15:33', '2026-08-18 09:15:33', NULL),
 (34, 0, 2, 'Service informatique', 'DSI', 61, '2026-08-28 16:03:42', '2026-08-28 16:20:15', NULL),
-(35, 0, 1, 'Service informatique 2.0', 'SRI', 2, '2026-09-01 15:10:47', '2026-09-01 15:10:47', NULL);
+(35, 0, 1, 'Service informatique 2.0', 'SRI', 2, '2026-09-01 15:10:47', '2026-09-01 15:10:47', NULL),
+(36, 0, 1, 'nouveau service', 'nvs', 66, '2026-09-08 08:19:41', '2026-09-08 08:19:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -1338,29 +1638,10 @@ CREATE TABLE `employes` (
 --
 
 INSERT INTO `employes` (`ID`, `company_id`, `site_id`, `department_id`, `job_title_id`, `hierarchy_level_id`, `manager_id`, `user_id`, `employment_status`, `hire_date`, `Nom`, `email`, `telephone`, `password`, `remember_token`, `BadgeID`, `HasBiometricSetup`, `HasFaceSetup`, `FaceEncodingPath`, `Pin`, `num_mat`, `CreatedAt`, `Actived`, `SiegeID`, `deleted`) VALUES
-(1, 1, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'Willy Tarkin', NULL, NULL, NULL, NULL, '96e6195793afdb9f3c54a4ffb7c20c21d37deb0a8b2b819f74473e68af152c95', 0, 0, NULL, NULL, 'EMP0001', '2025-08-30 08:03:43', 1, 1, 1),
-(2, NULL, 1, 1, 1, 5, 2, 2, 'actif', NULL, 'Solofoniaina Vololonirina Emma Joeline', NULL, NULL, NULL, NULL, 'b2c8a55a9aaa2d903b7732fb1dcc46e027aac65ed4f2098dd7611c3d6723a0ff', 0, 1, 'EMB_V1:fKvq5WM8YQ4XiD8aVRMpXC9ORcn0lamhZlLsYAtfxWG/52gkrn7bC6PrpTfURcxMdhvA7DOwGUPUJNh3fL0R03gaSTcmz9C703QBlH6adOaYXnRL4CO+kWG4y3Tds92AdnifIX3KjSg6316mmP04HaYA6H34nrJ2HkitS5QaToJKRVPVqgMtcDqSd/SfCwbyEv9xnrefWQqnBhPFB1uxFMZEkbr0ZbN0RjPTUESTjs9Xuya4O2wjfJP45SFUQIrWP33FhLz74RIMFCuAHGABewko4Ze+lEpqqTYOSc3wFc/ufohmm0VQoRPLK+84i+5CYQZwtPVEo1oe8Ed1YyuwCpOmg2aTEG1mnujj/sbNfPDp7OTA11feUGQ8bSmEyHLyFDtpQ4UM6LrC1JqFT6tU5/iYewLrwdSNe1hc01vzklqzeHfH4NnKoKwJyCLFZxUG87wfHjvyUpUw0TscZ8bL9NXA3JNLaS8qMaTyrNk5o/2oW5wOMf3iTkPFThx7/wF4HcQAs6R1vAm42fCHi+ZXuCpww4esajA5dlCc1WV4w5LujT2MRdcRY1cG0huVD1DmKGPrV4m4Ik5OQWIpqPqtfOKZxlEsIV8Ntu+juoI8MPL51htBV/RbkbWeYHWDtH1ywLJtgJgwmSgjXrWFeTO60VLdJS+wcExbxQ1d5KA5RxzNYAN8ow4XTv5+FCoam51TO9bbihp3nv31uXDJG6+0HBtF+DqoBR92OWtQCqqtOx+ZwsaR2ccuqjf3kJh42rPHEC6cPgUecqOi/SrJVHvby6cU82OlMoXSxOc4XaqnuWEhil3cjYW2IOb1NyFXBcZaSLxtQGhLHgNmcQAowBz56jq6m8ekxpA1LNksAZWNAf7v24CuQSVdTPO/INpUFgx0bA1H+PolQgBGRHS6kLVZZA1KYz1r9zKs495u36uA1tDPog+sxO5L+TqVyehA+1bPHR7FYaJ7jPfn3N8sWrnGOxWtCAs2I23lxIzI8HyxhwVj8ZDMLjm1EpilTNx920B6ZJ3xWHNyLs9etEc1p4Q9ugFZBK3td/NKKa3Zx0kpQYUuEqLvrk+30HTtklT3Fc/ONi0NjAvq+2S9xnTksRLHqBVU4i1be8k11185wxnYBYsFwInKAACib0EwNbivOzJ3T3wGPdZ2gyj4yuqbKjWYofuPxE9IFEPq2C8NCxZU5xa/0Ktxu4j1K/4SMVD8ZW+BKyh/gLxDmDdEFndW8MbA00G5zz/DdS4hQ2+9psoXAe+E1P6jqitEbukqV8efdbg17KiUJd5ColCOqI5FxYAkDbvSsWpZzI3WwuirKykhoES1AvUB9Fm57dOeIeXdxRgL6QeQFX1MJubAmuaCD6v+lqv5Ht0p6nOy40E8BJ4UU8te/Ao1h3F7aP0Xp4vgJc2j7UUZu0Zv9MbgWjOFUxQmtVTThCFjTFIf0q7Iv3rXpx6jSg070Zzh6oQI8bHXQDpsQPZk2d6Fd57fn8/CjkVMttjKqq0x0MltSazI6c2tmOJhL/+m4zjBfS3Uor7hPkdd/Nunub8h4yjCvlkw8DGBheR3/Bz0fV5Pm7M49KSyTZjFJei/e9e76t4UVA+1RxgeDurDl189H8i/g56S2GWO0XlVj/gC6K51e9la/zGpVD5fai0MOSMXWinqOLS6Y1ZVeAbke2W3D9MmguC+eUguHyIkrgBQUmM7X9g/1CgInJ6+0Motzmt8NHJ5uuXAXGSYjkYtFsRNZ8VATnn/mLsymAqGiARWUiFDQ0YSgS5k01suIpI4+LlG0btV9mkzGOszggSLxh99QxNvjIotSSOwf9lvQ7l0lo7QU9bQQ4ktA0NBsl3ozDuBchRBVd0/QlyZqFiRCOJBUG6BzN/ySV2siCUwX+SgQ2JvIIq/Xe+YpIU6m/FlT5yghxYX0GPWq1UaZ+3dYijI9ewOM7RDZQYDl4rWHzLlgU7uuRX+QkiOGvBXKiHIcg1oxCN5SkMwnTSMau2/Ck05uMAYwC4x03HUfZxEp/MIoVLYviNdYmGoInmwATT6XuOpijCqy23m/Juf/WXAiJLL+Tg5D9HEC9zcZiVWvC6z7G/keDGST3aF+pL0IBqZXXVCci6HclZjjuysm0ijjcg36wKbkQKT8BgOwbqIe/0xfwzxuGD1xdXYwF4j0z0UKXViMxCrinm3xsdaQlN59qVyPAr7F/tg2qvi0WHbMqSY362jA6thR2X0g8FhMCLgiGJI7EtKUpVgZ819C4KqIzT/1cWAVZ3jWDtxD9/XpjOLatoGgbPfBmwwZDCNtV8IkvS7JuKIgNFdYmO3hO+Uzh2Cdll9HSIivkQcZI+CuKg9slNwsETlbxvwJaNKZS4JDhoMrYMGG3U4oHlQaq05ucUrgJz3nKgDDMv5HuIIg1YNyVp35ahUN7aqAv0KCxHNRXUfOSYjISbQwjDnx2b9hjNG1GhXPOqaGmB4rvleiI8wvVczJuiMBMvjWGQspzvvff9xhKErGkU3yUaGkjLF1W50jgYhv7mq61WXs+wM7NnOTbX8xPzzUkpsguaikcqudRIAaMxfvwV7PCvLA1tAp5X8arqd+99q5yGeUBRlWlbz56PEdSB9kwujx/kCzzLxRnypvNQTSwU/nC8Xv7Mo8aIbgWZn8mViDwOX9pJLhGhtbil7prpnM0lYqz0jKb5/NXQYtNEx73CXdTjb/Qbg1S1AbSK2Z4+yjyWwHxNF8O5llj5rskRD84IX2pb4qPzSmOVmhXHErfo7J0DWZXzYIEd+4HK+Swl9', '691f59ef9b5c3e2e905873c5b386645e698d579f4133ee78e75e49e97db7da9b', 'EMP0002', '2025-08-29 11:08:29', 1, 1, 0),
-(3, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'Ramarotafika Hedi Franco', 'ramarotafika1999@gmail.com', NULL, '$2y$12$FlXPAxcC01j8tvK73QDBn.K650J995LlnOw73nT9Xj0HDbcO7oDo2', NULL, '3eb5cc214bf67c7e05df5606f27483c7e0d6a1d98ee8f41c2b010065b88475ee', 0, 1, 'EMB_V1:bHrV87lZ+dLSPmpJdSvTSOchiCzjASN7To/xgx4j+vtZfpx9l6vzzdzufMlVQAR99YIrxR2PVQ3Br4OM2kyWGnpxzoBnO2MIU4Sy+a6PNRHJPtkVivR6VZ9YzMrNbo9q+yJmF2ks5RBMBAe3LqY9pyeU/EE/SeaWptEi1s7zCoLxwFnvFhumCnJ6eqzBeEUoJss1e9Bv+rfRggkRw248E8PaoaLXHE9vP5xKsV0DklNMCeqMFFBGW8/ph6mK719fJZXx3RM3wKNP46xD5o8DenPDJ+zzR3ng7+l5nm23LFAqZq5mXMeCpcmmj/G167SXVHSI3Kl1QQPu1GX+3bFZntUlisL6IhgRZcJZoip8lFqgSW8HCBUjnZ4Tfr/M+mFl33UCB29NMYav4NFb0Cm8mlIWYM5GMS91j0GJB/ZZLZCT1bZ589RO50aaqRkyEroZFFvjXB8jmIw/Wkz1wXWLW8IWN84lU/tuk08TsUZtAyAff4oR0wS9OBM/h3KQeyDeRjMIUCPajYD8SYsMeg+ZAEN3rVQW/eBDdAw4IgFjjVwYEdjLeAEkmn+D1XfcbO5HtdEJfML3mQemskguYiyiXmXiFRdz8iPlCooUZkNfXLLhXDYKFxScwesP6t98gSl2h6XuYxjY9DS+AtZ1QV31WaVaVrWJkk33h5WEvbdv/f66PDlS6+At6yXjcZkUbViSiA9arzFLTJc6QK+Ma4nfXYb1HhL2jjyfHlCvgaocjqLhxQz04RmmhOzd/619V/aONmqNt56dPxUC9ztYSirkfrZla9oJ/s+KRAcS8BDOAWloAEwcPDMTRlmaxnFzBqRr3ARkDTr3FCRdE3tYotpLTSW6fAGD04Go34+3qY6NTW2/KNfEKlWFLH3JinJQS70Oa7I+K+DzKUyZfFboZcGOCclvd+vQiWr3DNuMDGNlGc3owCZCEGTrH1sqR/7AIXuGmjRniQr57fLhp1cJofSUtYqqyuS8XRVVEyRFzsaQj5mhfh9FTNz2XGL/MWNSoP20VQP8jHfcJG1KDU/9K8k5YdZgHnTui1vAweP8iO/+dARZ1ZoiIEd+YlcpkFT3sMm0SExC3aq0h77lTpk1tBMsQOXaKEeygr+AQJ2XIzvXNtACqYnJbJH+imomSm113UQnCn2Jo/YJg1POl5f2lYw6ufHkjHFEQVeVFNdKSVtEcPLFro9+juebvF6kWC3T3FSXK3nnpV/FineRmCH8exsw6EEyTQq/nk49ub15hRRSTwnEES8kg9obaUNBbcqdBTSOiyh5kE+WpnQ9o4Q2Dl6MEiFnGfEpG6wxAOwbDJpRXPjKC7ElsLhHpJcBMzijeUUJlbv4z3HWj7fCEraClezrNBS/+YUSREJXmiacOeYSofSdkj2ym3IMnDZMFe/lj1FDbvxtZh3jkbxpp/l1yFVI5l52lZ5KovpxPOx4HaPUZHdJKxjM+wK0PbPZVlw9JORElAGFKpEPXcZ0hIPtmsjUaa3bBYHgBVserM/65tWx0c92+II1XEZ9LQ7amHEveOqRNn4nsQwl0jv0/ImFHDmX1yAN33RUQtXtMeEyPZ3xT7lihf1lrQ6AVo+7Nk+NbsqoI2EGwuslAI7dm/KMBdFO9SBj9UdduqtsV3ZLIljxfKUnApuWIqBl6lYSKxiHyXyCiLAQbTeL0aitKxEj7JDLyMV9MoPCHCSLSFO8sHXBV+QuV0MUglURll4+YpXBlN3J3Q+93sJcvLoAdTUUAxmTjcwULP+AFOQM5NSMI3BG6vBqWSNrO0DNK4dtsykOKlHPbAwZBeBKvaxxgB6BBBy4xWV3iV2RoN2XjgAhZOAHvIQ3h7qEfB5taiFVI4RW5h1kRRpcxnmTnyAbpADtKOYp1i6O5cifgemFnzwqT0kpM5yUG3/jDMS9HR2DJ2EKKX9HDDuaEUhIbYAvCqjQKgNzMAstYJG/tq+K9c/QtxFLzoDQ+dI4QDYH2Tkuz0pF96GFFpyNyj65fEY7xUUKhAb90biVqK3nCbxM8rTnS3jljFOAFjsC7r2uUMyvQFpQYlv0qSLAAUVLtqOngcbJG6VDyyTPRYUxo+v+68/2h2hRkgmnEq0nf8WvBvO6VVD6KO8gunwfOS5oRiWD87lXPFQY1ltYJrdf2+Ix+8cQ1Ogm4WgtGSnJneoAol6UWtYp6QQ5O/UljJU5q4LPWC5bnqTh83xDCUw0XG8EzHqOS/wwbE9kxk7ZDsOqBwThKx9t0JraihMqV1/IElWrw43hq/RASZl6YF6BBLi2sLiezHYO/BtEBfvh2pk56MvMlXMaBJS1a16eOYnlr1aRWeeaSsWGuO4jh4ppO8KDXCukcS+mPKXO9Gxej48RjPYcIh0ASV0Jm3jxjQInBzIy6jYv5WYkgxrUblcm7ZmGEaITSV6/YqFpo3+2SYpEEzUUbYR3y/jG+qD2N+0U8aufLRidWgvIcQj4Zf7zHPWkPpn1OjRwVLwwGGFsyndgEOYKIBNIkOLK1xSxpErYf4YGggjqz5ikjVlYhaUI8u3ym9NJi6sqiHvYeOxpBPrzFFdMcXCwqFoZiXm6Te6yy9Y4iBolBCMfq8O6S0Iy9hSAQ05m9moHTRTpjCR25Wuh0aUM+q0lRyhz2CvgxqrGVkWm5wGBwsmZxN0Ou+i5h8nU/9HpRmmlPqVjnUiEIhId1mzTido8eRe+vobVjCwOvKvFtnYW5bGwaVkDm5t6DnkpC5ff+OuHwem2JvHZ/shhRVehg4yjA+SalA1CIezWJYRHsnUv', '823a2a3dec8c781b4f239bb2c92108a66150bc163d4292d549616478c071d04c', 'EMP0003', '2025-08-29 11:00:20', 1, 1, 0),
-(5, 1, 1, 16, 1, 1, 2, NULL, 'actif', NULL, 'MALALANIRINA Emile Noeline', 'malalanirinaemile2@gmail.com', NULL, '$2y$12$9S1WZLx1Rt.M1O0b0Am/Q.ty8Vk/l7FiiXdoDRL20Yiizaz3XfLje', 'muAp7jAwqn7ZVe3WIgPmvwEh5zQLJHj4rPfv1p5XSlYB62U4S3ED785QlobR', '03e4458621af91d0325724dbe776bf522611b729f4d3d8b0d3e8c1fd07665d31', 0, 0, NULL, NULL, 'EMP0005', '2025-08-29 06:49:12', 1, 1, 0),
-(16, 2, 2, NULL, 1, 1, 62, NULL, 'actif', NULL, 'Tarkin Willy', 'testautreadminrun@gmail.com', NULL, '$2y$12$p8h7NbYx4yTlyhR65YnePeiOgME/hF7loS03epiKTJzmz0zib7CHu', NULL, '37E8476C', 0, 1, NULL, NULL, 'EMP0016', '2025-10-03 14:15:35', 1, 2, 0),
-(17, NULL, 2, 2, 1, 1, 16, NULL, 'actif', NULL, 'Wilfried Payet', NULL, NULL, NULL, NULL, 'AD5689', 0, 1, NULL, NULL, 'EMP0017', '2025-10-04 14:40:43', 0, 2, 0),
-(35, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'abdouroihamane saidal', NULL, NULL, NULL, NULL, 'a57a369aac783150bb22e308627817b7089b3e2badbd383fb4d7ac632236dfab', 0, 0, NULL, NULL, '14', '2025-11-03 14:22:51', 1, 4, 0),
-(36, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'ahmed mohamed roukia', NULL, NULL, NULL, NULL, 'EEB15625', 0, 0, NULL, NULL, 'EMP0036', '2025-11-03 14:22:51', 1, 4, 0),
-(37, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'ousseni combo issouf', NULL, NULL, NULL, NULL, 'CE7E4425', 0, 0, NULL, NULL, 'EMP0037', '2025-11-03 14:22:51', 1, 4, 0),
-(38, NULL, 4, 3, 1, 1, 35, NULL, 'actif', NULL, 'ahmed wassim', NULL, NULL, NULL, NULL, 'BE8B3B25', 0, 0, NULL, NULL, 'EMP0038', '2025-11-03 14:22:51', 1, 4, 0),
-(39, NULL, 2, 2, 1, 1, 16, NULL, 'actif', NULL, 'Turpin Pascal', NULL, NULL, NULL, NULL, '047CB69AD01191', 0, 1, NULL, NULL, 'EMP0039', '2025-11-05 12:02:13', 0, 2, 0),
-(40, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'Mme Fanja', NULL, NULL, NULL, NULL, '783daa24570d0c2adce279d467ac25367e706fa64bd9284042b49e8e0803fc95', 0, 0, NULL, NULL, 'EMP0040', '2026-01-28 05:35:26', 0, 1, 1),
-(42, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'RANDRIAMBELOMANANA Safidinantenaina Nirintsoa Roger', NULL, NULL, NULL, NULL, '9198d215a53452cd296fa04fed7547b2cbddbfff92335fb6796cbb4b81e02c39', 0, 0, NULL, NULL, 'EMP0042', '2026-01-30 08:27:00', 0, 1, 1),
-(54, NULL, 8, 4, 1, 1, 54, NULL, 'actif', NULL, 'Emp 1', NULL, NULL, NULL, NULL, '112233', 1, 0, NULL, NULL, 'EMP0054', '2026-02-20 08:11:07', 1, 8, 0),
-(56, NULL, 8, 4, 1, 1, 54, NULL, 'actif', NULL, 'Emp 3', NULL, NULL, NULL, NULL, '113355', 1, 0, NULL, NULL, 'EMP0056', '2026-02-20 08:11:24', 1, 8, 0),
-(57, NULL, 1, 1, 1, 1, 2, NULL, 'actif', NULL, 'test  ffff', NULL, NULL, NULL, NULL, '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 0, 0, NULL, NULL, '877', '2026-03-09 07:37:24', 1, 1, 0),
-(58, NULL, 1, 12, 242, 1, 2, NULL, 'actif', NULL, 'Emma solofo', NULL, NULL, NULL, NULL, 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 0, 0, NULL, NULL, '22', '2026-08-06 08:04:49', 1, 1, 0),
-(60, 1, 1, 8, 2, 1, 2, NULL, 'actif', '2026-08-12', 'RAKOTONIRINA Manankasina', NULL, NULL, NULL, NULL, 'af3b7a26bddd5de85f59064ba3533a078aef0c8402b6e5533fd70b9c5820b0eb', 0, 0, NULL, NULL, '125487', '2026-08-11 10:03:50', 1, 1, 0),
-(61, 2, 2, 34, 266, NULL, 16, NULL, 'actif', '2023-09-14', 'TEST EMPLOYE POUR ASSIGNER UN MANAGER', 'employerun@gmailcom', NULL, '$2y$12$xZlxRpp93Tdtpk90RXAG/.RD6X0zCDY1KNFIVqT.wpWurxLk.WfD.', NULL, '64800a72cdfd8e7dfe65fbcfb49b04f8858b294c55374d4a30fc1ab8bf676003', 0, 0, NULL, NULL, '1', '2026-08-28 16:17:41', 1, 2, 0),
-(62, 2, 2, NULL, 264, NULL, 16, NULL, 'actif', '2023-12-14', 'RAHARIMANANA ALEX', 'alex@gmail.com', NULL, '$2y$12$xkVBqOzApbnTKxjWe2anSeVTOBjyCEaH42pCcn5i.SQps0o/wNwrK', NULL, '9df33304046cf50b54a3198b2bb6bc5681d9b671ccb99cb6a0961f22b65db37f', 0, 0, NULL, NULL, 'IM 1562', '2026-08-31 09:29:24', 1, 2, 0),
-(63, 2, 2, 34, 236, NULL, 16, NULL, 'actif', '2023-12-14', 'testemanager', NULL, NULL, NULL, NULL, '2680d8152dabba84c80a50e98afbcd84885b01a67ae276fdb1807fb3cfa66abb', 0, 0, NULL, NULL, '13', '2026-08-31 13:20:34', 0, 2, 0),
-(64, 1, 1, 33, 234, NULL, NULL, NULL, 'actif', '2026-07-14', 'tetsecreeremployedepuis adminsiege', NULL, NULL, NULL, NULL, '9718cb0ca7d6704e6683cbc76a45bedd8ad09cd8903b37e77ed9b69e1569bb00', 0, 0, NULL, NULL, 'EMP00161', '2026-08-31 13:22:37', 0, 1, 0),
-(65, 1, 1, 12, 279, NULL, 2, NULL, 'actif', '2023-09-03', 'tetsecreeremployedepuis adminsiege2', NULL, NULL, NULL, NULL, 'f3b47ca7ccc39e01686991ab6b8fcb035bb726f190d996063c72ba2ed040a211', 0, 0, NULL, NULL, '471', '2026-08-31 13:25:19', 0, 1, 0);
+(66, 1, 1, 16, 348, 1, 68, NULL, 'actif', '2026-01-23', 'MALALANIRINA Emile', 'malalanirinaemile2@gmail.com', NULL, '$2y$12$oS0PBv68skmanMki8kLOF.ZgBs4P9GOCJKHakLAPfWAZJR2ODA0IG', 'ggzIHa73SJcS89ySuG8ZKaTxLoGvZxE8jS9DoK9dfJwnXCaMDlRIL2JjegGk', 'd3a4337d53252dc675af653f03a1ae3bb2f1ae659fdb8d6420bc1061fa9a9456', 0, 0, NULL, NULL, 'IM 1562', '2026-09-04 10:52:46', 1, 1, 0),
+(67, 1, 1, 12, 349, 5, 69, NULL, 'actif', '2023-10-23', 'Emma Solofo', 'Emmasolofo@gmail.com', NULL, '$2y$12$Q2UvWSvzLk5kVR./Q33UYeomjSTOKxJ1x7xBgT.Rlz9i8m9LEY.xa', NULL, '6447fd17883351814e6069601557841ecee9de85ea6e1d9996f99354d7da368f', 0, 0, NULL, NULL, 'IM 1561', '2026-09-04 12:25:13', 1, 1, 0),
+(68, 1, 1, 16, 350, 4, 67, NULL, 'actif', '2025-05-01', 'Franco Hedi', 'ramarotafika1999@gmail.com', NULL, '$2y$12$Oi/PapkirmbVKsxUwHQHzeGO.YskRKK84hxSOCBiMcfNcm9vkmvT6', NULL, '6e73f6f76b1b3b59ce8bda8756ae3ad0fe227750fb096bdeff7c620a14daef6a', 0, 0, NULL, NULL, 'IM 1560', '2026-09-04 12:30:01', 1, 1, 0),
+(69, 1, 1, 11, 351, 7, NULL, NULL, 'actif', '2020-01-01', 'TARKIN WILLY', 'ceo@gmail.com', NULL, '$2y$12$CgazZKzA7SBX7/bS9lEuJe.yqB7JqtL.g9hQIytFsj8Ze4.5q4mki', NULL, '98392a2e53aaf0d12d5f7d1c51a1357667da03eea46cde50fe7be43ef64fa662', 0, 0, NULL, NULL, 'IM 0000', '2026-09-04 12:33:10', 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1395,7 +1676,8 @@ INSERT INTO `entreprises` (`ID`, `Nom`, `Logo`, `Nom_Lieu_Ville`, `Latitude`, `L
 (22, 'bureau geotrack', NULL, NULL, -19.01888974, 47.53938474, 50.00000000, '2026-02-03 14:57:57', 1, 2, 0),
 (30, 'Nav', NULL, 'Anosy', -12.00000000, 20.00000000, 30.00000000, '2026-03-11 05:20:23', 0, 1, 0),
 (31, 'SALIO', NULL, 'Mayotte', -12.00000000, 20.00000000, 30.00000000, '2026-03-11 05:30:00', 0, 2, 0),
-(32, 'test v3', NULL, 'LA REUNION', -12.00000000, 20.00000000, 30.00000000, '2026-03-11 05:37:47', 0, 1, 0);
+(32, 'test v3', NULL, 'LA REUNION', -12.00000000, 20.00000000, 30.00000000, '2026-03-11 05:37:47', 0, 1, 0),
+(33, 'SIEGE ENTREPRISE A', NULL, 'MARSEILLE', 75.00000000, 140.00000000, 100.00000000, '2026-09-04 10:45:32', 1, 12, 0);
 
 -- --------------------------------------------------------
 
@@ -1425,7 +1707,46 @@ INSERT INTO `entreprises_sieges` (`ID`, `Nom`, `Nom_Lieu_Ville`, `Actived`, `Cre
 (8, 'Réel Electrique TEST', 'TANANARIVO', 1, '2026-02-20 08:09:49', 'ae', 0),
 (9, 'N8N', 'TANANARIVO', 0, '2026-03-11 05:39:01', 'ae', 1),
 (10, 'test test test', NULL, 0, '2026-03-11 07:51:37', 'ad', 1),
-(11, 'fdffdfd', NULL, 0, '2026-03-11 08:49:23', 'ae', 1);
+(11, 'fdffdfd', NULL, 0, '2026-03-11 08:49:23', 'ae', 1),
+(12, 'Entreprise A', 'PARIS', 1, '2026-09-04 10:44:05', 'fr', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `evenements_planning`
+--
+
+CREATE TABLE `evenements_planning` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `siege_id` int(10) UNSIGNED NOT NULL,
+  `service_id` int(10) UNSIGNED DEFAULT NULL,
+  `poste_id` int(10) UNSIGNED DEFAULT NULL,
+  `titre` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `type` enum('formation','deplacement','reunion','conges_exceptionnel','autre') NOT NULL,
+  `debut` datetime NOT NULL,
+  `fin` datetime NOT NULL,
+  `toute_la_journee` tinyint(1) NOT NULL DEFAULT 0,
+  `couleur` varchar(50) DEFAULT NULL,
+  `cree_par` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `evenement_employes`
+--
+
+CREATE TABLE `evenement_employes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `evenement_id` bigint(20) UNSIGNED NOT NULL,
+  `employe_id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1472,7 +1793,40 @@ INSERT INTO `hierarchy_levels` (`id`, `company_id`, `name`, `code`, `rank`, `is_
 (4, 0, 'Responsable de service', 'N3', 3, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
 (5, 0, 'Manager / Chef de département', 'N4', 4, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
 (6, 0, 'Directeur', 'N5', 5, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
-(7, 0, 'Directeur général / Direction', 'N6', 6, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48');
+(7, 0, 'Directeur général / Direction', 'N6', 6, 1, NULL, '2026-08-18 09:18:48', '2026-08-18 09:18:48'),
+(15, 0, 'CEO', 'N7', 7, 0, NULL, '2026-09-08 10:29:58', '2026-09-08 10:29:58'),
+(16, 0, 'CEOoc', 'n9', 7, 0, NULL, '2026-09-08 10:53:24', '2026-09-08 10:53:24');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `horaires_types`
+--
+
+CREATE TABLE `horaires_types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `poste_id` int(10) UNSIGNED NOT NULL,
+  `jours_travailles` varchar(100) DEFAULT NULL,
+  `heure_debut` time NOT NULL,
+  `heure_fin` time NOT NULL,
+  `pause_debut` time DEFAULT NULL,
+  `pause_fin` time DEFAULT NULL,
+  `deuxieme_debut` time DEFAULT NULL,
+  `deuxieme_fin` time DEFAULT NULL,
+  `par_defaut` tinyint(1) NOT NULL DEFAULT 1,
+  `cree_par` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `horaires_types`
+--
+
+INSERT INTO `horaires_types` (`id`, `poste_id`, `jours_travailles`, `heure_debut`, `heure_fin`, `pause_debut`, `pause_fin`, `deuxieme_debut`, `deuxieme_fin`, `par_defaut`, `cree_par`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 348, 'lundi,mardi,mercredi,jeudi,vendredi', '08:30:00', '17:00:00', '12:00:00', '13:00:00', '13:00:00', '17:00:00', 1, 2, '2026-09-08 15:06:43', '2026-09-08 15:06:43', NULL),
+(2, 348, 'lundi,mardi,mercredi,jeudi,vendredi', '08:00:00', '12:00:00', '12:00:00', '13:00:00', '13:00:00', '16:30:00', 1, 2, '2026-09-08 15:07:37', '2026-09-08 15:07:37', NULL);
 
 -- --------------------------------------------------------
 
@@ -1521,6 +1875,7 @@ CREATE TABLE `job_titles` (
   `name` varchar(100) NOT NULL,
   `code` varchar(20) DEFAULT NULL,
   `hierarchy_level_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Niveau KOSI associé',
+  `department_id` int(10) UNSIGNED DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -1530,114 +1885,11 @@ CREATE TABLE `job_titles` (
 -- Déchargement des données de la table `job_titles`
 --
 
-INSERT INTO `job_titles` (`id`, `company_id`, `name`, `code`, `hierarchy_level_id`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 0, 'Manœuvre / Ouvrier', 'BTP-MAN', 1, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(3, 0, 'Maçon / Électricien / Plombier', 'BTP-ART', 1, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(5, 0, 'Ouvrier qualifié / Chef d\'équipe', 'BTP-OQ', 2, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(7, 0, 'Chef de chantier', 'BTP-CC', 3, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(9, 0, 'Conducteur de travaux', 'BTP-CT', 4, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(11, 0, 'Responsable travaux', 'BTP-RT', 5, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(13, 0, 'Directeur technique / Directeur travaux', 'BTP-DT', 6, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(15, 0, 'Directeur général / Gérant', 'BTP-DG', 7, NULL, '2026-08-18 09:22:04', '2026-08-18 09:22:04'),
-(63, 0, 'Téléconseiller / Agent', 'CC-AGT', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(65, 0, 'Agent senior / Référent', 'CC-SNR', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(67, 0, 'Team Leader', 'CC-TL', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(69, 0, 'Superviseur', 'CC-SUP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(71, 0, 'Responsable plateau', 'CC-RP', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(73, 0, 'Operations Manager', 'CC-OM', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(75, 0, 'Directeur des opérations', 'CC-DO', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(77, 0, 'Directeur général', 'CC-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(94, 0, 'Formateur', 'FOR-FORM', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(96, 0, 'Assistant administratif', 'FOR-AST', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(98, 0, 'Formateur référent', 'FOR-FR', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(100, 0, 'Coordinateur pédagogique', 'FOR-CP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(102, 0, 'Responsable pédagogique', 'FOR-RP', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(104, 0, 'Responsable administratif', 'FOR-RA', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(106, 0, 'Responsable de centre', 'FOR-RC', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(108, 0, 'Directeur de centre', 'FOR-DC', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(110, 0, 'Directeur général', 'FOR-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(125, 0, 'Vendeur / Caissier / Magasinier', 'COM-VEN', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(127, 0, 'Vendeur senior / Chef de rayon', 'COM-VS', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(129, 0, 'Responsable rayon', 'COM-RR', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(131, 0, 'Responsable magasin', 'COM-RM', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(133, 0, 'Responsable régional', 'COM-RR', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(135, 0, 'Directeur commercial / Directeur réseau', 'COM-DC', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(137, 0, 'Direction générale', 'COM-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(140, 0, 'Ouvrier / Opérateur', 'PROD-OP', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(142, 0, 'Opérateur senior / Chef d\'équipe', 'PROD-OS', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(144, 0, 'Superviseur production', 'PROD-SP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(146, 0, 'Responsable production', 'PROD-RP', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(148, 0, 'Responsable usine', 'PROD-RU', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(150, 0, 'Directeur industriel', 'PROD-DI', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(152, 0, 'Direction générale', 'PROD-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(155, 0, 'Chauffeur / Livreur', 'LOG-CHAUF', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(157, 0, 'Manutentionnaire', 'LOG-MAN', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(159, 0, 'Chef d\'équipe', 'LOG-CE', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(161, 0, 'Chef de parc / Superviseur', 'LOG-CP', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(163, 0, 'Responsable exploitation', 'LOG-RE', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(165, 0, 'Responsable logistique', 'LOG-RL', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(167, 0, 'Directeur exploitation', 'LOG-DE', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(169, 0, 'Directeur transport / Directeur opérations', 'LOG-DT', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(171, 0, 'Direction générale', 'LOG-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(186, 0, 'Serveur', 'HOT-SERV', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(188, 0, 'Femme/Valet de chambre', 'HOT-VAL', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(190, 0, 'Commis', 'HOT-COM', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(192, 0, 'Chef de rang / Référent', 'HOT-CR', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(194, 0, 'Maître d\'hôtel / Chef de cuisine', 'HOT-MH', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(196, 0, 'Responsable restauration', 'HOT-RR', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(198, 0, 'Responsable hébergement', 'HOT-RH', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(200, 0, 'Directeur d\'exploitation', 'HOT-DE', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(202, 0, 'Directeur hôtel', 'HOT-DH', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(204, 0, 'Direction générale / Groupe', 'HOT-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(217, 0, 'Employé / Agent', 'GEN-EMP', 1, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(219, 0, 'Agent senior / Référent', 'GEN-AS', 2, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(221, 0, 'Chef d\'équipe / Superviseur', 'GEN-CE', 3, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(223, 0, 'Responsable de service', 'GEN-RS', 4, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(225, 0, 'Manager / Chef de département', 'GEN-MGR', 5, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(227, 0, 'Directeur', 'GEN-DIR', 6, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(229, 0, 'Directeur général', 'GEN-DG', 7, NULL, '2026-08-18 10:08:27', '2026-08-18 10:08:27'),
-(232, 0, 'Assistant RH', 'RH-AST', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(234, 0, 'Assistant administratif', 'RH-ADM', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(236, 0, 'Chargé de recrutement', 'RH-REC', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(238, 0, 'Responsable RH', 'RH-RH', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(240, 0, 'Manager RH', 'RH-MGR', 5, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(242, 0, 'Directeur RH', 'RH-DIR', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(247, 0, 'Comptable', 'FIN-CPT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(249, 0, 'Assistant comptable', 'FIN-AST', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(251, 0, 'Responsable comptable', 'FIN-RC', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(253, 0, 'Directeur financier', 'FIN-DF', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(262, 0, 'Technicien support', 'IT-SUP', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(264, 0, 'Développeur', 'IT-DEV', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(266, 0, 'Analyste', 'IT-ANA', 3, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(268, 0, 'Chef de projet IT', 'IT-CP', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(270, 0, 'Responsable informatique', 'IT-RI', 5, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(272, 0, 'Directeur technique', 'IT-DT', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(277, 0, 'Assistant marketing', 'MKT-AST', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(279, 0, 'Chargé de communication', 'MKT-COM', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(281, 0, 'Responsable marketing', 'MKT-RM', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(283, 0, 'Directeur marketing', 'MKT-DM', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(292, 0, 'Agent qualité', 'QHSE-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(294, 0, 'Technicien qualité', 'QHSE-TECH', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(296, 0, 'Responsable qualité', 'QHSE-RQ', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(298, 0, 'Responsable QHSE', 'QHSE-RHSE', 5, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(307, 0, 'Acheteur', 'ACH-ACH', 2, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(309, 0, 'Responsable achats', 'ACH-RA', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(311, 0, 'Directeur achats', 'ACH-DA', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(314, 0, 'Technicien maintenance', 'MAINT-TECH', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(316, 0, 'Chef d\'équipe maintenance', 'MAINT-CE', 3, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(318, 0, 'Responsable maintenance', 'MAINT-RM', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(320, 0, 'Directeur maintenance', 'MAINT-DM', 6, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(329, 0, 'Agent de sécurité', 'SEC-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(331, 0, 'Chef d\'équipe sécurité', 'SEC-CE', 3, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(333, 0, 'Responsable sécurité', 'SEC-RS', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(336, 0, 'Conseiller client', 'SC-CONS', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(338, 0, 'Agent service client', 'SC-AGT', 1, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(340, 0, 'Responsable service client', 'SC-RSC', 4, NULL, '2026-08-18 10:08:28', '2026-08-18 10:08:28'),
-(342, 0, 'Directrice RH', 'DRHF', 6, NULL, '2026-08-31 16:07:05', '2026-08-31 16:07:05'),
-(343, 0, 'Directrice RH', 'Directrice', NULL, NULL, '2026-08-31 16:07:50', '2026-08-31 16:07:50'),
-(344, 0, 'Directrice RH', 'DRH', 6, NULL, '2026-09-01 15:11:44', '2026-09-01 15:11:44'),
-(345, 0, 'Directrice RH', 'DRH GEO', 6, NULL, '2026-09-01 15:16:04', '2026-09-01 15:16:04'),
-(346, 0, 'Directrice RH FEMME', 'DRF', 6, NULL, '2026-09-01 15:16:58', '2026-09-01 15:16:58');
+INSERT INTO `job_titles` (`id`, `company_id`, `name`, `code`, `hierarchy_level_id`, `department_id`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(348, 0, 'Stagiaire Dev Web', 'STG', 1, 16, NULL, '2026-09-04 10:50:51', '2026-09-04 10:50:51'),
+(349, 0, 'Responsable RH', 'RRH', 5, 12, NULL, '2026-09-04 12:24:11', '2026-09-04 12:24:11'),
+(350, 0, 'Lead Dev', 'LDEV', 4, 16, NULL, '2026-09-04 12:26:26', '2026-09-04 12:26:26'),
+(351, 0, 'Directeur G', 'DG', 7, 11, NULL, '2026-09-04 12:32:15', '2026-09-04 12:32:15');
 
 -- --------------------------------------------------------
 
@@ -1681,6 +1933,39 @@ INSERT INTO `jours_non_travailles` (`ID`, `Date`, `Nom`, `Type`, `SiegeID`, `Rec
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `leave_approvals`
+--
+
+CREATE TABLE `leave_approvals` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `leave_request_id` bigint(20) UNSIGNED NOT NULL,
+  `workflow_step_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Référence à l''étape, peut être NULL si on utilise le JSON du workflow',
+  `approver_id` int(10) UNSIGNED NOT NULL COMMENT 'Employé approbateur',
+  `step_order` int(11) NOT NULL COMMENT 'Ordre de l''étape dans ce workflow',
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `is_current` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Étape active en cours',
+  `approved_at` timestamp NULL DEFAULT NULL,
+  `rejected_at` timestamp NULL DEFAULT NULL,
+  `rejection_reason` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_approvals`
+--
+
+INSERT INTO `leave_approvals` (`id`, `leave_request_id`, `workflow_step_id`, `approver_id`, `step_order`, `status`, `is_current`, `approved_at`, `rejected_at`, `rejection_reason`, `created_at`, `updated_at`) VALUES
+(56, 82, NULL, 69, 1, 'rejected', 0, NULL, '2026-09-04 14:43:55', 'Beuacoup de travail', '2026-09-04 14:43:25', '2026-09-04 14:43:55'),
+(57, 82, NULL, 67, 2, 'approved', 0, '2026-09-04 14:48:05', NULL, NULL, '2026-09-04 14:43:25', '2026-09-04 14:48:05'),
+(58, 82, NULL, 69, 3, 'pending', 1, NULL, NULL, NULL, '2026-09-04 14:43:25', '2026-09-04 14:48:06'),
+(59, 83, NULL, 68, 1, 'approved', 0, '2026-09-08 15:17:48', NULL, NULL, '2026-09-08 15:16:16', '2026-09-08 15:17:48'),
+(60, 83, NULL, 67, 2, 'approved', 0, '2026-09-08 15:20:39', NULL, NULL, '2026-09-08 15:16:16', '2026-09-08 15:20:39'),
+(61, 83, NULL, 69, 3, 'approved', 0, '2026-09-08 15:21:09', NULL, NULL, '2026-09-08 15:16:16', '2026-09-08 15:21:09');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `leave_balances`
 --
 
@@ -1703,12 +1988,8 @@ CREATE TABLE `leave_balances` (
 --
 
 INSERT INTO `leave_balances` (`id`, `employee_id`, `leave_type_id`, `period_id`, `total_entitled`, `total_taken`, `total_pending`, `remaining`, `carryover_from_previous`, `created_at`, `updated_at`) VALUES
-(50, 1, 13, 13, 25.00, 0.00, 0.00, 25.00, 0.00, '2026-08-26 15:00:43', '2026-08-26 15:00:43'),
-(51, 2, 13, 13, 8.00, 0.00, 0.00, 8.00, 0.00, '2026-08-26 15:00:43', '2026-08-26 15:00:43'),
-(52, 3, 13, 13, 25.00, 0.00, 0.00, 25.00, 0.00, '2026-08-26 15:00:43', '2026-08-26 15:00:43'),
-(53, 5, 13, 13, 25.00, 5.00, 0.00, 20.00, 0.00, '2026-08-26 15:00:43', '2026-08-31 08:57:34'),
-(54, 62, 17, 14, 30.00, 0.00, 0.00, 30.00, 0.00, '2026-08-31 10:33:36', '2026-08-31 10:33:36'),
-(55, 5, 14, 15, 30.00, 0.00, 0.00, 30.00, 0.00, '2026-08-31 15:54:22', '2026-08-31 16:02:43');
+(58, 67, 20, 17, 19.00, 9.00, 0.00, 10.00, 0.00, '2026-09-04 12:58:24', '2026-09-04 14:41:37'),
+(59, 66, 20, 17, 20.00, 5.00, 0.00, 15.00, 0.00, '2026-09-08 15:15:36', '2026-09-08 15:21:09');
 
 -- --------------------------------------------------------
 
@@ -1737,17 +2018,12 @@ CREATE TABLE `leave_balance_transactions` (
 --
 
 INSERT INTO `leave_balance_transactions` (`id`, `employee_id`, `leave_type_id`, `period_id`, `amount`, `type`, `source`, `reference_id`, `reference_type`, `description`, `metadata`, `created_by`, `created_at`) VALUES
-(90, 1, 13, 13, 25.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
-(91, 2, 13, 13, 8.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
-(92, 3, 13, 13, 25.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
-(93, 5, 13, 13, 25.00, 'opening', NULL, NULL, NULL, 'initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-26 15:00:43'),
-(94, 5, 13, 13, -2.00, 'debit', NULL, 47, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 2, '2026-08-27 16:08:35'),
-(95, 5, 13, 13, 2.00, 'reversal', NULL, 47, 'leave_request', 'Annulation de congé - ', '\"{\\\"type\\\":\\\"reversal\\\",\\\"cancelled_request\\\":true}\"', 5, '2026-08-27 16:09:05'),
-(96, 5, 13, 13, -5.00, 'debit', NULL, 46, 'leave_request', 'Validation de congé - teste', '\"{\\\"type\\\":\\\"debit\\\"}\"', 2, '2026-08-31 08:57:34'),
-(97, 62, 17, 14, 30.00, 'opening', NULL, NULL, NULL, 'solde initial CP 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 18, '2026-08-31 10:33:36'),
-(98, 5, 14, 15, 30.00, 'opening', NULL, NULL, NULL, 'solde initial Maladie 2026', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-08-31 15:54:22'),
-(99, 5, 14, 15, -9.00, 'debit', NULL, 55, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 2, '2026-08-31 15:56:59'),
-(100, 5, 14, 15, 9.00, 'reversal', NULL, 55, 'leave_request', 'Annulation de congé - ', '\"{\\\"type\\\":\\\"reversal\\\",\\\"cancelled_request\\\":true}\"', 5, '2026-08-31 16:02:43');
+(116, 67, 20, 17, 19.00, 'opening', NULL, NULL, NULL, 'solde initial  cp 2026-2027', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-09-04 12:58:23'),
+(117, 67, 20, 17, -3.00, 'debit', NULL, 78, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 69, '2026-09-04 13:10:29'),
+(118, 67, 20, 17, -3.00, 'debit', NULL, 79, 'leave_request', 'Validation de congé - RDV', '\"{\\\"type\\\":\\\"debit\\\"}\"', 69, '2026-09-04 13:14:11'),
+(119, 67, 20, 17, -3.00, 'debit', NULL, 81, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 69, '2026-09-04 14:41:37'),
+(120, 66, 20, 17, 20.00, 'opening', NULL, NULL, NULL, 'Solde initial', '\"{\\\"type\\\":\\\"initialization\\\"}\"', 2, '2026-09-08 15:15:36'),
+(121, 66, 20, 17, -5.00, 'debit', NULL, 83, 'leave_request', 'Validation de congé - ', '\"{\\\"type\\\":\\\"debit\\\"}\"', 69, '2026-09-08 15:21:09');
 
 -- --------------------------------------------------------
 
@@ -1839,9 +2115,8 @@ CREATE TABLE `leave_periods` (
 --
 
 INSERT INTO `leave_periods` (`id`, `site_id`, `leave_type_id`, `name`, `start_date`, `end_date`, `submission_deadline`, `allow_rollover`, `max_rollover_days`, `rollover_expiry_date`, `is_default`, `status`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(13, 1, 13, 'Periode année 2026-2027', '2026-09-01', '2026-12-30', '2026-09-11', 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-08-21 12:14:41', '2026-08-31 14:53:58'),
-(14, 2, 17, 'Conge paye RUN 2026-2027', '2026-09-01', '2026-11-30', '2026-10-31', 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-08-31 10:29:48', '2026-08-31 10:29:48'),
-(15, 1, 14, 'Periode année 2026-2027 Maladie', '2026-01-01', '2026-12-31', NULL, 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-08-31 15:36:26', '2026-08-31 15:36:26');
+(16, 2, 19, 'Periode année 2026-2027', '2026-09-01', '2026-12-31', '2026-10-30', 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-09-04 10:18:47', '2026-09-04 10:18:47'),
+(17, 1, 20, 'Periode année 2026-2027', '2026-09-08', '2026-10-20', '2026-09-15', 0, NULL, NULL, 0, 'open', 1, 0, NULL, '2026-09-04 10:22:00', '2026-09-08 15:14:20');
 
 -- --------------------------------------------------------
 
@@ -1875,10 +2150,8 @@ CREATE TABLE `leave_policies` (
 --
 
 INSERT INTO `leave_policies` (`id`, `site_id`, `leave_type_id`, `name`, `calculation_method`, `reference_schedule_id`, `holiday_handling`, `rounding_rule`, `weekend_days`, `exclude_holidays`, `is_default`, `is_customizable`, `is_active`, `created_by`, `updated_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(3, 1, NULL, 'Politique Standar  CP', 'business_days', NULL, 'skip', 'none', 'sunday_only', 1, 0, 0, 1, NULL, NULL, NULL, '2026-08-21 12:04:59', '2026-08-24 10:05:28'),
-(4, 1, NULL, 'Politique Standar Maladie', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 0, 0, 1, NULL, NULL, NULL, '2026-08-21 12:05:50', '2026-08-21 12:05:50'),
-(5, NULL, NULL, 'Politique par défaut (auto-créée)', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 1, 0, 1, NULL, NULL, NULL, '2026-08-24 08:06:55', '2026-08-24 08:06:55'),
-(6, 1, NULL, 'Politique Standar  Sans solde', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 0, 0, 1, NULL, NULL, NULL, '2026-08-31 14:34:17', '2026-08-31 14:34:17');
+(7, 1, NULL, 'Politique pour CP Geotrack 2026', 'working_days', NULL, 'skip', 'none', 'saturday_sunday', 1, 0, 0, 1, NULL, NULL, NULL, '2026-09-04 10:12:12', '2026-09-04 10:12:12'),
+(8, 2, NULL, 'Politique pour CP Geotrack 2026', 'business_days', NULL, 'skip', 'none', 'sunday_only', 1, 0, 0, 1, NULL, NULL, NULL, '2026-09-04 10:16:16', '2026-09-04 10:16:16');
 
 -- --------------------------------------------------------
 
@@ -1912,9 +2185,7 @@ CREATE TABLE `leave_policy_assignments` (
 --
 
 INSERT INTO `leave_policy_assignments` (`id`, `leave_policy_id`, `company_id`, `site_id`, `department_id`, `job_title_id`, `hierarchy_level_id`, `employee_id`, `priority`, `is_active`, `assignment_type`, `start_date`, `end_date`, `created_by`, `updated_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(12, 3, NULL, 1, NULL, NULL, NULL, NULL, 50, 1, 'site', NULL, NULL, NULL, NULL, NULL, '2026-08-24 10:06:12', '2026-08-24 10:06:12'),
-(13, 4, NULL, 1, NULL, NULL, NULL, 5, 50, 1, 'individual', NULL, NULL, NULL, NULL, NULL, '2026-08-31 15:55:12', '2026-08-31 15:55:12'),
-(14, 4, NULL, 1, NULL, NULL, NULL, NULL, 50, 1, 'site', NULL, NULL, NULL, NULL, NULL, '2026-09-01 14:12:01', '2026-09-01 14:12:01');
+(16, 7, NULL, 1, NULL, NULL, NULL, NULL, 100, 1, 'site', NULL, NULL, NULL, NULL, NULL, '2026-09-04 12:38:27', '2026-09-04 12:38:27');
 
 -- --------------------------------------------------------
 
@@ -1953,17 +2224,8 @@ CREATE TABLE `leave_requests` (
 --
 
 INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type_id`, `period_id`, `start_date`, `end_date`, `duration`, `status`, `submitted_at`, `reason`, `comment`, `attachment_path`, `approved_by`, `approved_at`, `rejected_by`, `rejected_at`, `rejection_reason`, `created_at`, `updated_at`, `deleted_at`, `balance_impact`, `workflow_id`, `workflow_step`) VALUES
-(46, 5, 13, 13, '2026-10-17', '2026-10-22', 5.00, 'approved', NULL, 'teste', NULL, NULL, 2, '2026-08-31 08:57:34', NULL, NULL, NULL, '2026-08-27 13:09:51', '2026-08-31 08:57:34', NULL, 1, NULL, 0),
-(47, 5, 13, 13, '2026-09-11', '2026-09-12', 2.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-27 16:08:35', NULL, NULL, NULL, '2026-08-27 13:48:37', '2026-08-27 16:09:05', NULL, 1, NULL, 0),
-(48, 5, 13, 13, '2026-09-13', '2026-09-15', 2.00, 'draft', NULL, 'test', 'test', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-27 15:45:55', '2026-08-27 15:45:55', NULL, 1, NULL, 0),
-(49, 62, 13, 13, '2026-12-10', '2026-12-16', 6.00, 'draft', NULL, NULL, 'test autre utilisateur', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 09:37:39', '2026-08-31 10:42:38', '2026-08-31 10:42:38', 1, NULL, 0),
-(50, 62, 17, 14, '2026-09-11', '2026-09-14', 2.00, 'draft', NULL, 'TEST VER AUTRE ADMIN', 'TEST POUR VOIR OU LE DEMANDE A ETE ENVOYER', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:43:23', '2026-08-31 10:48:39', '2026-08-31 10:48:39', 1, NULL, 0),
-(51, 62, 17, 14, '2026-10-10', '2026-10-14', 3.00, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:45:38', '2026-08-31 10:46:00', NULL, 1, NULL, 0),
-(52, 62, 17, 14, '2026-11-12', '2026-11-13', 2.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 10:49:20', '2026-08-31 10:49:20', NULL, 1, NULL, 0),
-(53, 62, 17, 14, '2026-09-15', '2026-09-25', 9.00, 'draft', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 12:36:57', '2026-08-31 12:36:57', NULL, 1, NULL, 0),
-(54, 5, 13, 13, '2026-11-11', '2026-11-30', 17.00, 'pending', NULL, NULL, 'TEST', NULL, NULL, NULL, NULL, NULL, NULL, '2026-08-31 15:31:52', '2026-08-31 15:31:52', NULL, 1, NULL, 0),
-(55, 5, 14, 15, '2026-09-14', '2026-09-24', 9.00, 'cancelled', NULL, NULL, NULL, NULL, 2, '2026-08-31 15:56:59', NULL, NULL, NULL, '2026-08-31 15:56:25', '2026-08-31 16:02:43', NULL, 1, NULL, 0),
-(56, 5, 14, 15, '2026-09-01', '2026-09-03', 3.00, 'approved', NULL, 'je suis malade', NULL, NULL, 2, '2026-09-01 14:46:44', NULL, NULL, NULL, '2026-09-01 14:46:17', '2026-09-01 14:46:44', NULL, 1, NULL, 0);
+(82, 67, 20, 17, '2026-10-12', '2026-10-14', 3.00, 'pending', '2026-09-04 14:43:25', 'JE VEUX TESTER LE VALIDATION DU CONGE AYE EN 3 ETAPE', 'JUSTE TEST', NULL, NULL, NULL, NULL, NULL, NULL, '2026-09-04 14:43:25', '2026-09-04 14:43:25', NULL, 1, 5, 0),
+(83, 66, 20, 17, '2026-09-08', '2026-09-14', 5.00, 'approved', '2026-09-08 15:16:16', NULL, 'test planning', NULL, NULL, '2026-09-08 15:21:09', NULL, NULL, NULL, '2026-09-08 15:16:16', '2026-09-08 15:21:09', NULL, 1, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -1983,15 +2245,30 @@ CREATE TABLE `leave_request_attachments` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Déchargement des données de la table `leave_request_attachments`
+-- Structure de la table `leave_roles`
 --
 
-INSERT INTO `leave_request_attachments` (`id`, `leave_request_id`, `file_name`, `file_path`, `file_size`, `mime_type`, `uploaded_by`, `created_at`, `updated_at`) VALUES
-(14, 51, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/51/1788173138_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-08-31 10:45:39', '2026-08-31 10:45:39'),
-(15, 52, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/52/1788173360_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-08-31 10:49:20', '2026-08-31 10:49:20'),
-(16, 55, 'Capture d’écran 2026-06-09 154545.png', 'leave_attachments/55/1788191785_Capture d’écran 2026-06-09 154545.png', 246849, 'image/png', ' ', '2026-08-31 15:56:26', '2026-08-31 15:56:26'),
-(17, 56, 'Capture d’écran 2026-06-03 153354.png', 'leave_attachments/56/1788273977_Capture d’écran 2026-06-03 153354.png', 265720, 'image/png', ' ', '2026-09-01 14:46:17', '2026-09-01 14:46:17');
+CREATE TABLE `leave_roles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_roles`
+--
+
+INSERT INTO `leave_roles` (`id`, `site_id`, `name`, `label`, `is_active`, `created_at`, `updated_at`) VALUES
+(7, 1, 'rh', 'Responsable RH', 1, '2026-09-04 12:46:57', '2026-09-04 12:46:57'),
+(8, 1, 'manager', 'Manager site', 1, '2026-09-04 12:47:18', '2026-09-04 12:47:18'),
+(9, 1, 'direction', 'Direction', 1, '2026-09-04 12:47:42', '2026-09-04 12:47:42');
 
 -- --------------------------------------------------------
 
@@ -2029,12 +2306,24 @@ CREATE TABLE `leave_types` (
 --
 
 INSERT INTO `leave_types` (`id`, `site_id`, `name`, `code`, `unit`, `deducts_balance`, `requires_attachment`, `requires_attachment_after`, `allow_negative_balance`, `max_negative_limit`, `color`, `is_active`, `is_customizable`, `deleted_at`, `created_at`, `updated_at`, `min_notice_days`, `max_duration_per_request`, `allow_overlap`, `accrual_type`, `accrual_amount`, `affects_team_availability`) VALUES
-(13, 1, 'Conge paye', 'CP', 'days', 1, 'never', NULL, 0, NULL, '#85d96d', 1, 1, NULL, '2026-08-21 12:00:05', '2026-08-31 15:30:57', 15, 17.00, 0, 'manual', NULL, 1),
-(14, 1, 'MALADIE', 'MLD', 'days', 1, 'always', NULL, 0, NULL, '#ee1111', 1, 1, NULL, '2026-08-21 12:01:26', '2026-09-01 14:47:28', 0, NULL, 1, 'manual', NULL, 1),
-(15, NULL, 'TST conge', 'TST', 'days', 1, 'never', NULL, 0, NULL, '#b7104a', 1, 1, '2026-08-27 10:43:46', '2026-08-27 10:34:55', '2026-08-27 10:43:46', 0, NULL, 0, 'manual', NULL, 1),
-(16, NULL, 'TST', 'test', 'days', 1, 'never', NULL, 0, NULL, '#10B981', 1, 0, '2026-08-27 12:25:07', '2026-08-27 10:44:12', '2026-08-27 12:25:07', 0, NULL, 0, 'manual', NULL, 1),
-(17, 2, 'Congé payés Run telemat', 'CPR', 'days', 1, 'always', NULL, 0, NULL, '#10B981', 1, 0, NULL, '2026-08-31 09:54:38', '2026-08-31 09:54:38', 10, 15.00, 0, 'manual', NULL, 1),
-(18, 1, 'Sans solde', 'SS', 'days', 0, 'never', NULL, 1, 2, '#10B981', 1, 0, '2026-08-31 14:24:01', '2026-08-31 14:22:30', '2026-08-31 14:24:01', 2, 3.00, 0, 'manual', NULL, 1);
+(19, 2, 'Conge paye RUN TELEMAT 2026-2027', 'CPR', 'days', 1, 'never', NULL, 0, NULL, '#106fb7', 1, 0, NULL, '2026-09-04 10:05:43', '2026-09-04 10:05:43', 30, 7.00, 1, 'manual', NULL, 1),
+(20, 1, 'Conge paye Geotrrack  2026-2027', 'CPG', 'days', 1, 'never', NULL, 0, NULL, '#10b981', 1, 0, NULL, '2026-09-04 10:08:22', '2026-09-08 15:13:34', 0, 6.00, 0, 'manual', NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_type_siege_settings`
+--
+
+CREATE TABLE `leave_type_siege_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `SiegeID` int(10) UNSIGNED NOT NULL,
+  `leave_type_id` bigint(20) UNSIGNED NOT NULL,
+  `is_visible` tinyint(1) NOT NULL DEFAULT 1,
+  `forked_type_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2054,12 +2343,38 @@ CREATE TABLE `leave_type_site_activations` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `leave_validators`
+--
+
+CREATE TABLE `leave_validators` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL COMMENT 'Employé qui valide',
+  `site_id` int(10) UNSIGNED NOT NULL COMMENT 'Site sur lequel il a ce rôle',
+  `role` enum('manager','rh','drh','direction') NOT NULL COMMENT 'Rôle de validation',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leave_validators`
+--
+
+INSERT INTO `leave_validators` (`id`, `employee_id`, `site_id`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
+(4, 68, 1, 'manager', 1, '2026-09-04 12:48:08', '2026-09-04 12:48:08'),
+(5, 67, 1, 'rh', 1, '2026-09-04 12:48:35', '2026-09-04 12:48:35'),
+(6, 69, 1, 'direction', 1, '2026-09-04 12:48:46', '2026-09-04 12:48:46');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `leave_workflows`
 --
 
 CREATE TABLE `leave_workflows` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `leave_type_id` bigint(20) UNSIGNED DEFAULT NULL,
   `name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `steps` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Structure: [{"role": "manager", "order": 1, "label": "Validation Manager"}, {"role": "hr", "order": 2, "label": "Validation RH"}]' CHECK (json_valid(`steps`)),
@@ -2075,8 +2390,27 @@ CREATE TABLE `leave_workflows` (
 -- Déchargement des données de la table `leave_workflows`
 --
 
-INSERT INTO `leave_workflows` (`id`, `site_id`, `name`, `description`, `steps`, `is_default`, `is_customizable`, `is_active`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'rien', 'rie', '[{\"order\":1,\"role\":\"manager\",\"label\":\"Validation Manager\",\"description\":\"Le manager valide la demande\"},{\"order\":2,\"role\":\"hr\",\"label\":\"Validation RH\",\"description\":\"Le service RH approuve la demande\"},{\"order\":3,\"role\":\"manager\",\"label\":\"validation\",\"description\":\"f\"}]', 0, 1, 1, NULL, '2026-08-17 16:39:11', '2026-08-17 16:39:11');
+INSERT INTO `leave_workflows` (`id`, `site_id`, `leave_type_id`, `name`, `description`, `steps`, `is_default`, `is_customizable`, `is_active`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(5, 1, 20, 'workflow CPG', 'Validation conge  paye geotrack', '[{\"order\":1,\"role\":\"manager\",\"label\":\"Validation Manager\",\"description\":\"Le manager valide la demande\"},{\"order\":2,\"role\":\"rh\",\"label\":\"Validation RH\",\"description\":\"Le service RH approuve la demande\"},{\"order\":3,\"role\":\"direction\",\"label\":\"Validation  Directeur\",\"description\":\"Le service Direction approuve la demande\"}]', 0, 0, 1, NULL, '2026-09-04 12:50:46', '2026-09-04 12:50:46');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `leave_workflow_steps`
+--
+
+CREATE TABLE `leave_workflow_steps` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `workflow_id` bigint(20) UNSIGNED NOT NULL,
+  `step_order` int(11) NOT NULL DEFAULT 1,
+  `name` varchar(100) NOT NULL COMMENT 'Nom de l''étape (ex: Validation Manager)',
+  `description` text DEFAULT NULL,
+  `approver_role` enum('manager','rh','drh','direction','custom') DEFAULT 'manager' COMMENT 'Rôle attendu pour cette étape',
+  `approver_employee_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Si approbateur fixe (au lieu d''un rôle)',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2126,7 +2460,19 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (37, '2026_08_03_083005_create_policy_values_table', 16),
 (38, '2026_08_03_134359_create_calculation_rules_table', 17),
 (39, '2026_08_05_092626_add_checkbox_to_rule_fields_field_type_enum', 18),
-(40, '2026_08_05_093227_add_checkbox_to_rule_fields_enum', 19);
+(40, '2026_08_05_093227_add_checkbox_to_rule_fields_enum', 19),
+(41, '2026_09_02_094737_add_department_id_to_job_titles_table', 20),
+(42, '2026_09_03_071641_add_leave_type_id_to_leave_workflows_table', 21),
+(44, '2026_09_03_121016_create_leave_roles_table', 22),
+(45, '2026_08_11_161820_make_leave_types_siegeid_nullable', 23),
+(46, '2026_08_12_125415_create_leave_type_siege_settings_table', 23),
+(47, '2026_09_03_000001_create_horaires_types_table', 23),
+(48, '2026_09_03_000002_create_plannings_table', 23),
+(49, '2026_09_03_000003_create_planning_details_table', 23),
+(50, '2026_09_03_000004_create_evenements_planning_table', 23),
+(51, '2026_09_03_000005_create_evenement_employes_table', 23),
+(52, '2026_09_03_000006_create_comparaisons_planning_table', 23),
+(53, '2026_09_03_062132_add_department_id_to_job_titles_table', 23);
 
 -- --------------------------------------------------------
 
@@ -2146,26 +2492,6 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `notifications`
---
-
-INSERT INTO `notifications` (`id`, `user_id`, `type`, `title`, `message`, `leave_request_id`, `is_read`, `read_at`, `created_at`, `updated_at`) VALUES
-(69, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de Conge paye du 17/10/2026 au 22/10/2026 (5.0 jours)', 46, 0, NULL, '2026-08-27 13:09:51', '2026-08-27 13:09:51'),
-(70, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de Conge paye du 11/09/2026 au 12/09/2026 (2.0 jours)', 47, 0, NULL, '2026-08-27 13:48:37', '2026-08-27 13:48:37'),
-(71, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de Conge paye du 11/09/2026 au 12/09/2026 a été approuvée.', 47, 0, NULL, '2026-08-27 16:08:35', '2026-08-27 16:08:35'),
-(72, 2, 'leave_cancelled', ' Congé annulé', 'Votre congé de Conge paye du 11/09/2026 au 12/09/2026 a été annulé. Vos jours ont été recrédités.', 47, 0, NULL, '2026-08-27 16:09:05', '2026-08-27 16:09:05'),
-(73, 2, 'leave_cancelled_manager', ' Congé annulé par l\'employé', 'MALALANIRINA Emile Noeline a annulé son congé de Conge paye du 11/09/2026 au 12/09/2026.', 47, 0, NULL, '2026-08-27 16:09:05', '2026-08-27 16:09:05'),
-(74, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de Conge paye du 17/10/2026 au 22/10/2026 a été approuvée.', 46, 0, NULL, '2026-08-31 08:57:34', '2026-08-31 08:57:34'),
-(75, 18, 'leave_pending', ' Nouvelle demande de congé', 'RAHARIMANANA ALEX a soumis une demande de Congé payés Run telemat du 10/10/2026 au 14/10/2026 (3.0 jours)', 51, 0, NULL, '2026-08-31 10:46:00', '2026-08-31 10:46:00'),
-(76, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de Conge paye du 11/11/2026 au 30/11/2026 (17.0 jours)', 54, 0, NULL, '2026-08-31 15:31:52', '2026-08-31 15:31:52'),
-(77, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de MALADIE du 14/09/2026 au 24/09/2026 (9.0 jours)', 55, 0, NULL, '2026-08-31 15:56:35', '2026-08-31 15:56:35'),
-(78, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de MALADIE du 14/09/2026 au 24/09/2026 a été approuvée.', 55, 0, NULL, '2026-08-31 15:56:59', '2026-08-31 15:56:59'),
-(79, 2, 'leave_cancelled', ' Congé annulé', 'Votre congé de MALADIE du 14/09/2026 au 24/09/2026 a été annulé. Vos jours ont été recrédités.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43'),
-(80, 2, 'leave_cancelled_manager', ' Congé annulé par l\'employé', 'MALALANIRINA Emile Noeline a annulé son congé de MALADIE du 14/09/2026 au 24/09/2026.', 55, 0, NULL, '2026-08-31 16:02:43', '2026-08-31 16:02:43'),
-(81, 2, 'leave_pending', ' Nouvelle demande de congé', 'MALALANIRINA Emile Noeline a soumis une demande de MALADIE du 01/09/2026 au 03/09/2026 (3.0 jours)', 56, 0, NULL, '2026-09-01 14:46:21', '2026-09-01 14:46:21'),
-(82, 2, 'leave_approved', 'Demande de congé approuvée', 'Votre demande de MALADIE du 01/09/2026 au 03/09/2026 a été approuvée.', 56, 0, NULL, '2026-09-01 14:46:44', '2026-09-01 14:46:44');
 
 -- --------------------------------------------------------
 
@@ -2201,6 +2527,72 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `plannings`
+--
+
+CREATE TABLE `plannings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `siege_id` int(10) UNSIGNED NOT NULL,
+  `service_id` int(10) UNSIGNED DEFAULT NULL,
+  `poste_id` int(10) UNSIGNED DEFAULT NULL,
+  `date_debut_semaine` date NOT NULL,
+  `date_fin_semaine` date NOT NULL,
+  `nom` varchar(255) NOT NULL,
+  `statut` enum('brouillon','genere','valide','publie','archive') NOT NULL DEFAULT 'brouillon',
+  `cree_par` int(10) UNSIGNED NOT NULL,
+  `valide_par` int(10) UNSIGNED DEFAULT NULL,
+  `valide_le` timestamp NULL DEFAULT NULL,
+  `publie_le` timestamp NULL DEFAULT NULL,
+  `commentaire` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `plannings`
+--
+
+INSERT INTO `plannings` (`id`, `siege_id`, `service_id`, `poste_id`, `date_debut_semaine`, `date_fin_semaine`, `nom`, `statut`, `cree_par`, `valide_par`, `valide_le`, `publie_le`, `commentaire`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 16, 348, '2026-09-07', '2026-09-13', 'Planning 07/09/2026', 'genere', 2, NULL, NULL, NULL, NULL, '2026-09-08 15:09:21', '2026-09-08 15:09:21', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `planning_details`
+--
+
+CREATE TABLE `planning_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `planning_id` bigint(20) UNSIGNED NOT NULL,
+  `employe_id` int(10) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `heure_debut` time NOT NULL,
+  `heure_fin` time NOT NULL,
+  `pause_debut` time DEFAULT NULL,
+  `pause_fin` time DEFAULT NULL,
+  `deuxieme_debut` time DEFAULT NULL,
+  `deuxieme_fin` time DEFAULT NULL,
+  `commentaire` text DEFAULT NULL,
+  `statut` enum('planifie','confirme','effectue','annule','absent') NOT NULL DEFAULT 'planifie',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `planning_details`
+--
+
+INSERT INTO `planning_details` (`id`, `planning_id`, `employe_id`, `date`, `heure_debut`, `heure_fin`, `pause_debut`, `pause_fin`, `deuxieme_debut`, `deuxieme_fin`, `commentaire`, `statut`, `created_at`, `updated_at`) VALUES
+(1, 1, 66, '2026-09-07', '08:30:00', '17:00:00', '12:00:00', '13:00:00', '13:00:00', '17:00:00', NULL, 'planifie', '2026-09-08 15:09:21', '2026-09-08 15:09:21'),
+(2, 1, 66, '2026-09-08', '08:30:00', '17:00:00', '12:00:00', '13:00:00', '13:00:00', '17:00:00', NULL, 'planifie', '2026-09-08 15:09:21', '2026-09-08 15:09:21'),
+(3, 1, 66, '2026-09-09', '08:30:00', '17:00:00', '12:00:00', '13:00:00', '13:00:00', '17:00:00', NULL, 'planifie', '2026-09-08 15:09:21', '2026-09-08 15:09:21'),
+(4, 1, 66, '2026-09-10', '08:30:00', '17:00:00', '12:00:00', '13:00:00', '13:00:00', '17:00:00', NULL, 'planifie', '2026-09-08 15:09:21', '2026-09-08 15:09:21'),
+(5, 1, 66, '2026-09-11', '08:30:00', '17:00:00', '12:00:00', '13:00:00', '13:00:00', '17:00:00', NULL, 'planifie', '2026-09-08 15:09:21', '2026-09-08 15:09:21');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `pointages`
 --
 
@@ -2217,1210 +2609,6 @@ CREATE TABLE `pointages` (
   `SiegeID` int(10) UNSIGNED NOT NULL,
   `company_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `pointages`
---
-
-INSERT INTO `pointages` (`ID`, `employee_id`, `type_`, `auth_method`, `timestamp_`, `latitude`, `longitude`, `photo_path`, `synced`, `SiegeID`, `company_id`) VALUES
-(1, 3, 'entry', 'pin', '2025-09-01 08:03:11', -19.01889290, 47.53932970, '', 0, 1, 1),
-(2, 2, 'entry', 'rfid', '2025-09-01 08:07:27', -19.01889350, 47.53935320, '', 0, 1, 1),
-(3, 2, 'exit', 'rfid', '2025-09-01 12:26:03', -19.01890200, 47.53932950, '', 0, 1, 1),
-(4, 3, 'exit', 'pin', '2025-09-01 12:30:03', -19.01888810, 47.53936520, '', 0, 1, 1),
-(5, 3, 'entry', 'pin', '2025-09-01 13:59:14', -19.01888780, 47.53935930, '', 0, 1, 1),
-(6, 2, 'entry', 'rfid', '2025-09-01 13:59:44', -19.01889590, 47.53933060, '', 0, 1, 1),
-(7, 2, 'exit', 'rfid', '2025-09-01 16:30:54', -19.01890090, 47.53933290, '', 0, 1, 1),
-(8, 3, 'exit', 'pin', '2025-09-01 17:25:55', -19.01889170, 47.53934090, '', 0, 1, 1),
-(9, 3, 'entry', 'pin', '2025-09-02 08:04:31', -19.01889830, 47.53934810, '', 0, 1, 1),
-(10, 2, 'entry', 'rfid', '2025-09-02 08:07:19', -19.01889630, 47.53934440, '', 0, 1, 1),
-(11, 5, 'entry', 'rfid', '2025-09-02 08:53:17', -19.01889630, 47.53934440, '', 0, 1, 1),
-(12, 2, 'exit', 'rfid', '2025-09-02 12:07:20', -19.01890150, 47.53933040, '', 0, 1, 1),
-(13, 3, 'exit', 'rfid', '2025-09-02 12:07:44', -19.01889990, 47.53932910, '', 0, 1, 1),
-(14, 5, 'exit', 'rfid', '2025-09-02 12:08:43', -19.01889750, 47.53932420, '', 0, 1, 1),
-(15, 5, 'entry', 'rfid', '2025-09-02 13:07:39', -19.01889940, 47.53933030, '', 0, 1, 1),
-(16, 2, 'entry', 'rfid', '2025-09-02 13:32:31', -19.01889600, 47.53933370, '', 0, 1, 1),
-(17, 3, 'entry', 'rfid', '2025-09-02 13:59:22', -19.01889540, 47.53932970, '', 0, 1, 1),
-(18, 5, 'exit', 'rfid', '2025-09-02 16:47:49', -19.01889200, 47.53933960, '', 0, 1, 1),
-(19, 2, 'exit', 'rfid', '2025-09-02 17:00:19', -19.01890020, 47.53933520, '', 0, 1, 1),
-(20, 3, 'exit', 'rfid', '2025-09-02 17:44:51', -19.01889630, 47.53932930, '', 0, 1, 1),
-(21, 3, 'entry', 'rfid', '2025-09-03 08:02:12', -19.01889910, 47.53936010, '', 0, 1, 1),
-(22, 2, 'entry', 'rfid', '2025-09-03 08:08:18', -19.01889910, 47.53936010, '', 0, 1, 1),
-(23, 5, 'entry', 'rfid', '2025-09-03 09:11:13', -19.01889830, 47.53932990, '', 0, 1, 1),
-(24, 2, 'exit', 'rfid', '2025-09-03 12:06:57', -19.01888830, 47.53935910, '', 0, 1, 1),
-(25, 5, 'exit', 'rfid', '2025-09-03 12:10:37', -19.01889750, 47.53933790, '', 0, 1, 1),
-(26, 3, 'exit', 'rfid', '2025-09-03 12:22:23', -19.01889730, 47.53934090, '', 0, 1, 1),
-(27, 5, 'entry', 'rfid', '2025-09-03 13:00:23', -19.01889570, 47.53932980, '', 0, 1, 1),
-(28, 2, 'entry', 'rfid', '2025-09-03 13:00:35', -19.01889570, 47.53932980, '', 0, 1, 1),
-(29, 3, 'entry', 'rfid', '2025-09-03 14:01:13', -19.01888920, 47.53934440, '', 0, 1, 1),
-(30, 5, 'exit', 'rfid', '2025-09-03 16:41:06', -19.01889430, 47.53932840, '', 0, 1, 1),
-(31, 2, 'exit', 'rfid', '2025-09-03 17:00:21', -19.01888870, 47.53934130, '', 0, 1, 1),
-(32, 3, 'exit', 'rfid', '2025-09-03 17:40:28', -19.01889710, 47.53936240, '', 0, 1, 1),
-(33, 2, 'entry', 'rfid', '2025-09-04 08:03:01', -19.01889660, 47.53932960, '', 0, 1, 1),
-(34, 3, 'entry', 'rfid', '2025-09-04 08:08:19', -19.01889270, 47.53935770, '', 0, 1, 1),
-(35, 5, 'entry', 'rfid', '2025-09-04 08:53:29', -19.01889960, 47.53933580, '', 0, 1, 1),
-(36, 2, 'exit', 'rfid', '2025-09-04 12:11:39', -19.01889820, 47.53935130, '', 0, 1, 1),
-(37, 3, 'exit', 'rfid', '2025-09-04 12:12:20', -19.01890220, 47.53933060, '', 0, 1, 1),
-(38, 5, 'exit', 'rfid', '2025-09-04 12:15:35', -19.01889450, 47.53934670, '', 0, 1, 1),
-(39, 5, 'entry', 'rfid', '2025-09-04 12:54:38', -19.01889710, 47.53932940, '', 0, 1, 1),
-(40, 2, 'entry', 'rfid', '2025-09-04 13:40:08', -19.01889710, 47.53932940, '', 0, 1, 1),
-(41, 3, 'entry', 'rfid', '2025-09-04 14:04:46', -19.01889160, 47.53936230, '', 0, 1, 1),
-(42, 5, 'exit', 'rfid', '2025-09-04 16:37:14', -19.01890060, 47.53932680, '', 0, 1, 1),
-(43, 2, 'exit', 'rfid', '2025-09-04 17:32:05', -19.01889930, 47.53933430, '', 0, 1, 1),
-(44, 3, 'exit', 'rfid', '2025-09-04 17:39:16', -19.01888830, 47.53933830, '', 0, 1, 1),
-(45, 3, 'entry', 'rfid', '2025-09-05 08:02:29', -19.01889930, 47.53932450, '', 0, 1, 1),
-(46, 2, 'entry', 'rfid', '2025-09-05 08:10:08', -19.01889810, 47.53932770, '', 0, 1, 1),
-(47, 2, 'exit', 'rfid', '2025-09-05 12:11:00', -19.01890140, 47.53933260, '', 0, 1, 1),
-(48, 5, 'exit', 'rfid', '2025-09-05 12:20:40', -19.01889430, 47.53935940, '', 0, 1, 1),
-(49, 3, 'exit', 'rfid', '2025-09-05 12:31:54', -19.01890330, 47.53933050, '', 0, 1, 1),
-(50, 5, 'entry', 'rfid', '2025-09-05 12:57:52', -19.01889900, 47.53933770, '', 0, 1, 1),
-(51, 2, 'entry', 'rfid', '2025-09-05 13:36:53', -19.01889900, 47.53933770, '', 0, 1, 1),
-(52, 3, 'entry', 'rfid', '2025-09-05 14:00:07', -19.01889840, 47.53936220, '', 0, 1, 1),
-(53, 5, 'exit', 'rfid', '2025-09-05 16:33:54', -19.01889830, 47.53935140, '', 0, 1, 1),
-(54, 2, 'exit', 'rfid', '2025-09-05 17:06:36', -19.01889510, 47.53933370, '', 0, 1, 1),
-(55, 3, 'exit', 'rfid', '2025-09-05 17:47:02', -19.01888080, 47.53935940, '', 0, 1, 1),
-(58, 3, 'entry', 'rfid', '2025-09-06 10:00:07', -19.01889840, 47.53936220, '', 0, 1, 1),
-(59, 3, 'exit', 'rfid', '2025-09-06 11:24:59', -19.01888870, 47.53933660, '', 0, 1, 1),
-(60, 3, 'entry', 'rfid', '2025-09-08 08:05:48', -19.01888940, 47.53933680, '', 0, 1, 1),
-(61, 2, 'entry', 'rfid', '2025-09-08 08:06:11', -19.01889190, 47.53936190, '', 0, 1, 1),
-(62, 5, 'entry', 'rfid', '2025-09-08 08:52:58', -19.01889000, 47.53936710, '', 0, 1, 1),
-(63, 5, 'exit', 'rfid', '2025-09-08 12:10:21', -19.01889530, 47.53936450, '', 0, 1, 1),
-(64, 2, 'exit', 'rfid', '2025-09-08 12:10:57', -19.01889100, 47.53936350, '', 0, 1, 1),
-(65, 3, 'exit', 'rfid', '2025-09-08 12:19:01', -19.01889190, 47.53936260, '', 0, 1, 1),
-(66, 5, 'entry', 'rfid', '2025-09-08 12:46:44', -19.01889670, 47.53936180, '', 0, 1, 1),
-(67, 3, 'entry', 'rfid', '2025-09-08 13:59:37', -19.01889790, 47.53933380, '', 0, 1, 1),
-(68, 2, 'entry', 'rfid', '2025-09-08 14:00:05', -19.01889130, 47.53936650, '', 0, 1, 1),
-(69, 5, 'exit', 'rfid', '2025-09-08 16:36:49', -19.01889320, 47.53935410, '', 0, 1, 1),
-(70, 2, 'exit', 'rfid', '2025-09-08 17:21:49', -19.01889940, 47.53933430, '', 0, 1, 1),
-(71, 3, 'exit', 'rfid', '2025-09-08 17:53:51', -19.01889130, 47.53935100, '', 0, 1, 1),
-(72, 2, 'entry', 'rfid', '2025-09-09 07:58:32', -19.01889610, 47.53932860, '', 0, 1, 1),
-(73, 3, 'entry', 'rfid', '2025-09-09 08:05:08', -19.01888760, 47.53934250, '', 0, 1, 1),
-(74, 5, 'entry', 'rfid', '2025-09-09 09:09:46', -19.01888900, 47.53936520, '', 0, 1, 1),
-(75, 5, 'exit', 'rfid', '2025-09-09 12:12:18', -19.01889250, 47.53935280, '', 0, 1, 1),
-(76, 2, 'exit', 'rfid', '2025-09-09 12:12:47', -19.01889250, 47.53935280, '', 0, 1, 1),
-(77, 3, 'exit', 'rfid', '2025-09-09 12:18:33', -19.01889250, 47.53935280, '', 0, 1, 1),
-(78, 5, 'entry', 'rfid', '2025-09-09 12:59:13', -19.01888980, 47.53933650, '', 0, 1, 1),
-(79, 2, 'entry', 'rfid', '2025-09-09 13:41:28', -19.01888980, 47.53933650, '', 0, 1, 1),
-(80, 3, 'entry', 'rfid', '2025-09-09 14:02:23', -19.01889420, 47.53932450, '', 0, 1, 1),
-(81, 5, 'exit', 'rfid', '2025-09-09 16:37:56', -19.01888950, 47.53934880, '', 0, 1, 1),
-(82, 2, 'exit', 'rfid', '2025-09-09 17:24:32', -19.01889880, 47.53934880, '', 0, 1, 1),
-(83, 3, 'exit', 'rfid', '2025-09-09 17:35:07', -19.01890030, 47.53933110, '', 0, 1, 1),
-(84, 2, 'entry', 'rfid', '2025-09-10 08:02:44', -19.01889170, 47.53932990, '', 0, 1, 1),
-(85, 3, 'entry', 'rfid', '2025-09-10 08:04:53', -19.01889310, 47.53935220, '', 0, 1, 1),
-(86, 2, 'exit', 'rfid', '2025-09-10 12:09:50', -19.01888960, 47.53933960, '', 0, 1, 1),
-(87, 3, 'exit', 'rfid', '2025-09-10 12:23:49', -19.01889910, 47.53933200, '', 0, 1, 1),
-(88, 5, 'entry', 'rfid', '2025-09-10 12:24:06', -19.01889780, 47.53935060, '', 0, 1, 1),
-(89, 5, 'exit', 'rfid', '2025-09-10 12:24:33', -19.01889390, 47.53934090, '', 0, 1, 1),
-(90, 5, 'entry', 'rfid', '2025-09-10 13:01:18', -19.01889430, 47.53933880, '', 0, 1, 1),
-(91, 2, 'entry', 'rfid', '2025-09-10 13:06:49', -19.01889620, 47.53932420, '', 0, 1, 1),
-(92, 3, 'entry', 'rfid', '2025-09-10 14:02:47', -19.01888610, 47.53934910, '', 0, 1, 1),
-(93, 5, 'exit', 'rfid', '2025-09-10 16:21:24', -19.01889750, 47.53932900, '', 0, 1, 1),
-(94, 3, 'exit', 'rfid', '2025-09-10 17:32:07', -19.01889480, 47.53935780, '', 0, 1, 1),
-(95, 2, 'exit', 'rfid', '2025-09-10 17:32:29', -19.01889960, 47.53935220, '', 0, 1, 1),
-(96, 3, 'entry', 'rfid', '2025-09-11 08:07:18', -19.01889500, 47.53935700, '', 0, 1, 1),
-(97, 5, 'entry', 'rfid', '2025-09-11 08:59:02', -19.01890020, 47.53933910, '', 0, 1, 1),
-(98, 3, 'exit', 'rfid', '2025-09-11 12:22:49', -19.01889670, 47.53933280, '', 0, 1, 1),
-(99, 5, 'exit', 'rfid', '2025-09-11 12:25:34', -19.01889570, 47.53933480, '', 0, 1, 1),
-(100, 5, 'entry', 'rfid', '2025-09-11 12:52:34', -19.01889570, 47.53933480, '', 0, 1, 1),
-(101, 3, 'entry', 'rfid', '2025-09-11 14:00:59', -19.01889670, 47.53933480, '', 0, 1, 1),
-(102, 5, 'exit', 'rfid', '2025-09-11 16:39:11', -19.01888640, 47.53933100, '', 0, 1, 1),
-(103, 3, 'exit', 'rfid', '2025-09-11 18:01:19', -19.01889160, 47.53936490, '', 0, 1, 1),
-(104, 3, 'entry', 'rfid', '2025-09-12 08:06:01', -19.01888450, 47.53935220, '', 0, 1, 1),
-(105, 2, 'entry', 'rfid', '2025-09-12 08:06:22', -19.01889570, 47.53932120, '', 0, 1, 1),
-(106, 5, 'entry', 'rfid', '2025-09-12 09:10:07', -19.01889790, 47.53935540, '', 0, 1, 1),
-(107, 2, 'exit', 'rfid', '2025-09-12 12:14:17', -19.01890000, 47.53933910, '', 0, 1, 1),
-(108, 5, 'exit', 'rfid', '2025-09-12 12:15:07', -19.01888820, 47.53936570, '', 0, 1, 1),
-(109, 3, 'exit', 'rfid', '2025-09-12 12:25:35', -19.01888880, 47.53936740, '', 0, 1, 1),
-(110, 5, 'entry', 'rfid', '2025-09-12 12:48:40', -19.01888490, 47.53936070, '', 0, 1, 1),
-(111, 2, 'entry', 'rfid', '2025-09-12 13:35:43', -19.01888610, 47.53936480, '', 0, 1, 1),
-(112, 3, 'entry', 'rfid', '2025-09-12 13:59:01', -19.01888560, 47.53936540, '', 0, 1, 1),
-(113, 5, 'exit', 'rfid', '2025-09-12 16:40:35', -19.01889350, 47.53936100, '', 0, 1, 1),
-(114, 2, 'exit', 'rfid', '2025-09-12 17:11:10', -19.01889220, 47.53932870, '', 0, 1, 1),
-(115, 3, 'exit', 'rfid', '2025-09-12 17:27:59', -19.01889180, 47.53936140, '', 0, 1, 1),
-(116, 3, 'entry', 'rfid', '2025-09-13 09:09:25', -19.01889520, 47.53932740, '', 0, 1, 1),
-(117, 3, 'exit', 'rfid', '2025-09-13 11:16:16', -19.01889200, 47.53933180, '', 0, 1, 1),
-(118, 3, 'entry', 'rfid', '2025-09-15 08:07:04', -19.01888680, 47.53934840, '', 0, 1, 1),
-(119, 2, 'entry', 'rfid', '2025-09-15 08:10:03', -19.01888680, 47.53934840, '', 0, 1, 1),
-(120, 5, 'entry', 'rfid', '2025-09-15 08:51:10', -19.01889300, 47.53935310, '', 0, 1, 1),
-(121, 3, 'exit', 'rfid', '2025-09-15 12:17:48', -19.01889650, 47.53933820, '', 0, 1, 1),
-(122, 2, 'exit', 'rfid', '2025-09-15 12:18:03', -19.01888190, 47.53936470, '', 0, 1, 1),
-(123, 5, 'exit', 'rfid', '2025-09-15 12:18:41', -19.01888980, 47.53936390, '', 0, 1, 1),
-(124, 2, 'entry', 'rfid', '2025-09-15 13:14:07', -19.01890190, 47.53933270, '', 0, 1, 1),
-(125, 5, 'entry', 'rfid', '2025-09-15 13:16:26', -19.01890190, 47.53933270, '', 0, 1, 1),
-(126, 3, 'entry', 'rfid', '2025-09-15 13:48:41', -19.01889130, 47.53935400, '', 0, 1, 1),
-(127, 5, 'exit', 'rfid', '2025-09-15 16:48:27', -19.01888860, 47.53935160, '', 0, 1, 1),
-(128, 2, 'exit', 'rfid', '2025-09-15 17:11:03', -19.01889250, 47.53936070, '', 0, 1, 1),
-(129, 3, 'exit', 'rfid', '2025-09-15 17:20:29', -19.01889830, 47.53933850, '', 0, 1, 1),
-(130, 2, 'entry', 'rfid', '2025-09-17 07:52:38', -19.01886500, 47.53940010, '', 0, 1, 1),
-(131, 5, 'entry', 'rfid', '2025-09-17 08:48:54', -19.01885310, 47.53939740, '', 0, 1, 1),
-(133, 2, 'exit', 'rfid', '2025-09-17 12:07:15', -19.01886300, 47.53940420, '', 0, 1, 1),
-(134, 5, 'exit', 'rfid', '2025-09-17 12:08:27', -19.01885580, 47.53939130, '', 0, 1, 1),
-(135, 5, 'entry', 'rfid', '2025-09-17 12:39:19', -19.01885690, 47.53938920, '', 0, 1, 1),
-(136, 2, 'entry', 'rfid', '2025-09-17 13:36:21', -19.01885690, 47.53938920, '', 0, 1, 1),
-(137, 5, 'exit', 'rfid', '2025-09-17 16:30:35', -19.01885810, 47.53939080, '', 0, 1, 1),
-(138, 2, 'exit', 'rfid', '2025-09-17 16:41:39', -19.01885720, 47.53940110, '', 0, 1, 1),
-(139, 3, 'entry', 'rfid', '2025-09-18 08:01:27', -19.01886210, 47.53938530, '', 0, 1, 1),
-(140, 2, 'entry', 'rfid', '2025-09-18 08:06:58', -19.01885850, 47.53938750, '', 0, 1, 1),
-(141, 5, 'entry', 'rfid', '2025-09-18 08:50:51', -19.01885600, 47.53938940, '', 0, 1, 1),
-(142, 2, 'exit', 'rfid', '2025-09-18 12:13:18', -19.01886130, 47.53938250, '', 0, 1, 1),
-(143, 3, 'exit', 'rfid', '2025-09-18 12:13:28', -19.01886130, 47.53938250, '', 0, 1, 1),
-(144, 5, 'exit', 'rfid', '2025-09-18 12:13:43', -19.01885290, 47.53940000, '', 0, 1, 1),
-(145, 5, 'entry', 'rfid', '2025-09-18 12:47:30', -19.01885980, 47.53938360, '', 0, 1, 1),
-(146, 2, 'entry', 'rfid', '2025-09-18 12:54:08', -19.01886080, 47.53938250, '', 0, 1, 1),
-(147, 3, 'entry', 'rfid', '2025-09-18 13:54:46', -19.01885840, 47.53938630, '', 0, 1, 1),
-(148, 5, 'exit', 'rfid', '2025-09-18 17:14:24', -19.01885680, 47.53939200, '', 0, 1, 1),
-(149, 2, 'exit', 'rfid', '2025-09-18 17:15:15', -19.01885540, 47.53938650, '', 0, 1, 1),
-(150, 3, 'exit', 'rfid', '2025-09-18 17:29:57', -19.01885790, 47.53939020, '', 0, 1, 1),
-(151, 2, 'entry', 'rfid', '2025-09-19 07:59:54', -19.01885920, 47.53940460, '', 0, 1, 1),
-(152, 3, 'entry', 'rfid', '2025-09-19 08:04:53', -19.01885840, 47.53939000, '', 0, 1, 1),
-(153, 5, 'entry', 'rfid', '2025-09-19 08:53:23', -19.01885640, 47.53941760, '', 0, 1, 1),
-(155, 2, 'exit', 'rfid', '2025-09-19 12:09:41', -19.01885430, 47.53941050, '', 0, 1, 1),
-(156, 5, 'exit', 'rfid', '2025-09-19 12:19:57', -19.01885400, 47.53940310, '', 0, 1, 1),
-(157, 3, 'exit', 'rfid', '2025-09-19 12:23:22', -19.01885590, 47.53939220, '', 0, 1, 1),
-(158, 5, 'entry', 'rfid', '2025-09-19 12:44:30', -19.01885030, 47.53941480, '', 0, 1, 1),
-(159, 2, 'entry', 'rfid', '2025-09-19 13:06:02', -19.01885030, 47.53941480, '', 0, 1, 1),
-(160, 3, 'entry', 'rfid', '2025-09-19 14:03:08', -19.01885950, 47.53939930, '', 0, 1, 1),
-(161, 2, 'exit', 'rfid', '2025-09-19 17:21:22', -19.01885700, 47.53939090, '', 0, 1, 1),
-(162, 5, 'exit', 'rfid', '2025-09-19 17:21:37', -19.01886200, 47.53939020, '', 0, 1, 1),
-(163, 3, 'exit', 'rfid', '2025-09-19 17:36:16', -19.01885590, 47.53940680, '', 0, 1, 1),
-(164, 3, 'entry', 'rfid', '2025-09-20 08:30:11', -19.01885210, 47.53940300, '', 0, 1, 1),
-(167, 3, 'exit', 'rfid', '2025-09-20 11:22:15', -19.01885330, 47.53940790, '', 0, 1, 1),
-(170, 3, 'entry', 'rfid', '2025-09-22 08:01:25', -19.01885720, 47.53940760, '', 0, 1, 1),
-(171, 2, 'entry', 'rfid', '2025-09-22 08:02:53', -19.01885660, 47.53940120, '', 0, 1, 1),
-(172, 5, 'entry', 'rfid', '2025-09-22 09:09:15', -19.01885470, 47.53941740, '', 0, 1, 1),
-(173, 2, 'exit', 'rfid', '2025-09-22 12:01:56', -19.01885770, 47.53940940, '', 0, 1, 1),
-(174, 5, 'exit', 'rfid', '2025-09-22 12:03:36', -19.01885960, 47.53939590, '', 0, 1, 1),
-(175, 3, 'exit', 'rfid', '2025-09-22 12:04:15', -19.01886320, 47.53938650, '', 0, 1, 1),
-(176, 5, 'entry', 'rfid', '2025-09-22 13:06:19', -19.01886060, 47.53938990, '', 0, 1, 1),
-(177, 2, 'entry', 'rfid', '2025-09-22 13:06:43', -19.01886280, 47.53938880, '', 0, 1, 1),
-(178, 3, 'entry', 'rfid', '2025-09-22 13:26:44', -19.01886280, 47.53938880, '', 0, 1, 1),
-(179, 5, 'exit', 'rfid', '2025-09-22 16:53:45', -19.01885750, 47.53939820, '', 0, 1, 1),
-(180, 2, 'exit', 'rfid', '2025-09-22 17:06:22', -19.01885810, 47.53940240, '', 0, 1, 1),
-(181, 3, 'exit', 'rfid', '2025-09-22 17:40:25', -19.01885920, 47.53940000, '', 0, 1, 1),
-(182, 2, 'entry', 'rfid', '2025-09-23 07:59:37', -19.01886740, 47.53940670, '', 0, 1, 1),
-(183, 3, 'entry', 'rfid', '2025-09-23 07:59:47', -19.01886740, 47.53940670, '', 0, 1, 1),
-(184, 5, 'entry', 'rfid', '2025-09-23 08:52:56', -19.01886290, 47.53940670, '', 0, 1, 1),
-(187, 3, 'exit', 'rfid', '2025-09-23 12:00:47', -19.01886130, 47.53938790, '', 0, 1, 1),
-(188, 2, 'exit', 'rfid', '2025-09-23 12:02:09', -19.01886110, 47.53939100, '', 0, 1, 1),
-(189, 5, 'exit', 'rfid', '2025-09-23 12:02:36', -19.01885670, 47.53941320, '', 0, 1, 1),
-(190, 2, 'entry', 'rfid', '2025-09-23 13:00:02', -19.01886600, 47.53938710, '', 0, 1, 1),
-(191, 5, 'entry', 'rfid', '2025-09-23 13:03:19', -19.01886380, 47.53938630, '', 0, 1, 1),
-(192, 3, 'entry', 'rfid', '2025-09-23 13:30:24', -19.01886490, 47.53938520, '', 0, 1, 1),
-(193, 5, 'exit', 'rfid', '2025-09-23 17:00:13', -19.01886210, 47.53938930, '', 0, 1, 1),
-(194, 2, 'exit', 'rfid', '2025-09-23 17:13:33', -19.01886300, 47.53938740, '', 0, 1, 1),
-(199, 3, 'exit', 'rfid', '2025-09-23 17:34:26', -19.01886300, 47.53938740, '', 0, 1, 1),
-(200, 3, 'entry', 'rfid', '2025-09-24 08:00:19', -19.01886100, 47.53939380, '', 0, 1, 1),
-(201, 2, 'entry', 'rfid', '2025-09-24 08:02:28', -19.01886050, 47.53938960, '', 0, 1, 1),
-(202, 5, 'entry', 'rfid', '2025-09-24 08:51:33', -19.01886050, 47.53938960, '', 0, 1, 1),
-(205, 2, 'entry', 'rfid', '2025-09-24 13:14:59', -19.01884000, 47.53939950, '', 0, 1, 1),
-(206, 5, 'entry', 'rfid', '2025-09-24 13:15:59', -19.01885510, 47.53939250, '', 0, 1, 1),
-(207, 3, 'entry', 'rfid', '2025-09-24 13:32:26', -19.01885050, 47.53940610, '', 0, 1, 1),
-(208, 2, 'exit', 'rfid', '2025-09-24 17:11:48', -19.01882330, 47.53938770, '', 0, 1, 1),
-(209, 5, 'exit', 'rfid', '2025-09-24 17:12:26', -19.01881460, 47.53938020, '', 0, 1, 1),
-(210, 3, 'exit', 'rfid', '2025-09-24 17:45:50', -19.01882330, 47.53938020, '', 0, 1, 1),
-(211, 3, 'entry', 'rfid', '2025-09-25 08:03:15', -19.01882350, 47.53935700, '', 0, 1, 1),
-(212, 2, 'entry', 'rfid', '2025-09-25 08:17:43', -19.01885290, 47.53941170, '', 0, 1, 1),
-(213, 3, 'exit', 'rfid', '2025-09-25 12:01:55', -19.01882800, 47.53938320, '', 0, 1, 1),
-(214, 2, 'exit', 'rfid', '2025-09-25 12:02:32', -19.01893940, 47.53929740, '', 0, 1, 1),
-(215, 5, 'entry', 'rfid', '2025-09-25 13:06:20', -19.01891220, 47.53928630, '', 0, 1, 1),
-(216, 2, 'entry', 'rfid', '2025-09-25 13:07:11', -19.01888930, 47.53933660, '', 0, 1, 1),
-(221, 2, 'exit', 'rfid', '2025-09-29 17:10:11', -19.01884460, 47.53945790, NULL, 0, 1, 1),
-(222, 3, 'exit', 'rfid', '2025-09-29 17:53:53', -19.01882940, 47.53953450, NULL, 0, 1, 1),
-(223, 3, 'entry', 'rfid', '2025-09-30 08:01:30', -19.01882900, 47.53953230, NULL, 0, 1, 1),
-(224, 2, 'entry', 'rfid', '2025-09-30 08:07:30', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(230, 3, 'exit', 'rfid', '2025-09-24 12:05:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(231, 2, 'exit', 'rfid', '2025-09-24 12:12:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(232, 5, 'exit', 'rfid', '2025-09-24 12:13:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(233, 5, 'entry', 'rfid', '2025-09-25 09:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(234, 3, 'entry', 'rfid', '2025-09-25 13:21:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(236, 5, 'exit', 'rfid', '2025-09-25 16:13:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(237, 3, 'exit', 'rfid', '2025-09-25 17:30:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(238, 2, 'exit', 'rfid', '2025-09-25 17:30:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(239, 3, 'entry', 'rfid', '2025-09-26 08:01:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(240, 2, 'entry', 'rfid', '2025-09-26 08:07:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(241, 5, 'entry', 'rfid', '2025-09-26 09:25:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(242, 2, 'exit', 'rfid', '2025-09-26 12:02:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(243, 3, 'exit', 'rfid', '2025-09-26 12:02:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(244, 5, 'exit', 'rfid', '2025-09-26 12:06:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(245, 2, 'entry', 'rfid', '2025-09-26 13:11:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(246, 3, 'entry', 'rfid', '2025-09-26 13:31:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(247, 5, 'exit', 'rfid', '2025-09-26 15:30:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(248, 2, 'exit', 'rfid', '2025-09-26 17:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(249, 3, 'exit', 'rfid', '2025-09-26 17:31:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(250, 3, 'entry', 'rfid', '2025-09-29 08:02:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(251, 2, 'entry', 'rfid', '2025-09-29 08:10:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(252, 5, 'entry', 'rfid', '2025-09-29 09:02:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(253, 3, 'exit', 'rfid', '2025-09-29 12:02:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(254, 2, 'exit', 'rfid', '2025-09-29 12:02:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(255, 5, 'exit', 'rfid', '2025-09-29 12:04:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(256, 5, 'entry', 'rfid', '2025-09-29 12:58:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(257, 2, 'entry', 'rfid', '2025-09-29 13:25:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(258, 3, 'entry', 'rfid', '2025-09-29 13:50:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(259, 5, 'entry', 'rfid', '2025-09-30 09:04:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(260, 3, 'exit', 'rfid', '2025-09-30 12:02:58', -19.01882750, 47.53953670, NULL, 0, 1, 1),
-(261, 2, 'exit', 'rfid', '2025-09-30 12:03:17', -19.01882960, 47.53953510, NULL, 0, 1, 1),
-(262, 5, 'exit', 'rfid', '2025-09-30 12:03:36', -19.01882760, 47.53953500, NULL, 0, 1, 1),
-(263, 2, 'entry', 'rfid', '2025-09-30 13:02:56', -19.01882990, 47.53953330, NULL, 0, 1, 1),
-(264, 5, 'entry', 'rfid', '2025-09-30 13:12:04', -19.01882990, 47.53953330, NULL, 0, 1, 1),
-(265, 3, 'entry', 'rfid', '2025-09-30 13:32:04', -19.01884880, 47.53930570, NULL, 0, 1, 1),
-(266, 5, 'exit', 'rfid', '2025-09-30 15:24:00', -19.01882720, 47.53953450, NULL, 0, 1, 1),
-(267, 2, 'exit', 'rfid', '2025-09-30 17:19:38', -19.01882830, 47.53953540, NULL, 0, 1, 1),
-(268, 3, 'exit', 'rfid', '2025-09-30 18:02:33', -19.01882830, 47.53953540, NULL, 0, 1, 1),
-(271, 3, 'entry', 'rfid', '2025-10-01 08:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(272, 2, 'entry', 'rfid', '2025-10-01 08:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(273, 5, 'exit', 'rfid', '2025-09-25 12:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(278, 5, 'entry', 'rfid', '2025-09-26 13:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(279, 5, 'entry', 'rfid', '2025-09-05 09:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(280, 5, 'exit', 'rfid', '2025-09-29 16:00:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(281, 3, 'exit', 'rfid', '2025-10-01 12:04:49', -19.01885610, 47.53940400, NULL, 0, 1, 1),
-(282, 2, 'exit', 'rfid', '2025-10-01 12:09:00', -19.01885290, 47.53940950, NULL, 0, 1, 1),
-(283, 3, 'entry', 'rfid', '2025-10-01 13:38:20', -19.01883270, 47.53952000, NULL, 0, 1, 1),
-(284, 2, 'entry', 'rfid', '2025-10-01 13:38:41', -19.01882900, 47.53953530, NULL, 0, 1, 1),
-(285, 2, 'exit', 'rfid', '2025-10-01 16:53:38', -19.01886440, 47.53928720, NULL, 0, 1, 1),
-(286, 3, 'exit', 'rfid', '2025-10-01 17:36:42', -19.01885600, 47.53937930, NULL, 0, 1, 1),
-(287, 2, 'entry', 'rfid', '2025-10-02 07:57:29', -19.01882790, 47.53954220, NULL, 0, 1, 1),
-(288, 3, 'entry', 'rfid', '2025-10-02 08:02:45', -19.01885120, 47.53940120, NULL, 0, 1, 1),
-(289, 5, 'entry', 'rfid', '2025-10-02 09:51:58', -19.01884070, 47.53950750, NULL, 0, 1, 1),
-(291, 3, 'exit', 'rfid', '2025-10-02 12:02:09', -19.01883920, 47.53949170, NULL, 0, 1, 1),
-(292, 5, 'exit', 'rfid', '2025-10-02 12:06:59', -19.01884850, 47.53947220, NULL, 0, 1, 1),
-(293, 2, 'exit', 'rfid', '2025-10-02 12:14:45', -19.01884250, 47.53948940, NULL, 0, 1, 1),
-(294, 5, 'entry', 'rfid', '2025-10-02 12:46:46', -19.01885040, 47.53944450, NULL, 0, 1, 1),
-(295, 2, 'entry', 'rfid', '2025-10-02 13:15:13', -19.01882850, 47.53954180, NULL, 0, 1, 1),
-(296, 3, 'entry', 'rfid', '2025-10-02 13:28:29', -19.01886400, 47.53938400, NULL, 0, 1, 1),
-(297, 5, 'exit', 'rfid', '2025-10-02 15:44:44', -19.01882860, 47.53954490, NULL, 0, 1, 1),
-(298, 2, 'exit', 'rfid', '2025-10-02 17:17:12', -19.01884190, 47.53949350, NULL, 0, 1, 1),
-(299, 3, 'exit', 'rfid', '2025-10-02 17:32:10', -19.01884370, 47.53948590, NULL, 0, 1, 1),
-(300, 2, 'entry', 'rfid', '2025-10-03 07:58:02', -19.01882900, 47.53953970, NULL, 0, 1, 1),
-(301, 3, 'entry', 'rfid', '2025-10-03 08:03:19', -19.01883990, 47.53948970, NULL, 0, 1, 1),
-(302, 3, 'exit', 'pin', '2025-10-03 12:04:10', -19.01885310, 47.53940130, NULL, 0, 1, 1),
-(303, 2, 'exit', 'rfid', '2025-10-03 12:06:40', -19.01883940, 47.53950420, NULL, 0, 1, 1),
-(304, 2, 'entry', 'rfid', '2025-10-03 12:49:28', -19.01884280, 47.53949460, NULL, 0, 1, 1),
-(305, 3, 'entry', 'pin', '2025-10-03 12:59:49', -19.01883420, 47.53952030, NULL, 0, 1, 1),
-(306, 16, 'entry', 'pin', '2025-10-03 16:20:01', -20.92565730, 55.65744770, NULL, 0, 2, 7),
-(308, 16, 'exit', 'pin', '2025-10-03 16:21:04', -20.92565720, 55.65744740, NULL, 0, 2, 7),
-(309, 16, 'entry', 'face', '2025-10-03 16:23:12', -20.92586310, 55.65735060, NULL, 0, 2, 7),
-(310, 16, 'exit', 'face', '2025-10-03 16:25:17', -20.92584600, 55.65735300, NULL, 0, 2, 7),
-(311, 2, 'exit', 'rfid', '2025-10-03 17:03:30', -19.01884080, 47.53945760, NULL, 0, 1, 1),
-(312, 3, 'exit', 'rfid', '2025-10-03 17:07:46', -19.01883920, 47.53943400, NULL, 0, 1, 1),
-(313, 16, 'entry', 'face', '2025-10-04 16:30:14', -20.92582780, 55.65736060, NULL, 0, 2, 7),
-(314, 16, 'exit', 'pin', '2025-10-04 16:30:47', -20.92584550, 55.65735410, NULL, 0, 2, 7),
-(315, 3, 'entry', 'rfid', '2025-10-06 08:05:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(316, 3, 'exit', 'rfid', '2025-10-06 12:09:24', -19.01885300, 47.53941280, NULL, 0, 1, 1),
-(317, 3, 'entry', 'rfid', '2025-10-06 13:32:55', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(318, 3, 'exit', 'rfid', '2025-10-06 17:35:34', -19.01884200, 47.53949570, NULL, 0, 1, 1),
-(319, 3, 'entry', 'rfid', '2025-10-07 08:02:08', -19.01884350, 47.53949000, NULL, 0, 1, 1),
-(320, 3, 'exit', 'pin', '2025-10-07 12:00:50', -19.01885110, 47.53943670, NULL, 0, 1, 1),
-(321, 3, 'entry', 'rfid', '2025-10-07 13:25:35', -19.01884340, 47.53949560, NULL, 0, 1, 1),
-(322, 3, 'exit', 'rfid', '2025-10-07 17:35:44', -19.01883310, 47.53952750, NULL, 0, 1, 1),
-(323, 3, 'entry', 'rfid', '2025-10-09 08:02:37', -19.01883250, 47.53952620, NULL, 0, 1, 1),
-(324, 3, 'entry', 'rfid', '2025-10-09 13:30:55', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(325, 3, 'exit', 'rfid', '2025-10-09 12:01:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(326, 3, 'exit', 'rfid', '2025-10-09 17:31:06', -19.01882780, 47.53952930, NULL, 0, 1, 1),
-(327, 3, 'entry', 'rfid', '2025-10-10 07:57:56', -19.01882970, 47.53953870, NULL, 0, 1, 1),
-(328, 3, 'exit', 'rfid', '2025-10-10 12:01:14', -19.01882940, 47.53954000, NULL, 0, 1, 1),
-(329, 3, 'entry', 'rfid', '2025-10-10 12:42:50', -19.01882940, 47.53954000, NULL, 0, 1, 1),
-(330, 3, 'exit', 'rfid', '2025-10-10 16:03:48', -19.01882900, 47.53953880, NULL, 0, 1, 1),
-(331, 3, 'entry', 'rfid', '2025-10-13 08:02:49', -19.01882780, 47.53954310, NULL, 0, 1, 1),
-(333, 2, 'entry', 'rfid', '2025-10-13 08:09:21', -19.01882280, 47.53955350, NULL, 0, 1, 1),
-(334, 2, 'exit', 'rfid', '2025-10-13 12:07:39', -19.01882330, 47.53955370, NULL, 0, 1, 1),
-(335, 3, 'exit', 'rfid', '2025-10-13 12:11:32', -19.01882970, 47.53953680, NULL, 0, 1, 1),
-(336, 2, 'entry', 'rfid', '2025-10-13 13:58:33', -19.01882290, 47.53955360, NULL, 0, 1, 1),
-(337, 3, 'entry', 'rfid', '2025-10-13 13:30:07', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(338, 2, 'exit', 'rfid', '2025-10-13 17:36:54', -19.01882330, 47.53955370, NULL, 0, 1, 1),
-(339, 3, 'exit', 'rfid', '2025-10-13 17:58:23', -19.01882330, 47.53955370, NULL, 0, 1, 1),
-(340, 2, 'entry', 'rfid', '2025-10-14 08:01:41', -19.01882980, 47.53953830, NULL, 0, 1, 1),
-(341, 3, 'entry', 'rfid', '2025-10-14 08:06:12', -19.01882990, 47.53953810, NULL, 0, 1, 1),
-(342, 3, 'exit', 'rfid', '2025-10-14 12:09:39', -19.01882240, 47.53955330, NULL, 0, 1, 1),
-(343, 2, 'exit', 'rfid', '2025-10-14 12:09:51', -19.01882290, 47.53955360, NULL, 0, 1, 1),
-(344, 3, 'entry', 'rfid', '2025-10-14 13:32:43', -19.01882290, 47.53955360, NULL, 0, 1, 1),
-(345, 2, 'entry', 'rfid', '2025-10-14 13:34:12', -19.01882870, 47.53953540, NULL, 0, 1, 1),
-(346, 2, 'exit', 'rfid', '2025-10-14 17:47:18', -19.01882320, 47.53955300, NULL, 0, 1, 1),
-(347, 3, 'exit', 'rfid', '2025-10-14 17:47:33', -19.01882830, 47.53954070, NULL, 0, 1, 1),
-(348, 3, 'entry', 'rfid', '2025-10-15 08:07:34', -19.01883020, 47.53954040, NULL, 0, 1, 1),
-(349, 2, 'entry', 'rfid', '2025-10-15 08:14:47', -19.01882830, 47.53954210, NULL, 0, 1, 1),
-(350, 2, 'exit', 'rfid', '2025-10-15 12:05:13', -19.01882880, 47.53954120, NULL, 0, 1, 1),
-(351, 3, 'exit', 'rfid', '2025-10-15 12:08:32', -19.01882960, 47.53954000, NULL, 0, 1, 1),
-(352, 2, 'entry', 'rfid', '2025-10-15 13:33:53', -19.01882310, 47.53955370, NULL, 0, 1, 1),
-(353, 3, 'entry', 'rfid', '2025-10-15 13:41:28', -19.01882830, 47.53953990, NULL, 0, 1, 1),
-(354, 3, 'exit', 'rfid', '2025-10-15 17:45:47', -19.01882980, 47.53953800, NULL, 0, 1, 1),
-(355, 2, 'exit', 'rfid', '2025-10-15 17:52:02', -19.01882830, 47.53953990, NULL, 0, 1, 1),
-(356, 3, 'entry', 'rfid', '2025-10-16 08:03:42', -19.01882890, 47.53954100, NULL, 0, 1, 1),
-(357, 2, 'entry', 'rfid', '2025-10-16 08:05:58', -19.01882510, 47.53955450, NULL, 0, 1, 1),
-(358, 2, 'exit', 'rfid', '2025-10-16 12:04:59', -19.01882650, 47.53955330, NULL, 0, 1, 1),
-(359, 3, 'exit', 'rfid', '2025-10-16 12:05:17', -19.01882510, 47.53953860, NULL, 0, 1, 1),
-(360, 3, 'entry', 'rfid', '2025-10-16 13:36:31', -19.01882630, 47.53954010, NULL, 0, 1, 1),
-(361, 2, 'entry', 'rfid', '2025-10-16 13:36:45', -19.01882630, 47.53954220, NULL, 0, 1, 1),
-(362, 2, 'exit', 'rfid', '2025-10-16 17:22:03', -19.01882830, 47.53954140, NULL, 0, 1, 1),
-(363, 3, 'exit', 'rfid', '2025-10-16 17:44:09', -19.01882830, 47.53954140, NULL, 0, 1, 1),
-(364, 2, 'entry', 'rfid', '2025-10-17 08:05:46', -19.01882790, 47.53954230, NULL, 0, 1, 1),
-(365, 3, 'entry', 'rfid', '2025-10-17 08:06:14', -19.01882540, 47.53955290, NULL, 0, 1, 1),
-(366, 3, 'exit', 'rfid', '2025-10-17 12:05:14', -19.01882480, 47.53955080, NULL, 0, 1, 1),
-(367, 2, 'exit', 'rfid', '2025-10-17 12:05:37', -19.01882300, 47.53955370, NULL, 0, 1, 1),
-(368, 2, 'entry', 'rfid', '2025-10-17 13:00:13', -19.01882210, 47.53955590, NULL, 0, 1, 1),
-(369, 3, 'entry', 'rfid', '2025-10-17 13:01:12', -19.01882700, 47.53953820, NULL, 0, 1, 1),
-(370, 2, 'exit', 'rfid', '2025-10-17 16:31:44', -19.01882500, 47.53955190, NULL, 0, 1, 1),
-(371, 3, 'exit', 'rfid', '2025-10-17 16:32:29', -19.01882550, 47.53954850, NULL, 0, 1, 1),
-(373, 3, 'entry', 'rfid', '2025-10-20 08:05:01', -19.01882370, 47.53955410, NULL, 0, 1, 1),
-(374, 2, 'entry', 'rfid', '2025-10-20 08:07:54', -19.01882480, 47.53955120, NULL, 0, 1, 1),
-(375, 3, 'exit', 'rfid', '2025-10-20 12:10:18', -19.01882550, 47.53955210, NULL, 0, 1, 1),
-(376, 2, 'exit', 'rfid', '2025-10-20 12:15:48', -19.01882580, 47.53955230, NULL, 0, 1, 1),
-(377, 2, 'entry', 'rfid', '2025-10-20 13:31:43', -19.01882490, 47.53954880, NULL, 0, 1, 1),
-(378, 3, 'entry', 'rfid', '2025-10-20 13:35:09', -19.01882370, 47.53955410, NULL, 0, 1, 1),
-(379, 2, 'exit', 'rfid', '2025-10-20 17:35:17', -19.01882500, 47.53955190, NULL, 0, 1, 1),
-(380, 3, 'exit', 'rfid', '2025-10-20 17:42:46', -19.01882490, 47.53955160, NULL, 0, 1, 1),
-(381, 2, 'entry', 'rfid', '2025-10-21 08:03:11', -19.01882390, 47.53955320, NULL, 0, 1, 1),
-(382, 3, 'entry', 'rfid', '2025-10-21 08:06:10', -19.01882350, 47.53955470, NULL, 0, 1, 1),
-(383, 2, 'exit', 'rfid', '2025-10-21 12:14:24', -19.01882560, 47.53955000, NULL, 0, 1, 1),
-(384, 3, 'exit', 'rfid', '2025-10-21 12:14:44', -19.01882460, 47.53955080, NULL, 0, 1, 1),
-(385, 3, 'entry', 'rfid', '2025-10-21 13:37:23', -19.01882370, 47.53955470, NULL, 0, 1, 1),
-(386, 2, 'entry', 'rfid', '2025-10-21 13:42:09', -19.01882570, 47.53954730, NULL, 0, 1, 1),
-(387, 2, 'exit', 'rfid', '2025-10-21 17:33:24', -19.01882240, 47.53955540, NULL, 0, 1, 1),
-(388, 3, 'exit', 'rfid', '2025-10-21 17:38:30', -19.01882370, 47.53955400, NULL, 0, 1, 1),
-(389, 2, 'entry', 'rfid', '2025-10-22 08:05:21', -19.01882410, 47.53955470, NULL, 0, 1, 1),
-(390, 3, 'entry', 'rfid', '2025-10-22 08:06:48', -19.01882350, 47.53955380, NULL, 0, 1, 1),
-(391, 16, 'entry', 'face', '2025-10-22 10:39:21', -20.92585080, 55.65735240, NULL, 0, 2, 7),
-(392, 16, 'exit', 'face', '2025-10-22 10:40:47', -20.92568760, 55.65743070, NULL, 0, 2, 7),
-(393, 16, 'entry', 'face', '2025-10-22 12:01:33', -20.92583170, 55.65738050, NULL, 0, 2, 7),
-(394, 16, 'exit', 'face', '2025-10-22 12:10:09', -20.92584000, 55.65736720, NULL, 0, 2, 7),
-(395, 16, 'entry', 'face', '2025-10-22 12:16:44', -20.92578350, 55.65738620, NULL, 0, 2, 7),
-(396, 16, 'entry', 'face', '2025-10-22 12:26:01', -20.92568730, 55.65743000, NULL, 0, 2, 7),
-(397, 3, 'exit', 'rfid', '2025-10-22 12:05:41', -19.01882520, 47.53955040, NULL, 0, 1, 1),
-(398, 2, 'exit', 'rfid', '2025-10-22 12:06:12', -19.01882330, 47.53955540, NULL, 0, 1, 1),
-(399, 16, 'exit', 'face', '2025-10-22 13:26:11', -20.92584690, 55.65736340, NULL, 0, 2, 7),
-(400, 2, 'entry', 'rfid', '2025-10-22 13:20:05', -19.01882340, 47.53955250, NULL, 0, 1, 1),
-(401, 3, 'entry', 'rfid', '2025-10-22 13:32:13', -19.01882360, 47.53955540, NULL, 0, 1, 1),
-(402, 3, 'exit', 'rfid', '2025-10-22 17:52:13', -19.01882580, 47.53955020, NULL, 0, 1, 1),
-(403, 2, 'exit', 'rfid', '2025-10-22 17:53:22', -19.01882410, 47.53955440, NULL, 0, 1, 1),
-(404, 2, 'entry', 'rfid', '2025-10-23 08:00:57', -19.01882660, 47.53955270, NULL, 0, 1, 1),
-(405, 3, 'entry', 'rfid', '2025-10-23 08:06:40', -19.01882490, 47.53955340, NULL, 0, 1, 1),
-(406, 3, 'exit', 'rfid', '2025-10-23 12:05:09', -19.01881680, 47.53954490, NULL, 0, 1, 1),
-(407, 3, 'entry', 'rfid', '2025-10-23 13:35:27', -19.01881930, 47.53953230, NULL, 0, 1, 1),
-(408, 2, 'exit', 'rfid', '2025-10-23 12:05:00', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(409, 2, 'entry', 'rfid', '2025-10-23 13:33:31', -19.01889600, 47.53933370, '', 0, 1, 1),
-(410, 3, 'exit', 'rfid', '2025-10-23 17:40:25', -19.01881730, 47.53954500, NULL, 0, 1, 1),
-(411, 2, 'exit', 'rfid', '2025-10-23 17:54:00', -19.01881540, 47.53954390, NULL, 0, 1, 1),
-(412, 3, 'entry', 'rfid', '2025-10-24 08:03:38', -19.01882110, 47.53953370, NULL, 0, 1, 1),
-(413, 2, 'entry', 'rfid', '2025-10-24 08:10:07', -19.01881540, 47.53954390, NULL, 0, 1, 1),
-(417, 3, 'exit', 'face', '2025-10-24 12:06:07', -19.01881830, 47.53954470, NULL, 0, 1, 1),
-(418, 2, 'exit', 'rfid', '2025-10-24 12:09:24', -19.01881880, 47.53953190, NULL, 0, 1, 1),
-(419, 3, 'entry', 'rfid', '2025-10-24 12:57:47', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(420, 2, 'entry', 'rfid', '2025-10-24 13:02:15', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(421, 16, 'entry', 'rfid', '2025-10-24 20:00:13', -20.92582860, 55.65731950, NULL, 0, 2, 7),
-(422, 16, 'exit', 'face', '2025-10-24 20:01:10', -20.92582880, 55.65733270, NULL, 0, 2, 7),
-(423, 16, 'entry', 'face', '2025-10-24 21:12:47', -20.92579770, 55.65734900, NULL, 0, 2, 7),
-(424, 16, 'exit', 'face', '2025-10-24 23:13:35', -20.92582330, 55.65733190, NULL, 0, 2, 7),
-(425, 2, 'exit', 'rfid', '2025-10-24 16:58:16', -19.01881730, 47.53954500, NULL, 0, 1, 1),
-(426, 3, 'exit', 'rfid', '2025-10-24 17:00:31', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(427, 16, 'entry', 'face', '2025-10-25 09:19:53', -20.92583120, 55.65733830, NULL, 0, 2, 7),
-(428, 2, 'entry', 'rfid', '2025-10-27 07:57:21', -19.01881720, 47.53954500, NULL, 0, 1, 1),
-(429, 3, 'entry', 'rfid', '2025-10-27 08:04:55', -19.01881720, 47.53954500, NULL, 0, 1, 1),
-(430, 3, 'exit', 'rfid', '2025-10-27 12:04:19', -19.01881590, 47.53954410, NULL, 0, 1, 1),
-(431, 3, 'entry', 'rfid', '2025-10-27 13:31:53', -19.01881610, 47.53954420, NULL, 0, 1, 1),
-(432, 2, 'entry', 'rfid', '2025-10-27 12:30:21', -19.01881720, 47.53954500, NULL, 0, 1, 1),
-(433, 2, 'exit', 'rfid', '2025-10-27 12:04:21', -19.01881720, 47.53954500, NULL, 0, 1, 1),
-(434, 2, 'exit', 'rfid', '2025-10-27 16:56:53', -19.01881680, 47.53954490, NULL, 0, 1, 1),
-(435, 3, 'exit', 'rfid', '2025-10-27 17:28:05', -19.01881910, 47.53952970, NULL, 0, 1, 1),
-(436, 3, 'entry', 'rfid', '2025-10-28 08:04:17', -19.01882070, 47.53953020, NULL, 0, 1, 1),
-(437, 2, 'entry', 'rfid', '2025-10-28 08:07:21', -19.01882050, 47.53952980, NULL, 0, 1, 1),
-(438, 3, 'exit', 'rfid', '2025-10-28 12:06:30', -19.01881780, 47.53954490, NULL, 0, 1, 1),
-(439, 2, 'exit', 'rfid', '2025-10-28 12:08:00', -19.01881780, 47.53954490, NULL, 0, 1, 1),
-(440, 2, 'entry', 'rfid', '2025-10-28 13:31:45', -19.01881730, 47.53954500, NULL, 0, 1, 1),
-(441, 3, 'entry', 'rfid', '2025-10-28 13:34:21', -19.01881610, 47.53954420, NULL, 0, 1, 1),
-(443, 2, 'exit', 'rfid', '2025-10-28 17:29:08', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(444, 3, 'exit', 'rfid', '2025-10-28 17:53:56', -19.01881920, 47.53953030, NULL, 0, 1, 1),
-(445, 2, 'entry', 'rfid', '2025-10-29 08:03:58', -19.01881870, 47.53953050, NULL, 0, 1, 1),
-(446, 3, 'entry', 'rfid', '2025-10-29 08:06:43', -19.01881530, 47.53954390, NULL, 0, 1, 1),
-(447, 16, 'entry', 'rfid', '2025-10-29 11:57:52', -20.92584050, 55.65734010, NULL, 0, 2, 7),
-(448, 16, 'exit', 'face', '2025-10-29 12:07:17', -20.92581250, 55.65733490, NULL, 0, 2, 7),
-(449, 3, 'exit', 'face', '2025-10-29 12:08:14', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(450, 2, 'exit', 'face', '2025-10-29 12:06:28', -19.01881680, 47.53954490, NULL, 0, 1, 1),
-(451, 3, 'entry', 'face', '2025-10-29 13:36:07', -19.01881680, 47.53954490, NULL, 0, 1, 1),
-(452, 2, 'entry', 'rfid', '2025-10-29 13:41:23', -19.01881730, 47.53954500, NULL, 0, 1, 1),
-(453, 16, 'entry', 'pin', '2025-10-29 14:55:26', -20.92572080, 55.65738460, NULL, 0, 2, 7),
-(454, 16, 'exit', 'rfid', '2025-10-29 15:39:19', -20.92570910, 55.65739080, NULL, 0, 2, 7),
-(455, 16, 'entry', 'pin', '2025-10-29 15:40:31', -20.92580960, 55.65733890, NULL, 0, 2, 7),
-(456, 16, 'entry', 'face', '2025-10-29 15:42:42', -20.92580290, 55.65734590, NULL, 0, 2, 7),
-(457, 2, 'exit', 'rfid', '2025-10-29 17:20:34', -19.01881570, 47.53954410, NULL, 0, 1, 1),
-(458, 3, 'exit', 'rfid', '2025-10-29 17:39:23', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(459, 3, 'entry', 'rfid', '2025-10-30 08:02:49', -19.01881840, 47.53953140, NULL, 0, 1, 1),
-(460, 2, 'entry', 'rfid', '2025-10-30 08:04:39', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(461, 3, 'entry', 'pin', '2025-10-30 13:35:50', -19.01882010, 47.53952980, NULL, 0, 1, 1),
-(462, 2, 'entry', 'rfid', '2025-10-30 13:45:31', -19.01881730, 47.53954500, NULL, 0, 1, 1),
-(463, 3, 'exit', 'rfid', '2025-10-30 12:10:07', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(464, 2, 'exit', 'rfid', '2025-10-30 12:14:07', -19.01883070, 47.53953260, NULL, 0, 1, 1),
-(465, 3, 'exit', 'rfid', '2025-10-30 17:36:52', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(466, 2, 'exit', 'rfid', '2025-10-30 17:41:52', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(467, 3, 'entry', 'rfid', '2025-10-31 08:07:10', -19.01881830, 47.53954470, NULL, 0, 1, 1),
-(468, 2, 'entry', 'rfid', '2025-10-31 08:11:15', -19.01881680, 47.53954490, NULL, 0, 1, 1),
-(469, 16, 'exit', 'face', '2025-10-31 10:56:02', -20.92584870, 55.65732860, NULL, 0, 2, 7),
-(470, 16, 'exit', 'face', '2025-10-31 10:56:43', -20.92584630, 55.65733160, NULL, 0, 2, 7),
-(471, 3, 'exit', 'rfid', '2025-10-31 12:10:37', -19.01882060, 47.53953070, NULL, 0, 1, 1),
-(472, 2, 'entry', 'rfid', '2025-10-31 12:58:50', -19.01881830, 47.53953300, NULL, 0, 1, 1),
-(473, 3, 'entry', 'rfid', '2025-10-31 13:04:32', -19.01882030, 47.53953330, NULL, 0, 1, 1),
-(474, 2, 'exit', 'rfid', '2025-10-31 12:14:15', -19.01881610, 47.53954420, NULL, 0, 1, 1),
-(475, 2, 'exit', 'rfid', '2025-10-31 17:10:29', -19.01881640, 47.53954460, NULL, 0, 1, 1),
-(476, 3, 'exit', 'pin', '2025-10-31 17:13:21', -19.01882110, 47.53953060, NULL, 0, 1, 1),
-(477, 16, 'entry', 'rfid', '2025-11-01 15:58:48', -20.92582890, 55.65732880, NULL, 0, 2, 7),
-(478, 16, 'exit', 'rfid', '2025-11-01 16:02:06', -20.92582650, 55.65732940, NULL, 0, 2, 7),
-(479, 16, 'entry', 'rfid', '2025-11-01 16:07:13', -20.92582160, 55.65731550, NULL, 0, 2, 7),
-(480, 16, 'exit', 'rfid', '2025-11-01 16:08:36', -20.92584720, 55.65732880, NULL, 0, 2, 7),
-(481, 16, 'entry', 'face', '2025-11-01 16:09:16', -20.92584800, 55.65732920, NULL, 0, 2, 7),
-(482, 2, 'entry', 'rfid', '2025-11-03 07:15:51', -19.01897330, 47.53932580, NULL, 0, 1, 1),
-(483, 3, 'entry', 'rfid', '2025-11-03 08:06:32', -19.01897350, 47.53932510, NULL, 0, 1, 1),
-(485, 3, 'exit', 'face', '2025-11-03 12:09:25', -19.01897350, 47.53932510, NULL, 0, 1, 1),
-(486, 3, 'entry', 'face', '2025-11-03 13:35:51', -19.01897310, 47.53932050, NULL, 0, 1, 1),
-(489, 2, 'exit', 'rfid', '2025-11-03 12:11:59', -19.01897300, 47.53931900, NULL, 0, 1, 1),
-(490, 2, 'entry', 'rfid', '2025-11-03 13:03:16', -19.01897300, 47.53931880, NULL, 0, 1, 1),
-(491, 2, 'exit', 'rfid', '2025-11-03 16:53:27', -19.01897360, 47.53932400, NULL, 0, 1, 1),
-(492, 3, 'exit', 'rfid', '2025-11-03 17:31:58', -19.01897260, 47.53932690, NULL, 0, 1, 1),
-(493, 2, 'entry', 'rfid', '2025-11-04 08:05:02', -19.01879620, 47.53943080, NULL, 0, 1, 1),
-(494, 3, 'entry', 'rfid', '2025-11-04 08:12:53', -19.01897350, 47.53932510, NULL, 0, 1, 1),
-(495, 3, 'exit', 'rfid', '2025-11-04 12:08:35', -19.01897340, 47.53932160, NULL, 0, 1, 1),
-(496, 3, 'entry', 'rfid', '2025-11-04 13:33:28', -19.01897340, 47.53932160, NULL, 0, 1, 1),
-(497, 2, 'entry', 'rfid', '2025-11-04 14:03:04', -19.01897360, 47.53932400, NULL, 0, 1, 1),
-(498, 2, 'exit', 'rfid', '2025-11-04 12:53:51', -19.01897310, 47.53932050, NULL, 0, 1, 1),
-(499, 2, 'exit', 'rfid', '2025-11-04 17:11:42', -19.01895940, 47.53957730, NULL, 0, 1, 1),
-(501, 3, 'exit', 'rfid', '2025-11-04 17:36:24', -19.01904450, 47.53949090, NULL, 0, 1, 1),
-(502, 3, 'entry', 'rfid', '2025-11-05 08:07:16', -19.01904450, 47.53949090, NULL, 0, 1, 1),
-(503, 2, 'entry', 'rfid', '2025-11-05 08:10:54', -19.01904450, 47.53949090, NULL, 0, 1, 1),
-(504, 3, 'exit', 'rfid', '2025-11-05 12:11:56', -19.01895460, 47.53936022, NULL, 0, 1, 1),
-(505, 2, 'entry', 'rfid', '2025-11-05 13:32:49', -19.01895460, 47.53936022, NULL, 0, 1, 1),
-(506, 2, 'exit', 'rfid', '2025-11-05 12:11:19', -19.01887986, 47.53942637, NULL, 0, 1, 1),
-(507, 3, 'entry', 'rfid', '2025-11-05 13:33:29', -19.01887986, 47.53942637, NULL, 0, 1, 1),
-(509, 16, 'entry', 'face', '2025-11-05 15:00:51', -20.92584790, 55.65733130, NULL, 0, 2, 7),
-(510, 16, 'exit', 'face', '2025-11-05 15:06:01', -20.92584001, 55.65733717, NULL, 0, 2, 7),
-(511, 39, 'entry', 'pin', '2025-11-05 15:24:32', -20.92584019, 55.65733625, NULL, 0, 2, 7),
-(512, 16, 'entry', 'face', '2025-11-05 15:25:01', -20.92584019, 55.65733625, NULL, 0, 2, 7),
-(513, 39, 'exit', 'face', '2025-11-05 15:26:00', -20.92584238, 55.65733506, NULL, 0, 2, 7),
-(514, 2, 'exit', 'rfid', '2025-11-05 17:34:50', -19.01890366, 47.53941699, NULL, 0, 1, 1),
-(515, 3, 'exit', 'pin', '2025-11-05 17:38:35', -19.01890366, 47.53941699, NULL, 0, 1, 1),
-(516, 3, 'entry', 'rfid', '2025-11-06 08:03:54', -19.01892140, 47.53939860, NULL, 0, 1, 1),
-(517, 2, 'entry', 'rfid', '2025-11-06 08:10:54', -19.01892140, 47.53939860, NULL, 0, 1, 1),
-(518, 3, 'exit', 'rfid', '2025-11-06 12:03:24', -19.01894326, 47.53937126, NULL, 0, 1, 1),
-(519, 2, 'exit', 'rfid', '2025-11-06 12:08:30', -19.01889663, 47.53944083, NULL, 0, 1, 1),
-(520, 3, 'entry', 'rfid', '2025-11-06 13:28:34', -19.01884304, 47.53943870, NULL, 0, 1, 1),
-(521, 2, 'entry', 'rfid', '2025-11-06 13:32:07', -19.01886562, 47.53940030, NULL, 0, 1, 1),
-(522, 3, 'exit', 'rfid', '2025-11-06 17:34:24', -19.01889657, 47.53936030, NULL, 0, 1, 1),
-(523, 3, 'entry', 'rfid', '2025-11-07 08:07:26', -19.01889364, 47.53935724, NULL, 0, 1, 1),
-(525, 3, 'exit', 'rfid', '2025-11-07 12:03:16', -19.01889489, 47.53936178, NULL, 0, 1, 1),
-(526, 3, 'entry', 'rfid', '2025-11-07 13:00:45', -19.01892770, 47.53934684, NULL, 0, 1, 1),
-(527, 3, 'exit', 'rfid', '2025-11-07 16:35:05', -19.01893450, 47.53935960, NULL, 0, 1, 1),
-(528, 3, 'entry', 'rfid', '2025-11-10 07:59:52', -19.01891821, 47.53936599, NULL, 0, 1, 1),
-(529, 2, 'entry', 'rfid', '2025-11-10 08:06:55', -19.01891821, 47.53936599, NULL, 0, 1, 1),
-(530, 3, 'exit', 'rfid', '2025-11-10 12:06:45', -19.01891091, 47.53936959, NULL, 0, 1, 1),
-(531, 2, 'exit', 'rfid', '2025-11-10 12:06:57', -19.01891091, 47.53936959, NULL, 0, 1, 1),
-(532, 3, 'entry', 'rfid', '2025-11-10 13:34:06', -19.01890263, 47.53937430, NULL, 0, 1, 1),
-(533, 2, 'entry', 'rfid', '2025-11-10 13:41:37', -19.01890263, 47.53937430, NULL, 0, 1, 1),
-(534, 3, 'exit', 'rfid', '2025-11-10 17:03:10', -19.01889371, 47.53939260, NULL, 0, 1, 1),
-(535, 2, 'exit', 'rfid', '2025-11-10 17:03:20', -19.01889371, 47.53939260, NULL, 0, 1, 1),
-(536, 3, 'entry', 'rfid', '2025-11-11 08:05:12', -19.01888620, 47.53939322, NULL, 0, 1, 1),
-(537, 2, 'entry', 'rfid', '2025-11-11 08:05:25', -19.01888620, 47.53939322, NULL, 0, 1, 1),
-(538, 3, 'exit', 'rfid', '2025-11-11 12:08:15', -19.01888274, 47.53939421, NULL, 0, 1, 1),
-(539, 2, 'exit', 'rfid', '2025-11-11 12:09:40', -19.01888274, 47.53939421, NULL, 0, 1, 1),
-(540, 3, 'entry', 'pin', '2025-11-11 13:35:15', -19.01887943, 47.53939628, NULL, 0, 1, 1),
-(541, 2, 'entry', 'rfid', '2025-11-11 13:50:38', -19.01887412, 47.53939697, NULL, 0, 1, 1),
-(542, 2, 'exit', 'rfid', '2025-11-11 17:43:01', -19.01887198, 47.53939776, NULL, 0, 1, 1),
-(543, 3, 'exit', 'rfid', '2025-11-11 17:47:43', -19.01886952, 47.53939813, NULL, 0, 1, 1),
-(544, 3, 'entry', 'rfid', '2025-11-12 08:06:41', -19.01886378, 47.53939845, NULL, 0, 1, 1),
-(545, 2, 'entry', 'rfid', '2025-11-12 08:06:54', -19.01886378, 47.53939845, NULL, 0, 1, 1),
-(546, 1, 'entry', 'rfid', '2025-11-12 09:04:25', -19.01886020, 47.53939835, NULL, 0, 1, 1),
-(547, 3, 'exit', 'rfid', '2025-11-12 12:09:14', -19.01885845, 47.53939927, NULL, 0, 1, 1),
-(548, 2, 'exit', 'rfid', '2025-11-12 12:11:26', -19.01885845, 47.53939927, NULL, 0, 1, 1),
-(549, 3, 'entry', 'rfid', '2025-11-12 13:31:03', -19.01885669, 47.53939972, NULL, 0, 1, 1),
-(550, 2, 'entry', 'rfid', '2025-11-12 14:00:24', -19.01885669, 47.53939972, NULL, 0, 1, 1),
-(551, 2, 'exit', 'rfid', '2025-11-12 17:18:28', -19.01885585, 47.53939977, NULL, 0, 1, 1),
-(552, 1, 'exit', 'rfid', '2025-11-12 17:18:48', -19.01885585, 47.53939977, NULL, 0, 1, 1),
-(553, 3, 'exit', 'rfid', '2025-11-12 17:41:35', -19.01885585, 47.53939977, NULL, 0, 1, 1),
-(554, 2, 'entry', 'rfid', '2025-11-13 13:00:00', -19.01885318, 47.53940004, NULL, 0, 1, 1),
-(555, 3, 'entry', 'rfid', '2025-11-13 08:05:00', -19.01885318, 47.53940004, NULL, 0, 1, 1),
-(556, 1, 'entry', 'rfid', '2025-11-13 08:16:37', -19.01885194, 47.53939943, NULL, 0, 1, 1),
-(557, 1, 'exit', 'rfid', '2025-11-13 12:03:41', -19.01885128, 47.53939943, NULL, 0, 1, 1),
-(558, 3, 'exit', 'rfid', '2025-11-13 12:06:14', -19.01885061, 47.53939982, NULL, 0, 1, 1),
-(559, 2, 'exit', 'rfid', '2025-11-13 12:06:24', -19.01885061, 47.53939982, NULL, 0, 1, 1),
-(560, 2, 'exit', 'rfid', '2025-11-13 16:48:56', -19.01882452, 47.53942104, NULL, 0, 1, 1),
-(561, 3, 'exit', 'rfid', '2025-11-13 16:49:03', -19.01882452, 47.53942104, NULL, 0, 1, 1),
-(564, 2, 'exit', 'rfid', '2025-11-14 12:03:30', -19.01883644, 47.53937612, NULL, 0, 1, 1),
-(565, 3, 'exit', 'rfid', '2025-11-14 12:09:47', -19.01883644, 47.53937612, NULL, 0, 1, 1),
-(566, 2, 'entry', 'rfid', '2025-11-14 13:17:50', -19.01883843, 47.53937933, NULL, 0, 1, 1),
-(567, 3, 'entry', 'rfid', '2025-11-14 13:31:12', -19.01883843, 47.53937933, NULL, 0, 1, 1),
-(568, 3, 'entry', 'rfid', '2025-11-13 13:31:00', -19.01885318, 47.53940004, NULL, 0, 1, 1),
-(569, 2, 'exit', 'rfid', '2025-11-06 17:35:30', -19.01889663, 47.53944083, NULL, 0, 1, 1),
-(571, 2, 'entry', 'rfid', '2025-11-13 07:57:00', -19.01885318, 47.53940004, NULL, 0, 1, 1),
-(572, 3, 'exit', 'rfid', '2025-11-14 17:53:24', -19.01884557, 47.53938918, NULL, 0, 1, 1),
-(573, 2, 'exit', 'rfid', '2025-11-14 19:07:48', -19.01884646, 47.53939844, NULL, 0, 1, 1),
-(574, 3, 'entry', 'rfid', '2025-11-15 09:05:21', -19.01884527, 47.53940500, NULL, 0, 1, 1),
-(575, 2, 'entry', 'rfid', '2025-11-15 09:18:08', -19.01884461, 47.53940520, NULL, 0, 1, 1),
-(576, 2, 'exit', 'rfid', '2025-11-15 11:57:01', -19.01884169, 47.53940774, NULL, 0, 1, 1),
-(577, 3, 'exit', 'rfid', '2025-11-15 13:04:25', -19.01884169, 47.53940774, NULL, 0, 1, 1),
-(578, 3, 'entry', 'rfid', '2025-11-17 08:01:02', -19.01884701, 47.53940595, NULL, 0, 1, 1),
-(579, 2, 'entry', 'rfid', '2025-11-17 08:04:09', -19.01884521, 47.53940701, NULL, 0, 1, 1),
-(581, 2, 'exit', 'rfid', '2025-11-17 12:06:29', -19.01884455, 47.53940705, NULL, 0, 1, 1),
-(582, 3, 'exit', 'rfid', '2025-11-17 12:09:36', -19.01884455, 47.53940705, NULL, 0, 1, 1),
-(583, 3, 'entry', 'rfid', '2025-11-18 13:36:10', -19.01885664, 47.53941334, NULL, 0, 1, 1),
-(584, 2, 'entry', 'rfid', '2025-11-18 13:41:45', -19.01885664, 47.53941334, NULL, 0, 1, 1),
-(585, 2, 'entry', 'rfid', '2025-11-17 13:00:00', -19.01889350, 47.53935320, '', 0, 1, 1),
-(586, 2, 'exit', 'rfid', '2025-11-17 17:00:00', -19.01890200, 47.53932950, '', 0, 1, 1),
-(587, 3, 'exit', 'pin', '2025-11-17 17:00:00', -19.01889170, 47.53934090, '', 0, 1, 1),
-(588, 3, 'entry', 'pin', '2025-11-17 13:45:00', -19.01889830, 47.53934810, '', 0, 1, 1),
-(591, 3, 'entry', 'pin', '2025-11-14 08:05:00', -19.01880830, 47.53935763, NULL, 0, 1, 1),
-(592, 2, 'entry', 'rfid', '2025-11-14 08:00:00', -19.01880830, 47.53935763, NULL, 0, 1, 1),
-(593, 3, 'entry', 'rfid', '2025-11-18 08:00:00', -19.01884701, 47.53940595, NULL, 0, 1, 1),
-(594, 2, 'entry', 'rfid', '2025-11-18 08:00:00', -19.01884521, 47.53940701, NULL, 0, 1, 1),
-(595, 2, 'exit', 'rfid', '2025-11-18 12:00:00', -19.01884455, 47.53940705, NULL, 0, 1, 1),
-(596, 3, 'exit', 'rfid', '2025-11-18 12:00:00', -19.01884455, 47.53940705, NULL, 0, 1, 1),
-(597, 2, 'exit', 'rfid', '2025-11-18 17:09:10', -19.01885865, 47.53941565, NULL, 0, 1, 1),
-(598, 3, 'exit', 'rfid', '2025-11-18 17:36:29', -19.01886528, 47.53938724, NULL, 0, 1, 1),
-(599, 2, 'entry', 'rfid', '2025-11-19 08:02:10', -19.01886584, 47.53938997, NULL, 0, 1, 1),
-(600, 3, 'entry', 'rfid', '2025-11-19 08:04:42', -19.01886740, 47.53939066, NULL, 0, 1, 1),
-(601, 2, 'entry', 'rfid', '2025-11-19 13:33:40', -19.01886688, 47.53939495, NULL, 0, 1, 1),
-(602, 3, 'entry', 'rfid', '2025-11-19 13:37:10', -19.01886688, 47.53939495, NULL, 0, 1, 1),
-(603, 2, 'exit', 'rfid', '2025-11-19 12:00:00', -19.01890200, 47.53932950, '', 0, 1, 1),
-(604, 3, 'exit', 'pin', '2025-11-19 12:00:00', -19.01888810, 47.53936520, '', 0, 1, 1),
-(605, 2, 'exit', 'rfid', '2025-11-19 17:12:10', -19.01886768, 47.53939755, NULL, 0, 1, 1),
-(606, 3, 'exit', 'rfid', '2025-11-19 17:47:01', -19.01886768, 47.53939755, NULL, 0, 1, 1),
-(607, 2, 'entry', 'rfid', '2025-11-20 08:07:40', -19.01886741, 47.53940150, NULL, 0, 1, 1),
-(608, 3, 'entry', 'rfid', '2025-11-20 08:07:52', -19.01886741, 47.53940150, NULL, 0, 1, 1),
-(609, 2, 'exit', 'rfid', '2025-11-20 12:11:27', -19.01886669, 47.53940291, NULL, 0, 1, 1),
-(610, 2, 'entry', 'rfid', '2025-11-20 13:38:44', -19.01887610, 47.53939796, NULL, 0, 1, 1),
-(611, 3, 'entry', 'rfid', '2025-11-20 14:00:00', -19.01887559, 47.53940162, NULL, 0, 1, 1),
-(612, 2, 'exit', 'rfid', '2025-11-20 17:30:15', -19.01887774, 47.53940586, NULL, 0, 1, 1),
-(613, 3, 'exit', 'rfid', '2025-11-20 12:00:00', -19.01887774, 47.53940586, NULL, 0, 1, 1),
-(614, 3, 'exit', 'rfid', '2025-11-20 17:45:21', -19.01887774, 47.53940586, NULL, 0, 1, 1);
-INSERT INTO `pointages` (`ID`, `employee_id`, `type_`, `auth_method`, `timestamp_`, `latitude`, `longitude`, `photo_path`, `synced`, `SiegeID`, `company_id`) VALUES
-(615, 2, 'entry', 'rfid', '2025-11-21 08:14:22', -19.01887643, 47.53941336, NULL, 0, 1, 1),
-(616, 3, 'entry', 'rfid', '2025-11-21 08:05:00', -19.01887643, 47.53941336, NULL, 0, 1, 1),
-(617, 3, 'exit', 'rfid', '2025-11-21 12:10:00', -19.01887643, 47.53941336, NULL, 0, 1, 1),
-(618, 3, 'entry', 'rfid', '2025-11-21 13:32:00', -19.01887700, 47.53941544, NULL, 0, 1, 1),
-(619, 3, 'exit', 'rfid', '2025-11-21 18:00:55', -19.01887353, 47.53942182, NULL, 0, 1, 1),
-(620, 3, 'entry', 'rfid', '2025-11-24 08:05:00', -19.01889290, 47.53932970, '', 0, 1, 1),
-(621, 2, 'entry', 'rfid', '2025-11-24 08:05:00', -19.01889350, 47.53935320, '', 0, 1, 1),
-(622, 2, 'exit', 'rfid', '2025-11-21 12:00:00', -19.01890200, 47.53932950, '', 0, 1, 1),
-(623, 2, 'entry', 'rfid', '2025-11-21 13:00:00', -19.01889590, 47.53933060, '', 0, 1, 1),
-(624, 2, 'exit', 'rfid', '2025-11-21 17:00:00', -19.01890090, 47.53933290, '', 0, 1, 1),
-(625, 3, 'exit', 'rfid', '2025-11-24 12:08:03', -19.01880873, 47.53952382, NULL, 0, 1, 1),
-(626, 2, 'exit', 'rfid', '2025-11-24 12:09:28', -19.01882492, 47.53954798, NULL, 0, 1, 1),
-(627, 3, 'entry', 'rfid', '2025-11-24 13:32:40', -19.01882322, 47.53955505, NULL, 0, 1, 1),
-(628, 2, 'entry', 'rfid', '2025-11-24 13:37:54', -19.01882322, 47.53955505, NULL, 0, 1, 1),
-(629, 2, 'exit', 'rfid', '2025-11-24 17:09:04', -19.01883726, 47.53954973, NULL, 0, 1, 1),
-(630, 3, 'exit', 'rfid', '2025-11-24 17:38:25', -19.01883726, 47.53954973, NULL, 0, 1, 1),
-(631, 2, 'entry', 'rfid', '2025-11-25 08:06:25', -19.01883407, 47.53955295, NULL, 0, 1, 1),
-(632, 3, 'entry', 'rfid', '2025-11-25 08:20:33', -19.01883407, 47.53955295, NULL, 0, 1, 1),
-(633, 3, 'exit', 'rfid', '2025-11-25 12:12:30', -19.01883443, 47.53955047, NULL, 0, 1, 1),
-(634, 3, 'entry', 'rfid', '2025-11-25 13:20:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(635, 2, 'exit', 'rfid', '2025-11-25 17:27:37', -19.01885416, 47.53950637, NULL, 0, 1, 1),
-(636, 3, 'exit', 'rfid', '2025-11-25 17:38:25', -19.01885416, 47.53950637, NULL, 0, 1, 1),
-(637, 2, 'exit', 'rfid', '2025-11-26 12:06:33', -19.01883581, 47.53950643, NULL, 0, 1, 1),
-(638, 3, 'entry', 'rfid', '2025-11-26 08:05:00', -19.01883581, 47.53950643, NULL, 0, 1, 1),
-(639, 3, 'exit', 'rfid', '2025-11-26 12:05:00', -19.01883581, 47.53950643, NULL, 0, 1, 1),
-(640, 2, 'entry', 'rfid', '2025-11-26 13:28:45', -19.01872123, 47.53935236, NULL, 0, 1, 1),
-(641, 2, 'exit', 'rfid', '2025-11-25 12:00:00', -19.01890200, 47.53932950, '', 0, 1, 1),
-(642, 2, 'entry', 'rfid', '2025-11-25 13:00:00', -19.01889590, 47.53933060, '', 0, 1, 1),
-(644, 2, 'entry', 'rfid', '2025-11-26 08:00:00', -19.01872123, 47.53935236, NULL, 0, 1, 1),
-(645, 3, 'entry', 'rfid', '2025-11-26 13:30:00', -19.01883581, 47.53950643, NULL, 0, 1, 1),
-(646, 2, 'exit', 'rfid', '2025-11-26 17:27:58', -19.01872339, 47.53936300, NULL, 0, 1, 1),
-(647, 3, 'exit', 'pin', '2025-11-26 17:40:30', -19.01872339, 47.53936300, NULL, 0, 1, 1),
-(648, 2, 'entry', 'rfid', '2025-11-27 08:06:18', -19.01875736, 47.53937224, NULL, 0, 1, 1),
-(649, 3, 'entry', 'pin', '2025-11-27 08:06:54', -19.01875736, 47.53937224, NULL, 0, 1, 1),
-(650, 2, 'exit', 'rfid', '2025-11-27 12:07:01', -19.01881055, 47.53938809, NULL, 0, 1, 1),
-(651, 3, 'exit', 'pin', '2025-11-27 12:12:10', -19.01881055, 47.53938809, NULL, 0, 1, 1),
-(652, 3, 'entry', 'pin', '2025-11-27 13:32:56', -19.01881884, 47.53939546, NULL, 0, 1, 1),
-(653, 2, 'entry', 'rfid', '2025-11-27 13:33:04', -19.01881884, 47.53939546, NULL, 0, 1, 1),
-(654, 2, 'exit', 'rfid', '2025-11-27 16:59:36', -19.01882754, 47.53939773, NULL, 0, 1, 1),
-(655, 3, 'exit', 'pin', '2025-11-27 17:41:57', -19.01882754, 47.53939773, NULL, 0, 1, 1),
-(656, 2, 'entry', 'rfid', '2025-11-28 07:56:47', -19.01882689, 47.53940543, NULL, 0, 1, 1),
-(657, 2, 'exit', 'rfid', '2025-11-28 12:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(658, 2, 'entry', 'rfid', '2025-11-28 13:02:02', -19.01884630, 47.53944523, NULL, 0, 1, 1),
-(659, 3, 'entry', 'pin', '2025-11-28 13:38:43', -19.01885035, 47.53944035, NULL, 0, 1, 1),
-(660, 3, 'exit', 'pin', '2025-11-28 12:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(661, 3, 'entry', 'rfid', '2025-11-28 08:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(663, 2, 'exit', 'rfid', '2025-11-28 17:47:41', -19.01885245, 47.53944522, NULL, 0, 1, 1),
-(664, 3, 'exit', 'rfid', '2025-11-28 17:48:37', -19.01885245, 47.53944522, NULL, 0, 1, 1),
-(665, 3, 'entry', 'rfid', '2025-12-01 08:03:31', -19.01885459, 47.53944492, NULL, 0, 1, 1),
-(666, 3, 'exit', 'rfid', '2025-12-01 12:04:00', -19.01891310, 47.53939430, NULL, 0, 1, 1),
-(667, 3, 'entry', 'rfid', '2025-12-01 13:30:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(668, 3, 'exit', 'rfid', '2025-12-01 17:47:11', -19.01885626, 47.53944396, NULL, 0, 1, 1),
-(669, 3, 'entry', 'rfid', '2025-12-02 08:05:00', -19.01885558, 47.53944865, NULL, 0, 1, 1),
-(670, 2, 'entry', 'rfid', '2025-12-02 08:10:28', -19.01885558, 47.53944865, NULL, 0, 1, 1),
-(671, 2, 'entry', 'rfid', '2025-12-02 13:23:52', -19.01885558, 47.53944865, NULL, 0, 1, 1),
-(672, 3, 'entry', 'rfid', '2025-12-02 13:23:59', -19.01885558, 47.53944865, NULL, 0, 1, 1),
-(673, 2, 'exit', 'rfid', '2025-12-02 12:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(674, 3, 'exit', 'rfid', '2025-12-02 12:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(675, 2, 'entry', 'rfid', '2025-12-01 08:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(676, 2, 'exit', 'rfid', '2025-12-01 17:00:00', -19.01130470, 47.53737280, NULL, 0, 1, 1),
-(677, 2, 'exit', 'rfid', '2025-12-02 17:30:59', -19.01885448, 47.53944824, NULL, 0, 1, 1),
-(678, 3, 'exit', 'rfid', '2025-12-02 17:35:17', -19.01885448, 47.53944824, NULL, 0, 1, 1),
-(679, 3, 'entry', 'rfid', '2025-12-03 08:04:36', -19.01885708, 47.53944594, NULL, 0, 1, 1),
-(680, 2, 'entry', 'rfid', '2025-12-03 08:05:21', -19.01885708, 47.53944594, NULL, 0, 1, 1),
-(681, 2, 'exit', 'rfid', '2025-12-03 11:40:33', -19.01885380, 47.53945186, NULL, 0, 1, 1),
-(682, 3, 'exit', 'rfid', '2025-12-03 12:02:05', -19.01885380, 47.53945186, NULL, 0, 1, 1),
-(683, 2, 'entry', 'rfid', '2025-12-03 12:24:26', -19.01885201, 47.53944128, NULL, 0, 1, 1),
-(684, 3, 'entry', 'rfid', '2025-12-03 13:31:23', -19.01885201, 47.53944128, NULL, 0, 1, 1),
-(685, 3, 'exit', 'rfid', '2025-12-03 17:45:55', -19.01886432, 47.53944137, NULL, 0, 1, 1),
-(686, 2, 'exit', 'rfid', '2025-12-03 18:23:33', -19.01886432, 47.53944137, NULL, 0, 1, 1),
-(687, 2, 'entry', 'rfid', '2025-12-04 07:31:13', -19.01886084, 47.53944752, NULL, 0, 1, 1),
-(688, 3, 'entry', 'rfid', '2025-12-04 08:06:10', -19.01886084, 47.53944752, NULL, 0, 1, 1),
-(689, 3, 'exit', 'rfid', '2025-12-04 12:03:33', -19.01885785, 47.53945364, NULL, 0, 1, 1),
-(690, 3, 'entry', 'rfid', '2025-12-04 13:31:00', -18.98441280, 47.53737280, NULL, 0, 1, 1),
-(691, 2, 'exit', 'rfid', '2025-12-04 16:41:07', -19.01885785, 47.53945364, NULL, 0, 1, 1),
-(692, 3, 'exit', 'rfid', '2025-12-04 17:45:43', -19.01885785, 47.53945364, NULL, 0, 1, 1),
-(693, 2, 'entry', 'rfid', '2025-12-05 07:59:39', -19.01885355, 47.53946014, NULL, 0, 1, 1),
-(694, 3, 'entry', 'rfid', '2025-12-05 08:02:12', -19.01885355, 47.53946014, NULL, 0, 1, 1),
-(695, 3, 'exit', 'rfid', '2025-12-05 12:02:14', -19.01884551, 47.53946055, NULL, 0, 1, 1),
-(696, 2, 'exit', 'rfid', '2025-12-05 12:02:29', -19.01884551, 47.53946055, NULL, 0, 1, 1),
-(697, 2, 'entry', 'rfid', '2025-12-05 13:04:11', -19.01883953, 47.53946397, NULL, 0, 1, 1),
-(698, 3, 'entry', 'rfid', '2025-12-05 13:37:31', -19.01883953, 47.53946397, NULL, 0, 1, 1),
-(699, 3, 'exit', 'pin', '2025-12-05 17:21:01', -19.01880180, 47.53957700, NULL, 0, 1, 1),
-(700, 2, 'exit', 'rfid', '2025-12-05 17:33:55', -19.01880180, 47.53957700, NULL, 0, 1, 1),
-(701, 3, 'entry', 'rfid', '2025-12-06 09:05:00', -18.98441280, 47.53737280, NULL, 0, 1, 1),
-(703, 3, 'exit', 'rfid', '2025-12-06 11:57:00', -19.01879775, 47.53955849, NULL, 0, 1, 1),
-(705, 3, 'entry', 'rfid', '2025-12-08 08:08:27', -19.01879979, 47.53955288, NULL, 0, 1, 1),
-(706, 2, 'entry', 'rfid', '2025-12-08 08:20:53', -19.01879979, 47.53955288, NULL, 0, 1, 1),
-(708, 3, 'exit', 'rfid', '2025-12-08 12:05:00', -19.01854720, 47.54309120, NULL, 0, 1, 1),
-(709, 2, 'exit', 'rfid', '2025-12-08 12:06:30', -19.01881468, 47.53954901, NULL, 0, 1, 1),
-(710, 2, 'entry', 'rfid', '2025-12-08 13:13:41', -19.01884079, 47.53950583, NULL, 0, 1, 1),
-(711, 3, 'entry', 'rfid', '2025-12-08 13:34:09', -19.01884079, 47.53950583, NULL, 0, 1, 1),
-(712, 2, 'exit', 'rfid', '2025-12-08 17:26:59', -19.01882895, 47.53950786, NULL, 0, 1, 1),
-(713, 3, 'exit', 'rfid', '2025-12-08 17:53:07', -19.01882895, 47.53950786, NULL, 0, 1, 1),
-(714, 2, 'entry', 'rfid', '2025-12-09 07:57:32', -19.01883224, 47.53951379, NULL, 0, 1, 1),
-(715, 3, 'entry', 'rfid', '2025-12-09 08:09:08', -19.01883224, 47.53951379, NULL, 0, 1, 1),
-(716, 2, 'exit', 'rfid', '2025-12-09 12:07:47', -19.01882632, 47.53950797, NULL, 0, 1, 1),
-(717, 3, 'exit', 'rfid', '2025-12-09 12:08:19', -19.01882632, 47.53950797, NULL, 0, 1, 1),
-(718, 3, 'entry', 'rfid', '2025-12-09 13:30:00', -19.02182400, 47.54309120, NULL, 0, 1, 1),
-(719, 3, 'exit', 'rfid', '2025-12-09 17:48:58', -19.01882293, 47.53951408, NULL, 0, 1, 1),
-(720, 3, 'entry', 'rfid', '2025-12-10 08:21:57', -19.01883237, 47.53950159, NULL, 0, 1, 1),
-(721, 2, 'entry', 'rfid', '2025-12-10 08:34:25', -19.01885482, 47.53947189, NULL, 0, 1, 1),
-(722, 2, 'exit', 'rfid', '2025-12-10 12:04:15', -19.01885961, 47.53946482, NULL, 0, 1, 1),
-(723, 3, 'exit', 'rfid', '2025-12-10 12:05:01', -19.01885961, 47.53946482, NULL, 0, 1, 1),
-(725, 3, 'entry', 'rfid', '2025-12-10 13:29:47', -19.01886730, 47.53946329, NULL, 0, 1, 1),
-(726, 3, 'exit', 'rfid', '2025-12-10 17:00:00', -19.01892320, 47.53936570, NULL, 0, 1, 1),
-(727, 3, 'entry', 'rfid', '2025-12-11 08:05:00', -19.01892320, 47.53936570, NULL, 0, 1, 1),
-(728, 3, 'exit', 'rfid', '2025-12-11 12:05:00', -19.01892320, 47.53936570, NULL, 0, 1, 1),
-(729, 3, 'entry', 'rfid', '2025-12-11 13:30:00', -19.01072790, 47.53737290, NULL, 0, 1, 1),
-(730, 3, 'exit', 'rfid', '2025-12-11 18:11:47', -19.01893445, 47.53937561, NULL, 0, 1, 1),
-(731, 2, 'entry', 'rfid', '2025-12-12 07:50:12', -19.01887283, 47.53941684, NULL, 0, 1, 1),
-(732, 3, 'entry', 'rfid', '2025-12-12 08:06:23', -19.01887283, 47.53941684, NULL, 0, 1, 1),
-(734, 3, 'exit', 'rfid', '2025-12-12 12:02:27', -19.01887722, 47.53941442, NULL, 0, 1, 1),
-(735, 3, 'entry', 'rfid', '2025-12-12 13:30:42', -19.01888684, 47.53940950, NULL, 0, 1, 1),
-(736, 3, 'exit', 'rfid', '2025-12-12 17:53:40', -19.01890379, 47.53940554, NULL, 0, 1, 1),
-(737, 3, 'entry', 'face', '2025-12-13 09:24:18', -19.01890048, 47.53940490, NULL, 0, 1, 1),
-(738, 3, 'exit', 'pin', '2025-12-13 13:52:56', -19.01889425, 47.53941712, NULL, 0, 1, 1),
-(739, 2, 'entry', 'rfid', '2025-12-15 08:06:45', -19.01889321, 47.53943293, NULL, 0, 1, 1),
-(740, 3, 'entry', 'rfid', '2025-12-15 08:07:12', -19.01889321, 47.53943293, NULL, 0, 1, 1),
-(741, 2, 'exit', 'rfid', '2025-12-15 12:05:28', -19.01893536, 47.53942194, NULL, 0, 1, 1),
-(742, 3, 'exit', 'rfid', '2025-12-15 12:06:06', -19.01893536, 47.53942194, NULL, 0, 1, 1),
-(743, 2, 'entry', 'rfid', '2025-12-15 13:15:33', -19.01891371, 47.53943500, NULL, 0, 1, 1),
-(744, 3, 'entry', 'rfid', '2025-12-15 13:31:35', -19.01891371, 47.53943500, NULL, 0, 1, 1),
-(745, 3, 'exit', 'pin', '2025-12-15 17:36:27', -19.01888918, 47.53945770, NULL, 0, 1, 1),
-(746, 2, 'exit', 'rfid', '2025-12-15 17:38:57', -19.01888918, 47.53945770, NULL, 0, 1, 1),
-(747, 2, 'entry', 'rfid', '2025-12-16 08:07:46', -19.01889116, 47.53945817, NULL, 0, 1, 1),
-(748, 3, 'entry', 'rfid', '2025-12-16 08:07:00', -18.99039180, 47.53798670, NULL, 0, 1, 1),
-(749, 2, 'exit', 'rfid', '2025-12-16 12:10:27', -19.01890885, 47.53943856, NULL, 0, 1, 1),
-(750, 3, 'exit', 'rfid', '2025-12-16 12:11:37', -19.01890885, 47.53943856, NULL, 0, 1, 1),
-(751, 2, 'entry', 'rfid', '2025-12-16 13:07:59', -19.01890443, 47.53943905, NULL, 0, 1, 1),
-(752, 3, 'entry', 'rfid', '2025-12-16 13:23:39', -19.01890443, 47.53943905, NULL, 0, 1, 1),
-(753, 2, 'exit', 'rfid', '2025-12-16 17:24:06', -19.01889956, 47.53944309, NULL, 0, 1, 1),
-(754, 3, 'exit', 'rfid', '2025-12-16 17:47:16', -19.01889956, 47.53944309, NULL, 0, 1, 1),
-(755, 2, 'entry', 'rfid', '2025-12-17 07:59:47', -19.01889821, 47.53944281, NULL, 0, 1, 1),
-(756, 3, 'entry', 'rfid', '2025-12-17 08:10:10', -19.01889821, 47.53944281, NULL, 0, 1, 1),
-(757, 2, 'exit', 'rfid', '2025-12-17 12:07:11', -19.01889854, 47.53944221, NULL, 0, 1, 1),
-(758, 3, 'exit', 'rfid', '2025-12-17 12:11:16', -19.01889854, 47.53944221, NULL, 0, 1, 1),
-(759, 2, 'entry', 'rfid', '2025-12-17 13:07:33', -19.01887979, 47.53944568, NULL, 0, 1, 1),
-(760, 3, 'entry', 'pin', '2025-12-17 13:27:44', -19.01887979, 47.53944568, NULL, 0, 1, 1),
-(761, 2, 'exit', 'rfid', '2025-12-17 17:29:19', -19.01891234, 47.53944636, NULL, 0, 1, 1),
-(762, 3, 'exit', 'rfid', '2025-12-17 17:34:52', -19.01891234, 47.53944636, NULL, 0, 1, 1),
-(763, 3, 'entry', 'rfid', '2025-12-18 08:08:28', -19.01890359, 47.53944033, NULL, 0, 1, 1),
-(764, 2, 'entry', 'rfid', '2025-12-18 08:55:21', -19.01890359, 47.53944033, NULL, 0, 1, 1),
-(765, 3, 'exit', 'rfid', '2025-12-18 12:08:28', -19.01889896, 47.53943850, NULL, 0, 1, 1),
-(766, 3, 'entry', 'pin', '2025-12-18 13:36:38', -19.01889556, 47.53944010, NULL, 0, 1, 1),
-(767, 3, 'exit', 'pin', '2025-12-18 17:50:51', -19.01889150, 47.53943172, NULL, 0, 1, 1),
-(768, 3, 'entry', 'rfid', '2025-12-19 08:30:06', -19.01889094, 47.53943272, NULL, 0, 1, 1),
-(769, 2, 'entry', 'rfid', '2025-12-19 08:35:27', -19.01889094, 47.53943272, NULL, 0, 1, 1),
-(770, 2, 'exit', 'rfid', '2025-12-19 10:57:52', -19.01889026, 47.53943091, NULL, 0, 1, 1),
-(771, 3, 'exit', 'rfid', '2025-12-19 12:14:15', -19.01889026, 47.53943091, NULL, 0, 1, 1),
-(772, 39, 'entry', 'face', '2025-12-26 11:27:21', -20.92585008, 55.65735034, NULL, 0, 2, 7),
-(773, 3, 'entry', 'rfid', '2026-01-05 08:05:00', -18.92352000, 47.54309120, NULL, 0, 1, 1),
-(774, 2, 'entry', 'rfid', '2026-01-05 08:05:00', -18.92352000, 47.54309120, NULL, 0, 1, 1),
-(775, 2, 'exit', 'rfid', '2026-01-05 12:05:00', -18.92352000, 47.54309120, NULL, 0, 1, 1),
-(776, 3, 'exit', 'rfid', '2026-01-05 12:05:00', -18.92352000, 47.54309120, NULL, 0, 1, 1),
-(777, 3, 'entry', 'rfid', '2026-01-05 13:31:38', -19.01886780, 47.53941035, NULL, 0, 1, 1),
-(778, 2, 'entry', 'rfid', '2026-01-05 13:32:23', -19.01886780, 47.53941035, NULL, 0, 1, 1),
-(779, 2, 'exit', 'rfid', '2026-01-05 17:34:53', -19.01885171, 47.53941357, NULL, 0, 1, 1),
-(780, 3, 'exit', 'pin', '2026-01-05 17:35:40', -19.01885171, 47.53941357, NULL, 0, 1, 1),
-(781, 3, 'entry', 'pin', '2026-01-06 08:05:38', -19.01885605, 47.53941515, NULL, 0, 1, 1),
-(782, 2, 'entry', 'rfid', '2026-01-06 08:10:38', -19.01885605, 47.53941515, NULL, 0, 1, 1),
-(783, 3, 'exit', 'rfid', '2026-01-06 12:06:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(784, 2, 'exit', 'rfid', '2026-01-06 12:07:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(785, 3, 'entry', 'rfid', '2026-01-06 13:29:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(786, 2, 'entry', 'rfid', '2026-01-06 12:29:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(787, 3, 'exit', 'pin', '2026-01-06 17:31:12', -19.01885849, 47.53941636, NULL, 0, 1, 1),
-(788, 2, 'exit', 'rfid', '2026-01-06 17:32:04', -19.01885849, 47.53941636, NULL, 0, 1, 1),
-(789, 2, 'entry', 'rfid', '2026-01-07 08:05:33', -19.01885266, 47.53941436, NULL, 0, 1, 1),
-(790, 3, 'entry', 'pin', '2026-01-07 08:10:08', -19.01885266, 47.53941436, NULL, 0, 1, 1),
-(791, 3, 'exit', 'pin', '2026-01-07 12:04:41', -19.01885345, 47.53941371, NULL, 0, 1, 1),
-(792, 2, 'exit', 'rfid', '2026-01-07 12:00:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(793, 2, 'entry', 'rfid', '2026-01-07 13:00:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(794, 3, 'entry', 'rfid', '2026-01-07 13:30:00', -18.91368960, 47.53653760, NULL, 0, 1, 1),
-(795, 2, 'exit', 'rfid', '2026-01-07 17:11:55', -19.01886350, 47.53939053, NULL, 0, 1, 1),
-(796, 3, 'exit', 'rfid', '2026-01-07 17:33:17', -19.01886350, 47.53939053, NULL, 0, 1, 1),
-(797, 2, 'entry', 'rfid', '2026-01-08 08:00:44', -19.01895533, 47.53929200, NULL, 0, 1, 1),
-(798, 3, 'entry', 'pin', '2026-01-08 08:02:30', -19.01895533, 47.53929200, NULL, 0, 1, 1),
-(799, 3, 'exit', 'pin', '2026-01-08 12:04:13', -19.01888902, 47.53938272, NULL, 0, 1, 1),
-(800, 2, 'exit', 'rfid', '2026-01-08 12:09:12', -19.01888902, 47.53938272, NULL, 0, 1, 1),
-(801, 3, 'entry', 'pin', '2026-01-08 13:33:33', -19.01887866, 47.53939671, NULL, 0, 1, 1),
-(802, 2, 'entry', 'rfid', '2026-01-08 13:45:06', -19.01887866, 47.53939671, NULL, 0, 1, 1),
-(803, 2, 'exit', 'rfid', '2026-01-08 17:26:04', -19.01887449, 47.53940246, NULL, 0, 1, 1),
-(804, 3, 'exit', 'face', '2026-01-08 17:34:55', -19.01887449, 47.53940246, NULL, 0, 1, 1),
-(805, 3, 'entry', 'pin', '2026-01-09 08:06:53', -19.01887190, 47.53940698, NULL, 0, 1, 1),
-(806, 2, 'entry', 'rfid', '2026-01-09 08:11:52', -19.01887190, 47.53940698, NULL, 0, 1, 1),
-(807, 3, 'exit', 'pin', '2026-01-09 12:03:35', -19.01887046, 47.53940941, NULL, 0, 1, 1),
-(808, 2, 'exit', 'rfid', '2026-01-09 12:09:58', -19.01887046, 47.53940941, NULL, 0, 1, 1),
-(809, 3, 'entry', 'pin', '2026-01-09 13:04:39', -19.01886960, 47.53941062, NULL, 0, 1, 1),
-(810, 2, 'entry', 'rfid', '2026-01-09 13:04:50', -19.01886960, 47.53941062, NULL, 0, 1, 1),
-(811, 3, 'exit', 'pin', '2026-01-09 17:07:49', -19.01886935, 47.53941186, NULL, 0, 1, 1),
-(812, 2, 'exit', 'rfid', '2026-01-09 17:08:18', -19.01886935, 47.53941186, NULL, 0, 1, 1),
-(813, 2, 'entry', 'rfid', '2026-01-12 07:57:33', -19.01887224, 47.53941998, NULL, 0, 1, 1),
-(814, 3, 'entry', 'pin', '2026-01-12 08:05:33', -19.01887224, 47.53941998, NULL, 0, 1, 1),
-(815, 3, 'exit', 'pin', '2026-01-12 12:03:15', -19.01886640, 47.53941726, NULL, 0, 1, 1),
-(816, 2, 'exit', 'rfid', '2026-01-12 12:11:23', -19.01886640, 47.53941726, NULL, 0, 1, 1),
-(817, 2, 'entry', 'rfid', '2026-01-12 13:13:30', -19.01886414, 47.53942499, NULL, 0, 1, 1),
-(818, 3, 'entry', 'pin', '2026-01-12 13:26:06', -19.01886414, 47.53942499, NULL, 0, 1, 1),
-(819, 2, 'exit', 'rfid', '2026-01-12 17:01:04', -19.01886399, 47.53942289, NULL, 0, 1, 1),
-(820, 3, 'exit', 'face', '2026-01-12 17:33:09', -19.01886399, 47.53942289, NULL, 0, 1, 1),
-(821, 3, 'entry', 'pin', '2026-01-13 08:03:24', -19.01886792, 47.53943794, NULL, 0, 1, 1),
-(822, 2, 'entry', 'rfid', '2026-01-13 08:07:29', -19.01886792, 47.53943794, NULL, 0, 1, 1),
-(823, 3, 'exit', 'pin', '2026-01-13 12:02:19', -19.01886420, 47.53942030, NULL, 0, 1, 1),
-(824, 2, 'exit', 'rfid', '2026-01-13 12:33:34', -19.01886420, 47.53942030, NULL, 0, 1, 1),
-(825, 2, 'entry', 'rfid', '2026-01-13 13:30:30', -19.01886535, 47.53942065, NULL, 0, 1, 1),
-(826, 2, 'exit', 'rfid', '2026-01-13 17:42:02', -19.01886413, 47.53941126, NULL, 0, 1, 1),
-(827, 3, 'exit', 'pin', '2026-01-13 17:55:10', -19.01886413, 47.53941126, NULL, 0, 1, 1),
-(828, 3, 'entry', 'pin', '2026-01-14 08:05:36', -19.01886360, 47.53941368, NULL, 0, 1, 1),
-(829, 2, 'entry', 'rfid', '2026-01-14 08:05:43', -19.01886360, 47.53941368, NULL, 0, 1, 1),
-(830, 3, 'exit', 'pin', '2026-01-14 12:00:26', -19.01886362, 47.53941491, NULL, 0, 1, 1),
-(831, 2, 'exit', 'rfid', '2026-01-14 12:25:51', -19.01886362, 47.53941491, NULL, 0, 1, 1),
-(832, 3, 'entry', 'face', '2026-01-14 13:30:39', -19.01886553, 47.53942007, NULL, 0, 1, 1),
-(833, 2, 'entry', 'rfid', '2026-01-14 13:33:58', -19.01886587, 47.53942030, NULL, 0, 1, 1),
-(834, 2, 'exit', 'rfid', '2026-01-14 17:22:20', -19.01885506, 47.53942041, NULL, 0, 1, 1),
-(835, 3, 'exit', 'pin', '2026-01-14 17:33:57', -19.01885506, 47.53942041, NULL, 0, 1, 1),
-(836, 3, 'entry', 'pin', '2026-01-15 08:05:17', -19.01885712, 47.53940968, NULL, 0, 1, 1),
-(837, 2, 'entry', 'rfid', '2026-01-15 08:08:49', -19.01885928, 47.53941362, NULL, 0, 1, 1),
-(838, 3, 'exit', 'pin', '2026-01-15 12:03:48', -19.01885998, 47.53941402, NULL, 0, 1, 1),
-(839, 2, 'exit', 'rfid', '2026-01-15 12:04:32', -19.01885998, 47.53941402, NULL, 0, 1, 1),
-(840, 2, 'entry', 'rfid', '2026-01-15 13:33:04', -19.01886044, 47.53941454, NULL, 0, 1, 1),
-(841, 3, 'entry', 'pin', '2026-01-15 13:33:42', -19.01886044, 47.53941454, NULL, 0, 1, 1),
-(842, 3, 'entry', 'pin', '2026-01-13 13:30:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(843, 3, 'exit', 'pin', '2026-01-15 17:38:38', -19.01886089, 47.53941492, NULL, 0, 1, 1),
-(844, 2, 'exit', 'rfid', '2026-01-15 18:40:33', -19.01886089, 47.53941492, NULL, 0, 1, 1),
-(845, 2, 'entry', 'rfid', '2026-01-16 08:10:09', -19.01886155, 47.53941428, NULL, 0, 1, 1),
-(846, 3, 'entry', 'pin', '2026-01-16 08:22:58', -19.01886155, 47.53941428, NULL, 0, 1, 1),
-(847, 3, 'exit', 'pin', '2026-01-16 12:07:02', -19.01886307, 47.53941330, NULL, 0, 1, 1),
-(848, 2, 'exit', 'rfid', '2026-01-16 12:07:51', -19.01886307, 47.53941330, NULL, 0, 1, 1),
-(849, 3, 'entry', 'pin', '2026-01-16 13:00:44', -19.01886404, 47.53941208, NULL, 0, 1, 1),
-(850, 2, 'entry', 'rfid', '2026-01-16 13:00:51', -19.01886404, 47.53941208, NULL, 0, 1, 1),
-(851, 2, 'exit', 'rfid', '2026-01-16 17:04:12', -19.01886496, 47.53941116, NULL, 0, 1, 1),
-(852, 3, 'exit', 'pin', '2026-01-16 17:13:27', -19.01886496, 47.53941116, NULL, 0, 1, 1),
-(853, 16, 'entry', 'face', '2026-01-18 15:43:22', -20.92582060, 55.65734666, NULL, 0, 2, 7),
-(854, 16, 'exit', 'rfid', '2026-01-18 16:14:00', -20.92582610, 55.65734669, NULL, 0, 2, 7),
-(855, 2, 'entry', 'rfid', '2026-01-19 08:06:49', -19.01886546, 47.53941010, NULL, 0, 1, 1),
-(856, 3, 'entry', 'pin', '2026-01-19 08:09:26', -19.01886546, 47.53941010, NULL, 0, 1, 1),
-(857, 16, 'entry', 'rfid', '2026-01-19 09:41:17', -20.92582373, 55.65733550, NULL, 0, 2, 7),
-(858, 39, 'entry', 'rfid', '2026-01-19 09:47:31', -20.92582373, 55.65733550, NULL, 0, 2, 7),
-(859, 39, 'exit', 'rfid', '2026-01-19 09:48:44', -20.92583691, 55.65734779, NULL, 0, 2, 7),
-(860, 3, 'exit', 'pin', '2026-01-19 12:00:57', -19.01886603, 47.53940941, NULL, 0, 1, 1),
-(861, 2, 'exit', 'rfid', '2026-01-19 12:09:42', -19.01886603, 47.53940941, NULL, 0, 1, 1),
-(862, 3, 'entry', 'pin', '2026-01-19 13:34:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(863, 2, 'entry', 'rfid', '2026-01-19 13:41:06', -19.01886723, 47.53940868, NULL, 0, 1, 1),
-(864, 3, 'exit', 'pin', '2026-01-19 17:41:13', -19.01887490, 47.53939780, NULL, 0, 1, 1),
-(865, 2, 'exit', 'rfid', '2026-01-19 17:46:48', -19.01887490, 47.53939780, NULL, 0, 1, 1),
-(866, 2, 'entry', 'rfid', '2026-01-20 08:04:30', -19.01890324, 47.53939127, NULL, 0, 1, 1),
-(867, 3, 'entry', 'pin', '2026-01-20 08:20:44', -19.01890324, 47.53939127, NULL, 0, 1, 1),
-(869, 39, 'entry', 'rfid', '2026-01-20 11:06:49', -20.92579378, 55.65735366, NULL, 0, 2, 7),
-(870, 16, 'exit', 'rfid', '2026-01-20 11:32:31', -20.92578540, 55.65733220, NULL, 0, 2, 7),
-(871, 3, 'exit', 'pin', '2026-01-20 12:05:53', -19.01887093, 47.53939970, NULL, 0, 1, 1),
-(872, 2, 'exit', 'rfid', '2026-01-20 12:06:45', -19.01887264, 47.53940088, NULL, 0, 1, 1),
-(873, 2, 'entry', 'rfid', '2026-01-20 13:32:05', -19.01887309, 47.53939991, NULL, 0, 1, 1),
-(874, 3, 'entry', 'pin', '2026-01-20 13:35:28', -19.01887309, 47.53939991, NULL, 0, 1, 1),
-(875, 3, 'exit', 'pin', '2026-01-20 17:51:27', -19.01887381, 47.53940102, NULL, 0, 1, 1),
-(876, 2, 'exit', 'rfid', '2026-01-20 17:54:03', -19.01887381, 47.53940102, NULL, 0, 1, 1),
-(877, 2, 'entry', 'rfid', '2026-01-21 07:53:47', -19.01888239, 47.53940655, NULL, 0, 1, 1),
-(878, 3, 'entry', 'pin', '2026-01-21 08:06:54', -19.01888239, 47.53940655, NULL, 0, 1, 1),
-(879, 2, 'exit', 'rfid', '2026-01-21 12:02:51', -19.01888121, 47.53940632, NULL, 0, 1, 1),
-(880, 3, 'exit', 'pin', '2026-01-21 12:06:58', -19.01888121, 47.53940632, NULL, 0, 1, 1),
-(881, 3, 'entry', 'face', '2026-01-21 13:37:03', -19.01888017, 47.53940609, NULL, 0, 1, 1),
-(882, 2, 'entry', 'rfid', '2026-01-21 13:39:16', -19.01888017, 47.53940609, NULL, 0, 1, 1),
-(883, 2, 'exit', 'rfid', '2026-01-21 17:40:04', -19.01887966, 47.53940589, NULL, 0, 1, 1),
-(884, 3, 'exit', 'pin', '2026-01-21 17:53:17', -19.01887966, 47.53940589, NULL, 0, 1, 1),
-(885, 3, 'entry', 'pin', '2026-01-22 08:06:24', -19.01887905, 47.53940565, NULL, 0, 1, 1),
-(886, 2, 'entry', 'rfid', '2026-01-22 08:06:57', -19.01887905, 47.53940565, NULL, 0, 1, 1),
-(888, 16, 'entry', 'rfid', '2026-01-22 12:35:01', -20.92579020, 55.65727930, NULL, 0, 2, 7),
-(890, 3, 'exit', 'rfid', '2026-01-22 11:57:52', -19.01887740, 47.53940229, NULL, 0, 1, 1),
-(892, 3, 'entry', 'pin', '2026-01-22 13:28:23', -19.01887675, 47.53940243, NULL, 0, 1, 1),
-(893, 2, 'exit', 'rfid', '2026-01-22 17:06:19', -19.01887657, 47.53940255, NULL, 0, 1, 1),
-(894, 3, 'exit', 'face', '2026-01-22 17:35:26', -19.01887657, 47.53940255, NULL, 0, 1, 1),
-(895, 2, 'entry', 'rfid', '2026-01-23 07:56:21', -19.01887641, 47.53940268, NULL, 0, 1, 1),
-(896, 3, 'entry', 'pin', '2026-01-23 08:06:59', -19.01887641, 47.53940268, NULL, 0, 1, 1),
-(898, 5, 'entry', 'rfid', '2026-01-23 08:37:04', -19.01887641, 47.53940268, NULL, 0, 1, 1),
-(899, 3, 'exit', 'rfid', '2026-01-23 12:03:07', -19.01887644, 47.53940278, NULL, 0, 1, 1),
-(900, 2, 'exit', 'rfid', '2026-01-23 12:05:53', -19.01887639, 47.53940242, NULL, 0, 1, 1),
-(901, 5, 'exit', 'rfid', '2026-01-23 12:06:10', -19.01887639, 47.53940242, NULL, 0, 1, 1),
-(902, 3, 'entry', 'rfid', '2026-01-23 13:01:26', -19.01888229, 47.53940270, NULL, 0, 1, 1),
-(903, 5, 'entry', 'rfid', '2026-01-23 13:03:58', -19.01888229, 47.53940270, NULL, 0, 1, 1),
-(904, 2, 'entry', 'rfid', '2026-01-23 13:08:14', -19.01888229, 47.53940270, NULL, 0, 1, 1),
-(905, 5, 'exit', 'rfid', '2026-01-23 16:24:51', -19.01888140, 47.53940251, NULL, 0, 1, 1),
-(906, 2, 'exit', 'rfid', '2026-01-23 16:59:58', -19.01888140, 47.53940251, NULL, 0, 1, 1),
-(907, 3, 'exit', 'rfid', '2026-01-23 17:00:05', -19.01888140, 47.53940251, NULL, 0, 1, 1),
-(908, 2, 'entry', 'rfid', '2026-01-26 07:59:28', -19.01888191, 47.53940312, NULL, 0, 1, 1),
-(909, 3, 'entry', 'pin', '2026-01-26 08:04:52', -19.01888191, 47.53940312, NULL, 0, 1, 1),
-(910, 5, 'entry', 'rfid', '2026-01-26 08:12:07', -19.01888191, 47.53940312, NULL, 0, 1, 1),
-(911, 3, 'exit', 'pin', '2026-01-26 12:04:11', -19.01888321, 47.53940022, NULL, 0, 1, 1),
-(912, 5, 'exit', 'rfid', '2026-01-26 12:05:10', -19.01888321, 47.53940022, NULL, 0, 1, 1),
-(913, 2, 'exit', 'rfid', '2026-01-26 12:05:25', -19.01888321, 47.53940022, NULL, 0, 1, 1),
-(914, 5, 'entry', 'rfid', '2026-01-26 12:58:37', -19.01887039, 47.53940668, NULL, 0, 1, 1),
-(915, 2, 'entry', 'rfid', '2026-01-26 13:00:45', -19.01887039, 47.53940668, NULL, 0, 1, 1),
-(916, 3, 'entry', 'pin', '2026-01-26 13:32:58', -19.01887039, 47.53940668, NULL, 0, 1, 1),
-(917, 5, 'exit', 'rfid', '2026-01-26 16:15:52', -19.01887026, 47.53940972, NULL, 0, 1, 1),
-(918, 2, 'exit', 'rfid', '2026-01-26 17:19:10', -19.01887026, 47.53940972, NULL, 0, 1, 1),
-(919, 3, 'exit', 'pin', '2026-01-26 17:52:33', -19.01887026, 47.53940972, NULL, 0, 1, 1),
-(920, 2, 'entry', 'rfid', '2026-01-27 08:18:09', -19.01886757, 47.53941384, NULL, 0, 1, 1),
-(921, 3, 'entry', 'pin', '2026-01-27 08:18:25', -19.01886757, 47.53941384, NULL, 0, 1, 1),
-(922, 5, 'entry', 'rfid', '2026-01-27 08:31:38', -19.01886757, 47.53941384, NULL, 0, 1, 1),
-(923, 3, 'exit', 'pin', '2026-01-27 12:04:45', -19.01886947, 47.53941071, NULL, 0, 1, 1),
-(924, 2, 'exit', 'rfid', '2026-01-27 12:05:18', -19.01886947, 47.53941071, NULL, 0, 1, 1),
-(925, 5, 'exit', 'rfid', '2026-01-27 12:05:45', -19.01886947, 47.53941071, NULL, 0, 1, 1),
-(926, 5, 'entry', 'rfid', '2026-01-27 13:02:12', -19.01887021, 47.53940953, NULL, 0, 1, 1),
-(927, 2, 'entry', 'rfid', '2026-01-27 13:07:43', -19.01887021, 47.53940953, NULL, 0, 1, 1),
-(928, 3, 'entry', 'pin', '2026-01-27 13:33:15', -19.01887021, 47.53940953, NULL, 0, 1, 1),
-(929, 5, 'exit', 'rfid', '2026-01-27 16:14:54', -19.01887586, 47.53940530, NULL, 0, 1, 1),
-(930, 2, 'exit', 'rfid', '2026-01-27 17:18:04', -19.01887586, 47.53940530, NULL, 0, 1, 1),
-(931, 3, 'exit', 'pin', '2026-01-27 17:32:41', -19.01887586, 47.53940530, NULL, 0, 1, 1),
-(932, 2, 'entry', 'rfid', '2026-01-28 08:03:06', -19.01887626, 47.53940440, NULL, 0, 1, 1),
-(933, 3, 'entry', 'pin', '2026-01-28 08:08:33', -19.01887626, 47.53940440, NULL, 0, 1, 1),
-(934, 5, 'entry', 'rfid', '2026-01-28 08:28:10', -19.01887626, 47.53940440, NULL, 0, 1, 1),
-(935, 3, 'exit', 'pin', '2026-01-28 12:04:38', -19.01887657, 47.53940359, NULL, 0, 1, 1),
-(936, 2, 'exit', 'rfid', '2026-01-28 12:05:24', -19.01887657, 47.53940359, NULL, 0, 1, 1),
-(937, 5, 'exit', 'rfid', '2026-01-28 12:09:23', -19.01887657, 47.53940359, NULL, 0, 1, 1),
-(938, 5, 'entry', 'rfid', '2026-01-28 13:01:24', -19.01888665, 47.53938805, NULL, 0, 1, 1),
-(939, 2, 'entry', 'rfid', '2026-01-28 13:10:50', -19.01888665, 47.53938805, NULL, 0, 1, 1),
-(940, 3, 'entry', 'pin', '2026-01-28 13:35:32', -19.01888665, 47.53938805, NULL, 0, 1, 1),
-(941, 5, 'exit', 'rfid', '2026-01-28 16:08:03', -19.01886934, 47.53942932, NULL, 0, 1, 1),
-(942, 39, 'entry', 'face', '2026-01-28 17:36:19', -20.92572056, 55.65734832, NULL, 0, 2, 7),
-(943, 16, 'entry', 'face', '2026-01-28 17:36:55', -20.92572056, 55.65734832, NULL, 0, 2, 7),
-(944, 2, 'exit', 'rfid', '2026-01-28 17:23:48', -19.01886934, 47.53942932, NULL, 0, 1, 1),
-(945, 3, 'exit', 'pin', '2026-01-28 17:53:46', -19.01886934, 47.53942932, NULL, 0, 1, 1),
-(946, 2, 'entry', 'rfid', '2026-01-29 07:56:51', -19.01880434, 47.53951042, NULL, 0, 1, 1),
-(947, 3, 'entry', 'pin', '2026-01-29 08:02:50', -19.01880434, 47.53951042, NULL, 0, 1, 1),
-(948, 5, 'entry', 'rfid', '2026-01-29 08:23:21', -19.01880434, 47.53951042, NULL, 0, 1, 1),
-(949, 3, 'exit', 'pin', '2026-01-29 12:04:43', -19.01883941, 47.53945659, NULL, 0, 1, 1),
-(950, 5, 'exit', 'rfid', '2026-01-29 12:11:41', -19.01883941, 47.53945659, NULL, 0, 1, 1),
-(951, 5, 'entry', 'rfid', '2026-01-29 13:02:34', -19.01884765, 47.53944505, NULL, 0, 1, 1),
-(952, 3, 'entry', 'pin', '2026-01-29 13:30:26', -19.01884765, 47.53944505, NULL, 0, 1, 1),
-(953, 39, 'entry', 'face', '2026-01-29 15:54:02', -20.92584980, 55.65735740, NULL, 0, 2, 7),
-(954, 16, 'entry', 'face', '2026-01-29 15:54:28', -20.92584980, 55.65735740, NULL, 0, 2, 7),
-(957, 39, 'exit', 'face', '2026-01-29 15:55:19', -20.92584532, 55.65735692, NULL, 0, 2, 7),
-(958, 16, 'exit', 'rfid', '2026-01-29 15:55:35', -20.92584532, 55.65735692, NULL, 0, 2, 7),
-(959, 16, 'entry', 'rfid', '2026-01-29 15:58:35', -20.92584591, 55.65735652, NULL, 0, 2, 7),
-(960, 39, 'entry', 'face', '2026-01-29 15:59:08', -20.92584591, 55.65735652, NULL, 0, 2, 7),
-(963, 16, 'exit', 'face', '2026-01-29 16:09:55', -20.92584090, 55.65734603, NULL, 0, 2, 7),
-(964, 5, 'exit', 'rfid', '2026-01-29 16:38:50', -19.01885119, 47.53943585, NULL, 0, 1, 1),
-(966, 39, 'exit', 'face', '2026-01-29 17:56:44', -20.92584090, 55.65734603, NULL, 0, 2, 7),
-(967, 39, 'entry', 'face', '2026-01-29 18:05:50', -20.92588440, 55.65735830, NULL, 0, 2, 7),
-(968, 16, 'entry', 'face', '2026-01-29 18:06:25', -20.92588440, 55.65735830, NULL, 0, 2, 7),
-(969, 39, 'entry', 'face', '2026-01-29 18:06:56', -20.92588440, 55.65735830, NULL, 0, 2, 7),
-(971, 3, 'exit', 'face', '2026-01-29 17:30:43', -19.01885119, 47.53943585, NULL, 0, 1, 1),
-(972, 2, 'exit', 'rfid', '2026-01-29 18:25:02', -19.01885119, 47.53943585, NULL, 0, 1, 1),
-(973, 2, 'entry', 'rfid', '2026-01-30 07:54:34', -19.01885541, 47.53942953, NULL, 0, 1, 1),
-(974, 3, 'entry', 'pin', '2026-01-30 08:07:20', -19.01885916, 47.53942459, NULL, 0, 1, 1),
-(975, 5, 'entry', 'rfid', '2026-01-30 08:27:03', -19.01885916, 47.53942459, NULL, 0, 1, 1),
-(976, 42, 'entry', 'pin', '2026-01-30 08:34:31', -19.01886223, 47.53942048, NULL, 0, 1, 1),
-(977, 2, 'exit', 'rfid', '2026-01-30 12:04:40', -19.01886428, 47.53941728, NULL, 0, 1, 1),
-(978, 5, 'exit', 'rfid', '2026-01-30 12:04:53', -19.01886428, 47.53941728, NULL, 0, 1, 1),
-(979, 3, 'exit', 'pin', '2026-01-30 12:05:10', -19.01886428, 47.53941728, NULL, 0, 1, 1),
-(980, 42, 'exit', 'pin', '2026-01-30 12:05:57', -19.01886428, 47.53941728, NULL, 0, 1, 1),
-(981, 5, 'entry', 'rfid', '2026-01-30 12:58:59', -19.01888358, 47.53938674, NULL, 0, 1, 1),
-(982, 42, 'entry', 'pin', '2026-01-30 12:59:15', -19.01888358, 47.53938674, NULL, 0, 1, 1),
-(983, 3, 'entry', 'pin', '2026-01-30 12:59:26', -19.01888358, 47.53938674, NULL, 0, 1, 1),
-(984, 2, 'entry', 'rfid', '2026-01-30 13:02:41', -19.01888538, 47.53938821, NULL, 0, 1, 1),
-(985, 5, 'exit', 'rfid', '2026-01-30 16:15:17', -19.01888346, 47.53938720, NULL, 0, 1, 1),
-(986, 3, 'exit', 'pin', '2026-01-30 16:28:32', -19.01888346, 47.53938720, NULL, 0, 1, 1),
-(987, 42, 'exit', 'pin', '2026-01-30 16:31:12', -19.01888346, 47.53938720, NULL, 0, 1, 1),
-(988, 2, 'exit', 'rfid', '2026-01-30 16:31:25', -19.01888346, 47.53938720, NULL, 0, 1, 1),
-(989, 3, 'entry', 'pin', '2026-02-02 08:14:33', -19.01888330, 47.53938770, NULL, 0, 1, 1),
-(990, 2, 'entry', 'rfid', '2026-02-02 08:16:12', -19.01888330, 47.53938770, NULL, 0, 1, 1),
-(991, 42, 'entry', 'pin', '2026-02-02 08:20:19', -19.01888330, 47.53938770, NULL, 0, 1, 1),
-(992, 5, 'entry', 'rfid', '2026-02-02 08:23:26', -19.01888330, 47.53938770, NULL, 0, 1, 1),
-(993, 1, 'entry', 'rfid', '2026-02-02 08:35:50', -19.01888330, 47.53938770, NULL, 0, 1, 1),
-(999, 3, 'exit', 'rfid', '2026-02-02 12:03:15', -19.01891887, 47.53934726, NULL, 0, 1, 1),
-(1001, 5, 'exit', 'rfid', '2026-02-02 12:07:18', -19.01891887, 47.53934726, NULL, 0, 1, 1),
-(1002, 2, 'exit', 'rfid', '2026-02-02 12:07:32', -19.01891887, 47.53934726, NULL, 0, 1, 1),
-(1003, 1, 'exit', 'rfid', '2026-02-02 12:07:45', -19.01891887, 47.53934726, NULL, 0, 1, 1),
-(1004, 42, 'exit', 'rfid', '2026-02-02 12:09:47', -19.01891342, 47.53935542, NULL, 0, 1, 1),
-(1005, 5, 'entry', 'rfid', '2026-02-02 12:51:47', -19.01891056, 47.53936042, NULL, 0, 1, 1),
-(1006, 42, 'entry', 'rfid', '2026-02-02 12:59:46', -19.01891056, 47.53936042, NULL, 0, 1, 1),
-(1007, 2, 'entry', 'rfid', '2026-02-02 13:05:59', -19.01891056, 47.53936042, NULL, 0, 1, 1),
-(1008, 3, 'entry', 'pin', '2026-02-02 13:30:02', -19.01891056, 47.53936042, NULL, 0, 1, 1),
-(1034, 5, 'exit', 'rfid', '2026-02-02 17:21:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1035, 42, 'exit', 'rfid', '2026-02-02 17:21:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1036, 3, 'exit', 'rfid', '2026-02-02 17:34:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1037, 2, 'exit', 'rfid', '2026-02-02 17:50:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1038, 2, 'entry', 'rfid', '2026-02-03 08:00:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1039, 5, 'entry', 'rfid', '2026-02-03 08:17:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1040, 42, 'entry', 'rfid', '2026-02-03 08:26:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1041, 2, 'exit', 'rfid', '2026-02-03 12:10:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1042, 5, 'exit', 'rfid', '2026-02-03 12:10:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1043, 42, 'exit', 'rfid', '2026-02-03 12:10:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1044, 2, 'entry', 'rfid', '2026-02-03 13:00:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1045, 5, 'entry', 'rfid', '2026-02-03 13:00:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1046, 42, 'entry', 'rfid', '2026-02-03 13:00:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1053, 3, 'entry', 'rfid', '2026-02-03 08:00:00', -18.90000000, 47.53000000, NULL, 0, 1, 1),
-(1054, 3, 'exit', 'rfid', '2026-02-03 12:00:00', -19.01610300, 47.53638600, NULL, 0, 1, 1),
-(1055, 3, 'entry', 'rfid', '2026-02-03 14:00:00', -19.01610300, 47.53638600, NULL, 0, 1, 1),
-(1057, 5, 'exit', 'rfid', '2026-02-03 16:41:39', -19.01888960, 47.53937862, NULL, 0, 1, 1),
-(1058, 39, 'entry', 'pin', '2026-02-03 17:02:12', -19.01888746, 47.53938629, NULL, 0, 2, 22),
-(1059, 39, 'exit', 'pin', '2026-02-03 17:03:02', -19.01889029, 47.53938640, NULL, 0, 2, 22),
-(1060, 2, 'exit', 'rfid', '2026-02-03 17:21:25', -19.01890884, 47.53939594, NULL, 0, 1, 1),
-(1061, 42, 'exit', 'rfid', '2026-02-03 17:29:04', -19.01890884, 47.53939594, NULL, 0, 1, 1),
-(1062, 3, 'exit', 'pin', '2026-02-03 17:41:21', -19.01890884, 47.53939594, NULL, 0, 1, 1),
-(1063, 2, 'entry', 'rfid', '2026-02-04 08:03:13', -19.01891072, 47.53938780, NULL, 0, 1, 1),
-(1064, 3, 'entry', 'pin', '2026-02-04 08:08:29', -19.01891072, 47.53938780, NULL, 0, 1, 1),
-(1065, 5, 'entry', 'rfid', '2026-02-04 08:22:52', -19.01891271, 47.53938469, NULL, 0, 1, 1),
-(1066, 42, 'entry', 'rfid', '2026-02-04 08:23:55', -19.01891271, 47.53938469, NULL, 0, 1, 1),
-(1072, 3, 'exit', 'pin', '2026-02-04 12:05:16', -19.01888996, 47.53938281, NULL, 0, 1, 1),
-(1073, 5, 'exit', 'rfid', '2026-02-04 12:06:33', -19.01888996, 47.53938281, NULL, 0, 1, 1),
-(1074, 42, 'exit', 'rfid', '2026-02-04 12:08:11', -19.01888996, 47.53938281, NULL, 0, 1, 1),
-(1076, 42, 'entry', 'rfid', '2026-02-04 12:35:49', -19.01889209, 47.53948282, NULL, 0, 1, 1),
-(1077, 5, 'entry', 'rfid', '2026-02-04 12:51:02', -19.01889209, 47.53948282, NULL, 0, 1, 1),
-(1078, 3, 'entry', 'pin', '2026-02-04 13:33:55', -19.01889209, 47.53948282, NULL, 0, 1, 1),
-(1085, 5, 'exit', 'rfid', '2026-02-04 16:55:29', -19.01888114, 47.53939292, NULL, 0, 1, 1),
-(1086, 42, 'exit', 'rfid', '2026-02-04 16:55:23', -19.01888114, 47.53939292, NULL, 0, 1, 1),
-(1087, 2, 'exit', 'rfid', '2026-02-04 17:24:41', -19.01888321, 47.53939165, NULL, 0, 1, 1),
-(1088, 3, 'exit', 'pin', '2026-02-04 17:30:17', -19.01888321, 47.53939165, NULL, 0, 1, 1),
-(1089, 3, 'entry', 'pin', '2026-02-05 08:17:34', -19.01888533, 47.53938960, NULL, 0, 1, 1),
-(1090, 42, 'entry', 'rfid', '2026-02-05 08:20:37', -19.01888533, 47.53938960, NULL, 0, 1, 1),
-(1091, 5, 'entry', 'rfid', '2026-02-05 08:19:54', -19.01888533, 47.53938960, NULL, 0, 1, 1),
-(1092, 3, 'exit', 'pin', '2026-02-05 12:04:22', -19.01883476, 47.53937612, NULL, 0, 1, 1),
-(1093, 5, 'exit', 'rfid', '2026-02-05 12:07:08', -19.01883476, 47.53937612, NULL, 0, 1, 1),
-(1094, 42, 'exit', 'rfid', '2026-02-05 12:07:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1095, 5, 'entry', 'rfid', '2026-02-05 13:00:54', -19.01894504, 47.53937417, NULL, 0, 1, 1),
-(1096, 42, 'entry', 'rfid', '2026-02-05 13:01:20', -19.01894504, 47.53937417, NULL, 0, 1, 1),
-(1097, 3, 'entry', 'pin', '2026-02-05 13:35:37', -19.01891388, 47.53936952, NULL, 0, 1, 1),
-(1098, 42, 'exit', 'rfid', '2026-02-05 17:22:44', -19.01892768, 47.53936696, NULL, 0, 1, 1),
-(1099, 5, 'exit', 'rfid', '2026-02-05 17:23:17', -19.01892768, 47.53936696, NULL, 0, 1, 1),
-(1100, 3, 'exit', 'pin', '2026-02-05 17:56:49', -19.01888254, 47.53938777, NULL, 0, 1, 1),
-(1101, 3, 'entry', 'pin', '2026-02-06 08:10:37', -19.01889488, 47.53939153, NULL, 0, 1, 1),
-(1102, 2, 'entry', 'rfid', '2026-02-06 08:12:55', -19.01889488, 47.53939153, NULL, 0, 1, 1),
-(1103, 42, 'entry', 'rfid', '2026-02-06 08:27:03', -19.01889488, 47.53939153, NULL, 0, 1, 1),
-(1104, 5, 'entry', 'rfid', '2026-02-06 08:35:53', -19.01889488, 47.53939153, NULL, 0, 1, 1),
-(1105, 2, 'exit', 'rfid', '2026-02-06 12:06:31', -19.01888486, 47.53939117, NULL, 0, 1, 1),
-(1106, 3, 'exit', 'pin', '2026-02-06 12:06:40', -19.01888486, 47.53939117, NULL, 0, 1, 1),
-(1107, 42, 'exit', 'rfid', '2026-02-06 12:09:03', -19.01888486, 47.53939117, NULL, 0, 1, 1),
-(1108, 5, 'exit', 'rfid', '2026-02-06 12:09:26', -19.01888486, 47.53939117, NULL, 0, 1, 1),
-(1109, 42, 'entry', 'rfid', '2026-02-06 12:54:49', -19.01889203, 47.53938598, NULL, 0, 1, 1),
-(1110, 5, 'entry', 'rfid', '2026-02-06 12:54:56', -19.01889203, 47.53938598, NULL, 0, 1, 1),
-(1111, 2, 'entry', 'rfid', '2026-02-06 13:00:12', -19.01889203, 47.53938598, NULL, 0, 1, 1),
-(1112, 3, 'entry', 'pin', '2026-02-06 13:35:31', -19.01889203, 47.53938598, NULL, 0, 1, 1),
-(1113, 42, 'exit', 'rfid', '2026-02-06 16:43:40', -19.01888769, 47.53938807, NULL, 0, 1, 1),
-(1114, 2, 'exit', 'rfid', '2026-02-06 17:17:46', -19.01888659, 47.53938888, NULL, 0, 1, 1),
-(1115, 5, 'exit', 'rfid', '2026-02-06 17:35:20', -19.01888659, 47.53938888, NULL, 0, 1, 1),
-(1116, 3, 'exit', 'pin', '2026-02-06 17:36:06', -19.01888659, 47.53938888, NULL, 0, 1, 1),
-(1117, 3, 'entry', 'pin', '2026-02-07 09:11:42', -19.01888886, 47.53938425, NULL, 0, 1, 1),
-(1118, 2, 'entry', 'rfid', '2026-02-07 10:00:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1119, 3, 'exit', 'pin', '2026-02-07 12:33:18', -19.01888278, 47.53938932, NULL, 0, 1, 1),
-(1120, 3, 'entry', 'pin', '2026-02-09 08:09:16', -19.01888604, 47.53938834, NULL, 0, 1, 1),
-(1121, 2, 'entry', 'rfid', '2026-02-09 08:13:23', -19.01888604, 47.53938834, NULL, 0, 1, 1),
-(1122, 2, 'exit', 'rfid', '2026-02-07 12:30:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1123, 5, 'entry', 'rfid', '2026-02-09 08:25:13', -19.01888604, 47.53938834, NULL, 0, 1, 1),
-(1124, 42, 'entry', 'rfid', '2026-02-09 08:29:08', -19.01888604, 47.53938834, NULL, 0, 1, 1),
-(1125, 3, 'exit', 'pin', '2026-02-09 12:03:02', -19.01889820, 47.53938310, NULL, 0, 1, 1),
-(1126, 2, 'exit', 'rfid', '2026-02-09 12:05:14', -19.01888694, 47.53938799, NULL, 0, 1, 1),
-(1127, 5, 'exit', 'rfid', '2026-02-09 12:06:05', -19.01888694, 47.53938799, NULL, 0, 1, 1),
-(1128, 42, 'exit', 'rfid', '2026-02-09 12:06:28', -19.01888694, 47.53938799, NULL, 0, 1, 1),
-(1130, 42, 'entry', 'rfid', '2026-02-09 12:57:54', -19.01888658, 47.53938829, NULL, 0, 1, 1),
-(1131, 5, 'entry', 'rfid', '2026-02-09 12:59:35', -19.01888700, 47.53938766, NULL, 0, 1, 1),
-(1132, 2, 'entry', 'rfid', '2026-02-09 13:04:16', -19.01888700, 47.53938766, NULL, 0, 1, 1),
-(1133, 3, 'entry', 'pin', '2026-02-09 13:27:48', -19.01888700, 47.53938766, NULL, 0, 1, 1),
-(1134, 42, 'exit', 'rfid', '2026-02-09 17:17:20', -19.01888595, 47.53938797, NULL, 0, 1, 1),
-(1135, 5, 'exit', 'rfid', '2026-02-09 17:19:10', -19.01888595, 47.53938797, NULL, 0, 1, 1),
-(1136, 2, 'exit', 'rfid', '2026-02-09 17:21:31', -19.01888595, 47.53938797, NULL, 0, 1, 1),
-(1137, 3, 'exit', 'pin', '2026-02-09 17:33:49', -19.01888510, 47.53938873, NULL, 0, 1, 1),
-(1138, 3, 'exit', 'pin', '2026-02-10 12:04:06', -19.01888472, 47.53938862, NULL, 0, 1, 1),
-(1139, 5, 'entry', 'rfid', '2026-02-10 08:27:26', -19.01888571, 47.53938820, NULL, 0, 1, 1),
-(1140, 2, 'entry', 'rfid', '2026-02-10 08:11:27', -19.01888571, 47.53938820, NULL, 0, 1, 1),
-(1141, 42, 'entry', 'rfid', '2026-02-10 08:27:59', -19.01888571, 47.53938820, NULL, 0, 1, 1),
-(1142, 3, 'entry', 'pin', '2026-02-10 08:08:47', -19.01888571, 47.53938820, NULL, 0, 1, 1),
-(1143, 2, 'exit', 'rfid', '2026-02-10 12:07:24', -19.01888472, 47.53938862, NULL, 0, 1, 1),
-(1144, 42, 'exit', 'rfid', '2026-02-10 12:07:45', -19.01888472, 47.53938862, NULL, 0, 1, 1),
-(1145, 5, 'entry', 'rfid', '2026-02-10 12:57:43', -19.01888635, 47.53938748, NULL, 0, 1, 1),
-(1146, 5, 'exit', 'rfid', '2026-02-10 12:08:15', -19.01888472, 47.53938862, NULL, 0, 1, 1),
-(1147, 42, 'entry', 'rfid', '2026-02-10 12:57:54', -19.01888635, 47.53938748, NULL, 0, 1, 1),
-(1148, 42, 'exit', 'rfid', '2026-02-10 16:06:40', -19.01888634, 47.53938758, NULL, 0, 1, 1),
-(1149, 3, 'entry', 'pin', '2026-02-10 13:33:37', -19.01888635, 47.53938748, NULL, 0, 1, 1),
-(1150, 2, 'entry', 'rfid', '2026-02-10 13:03:45', -19.01888635, 47.53938748, NULL, 0, 1, 1),
-(1151, 2, 'exit', 'rfid', '2026-02-10 17:08:38', -19.01888634, 47.53938758, NULL, 0, 1, 1),
-(1152, 5, 'exit', 'rfid', '2026-02-10 16:08:57', -19.01888634, 47.53938758, NULL, 0, 1, 1),
-(1153, 3, 'exit', 'pin', '2026-02-10 17:46:18', -19.01888634, 47.53938758, NULL, 0, 1, 1),
-(1154, 5, 'entry', 'rfid', '2026-02-11 08:30:16', -19.01888707, 47.53938738, NULL, 0, 1, 1),
-(1155, 42, 'entry', 'rfid', '2026-02-11 08:30:27', -19.01888707, 47.53938738, NULL, 0, 1, 1),
-(1156, 2, 'entry', 'rfid', '2026-02-11 08:50:54', -19.01888707, 47.53938738, NULL, 0, 1, 1),
-(1157, 2, 'exit', 'rfid', '2026-02-11 12:09:45', -19.01888842, 47.53938636, NULL, 0, 1, 1),
-(1158, 5, 'exit', 'rfid', '2026-02-11 12:13:41', -19.01888842, 47.53938636, NULL, 0, 1, 1),
-(1159, 42, 'exit', 'rfid', '2026-02-11 12:13:52', -19.01888842, 47.53938636, NULL, 0, 1, 1),
-(1160, 5, 'entry', 'rfid', '2026-02-11 13:01:26', -19.01888940, 47.53938683, NULL, 0, 1, 1),
-(1161, 42, 'entry', 'rfid', '2026-02-11 13:01:41', -19.01888940, 47.53938683, NULL, 0, 1, 1),
-(1162, 2, 'entry', 'rfid', '2026-02-11 13:01:57', -19.01888940, 47.53938683, NULL, 0, 1, 1),
-(1163, 42, 'exit', 'rfid', '2026-02-11 16:41:06', -19.01889128, 47.53938609, NULL, 0, 1, 1),
-(1164, 5, 'exit', 'rfid', '2026-02-11 17:02:58', -19.01889128, 47.53938609, NULL, 0, 1, 1),
-(1165, 2, 'exit', 'rfid', '2026-02-11 17:52:17', -19.01889128, 47.53938609, NULL, 0, 1, 1),
-(1166, 2, 'entry', 'rfid', '2026-02-12 08:04:44', -19.01889085, 47.53938626, NULL, 0, 1, 1),
-(1167, 2, 'entry', 'rfid', '2026-02-12 13:10:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1168, 42, 'entry', 'rfid', '2026-02-12 08:28:40', -19.01889085, 47.53938626, NULL, 0, 1, 1),
-(1169, 2, 'exit', 'rfid', '2026-02-12 12:06:01', -19.01889088, 47.53938607, NULL, 0, 1, 1),
-(1170, 5, 'exit', 'rfid', '2026-02-12 12:07:28', -19.01889088, 47.53938607, NULL, 0, 1, 1),
-(1171, 3, 'exit', 'pin', '2026-02-12 12:06:25', -19.01889088, 47.53938607, NULL, 0, 1, 1),
-(1172, 5, 'entry', 'rfid', '2026-02-12 08:22:49', -19.01889085, 47.53938626, NULL, 0, 1, 1),
-(1173, 2, 'exit', 'rfid', '2026-02-12 17:04:24', -19.01889292, 47.53938736, NULL, 0, 1, 1),
-(1174, 3, 'entry', 'pin', '2026-02-12 13:31:50', -19.01889263, 47.53938484, NULL, 0, 1, 1),
-(1176, 42, 'exit', 'rfid', '2026-02-12 12:10:18', -19.01889088, 47.53938607, NULL, 0, 1, 1),
-(1177, 5, 'entry', 'rfid', '2026-02-12 12:51:23', -19.01889263, 47.53938484, NULL, 0, 1, 1),
-(1180, 2, 'entry', 'rfid', '2026-02-13 08:06:07', -19.01889246, 47.53938709, NULL, 0, 1, 1),
-(1182, 5, 'exit', 'rfid', '2026-02-12 17:10:54', -19.01889292, 47.53938736, NULL, 0, 1, 1),
-(1183, 3, 'entry', 'pin', '2026-02-13 08:09:44', -19.01889246, 47.53938709, NULL, 0, 1, 1),
-(1184, 5, 'entry', 'rfid', '2026-02-13 08:22:54', -19.01889246, 47.53938709, NULL, 0, 1, 1),
-(1185, 42, 'entry', 'rfid', '2026-02-13 08:29:16', -19.01889246, 47.53938709, NULL, 0, 1, 1),
-(1186, 3, 'exit', 'pin', '2026-02-13 12:08:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1187, 42, 'exit', 'rfid', '2026-02-13 12:08:47', -19.01889199, 47.53938696, NULL, 0, 1, 1),
-(1188, 42, 'entry', 'rfid', '2026-02-13 12:56:51', -19.01889207, 47.53938696, NULL, 0, 1, 1),
-(1189, 5, 'entry', 'rfid', '2026-02-13 12:58:02', -19.01889207, 47.53938696, NULL, 0, 1, 1),
-(1190, 5, 'exit', 'rfid', '2026-02-13 12:09:26', -19.01889199, 47.53938696, NULL, 0, 1, 1),
-(1191, 2, 'exit', 'rfid', '2026-02-13 12:08:28', -19.01889199, 47.53938696, NULL, 0, 1, 1),
-(1192, 3, 'entry', 'pin', '2026-02-13 13:35:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1193, 42, 'exit', 'rfid', '2026-02-13 17:00:10', -19.01889136, 47.53938194, NULL, 0, 1, 1),
-(1194, 2, 'entry', 'rfid', '2026-02-13 12:30:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1195, 2, 'exit', 'rfid', '2026-02-13 17:34:02', -19.01889136, 47.53938194, NULL, 0, 1, 1),
-(1196, 5, 'exit', 'rfid', '2026-02-13 17:34:12', -19.01889136, 47.53938194, NULL, 0, 1, 1),
-(1197, 3, 'exit', 'pin', '2026-02-13 17:45:26', -19.01889136, 47.53938194, NULL, 0, 1, 1),
-(1198, 3, 'entry', 'pin', '2026-02-14 08:59:16', -19.01889015, 47.53938261, NULL, 0, 1, 1),
-(1199, 3, 'exit', 'pin', '2026-02-14 11:34:12', -19.01889304, 47.53939072, NULL, 0, 1, 1),
-(1200, 2, 'entry', 'rfid', '2026-02-16 08:04:23', -19.01888537, 47.53938663, NULL, 0, 1, 1),
-(1201, 3, 'entry', 'pin', '2026-02-16 08:09:55', -19.01888139, 47.53938408, NULL, 0, 1, 1),
-(1202, 5, 'entry', 'rfid', '2026-02-16 08:23:03', -19.01888139, 47.53938408, NULL, 0, 1, 1),
-(1203, 42, 'entry', 'rfid', '2026-02-16 08:29:37', -19.01888139, 47.53938408, NULL, 0, 1, 1),
-(1204, 3, 'exit', 'pin', '2026-02-16 12:04:08', -19.01888193, 47.53938055, NULL, 0, 1, 1),
-(1205, 2, 'exit', 'rfid', '2026-02-16 12:04:32', -19.01888193, 47.53938055, NULL, 0, 1, 1),
-(1206, 42, 'exit', 'rfid', '2026-02-16 12:06:55', -19.01888193, 47.53938055, NULL, 0, 1, 1),
-(1207, 42, 'entry', 'rfid', '2026-02-16 12:59:12', -19.01888022, 47.53936331, NULL, 0, 1, 1),
-(1208, 5, 'entry', 'rfid', '2026-02-16 12:59:22', -19.01888022, 47.53936331, NULL, 0, 1, 1),
-(1209, 2, 'entry', 'rfid', '2026-02-16 13:04:01', -19.01888201, 47.53937231, NULL, 0, 1, 1),
-(1210, 5, 'exit', 'rfid', '2026-02-16 12:05:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1211, 3, 'entry', 'pin', '2026-02-16 13:33:07', -19.01888201, 47.53937231, NULL, 0, 1, 1),
-(1212, 5, 'exit', 'rfid', '2026-02-16 16:44:05', -19.01888279, 47.53937416, NULL, 0, 1, 1),
-(1213, 42, 'exit', 'rfid', '2026-02-16 16:44:13', -19.01888279, 47.53937416, NULL, 0, 1, 1),
-(1214, 2, 'exit', 'rfid', '2026-02-16 17:14:14', -19.01888279, 47.53937416, NULL, 0, 1, 1),
-(1215, 3, 'exit', 'pin', '2026-02-16 18:06:37', -19.01888279, 47.53937416, NULL, 0, 1, 1),
-(1216, 2, 'entry', 'rfid', '2026-02-17 08:06:54', -19.01888372, 47.53937521, NULL, 0, 1, 1),
-(1217, 5, 'entry', 'rfid', '2026-02-17 08:27:49', -19.01888372, 47.53937521, NULL, 0, 1, 1),
-(1218, 42, 'entry', 'rfid', '2026-02-17 08:27:56', -19.01888372, 47.53937521, NULL, 0, 1, 1),
-(1219, 3, 'entry', 'pin', '2026-02-17 08:40:18', -19.01888372, 47.53937521, NULL, 0, 1, 1),
-(1220, 3, 'exit', 'pin', '2026-02-17 12:06:22', -19.01888429, 47.53937625, NULL, 0, 1, 1),
-(1221, 42, 'exit', 'rfid', '2026-02-17 12:06:55', -19.01888429, 47.53937625, NULL, 0, 1, 1),
-(1222, 5, 'exit', 'rfid', '2026-02-17 12:07:13', -19.01888429, 47.53937625, NULL, 0, 1, 1),
-(1223, 2, 'exit', 'rfid', '2026-02-17 12:08:52', -19.01888429, 47.53937625, NULL, 0, 1, 1),
-(1224, 42, 'entry', 'rfid', '2026-02-17 12:59:46', -19.01888339, 47.53937579, NULL, 0, 1, 1),
-(1225, 5, 'entry', 'rfid', '2026-02-17 13:00:18', -19.01888339, 47.53937579, NULL, 0, 1, 1),
-(1226, 2, 'entry', 'rfid', '2026-02-17 13:12:54', -19.01888339, 47.53937579, NULL, 0, 1, 1),
-(1228, 42, 'exit', 'rfid', '2026-02-17 16:53:09', -19.01888459, 47.53937014, NULL, 0, 1, 1),
-(1229, 5, 'exit', 'rfid', '2026-02-17 17:36:23', -19.01888459, 47.53937014, NULL, 0, 1, 1),
-(1230, 2, 'exit', 'rfid', '2026-02-17 18:13:56', -19.01888459, 47.53937014, NULL, 0, 1, 1),
-(1231, 2, 'entry', 'rfid', '2026-02-18 08:02:17', -19.01888655, 47.53936771, NULL, 0, 1, 1),
-(1232, 3, 'entry', 'pin', '2026-02-18 08:12:00', -19.01888655, 47.53936771, NULL, 0, 1, 1),
-(1233, 5, 'entry', 'rfid', '2026-02-18 08:26:52', -19.01888631, 47.53937324, NULL, 0, 1, 1),
-(1234, 42, 'entry', 'rfid', '2026-02-18 08:29:33', -19.01888631, 47.53937324, NULL, 0, 1, 1),
-(1237, 3, 'exit', 'pin', '2026-02-18 12:05:39', -19.01889290, 47.53939020, NULL, 0, 1, 1),
-(1238, 42, 'exit', 'rfid', '2026-02-18 12:06:23', -19.01889290, 47.53939020, NULL, 0, 1, 1),
-(1239, 5, 'exit', 'rfid', '2026-02-18 12:07:31', -19.01889290, 47.53939020, NULL, 0, 1, 1),
-(1240, 42, 'entry', 'rfid', '2026-02-18 12:49:39', -19.01889240, 47.53938927, NULL, 0, 1, 1),
-(1241, 5, 'entry', 'rfid', '2026-02-18 12:50:25', -19.01889240, 47.53938927, NULL, 0, 1, 1),
-(1242, 3, 'entry', 'pin', '2026-02-18 13:32:12', -19.01889239, 47.53938930, NULL, 0, 1, 1),
-(1243, 42, 'exit', 'rfid', '2026-02-18 17:11:21', -19.01890326, 47.53935864, NULL, 0, 1, 1),
-(1244, 5, 'exit', 'rfid', '2026-02-18 17:15:54', -19.01890326, 47.53935864, NULL, 0, 1, 1),
-(1245, 3, 'exit', 'pin', '2026-02-18 17:55:13', -19.01888890, 47.53939178, NULL, 0, 1, 1);
-INSERT INTO `pointages` (`ID`, `employee_id`, `type_`, `auth_method`, `timestamp_`, `latitude`, `longitude`, `photo_path`, `synced`, `SiegeID`, `company_id`) VALUES
-(1246, 3, 'entry', 'pin', '2026-02-19 08:12:15', -19.01886190, 47.53940635, NULL, 0, 1, 1),
-(1247, 5, 'entry', 'rfid', '2026-02-19 08:26:46', -19.01886190, 47.53940635, NULL, 0, 1, 1),
-(1248, 42, 'entry', 'rfid', '2026-02-19 08:31:05', -19.01886190, 47.53940635, NULL, 0, 1, 1),
-(1249, 2, 'exit', 'rfid', '2026-02-18 16:30:00', -19.01370000, 47.53690000, NULL, 0, 1, 1),
-(1251, 3, 'exit', 'pin', '2026-02-19 12:04:35', -19.01889020, 47.53939200, NULL, 0, 1, 1),
-(1252, 42, 'exit', 'rfid', '2026-02-19 12:08:27', -19.01888966, 47.53939150, NULL, 0, 1, 1),
-(1253, 5, 'exit', 'rfid', '2026-02-19 12:08:39', -19.01888966, 47.53939150, NULL, 0, 1, 1),
-(1254, 5, 'entry', 'rfid', '2026-02-19 13:02:24', -19.01888958, 47.53939138, NULL, 0, 1, 1),
-(1255, 42, 'entry', 'rfid', '2026-02-19 13:02:53', -19.01888958, 47.53939138, NULL, 0, 1, 1),
-(1256, 3, 'entry', 'pin', '2026-02-19 13:32:45', -19.01888958, 47.53939138, NULL, 0, 1, 1),
-(1257, 42, 'exit', 'rfid', '2026-02-19 16:55:47', -19.01888650, 47.53939340, NULL, 0, 1, 1),
-(1258, 5, 'exit', 'rfid', '2026-02-19 16:55:52', -19.01888650, 47.53939340, NULL, 0, 1, 1),
-(1259, 3, 'exit', 'pin', '2026-02-19 17:39:07', -19.01888650, 47.53939340, NULL, 0, 1, 1),
-(1260, 3, 'entry', 'pin', '2026-02-20 08:08:57', -19.01889107, 47.53941406, NULL, 0, 1, 1),
-(1261, 5, 'entry', 'rfid', '2026-02-20 08:26:50', -19.01888230, 47.53938590, NULL, 0, 1, 1),
-(1262, 42, 'entry', 'rfid', '2026-02-20 08:29:09', -19.01888230, 47.53938590, NULL, 0, 1, 1),
-(1273, 3, 'exit', 'pin', '2026-02-20 12:06:48', -19.01888680, 47.53938926, NULL, 0, 1, 1),
-(1274, 5, 'exit', 'rfid', '2026-02-20 12:07:01', -19.01888680, 47.53938926, NULL, 0, 1, 1),
-(1275, 42, 'exit', 'rfid', '2026-02-20 12:07:33', -19.01888680, 47.53938926, NULL, 0, 1, 1),
-(1276, 5, 'entry', 'rfid', '2026-02-20 13:00:54', -19.01888886, 47.53938996, NULL, 0, 1, 1),
-(1277, 42, 'entry', 'rfid', '2026-02-20 13:02:07', -19.01888901, 47.53939042, NULL, 0, 1, 1),
-(1278, 3, 'entry', 'pin', '2026-02-20 13:35:06', -19.01888901, 47.53939042, NULL, 0, 1, 1),
-(1392, 42, 'exit', 'rfid', '2026-02-20 16:40:08', -19.01888896, 47.53939061, NULL, 0, 1, 1),
-(1393, 5, 'exit', 'rfid', '2026-02-20 16:40:32', -19.01888896, 47.53939061, NULL, 0, 1, 1),
-(1394, 3, 'exit', 'pin', '2026-02-20 17:20:50', -19.01888896, 47.53939061, NULL, 0, 1, 1),
-(1402, 3, 'entry', 'pin', '2026-02-23 08:26:16', -19.01887292, 47.53935946, NULL, 0, 1, 1),
-(1403, 5, 'entry', 'rfid', '2026-02-23 08:26:27', -19.01887292, 47.53935946, NULL, 0, 1, 1),
-(1404, 2, 'entry', 'rfid', '2026-02-23 08:26:40', -19.01887292, 47.53935946, NULL, 0, 1, 1),
-(1406, 42, 'entry', 'rfid', '2026-02-23 08:27:59', -19.01891498, 47.53930124, NULL, 0, 1, 1),
-(1407, 2, 'exit', 'rfid', '2026-02-23 12:08:31', -19.01888240, 47.53939000, NULL, 0, 1, 1),
-(1408, 3, 'exit', 'pin', '2026-02-23 12:08:52', -19.01888240, 47.53939000, NULL, 0, 1, 1),
-(1409, 42, 'exit', 'rfid', '2026-02-23 12:09:12', -19.01888240, 47.53939000, NULL, 0, 1, 1),
-(1411, 42, 'entry', 'rfid', '2026-02-23 12:47:41', -19.01885883, 47.53942468, NULL, 0, 1, 1),
-(1413, 2, 'entry', 'rfid', '2026-02-23 13:05:17', -19.01885883, 47.53942468, NULL, 0, 1, 1),
-(1414, 3, 'entry', 'pin', '2026-02-23 13:35:36', -19.01885883, 47.53942468, NULL, 0, 1, 1),
-(1418, 1, 'entry', 'face', '2026-02-23 14:19:32', -19.01887284, 47.53940440, NULL, 0, 1, 1),
-(1419, 1, 'exit', 'face', '2026-02-23 14:21:37', -19.01887443, 47.53940227, NULL, 0, 1, 1),
-(1428, 2, 'exit', 'rfid', '2026-02-23 17:08:43', -19.01889615, 47.53939038, NULL, 0, 1, 1),
-(1430, 42, 'exit', 'rfid', '2026-02-23 17:21:23', -19.01889606, 47.53938906, NULL, 0, 1, 1),
-(1431, 3, 'exit', 'pin', '2026-02-23 17:41:38', -19.01889050, 47.53938710, NULL, 0, 1, 1),
-(1432, 2, 'entry', 'rfid', '2026-02-24 08:08:21', -19.01885885, 47.53941172, NULL, 0, 1, 1),
-(1433, 3, 'entry', 'pin', '2026-02-24 08:12:16', -19.01885885, 47.53941172, NULL, 0, 1, 1),
-(1434, 42, 'entry', 'rfid', '2026-02-24 08:24:02', -19.01885885, 47.53941172, NULL, 0, 1, 1),
-(1435, 5, 'entry', 'rfid', '2026-02-24 08:30:17', -19.01889658, 47.53937247, NULL, 0, 1, 1),
-(1442, 3, 'exit', 'pin', '2026-02-24 12:06:21', -19.01888620, 47.53939140, NULL, 0, 1, 1),
-(1443, 2, 'exit', 'rfid', '2026-02-24 12:07:47', -19.01888620, 47.53939140, NULL, 0, 1, 1),
-(1444, 5, 'exit', 'rfid', '2026-02-24 12:08:28', -19.01888620, 47.53939140, NULL, 0, 1, 1),
-(1445, 42, 'exit', 'rfid', '2026-02-24 12:08:52', -19.01888620, 47.53939140, NULL, 0, 1, 1),
-(1446, 5, 'entry', 'rfid', '2026-02-24 12:55:01', -19.01890237, 47.53937230, NULL, 0, 1, 1),
-(1447, 42, 'entry', 'rfid', '2026-02-24 13:00:22', -19.01890237, 47.53937230, NULL, 0, 1, 1),
-(1448, 2, 'entry', 'rfid', '2026-02-24 13:02:00', -19.01890237, 47.53937230, NULL, 0, 1, 1),
-(1449, 3, 'entry', 'pin', '2026-02-24 13:33:53', -19.01890237, 47.53937230, NULL, 0, 1, 1),
-(1461, 42, 'exit', 'rfid', '2026-02-24 16:43:36', -19.01889115, 47.53939799, NULL, 0, 1, 1),
-(1462, 5, 'exit', 'rfid', '2026-02-24 16:45:18', -19.01889115, 47.53939799, NULL, 0, 1, 1),
-(1463, 2, 'exit', 'rfid', '2026-02-24 17:01:42', -19.01889270, 47.53937820, NULL, 0, 1, 1),
-(1464, 3, 'exit', 'pin', '2026-02-24 18:02:51', -19.01889120, 47.53938413, NULL, 0, 1, 1),
-(1465, 3, 'entry', 'pin', '2026-02-25 08:11:07', -19.01889290, 47.53938260, NULL, 0, 1, 1),
-(1468, 2, 'entry', 'rfid', '2026-02-25 08:00:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1470, 2, 'exit', 'rfid', '2026-02-25 17:41:00', -20.92590500, 55.65733000, NULL, 0, 1, 1),
-(1471, 3, 'exit', 'pin', '2026-02-25 17:56:24', -19.01904152, 47.53929453, NULL, 0, 1, 1),
-(1472, 42, 'entry', 'rfid', '2026-02-26 08:28:34', -19.01899668, 47.53933977, NULL, 0, 1, 1),
-(1473, 5, 'entry', 'rfid', '2026-02-26 08:29:08', -19.01899668, 47.53933977, NULL, 0, 1, 1),
-(1474, 3, 'entry', 'pin', '2026-02-26 09:12:45', -19.01899668, 47.53933977, NULL, 0, 1, 1),
-(1475, 5, 'exit', 'rfid', '2026-02-26 12:07:01', -19.01896594, 47.53935023, NULL, 0, 1, 1),
-(1476, 3, 'exit', 'pin', '2026-02-26 12:07:22', -19.01896594, 47.53935023, NULL, 0, 1, 1),
-(1477, 42, 'exit', 'rfid', '2026-02-26 12:07:44', -19.01896594, 47.53935023, NULL, 0, 1, 1),
-(1500, 5, 'exit', 'rfid', '2026-02-23 12:00:00', -19.01460000, 47.53660000, NULL, 0, 1, 1),
-(1501, 3, 'exit', 'pin', '2026-02-27 12:04:19', -19.01887186, 47.53936495, NULL, 0, 1, 1),
-(1503, 5, 'exit', 'rfid', '2026-02-27 12:05:48', -19.01887203, 47.53936840, NULL, 0, 1, 1),
-(1504, 42, 'entry', 'rfid', '2026-02-27 12:46:56', -19.01887290, 47.53937034, NULL, 0, 1, 1),
-(1505, 5, 'entry', 'rfid', '2026-02-27 12:47:15', -19.01887290, 47.53937034, NULL, 0, 1, 1),
-(1506, 3, 'entry', 'pin', '2026-02-27 13:35:09', -19.01887327, 47.53937175, NULL, 0, 1, 1),
-(1509, 42, 'exit', 'rfid', '2026-02-27 17:25:31', -19.01887853, 47.53938296, NULL, 0, 1, 1),
-(1514, 3, 'entry', 'pin', '2026-02-28 08:49:47', -19.01889040, 47.53937696, NULL, 0, 1, 1),
-(1515, 3, 'exit', 'pin', '2026-02-28 11:48:25', -19.01887580, 47.53938190, NULL, 0, 1, 1),
-(1521, 57, 'entry', 'rfid', '2026-03-10 06:56:00', -25.03000000, 46.99000000, NULL, 0, 1, 1),
-(1522, 57, 'exit', 'rfid', '2026-03-10 08:56:00', -20.92590000, 55.65730000, NULL, 0, 1, 1),
-(1523, 57, 'entry', 'rfid', '2026-03-10 09:56:00', -20.92590000, 55.65730000, NULL, 0, 1, 1),
-(1524, 57, 'exit', 'rfid', '2026-03-10 10:56:00', -20.92590000, 55.65730000, NULL, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -3614,9 +2802,10 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('f6vl9sP26gVCp8Soi8x43a4vTHcEzFif79qN3a2D', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibmU1NVU3VVhXUUtGMzNlTEoyck4waXgwYXNMTHZySUt2WEtQUnV4TCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9lbXBsb3llL2xlYXZlLXJlcXVlc3RzL2NyZWF0ZSI7czo1OiJyb3V0ZSI7czoyOToiZW1wbG95ZS5sZWF2ZS1yZXF1ZXN0cy5jcmVhdGUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjU0OiJsb2dpbl9lbXBsb3llXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NTtzOjExOiJlbXBsb3llZV9pZCI7aTo1O30=', 1788274334),
-('jC76XQ1eBQAZySR6PuKqyLbE9Mhi3b7ljj6Ki9w9', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYWdoaXVqTzU2MVB2OFdZZzJ2U214cm1KZmgwdjNFRWNVaWMzVEhrNSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9sZWF2ZS13b3JrZmxvd3MiO3M6NToicm91dGUiO3M6Mjc6ImFkbWluLmxlYXZlLXdvcmtmbG93cy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1788279800),
-('z09SlbuQ0wpJjz7wp8uLWT99PaUhLc3a15rZy4jt', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiek81UHNtaDlqSUYzcXVPemc4WjZUVkJtSU9QWUJBdlZJVTN4OXk4UiI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjU5OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYWRtaW4vZGVwYXJ0bWVudHM/c2VhcmNoPVJIJnNpdGVfaWQ9MSI7czo1OiJyb3V0ZSI7czoyMzoiYWRtaW4uZGVwYXJ0bWVudHMuaW5kZXgiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1788337539);
+('ewS9zDVyvj9ZXSrav1w73r2h1U1FnRYXBxfSoZZT', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZWF2STdSRlBhZ0hBNjUxWVVWMkZ4Y3g0QUxlUGdUV0Y4SHJiTDhTTyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9sZWF2ZS10eXBlcyI7czo1OiJyb3V0ZSI7czoyMzoiYWRtaW4ubGVhdmUtdHlwZXMuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1788941431),
+('FkYu8Ct8nglHVfTy923IkXAAIMigJBtsDskrKNEM', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoibDE0T0FXbDFkYk8yVGl2cjdFb3ZObTlRTm9QSTZteUh1cUpMNlo3RyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fXM6NTQ6ImxvZ2luX2VtcGxveWVfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo2NjtzOjExOiJlbXBsb3llZV9pZCI7aTo2NjtzOjM6InVybCI7YToxOntzOjg6ImludGVuZGVkIjtzOjI4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvc2llZ2VzIjt9fQ==', 1788933766),
+('TufZnAOrMwg4JEpDd6097xsFwvXGZODObHPnkaPC', 66, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiYkNMWkRWRERkT2QxbUZXOHV4T1NwZlFJQ0xKUDJEa040YmEyUjhDUSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MTIzOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZW1wbG95ZS9jYWxlbmRhci9ldmVudHM/ZW5kPTIwMjYtMTAtMTJUMDAlM0EwMCUzQTAwJTJCMDMlM0EwMCZzdGFydD0yMDI2LTA4LTMxVDAwJTNBMDAlM0EwMCUyQjAzJTNBMDAiO3M6NToicm91dGUiO3M6MjM6ImVtcGxveWUuY2FsZW5kYXIuZXZlbnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1NDoibG9naW5fZW1wbG95ZV81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjY2O3M6MTE6ImVtcGxveWVlX2lkIjtpOjY2O3M6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO319', 1788939014),
+('WNBQG6JTZnwovvMylTgj4uuY6OVpASscBQ9Bah4P', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiWkE2MjhOa3E2ZUhCMkNoQzlhVTZVWGtEQkRYcmM5VHdWSXh2dTFaTyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6Mjg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zaWVnZXMiO31zOjU0OiJsb2dpbl9lbXBsb3llXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NjY7fQ==', 1788933905);
 
 -- --------------------------------------------------------
 
@@ -3726,13 +2915,6 @@ CREATE TABLE `site_leave_workflow_settings` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `site_leave_workflow_settings`
---
-
-INSERT INTO `site_leave_workflow_settings` (`id`, `site_id`, `leave_workflow_id`, `name`, `description`, `steps`, `is_default`, `is_active`, `created_at`, `updated_at`) VALUES
-(2, 1, 1, 'Validation standar', NULL, '[{\"order\":1,\"role\":\"director\",\"label\":\"Validation Directeur\",\"description\":\"DR\"},{\"order\":2,\"role\":\"hr\",\"label\":\"Validation RH\",\"description\":\"Le service RH approuve la demande\"},{\"order\":3,\"role\":\"manager\",\"label\":\"validation\",\"description\":\"\"}]', 0, 1, '2026-08-21 12:21:10', '2026-08-21 12:21:10');
 
 -- --------------------------------------------------------
 
@@ -3884,6 +3066,14 @@ ALTER TABLE `company_holidays`
   ADD KEY `company_holidays_site_date_index` (`site_id`,`date`);
 
 --
+-- Index pour la table `comparaisons_planning`
+--
+ALTER TABLE `comparaisons_planning`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `comparaisons_planning_planning_detail_id_date_comparaison_unique` (`planning_detail_id`,`date_comparaison`),
+  ADD KEY `comparaisons_planning_pointage_id_foreign` (`pointage_id`);
+
+--
 -- Index pour la table `conges`
 --
 ALTER TABLE `conges`
@@ -3943,6 +3133,25 @@ ALTER TABLE `entreprises_sieges`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Index pour la table `evenements_planning`
+--
+ALTER TABLE `evenements_planning`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `evenements_planning_siege_id_foreign` (`siege_id`),
+  ADD KEY `evenements_planning_service_id_foreign` (`service_id`),
+  ADD KEY `evenements_planning_poste_id_foreign` (`poste_id`),
+  ADD KEY `evenements_planning_cree_par_foreign` (`cree_par`),
+  ADD KEY `evenements_planning_debut_fin_index` (`debut`,`fin`);
+
+--
+-- Index pour la table `evenement_employes`
+--
+ALTER TABLE `evenement_employes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `evenement_employes_evenement_id_employe_id_unique` (`evenement_id`,`employe_id`),
+  ADD KEY `evenement_employes_employe_id_foreign` (`employe_id`);
+
+--
 -- Index pour la table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -3954,6 +3163,14 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `hierarchy_levels`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `horaires_types`
+--
+ALTER TABLE `horaires_types`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `horaires_types_cree_par_foreign` (`cree_par`),
+  ADD KEY `horaires_types_poste_id_foreign` (`poste_id`);
 
 --
 -- Index pour la table `jobs`
@@ -3973,7 +3190,8 @@ ALTER TABLE `job_batches`
 --
 ALTER TABLE `job_titles`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `job_titles_hierarchy_level_id_index` (`hierarchy_level_id`);
+  ADD KEY `job_titles_hierarchy_level_id_index` (`hierarchy_level_id`),
+  ADD KEY `job_titles_department_id_foreign` (`department_id`);
 
 --
 -- Index pour la table `jours_non_travailles`
@@ -3983,6 +3201,17 @@ ALTER TABLE `jours_non_travailles`
   ADD KEY `jours_non_travailles_siegeid_foreign` (`SiegeID`),
   ADD KEY `jours_non_travailles_date_siegeid_index` (`Date`,`SiegeID`),
   ADD KEY `jours_non_travailles_actived_index` (`Actived`);
+
+--
+-- Index pour la table `leave_approvals`
+--
+ALTER TABLE `leave_approvals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leave_approvals_leave_request_id_index` (`leave_request_id`),
+  ADD KEY `leave_approvals_approver_id_index` (`approver_id`),
+  ADD KEY `leave_approvals_is_current_index` (`is_current`),
+  ADD KEY `leave_approvals_status_index` (`status`),
+  ADD KEY `leave_approvals_workflow_step_id_foreign` (`workflow_step_id`);
 
 --
 -- Index pour la table `leave_balances`
@@ -4063,6 +3292,13 @@ ALTER TABLE `leave_request_attachments`
   ADD KEY `lra_request_index` (`leave_request_id`);
 
 --
+-- Index pour la table `leave_roles`
+--
+ALTER TABLE `leave_roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `leave_roles_name_unique` (`name`);
+
+--
 -- Index pour la table `leave_types`
 --
 ALTER TABLE `leave_types`
@@ -4070,6 +3306,15 @@ ALTER TABLE `leave_types`
   ADD UNIQUE KEY `leave_types_code_site_id_unique` (`code`,`site_id`),
   ADD KEY `leave_types_site_id_is_active_index` (`site_id`,`is_active`),
   ADD KEY `leave_types_deleted_at_index` (`deleted_at`);
+
+--
+-- Index pour la table `leave_type_siege_settings`
+--
+ALTER TABLE `leave_type_siege_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `leave_type_siege_settings_siegeid_leave_type_id_unique` (`SiegeID`,`leave_type_id`),
+  ADD KEY `leave_type_siege_settings_leave_type_id_foreign` (`leave_type_id`),
+  ADD KEY `leave_type_siege_settings_forked_type_id_foreign` (`forked_type_id`);
 
 --
 -- Index pour la table `leave_type_site_activations`
@@ -4080,13 +3325,32 @@ ALTER TABLE `leave_type_site_activations`
   ADD KEY `leave_type_site_activations_leave_type_id_foreign` (`leave_type_id`);
 
 --
+-- Index pour la table `leave_validators`
+--
+ALTER TABLE `leave_validators`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_validator` (`employee_id`,`site_id`,`role`) COMMENT 'Un même employé ne peut avoir qu''un seul rôle par site',
+  ADD KEY `leave_validators_site_id_index` (`site_id`),
+  ADD KEY `leave_validators_role_index` (`role`);
+
+--
 -- Index pour la table `leave_workflows`
 --
 ALTER TABLE `leave_workflows`
   ADD PRIMARY KEY (`id`),
   ADD KEY `leave_workflows_site_id_index` (`site_id`),
   ADD KEY `leave_workflows_name_index` (`name`),
-  ADD KEY `leave_workflows_site_active_index` (`site_id`,`is_active`);
+  ADD KEY `leave_workflows_site_active_index` (`site_id`,`is_active`),
+  ADD KEY `leave_workflows_leave_type_id_foreign` (`leave_type_id`);
+
+--
+-- Index pour la table `leave_workflow_steps`
+--
+ALTER TABLE `leave_workflow_steps`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workflow_id` (`workflow_id`),
+  ADD KEY `approver_role` (`approver_role`),
+  ADD KEY `leave_workflow_steps_approver_employee_id_foreign` (`approver_employee_id`);
 
 --
 -- Index pour la table `migrations`
@@ -4118,6 +3382,27 @@ ALTER TABLE `personal_access_tokens`
   ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`),
   ADD KEY `personal_access_tokens_expires_at_index` (`expires_at`);
+
+--
+-- Index pour la table `plannings`
+--
+ALTER TABLE `plannings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `plannings_siege_id_foreign` (`siege_id`),
+  ADD KEY `plannings_service_id_foreign` (`service_id`),
+  ADD KEY `plannings_poste_id_foreign` (`poste_id`),
+  ADD KEY `plannings_cree_par_foreign` (`cree_par`),
+  ADD KEY `plannings_valide_par_foreign` (`valide_par`),
+  ADD KEY `plannings_date_debut_semaine_date_fin_semaine_index` (`date_debut_semaine`,`date_fin_semaine`),
+  ADD KEY `plannings_statut_index` (`statut`);
+
+--
+-- Index pour la table `planning_details`
+--
+ALTER TABLE `planning_details`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `planning_details_planning_id_employe_id_date_unique` (`planning_id`,`employe_id`,`date`),
+  ADD KEY `planning_details_employe_id_date_index` (`employe_id`,`date`);
 
 --
 -- Index pour la table `pointages`
@@ -4212,13 +3497,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=995;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1289;
 
 --
 -- AUTO_INCREMENT pour la table `administration`
 --
 ALTER TABLE `administration`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT pour la table `admin_roles`
@@ -4230,7 +3515,13 @@ ALTER TABLE `admin_roles`
 -- AUTO_INCREMENT pour la table `company_holidays`
 --
 ALTER TABLE `company_holidays`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT pour la table `comparaisons_planning`
+--
+ALTER TABLE `comparaisons_planning`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `conges`
@@ -4248,7 +3539,7 @@ ALTER TABLE `conge_validations`
 -- AUTO_INCREMENT pour la table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT pour la table `employee_managers`
@@ -4260,19 +3551,31 @@ ALTER TABLE `employee_managers`
 -- AUTO_INCREMENT pour la table `employes`
 --
 ALTER TABLE `employes`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT pour la table `entreprises`
 --
 ALTER TABLE `entreprises`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT pour la table `entreprises_sieges`
 --
 ALTER TABLE `entreprises_sieges`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT pour la table `evenements_planning`
+--
+ALTER TABLE `evenements_planning`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `evenement_employes`
+--
+ALTER TABLE `evenement_employes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `failed_jobs`
@@ -4284,7 +3587,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT pour la table `hierarchy_levels`
 --
 ALTER TABLE `hierarchy_levels`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT pour la table `horaires_types`
+--
+ALTER TABLE `horaires_types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `jobs`
@@ -4296,7 +3605,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT pour la table `job_titles`
 --
 ALTER TABLE `job_titles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=347;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=352;
 
 --
 -- AUTO_INCREMENT pour la table `jours_non_travailles`
@@ -4305,16 +3614,22 @@ ALTER TABLE `jours_non_travailles`
   MODIFY `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
+-- AUTO_INCREMENT pour la table `leave_approvals`
+--
+ALTER TABLE `leave_approvals`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+
+--
 -- AUTO_INCREMENT pour la table `leave_balances`
 --
 ALTER TABLE `leave_balances`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT pour la table `leave_balance_transactions`
 --
 ALTER TABLE `leave_balance_transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT pour la table `leave_import_batches`
@@ -4326,37 +3641,49 @@ ALTER TABLE `leave_import_batches`
 -- AUTO_INCREMENT pour la table `leave_periods`
 --
 ALTER TABLE `leave_periods`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT pour la table `leave_policies`
 --
 ALTER TABLE `leave_policies`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `leave_policy_assignments`
 --
 ALTER TABLE `leave_policy_assignments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT pour la table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT pour la table `leave_request_attachments`
 --
 ALTER TABLE `leave_request_attachments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT pour la table `leave_roles`
+--
+ALTER TABLE `leave_roles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT pour la table `leave_types`
 --
 ALTER TABLE `leave_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT pour la table `leave_type_siege_settings`
+--
+ALTER TABLE `leave_type_siege_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `leave_type_site_activations`
@@ -4365,28 +3692,52 @@ ALTER TABLE `leave_type_site_activations`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT pour la table `leave_validators`
+--
+ALTER TABLE `leave_validators`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT pour la table `leave_workflows`
 --
 ALTER TABLE `leave_workflows`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `leave_workflow_steps`
+--
+ALTER TABLE `leave_workflow_steps`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT pour la table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT pour la table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `plannings`
+--
+ALTER TABLE `plannings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `planning_details`
+--
+ALTER TABLE `planning_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `pointages`
@@ -4465,6 +3816,13 @@ ALTER TABLE `company_holidays`
   ADD CONSTRAINT `company_holidays_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
 
 --
+-- Contraintes pour la table `comparaisons_planning`
+--
+ALTER TABLE `comparaisons_planning`
+  ADD CONSTRAINT `comparaisons_planning_planning_detail_id_foreign` FOREIGN KEY (`planning_detail_id`) REFERENCES `planning_details` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comparaisons_planning_pointage_id_foreign` FOREIGN KEY (`pointage_id`) REFERENCES `pointages` (`ID`) ON DELETE SET NULL;
+
+--
 -- Contraintes pour la table `conges`
 --
 ALTER TABLE `conges`
@@ -4498,9 +3856,33 @@ ALTER TABLE `entreprises`
   ADD CONSTRAINT `fk_sieges_company` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Contraintes pour la table `evenements_planning`
+--
+ALTER TABLE `evenements_planning`
+  ADD CONSTRAINT `evenements_planning_cree_par_foreign` FOREIGN KEY (`cree_par`) REFERENCES `administration` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `evenements_planning_poste_id_foreign` FOREIGN KEY (`poste_id`) REFERENCES `job_titles` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `evenements_planning_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `evenements_planning_siege_id_foreign` FOREIGN KEY (`siege_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `evenement_employes`
+--
+ALTER TABLE `evenement_employes`
+  ADD CONSTRAINT `evenement_employes_employe_id_foreign` FOREIGN KEY (`employe_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `evenement_employes_evenement_id_foreign` FOREIGN KEY (`evenement_id`) REFERENCES `evenements_planning` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `horaires_types`
+--
+ALTER TABLE `horaires_types`
+  ADD CONSTRAINT `horaires_types_cree_par_foreign` FOREIGN KEY (`cree_par`) REFERENCES `administration` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `horaires_types_poste_id_foreign` FOREIGN KEY (`poste_id`) REFERENCES `job_titles` (`id`) ON DELETE CASCADE;
+
+--
 -- Contraintes pour la table `job_titles`
 --
 ALTER TABLE `job_titles`
+  ADD CONSTRAINT `job_titles_department_id_foreign` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `job_titles_hierarchy_level_id_foreign` FOREIGN KEY (`hierarchy_level_id`) REFERENCES `hierarchy_levels` (`id`) ON DELETE SET NULL;
 
 --
@@ -4508,6 +3890,14 @@ ALTER TABLE `job_titles`
 --
 ALTER TABLE `jours_non_travailles`
   ADD CONSTRAINT `jours_non_travailles_siegeid_foreign` FOREIGN KEY (`SiegeID`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_approvals`
+--
+ALTER TABLE `leave_approvals`
+  ADD CONSTRAINT `leave_approvals_approver_id_foreign` FOREIGN KEY (`approver_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `leave_approvals_leave_request_id_foreign` FOREIGN KEY (`leave_request_id`) REFERENCES `leave_requests` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `leave_approvals_workflow_step_id_foreign` FOREIGN KEY (`workflow_step_id`) REFERENCES `leave_workflow_steps` (`id`) ON DELETE SET NULL;
 
 --
 -- Contraintes pour la table `leave_balances`
@@ -4559,6 +3949,13 @@ ALTER TABLE `leave_types`
   ADD CONSTRAINT `leave_types_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE SET NULL;
 
 --
+-- Contraintes pour la table `leave_type_siege_settings`
+--
+ALTER TABLE `leave_type_siege_settings`
+  ADD CONSTRAINT `leave_type_siege_settings_forked_type_id_foreign` FOREIGN KEY (`forked_type_id`) REFERENCES `leave_types` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `leave_type_siege_settings_leave_type_id_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE CASCADE;
+
+--
 -- Contraintes pour la table `leave_type_site_activations`
 --
 ALTER TABLE `leave_type_site_activations`
@@ -4568,10 +3965,25 @@ ALTER TABLE `leave_type_site_activations`
   ADD CONSTRAINT `ltsa_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
 
 --
+-- Contraintes pour la table `leave_validators`
+--
+ALTER TABLE `leave_validators`
+  ADD CONSTRAINT `leave_validators_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `leave_validators_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
 -- Contraintes pour la table `leave_workflows`
 --
 ALTER TABLE `leave_workflows`
+  ADD CONSTRAINT `leave_workflows_leave_type_id_foreign` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_types` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `leave_workflows_site_id_foreign` FOREIGN KEY (`site_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `leave_workflow_steps`
+--
+ALTER TABLE `leave_workflow_steps`
+  ADD CONSTRAINT `leave_workflow_steps_approver_employee_id_foreign` FOREIGN KEY (`approver_employee_id`) REFERENCES `employes` (`ID`) ON DELETE SET NULL,
+  ADD CONSTRAINT `leave_workflow_steps_workflow_id_foreign` FOREIGN KEY (`workflow_id`) REFERENCES `leave_workflows` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `notifications`
@@ -4579,6 +3991,23 @@ ALTER TABLE `leave_workflows`
 ALTER TABLE `notifications`
   ADD CONSTRAINT `notifications_leave_request_id_foreign` FOREIGN KEY (`leave_request_id`) REFERENCES `leave_requests` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `administration` (`ID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `plannings`
+--
+ALTER TABLE `plannings`
+  ADD CONSTRAINT `plannings_cree_par_foreign` FOREIGN KEY (`cree_par`) REFERENCES `administration` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `plannings_poste_id_foreign` FOREIGN KEY (`poste_id`) REFERENCES `job_titles` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `plannings_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `plannings_siege_id_foreign` FOREIGN KEY (`siege_id`) REFERENCES `entreprises_sieges` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `plannings_valide_par_foreign` FOREIGN KEY (`valide_par`) REFERENCES `administration` (`ID`) ON DELETE SET NULL;
+
+--
+-- Contraintes pour la table `planning_details`
+--
+ALTER TABLE `planning_details`
+  ADD CONSTRAINT `planning_details_employe_id_foreign` FOREIGN KEY (`employe_id`) REFERENCES `employes` (`ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `planning_details_planning_id_foreign` FOREIGN KEY (`planning_id`) REFERENCES `plannings` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `pointages`
