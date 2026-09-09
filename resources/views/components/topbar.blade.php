@@ -36,6 +36,10 @@
                 } elseif ($user->IsSeller == 1) {
                     $roleLabel = 'Revendeur';
                     $roleColor = 'linear-gradient(135deg, #10b981, #059669)';
+                } elseif ($user->IsSupervisor == 1) {
+                    // ✅ NOUVEAU : Responsable de service
+                    $roleLabel = 'Responsable de service';
+                    $roleColor = 'linear-gradient(135deg, #0ea5e9, #0284c7)'; // bleu clair
                 } elseif ($user->isManager ?? false) {
                     $roleLabel = 'Manager Admin Simple';
                     $roleColor = 'linear-gradient(135deg, #6b7280, #4b5563)';
