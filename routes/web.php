@@ -46,6 +46,8 @@ use App\Http\Controllers\Employe\LeaveValidationController;
 use App\Http\Controllers\HoraireTypeController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\EmployePlanningController;
+use App\Http\Controllers\SupervisorController;
+
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -97,8 +99,9 @@ Route::get('/', function () {
 
 // ============================================
 // ✅ ROUTES AUTHENTIFIÉES (Tous les admins)
+// ✅ AJOUT du middleware block.supervisor sur le groupe auth
 // ============================================
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'block.supervisor'])->group(function () {
 
     // Langue
     Route::get('/language/{locale}', [LanguageController::class, 'changeLanguage'])->name('language.change');
@@ -334,6 +337,13 @@ Route::middleware('auth')->group(function () {
         Route::patch('/sellers/{seller}', [SellerController::class, 'update']);
         Route::delete('/sellers/{seller}', [SellerController::class, 'destroy'])->name('sellers.destroy');
         Route::delete('/sellers/reset/{seller}', [SellerController::class, 'reset'])->name('sellers.reset');
+    });
+
+    // ===== ✅ RESPONSABLES DE SERVICE (déplacé ICI, à l'intérieur du groupe auth) =====
+    Route::middleware('block.sellers')->group(function () {
+        Route::resource('supervisors', SupervisorController::class)->except(['show']);
+        Route::post('supervisors/{id}/toggle', [SupervisorController::class, 'toggleActive'])
+            ->name('supervisors.toggle');
     });
 
     // ===== ROUTES SUPER ADMIN UNIQUEMENT =====

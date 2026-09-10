@@ -10,14 +10,16 @@
     $isSuperAdmin = $isAdmin && $user->IsSuperAdmin == 1;
     $isSimpleAdmin = $isAdmin && $user->IsSuperAdmin == 0 && $user->IsSeller == 0;
     $isSeller = $isAdmin && $user->IsSeller == 1;
+
+    // ✅ NOUVEAU : identifie le Responsable de service
+    $isSupervisor = $isAdmin && $user->IsSupervisor == 1;
+
     $isManagerSuperAdmin = $isAdmin && $user->IsSuperAdmin == 1 && ($user->isManager ?? false);
     $isManagerSimpleAdmin = $isAdmin && $user->IsSuperAdmin == 0 && $user->IsSeller == 0 && ($user->isManager ?? false);
     $isManagerSeller = $isAdmin && $user->IsSeller == 1 && ($user->isManager ?? false);
 
-    // Pour les employés (ils voient une version simplifiée)
     $isEmployeMode = $isEmploye;
 
-    // Compteur de notifications non lues pour l'employé
     $unreadNotifications = 0;
     if ($isAdmin) {
         try {
@@ -30,7 +32,6 @@
         }
     }
 
-    // Compteur pour les employés (si user_id est dans employes)
     if ($isEmploye && $user->ID) {
         try {
             $unreadNotifications = \DB::table('notifications')
@@ -42,7 +43,6 @@
         }
     }
 
-    // Vérifier si des plannings sont en attente (admin)
     $hasPendingPlanning = false;
     if ($isAdmin) {
         try {
@@ -78,37 +78,35 @@
             <span>{{ __('Tableau de bord') }}</span>
         </a>
 
-        {{-- Siège : Visible par tous --}}
+        {{-- ✅ Siège : caché pour le Supervisor --}}
+        @if(!$isSupervisor)
         <a href="{{ route('sieges.index') }}"
            class="sidebar-link {{ request()->routeIs('sieges.*') ? 'active' : '' }}">
             <i class="bi bi-building"></i>
             <span>{{ __('Siège') }}</span>
         </a>
+        @endif
 
         {{-- ==================== ESPACE EMPLOYÉ ==================== --}}
         @if($isEmploye)
-            {{-- Mes congés --}}
             <a href="{{ route('employe.dashboard') }}"
                class="sidebar-link {{ request()->routeIs('employe.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-calendar-check"></i>
                 <span>{{ __('Mes congés') }}</span>
             </a>
 
-            {{-- Mes demandes --}}
             <a href="{{ route('employe.leave-requests.index') }}"
                class="sidebar-link {{ request()->routeIs('employe.leave-requests.*') ? 'active' : '' }}">
                 <i class="bi bi-list-ul"></i>
                 <span>{{ __('Mes demandes') }}</span>
             </a>
 
-            {{-- Nouvelle demande --}}
             <a href="{{ route('employe.leave-requests.create') }}"
                class="sidebar-link {{ request()->routeIs('employe.leave-requests.create') ? 'active' : '' }}">
                 <i class="bi bi-plus-circle"></i>
                 <span>{{ __('Nouvelle demande') }}</span>
             </a>
 
-            {{-- Notifications --}}
             <a href="{{ route('employe.notifications.index') }}"
                class="sidebar-link {{ request()->routeIs('employe.notifications.*') ? 'active' : '' }}">
                 <i class="bi bi-bell"></i>
@@ -120,16 +118,12 @@
                 @endif
             </a>
 
-            {{-- Calendrier des congés --}}
             <a href="{{ route('employe.leave-calendar.index') }}"
                class="sidebar-link {{ request()->routeIs('employe.leave-calendar.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar3"></i>
                 <span>{{ __('Calendrier des congés') }}</span>
             </a>
 
-            {{-- ========================================== --}}
-            {{-- 📅 MON PLANNING (EMPLOYÉ)                  --}}
-            {{-- ========================================== --}}
             <a href="{{ route('employe.planning.index') }}"
                class="sidebar-link {{ request()->routeIs('employe.planning.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-range"></i>
@@ -137,7 +131,7 @@
             </a>
         @endif
 
-        {{-- ADMINISTRATEUR (uniquement pour les admins) --}}
+        {{-- ADMINISTRATEUR --}}
         @if($isAdmin)
             {{-- Administrateur & Revendeur : Super Admin uniquement --}}
             @if($isSuperAdmin)
@@ -154,8 +148,8 @@
             </a>
             @endif
 
-            {{-- Gestion des Managers --}}
-            @if($isSuperAdmin || ($isSimpleAdmin && !$isManagerSimpleAdmin) || ($isSeller && !$isManagerSeller))
+            {{-- ✅ Gestion des Managers : caché pour le Supervisor (ajout de && !$isSupervisor) --}}
+            @if(($isSuperAdmin || ($isSimpleAdmin && !$isManagerSimpleAdmin) || ($isSeller && !$isManagerSeller)) && !$isSupervisor)
             @php
                 $isManagerActive = in_array(request('role'), ['manager_super_admin', 'manager_simple_admin', 'manager_seller']);
             @endphp
@@ -194,23 +188,53 @@
             </div>
             @endif
 
-            {{-- Entreprises : Visible par tous (admins) --}}
+            {{-- ✅ NOUVEAU : Gestion des Responsables de service (Manager uniquement) --}}
+            @if($isAdmin && $user->IsManager == 1 && $user->IsSuperAdmin == 0 && $user->IsSeller == 0)
+                @php
+                    $isSupervisorMenuOpen = request()->routeIs('supervisors.*');
+                @endphp
+                <a href="#supervisorSubmenu"
+                   data-bs-toggle="collapse"
+                   class="sidebar-link {{ $isSupervisorMenuOpen ? '' : 'collapsed' }}"
+                   aria-expanded="{{ $isSupervisorMenuOpen ? 'true' : 'false' }}">
+                    <i class="bi bi-people-fill"></i>
+                    <span>{{ __('Responsables de service') }}</span>
+                    <i class="bi bi-chevron-down ms-auto chevron-icon"
+                       style="font-size: 0.8rem; transition: transform 0.3s;"></i>
+                </a>
+                <div class="collapse {{ $isSupervisorMenuOpen ? 'show' : '' }} mt-1" id="supervisorSubmenu">
+                    <a href="{{ route('supervisors.index') }}"
+                       class="sidebar-link ms-3 {{ request()->routeIs('supervisors.index') ? 'active' : '' }}"
+                       style="padding-top: 0.35rem; padding-bottom: 0.35rem; font-size: 0.9rem;">
+                        <i class="bi bi-list-ul"></i>
+                        <span>{{ __('Liste des responsables') }}</span>
+                    </a>
+                    <a href="{{ route('supervisors.create') }}"
+                       class="sidebar-link ms-3 {{ request()->routeIs('supervisors.create') ? 'active' : '' }}"
+                       style="padding-top: 0.35rem; padding-bottom: 0.35rem; font-size: 0.9rem;">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>{{ __('Créer un responsable') }}</span>
+                    </a>
+                </div>
+            @endif
+
+            {{-- ✅ Site ou établissement : caché pour le Supervisor --}}
+            @if(!$isSupervisor)
             <a href="{{ route('entreprises.index') }}"
                class="sidebar-link {{ request()->routeIs('entreprises.*') ? 'active' : '' }}">
                 <i class="bi bi-shop"></i>
                 <span>{{ __('Site ou établissement') }}</span>
             </a>
+            @endif
 
-            {{-- Employés : Visible par tous (admins) --}}
+            {{-- ✅ Employé : visible pour tous (y compris Supervisor) --}}
             <a href="{{ route('employes.index') }}"
                class="sidebar-link {{ request()->routeIs('employes.*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i>
                 <span>{{ __('Employé') }}</span>
             </a>
 
-            {{-- ========================================== --}}
-            {{-- 📅 PLANNING (NOUVEAU MODULE)              --}}
-            {{-- ========================================== --}}
+            {{-- 📅 PLANNING --}}
             @if(!$isSeller)
             @php
                 $isPlanningOpen = request()->routeIs('planning.*')
@@ -228,7 +252,7 @@
                     <i class="bi bi-chevron-down small chevron"></i>
                 </summary>
 
-                {{-- Voir le planning --}}
+                {{-- Voir le planning : visible pour tous --}}
                 @if(Route::has('planning.index'))
                 <a href="{{ route('planning.index') }}"
                    class="sidebar-link sidebar-sub {{ request()->routeIs('planning.index') || request()->routeIs('planning.calendar') || request()->routeIs('planning.show') ? 'active' : '' }}">
@@ -237,8 +261,8 @@
                 </a>
                 @endif
 
-                {{-- Créer un planning --}}
-                @if(Route::has('planning.create'))
+                {{-- ✅ Créer un planning : caché pour le Supervisor --}}
+                @if(Route::has('planning.create') && !$isSupervisor)
                 <a href="{{ route('planning.create') }}"
                    class="sidebar-link sidebar-sub {{ request()->routeIs('planning.create') ? 'active' : '' }}">
                     <i class="bi bi-plus-circle"></i>
@@ -246,8 +270,8 @@
                 </a>
                 @endif
 
-                {{-- Paramètres des horaires --}}
-                @if(Route::has('planning.horaires-types.index'))
+                {{-- ✅ Horaires types : caché pour le Supervisor --}}
+                @if(Route::has('planning.horaires-types.index') && !$isSupervisor)
                 <a href="{{ route('planning.horaires-types.index') }}"
                    class="sidebar-link sidebar-sub {{ request()->routeIs('planning.horaires-types.*') ? 'active' : '' }}">
                     <i class="bi bi-clock-history"></i>
@@ -257,8 +281,8 @@
             </details>
             @endif
 
-            {{-- ==================== ORGANISATION RH ==================== --}}
-            @if(!$isSeller)
+            {{-- ✅ Organisation RH : cachée pour le Supervisor --}}
+            @if(!$isSeller && !$isSupervisor)
             @php
                 $isOrgOpen = request()->routeIs('admin.departments.*')
                           || request()->routeIs('admin.job-titles.*')
@@ -271,7 +295,6 @@
                     <i class="bi bi-chevron-down small chevron"></i>
                 </summary>
 
-                {{-- Services --}}
                 @if(Route::has('admin.departments.index'))
                 <a href="{{ route('admin.departments.index') }}"
                    class="sidebar-link sidebar-sub {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
@@ -280,7 +303,6 @@
                 </a>
                 @endif
 
-                {{-- Postes --}}
                 @if(Route::has('admin.job-titles.index'))
                 <a href="{{ route('admin.job-titles.index') }}"
                    class="sidebar-link sidebar-sub {{ request()->routeIs('admin.job-titles.*') ? 'active' : '' }}">
@@ -289,7 +311,6 @@
                 </a>
                 @endif
 
-                {{-- Niveaux --}}
                 @if(Route::has('admin.hierarchy-levels.index'))
                 <a href="{{ route('admin.hierarchy-levels.index') }}"
                    class="sidebar-link sidebar-sub {{ request()->routeIs('admin.hierarchy-levels.*') ? 'active' : '' }}">
@@ -303,12 +324,14 @@
             {{-- Sections INTERDITES aux vendeurs --}}
             @if(!$isSeller)
 
+            {{-- ✅ Pointage : visible pour Supervisor aussi --}}
             <a href="{{ route('pointages.index') }}"
                class="sidebar-link {{ request()->routeIs('pointages.*') ? 'active' : '' }}">
                 <i class="bi bi-clock-history"></i>
                 <span>{{ __('Pointage') }}</span>
             </a>
 
+            {{-- ✅ Rapport : visible pour Supervisor aussi --}}
             <a href="{{ route('reports.index') }}"
                class="sidebar-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                 <i class="bi bi-file-earmark-text"></i>
@@ -356,6 +379,7 @@
                     <span>{{ __('Gestion des Congés') }}</span>
                 </a>
 
+                {{-- ✅ Validation congé : visible pour Supervisor (autorisé) --}}
                 @if($isSuperAdmin || $isSimpleAdmin)
                     <a href="{{ route('conge-validations.index') }}"
                        class="sidebar-link sidebar-sub {{ request()->routeIs('conge-validations.*') ? 'active' : '' }}">
@@ -369,7 +393,8 @@
                     </a>
                 @endif
 
-                @if($isSuperAdmin || $isSimpleAdmin)
+                {{-- ✅ Paramètres congés : caché pour le Supervisor --}}
+                @if(($isSuperAdmin || $isSimpleAdmin) && !$isSupervisor)
                     <a href="{{ route('admin.leave-types.index') }}"
                        class="sidebar-link sidebar-sub {{ request()->routeIs('admin.leave-types.*') || request()->routeIs('admin.leave-policies.*') || request()->routeIs('admin.leave-periods.*') || request()->routeIs('admin.company-holidays.*') || request()->routeIs('admin.leave-workflows.*') ? 'active' : '' }}">
                         <i class="bi bi-sliders"></i>
@@ -378,16 +403,19 @@
                 @endif
             </details>
 
+            {{-- ✅ Jour férié : caché pour le Supervisor --}}
+            @if(!$isSupervisor)
             <a href="{{ route('jours-non-travailles.index') }}"
                class="sidebar-link {{ request()->routeIs('jours-non-travailles.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-event"></i>
                 <span>{{ __('Jour férié') }}</span>
             </a>
+            @endif
 
             @endif
 
-            {{-- Événements : Super Admin et Simple Admin uniquement --}}
-            @if($isSuperAdmin || $isSimpleAdmin)
+            {{-- ✅ Événements : caché pour le Supervisor --}}
+            @if(($isSuperAdmin || $isSimpleAdmin) && !$isSupervisor)
             <a href="{{ route('evenements.index') }}"
                class="sidebar-link {{ request()->routeIs('evenements.*') ? 'active' : '' }}">
                 <i class="bi bi-exclamation-triangle"></i>

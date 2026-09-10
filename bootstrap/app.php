@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'block.sellers' => \App\Http\Middleware\BlockSellers::class,
             'only.sellers' => \App\Http\Middleware\OnlySellers::class,
             'block.simple.admin.sieges' => \App\Http\Middleware\BlockSimpleAdminSieges::class,
+            'block.supervisor' => \App\Http\Middleware\BlockSupervisor::class, // ✅ AJOUT
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
