@@ -18,26 +18,37 @@
             $user = Auth::user();
             $isAdmin = $user instanceof \App\Models\Administration;
             $isEmploye = $user instanceof \App\Models\Employe;
-            
+
+            // ✅ Détection correcte des rôles
+            $isSuperAdmin = $isAdmin && $user->IsSuperAdmin == 1;
+            $isSeller     = $isAdmin && $user->IsSeller == 1;
+            $isManager    = $isAdmin && $user->IsManager == 1;
+            $isSupervisor = $isAdmin && $user->IsSupervisor == 1;
+
             // Rôle de l'utilisateur
             $roleLabel = 'Employé';
             $roleColor = 'linear-gradient(135deg, #4f8a8b, #3d6b6c)';
-            
+
             if ($isAdmin) {
-                if ($user->IsSuperAdmin == 1 && !($user->isManager ?? false)) {
+                if ($isSuperAdmin && !$isManager) {
                     $roleLabel = 'Super Administrateur';
                     $roleColor = 'linear-gradient(135deg, #3F52A4, #5a6fb8)';
-                } elseif ($user->IsSuperAdmin == 1 && ($user->isManager ?? false)) {
+                } elseif ($isSuperAdmin && $isManager) {
                     $roleLabel = 'Manager Super Admin';
                     $roleColor = 'linear-gradient(135deg, #3F52A4, #5a6fb8)';
-                } elseif ($user->IsSeller == 1 && ($user->isManager ?? false)) {
+                } elseif ($isSeller && $isManager) {
                     $roleLabel = 'Manager Revendeur';
                     $roleColor = 'linear-gradient(135deg, #10b981, #059669)';
-                } elseif ($user->IsSeller == 1) {
+                } elseif ($isSeller) {
                     $roleLabel = 'Revendeur';
                     $roleColor = 'linear-gradient(135deg, #10b981, #059669)';
-                } elseif ($user->isManager ?? false) {
-                    $roleLabel = 'Manager Admin Simple';
+                } elseif ($isSupervisor) {
+                    // Responsable de service
+                    $roleLabel = 'Responsable de service';
+                    $roleColor = 'linear-gradient(135deg, #0ea5e9, #0284c7)';
+                } elseif ($isManager) {
+                    // ✅ MODIFIÉ : affiché comme « Manager » (au lieu de « Manager Admin Simple »)
+                    $roleLabel = 'Manager';
                     $roleColor = 'linear-gradient(135deg, #6b7280, #4b5563)';
                 } else {
                     $roleLabel = 'Simple Administrateur';
@@ -73,7 +84,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="topbarUserDropdown"
                 style="border: 2px solid #3F52A4; border-radius: 10px;">
-                
+
                 {{-- Logs d'activité (Super Admin uniquement) --}}
                 @if($isAdmin && $user->IsSuperAdmin == 1)
                 <li>

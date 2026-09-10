@@ -15,9 +15,12 @@ use App\Services\HashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\ActivityLogService;
+use App\Traits\EmployeeAccessTrait;
 
 class EmployeController extends Controller
 {
+    use EmployeeAccessTrait;
+
     protected $repository;
     protected $exportService;
     protected $hashService;
@@ -42,7 +45,12 @@ class EmployeController extends Controller
             'sort_by', 'sort_order'
         ]);
 
-        $employes = $this->repository->getFiltered($filters);
+        // Récupérer les IDs accessibles pour l'utilisateur connecté
+        $user = auth()->user();
+        $accessibleIds = $this->getAccessibleEmployeeIds($user);
+
+        // Passer ces IDs au repository
+        $employes = $this->repository->getFiltered($filters, 5, $accessibleIds);
         $employes->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);
         $employes->appends($filters);
 
@@ -157,6 +165,7 @@ class EmployeController extends Controller
        ========================================================= */
     public function show($id)
     {
+        $this->ensureAccessible($id);
         $employe = $this->repository->findById($id);
         $employe->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);
         $pointages = $employe->pointages()->latest('timestamp_')->paginate(5);
@@ -170,6 +179,7 @@ class EmployeController extends Controller
        ========================================================= */
     public function edit($id)
     {
+        $this->ensureAccessible($id);
         $employe = $this->repository->findById($id);
         $employe->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);
 
@@ -195,168 +205,159 @@ class EmployeController extends Controller
         ));
     }
 
-public function getJobTitlesByDepartment(Request $request)
-{
-    $departmentId = $request->input('department_id');
-    $user = auth()->user();
+    public function getJobTitlesByDepartment(Request $request)
+    {
+        $departmentId = $request->input('department_id');
+        $user = auth()->user();
 
-    $query = JobTitle::query();
+        $query = JobTitle::query();
 
-    if ($departmentId) {
-        // Vérifier que le service existe (et appartient au site si non superadmin)
-        $department = Department::find($departmentId);
-        if ($department && ($user->IsSuperAdmin || $department->site_id == $user->SiegeID)) {
-            $query->where('department_id', $departmentId);
+        if ($departmentId) {
+            $department = Department::find($departmentId);
+            if ($department && ($user->IsSuperAdmin || $department->site_id == $user->SiegeID)) {
+                $query->where('department_id', $departmentId);
+            } else {
+                return response()->json([]);
+            }
         } else {
-            return response()->json([]);
+            if (!$user->IsSuperAdmin && $user->SiegeID) {
+                $query->whereHas('department', function($q) use ($user) {
+                    $q->where('site_id', $user->SiegeID);
+                })->orWhereNull('department_id');
+            }
         }
-    } else {
-        // Si aucun service, on peut renvoyer tous les postes du site (ou tous pour super-admin)
-        if (!$user->IsSuperAdmin && $user->SiegeID) {
-            $query->whereHas('department', function($q) use ($user) {
-                $q->where('site_id', $user->SiegeID);
-            })->orWhereNull('department_id');
-        }
-    }
 
-    $jobTitles = $query->orderBy('name')->get(['id', 'name']);
-    return response()->json($jobTitles);
-}
+        $jobTitles = $query->orderBy('name')->get(['id', 'name']);
+        return response()->json($jobTitles);
+    }
 
     /* =========================================================
        UPDATE - CORRIGÉ
        ========================================================= */
-   /* =========================================================
-   UPDATE - CORRIGÉ
-   ========================================================= */
-public function update(EmployeRequest $request, $id)
-{
-    $data = $request->validated();
-    $employe = Employe::findOrFail($id);
+    public function update(EmployeRequest $request, $id)
+    {
+        $this->ensureAccessible($id);
+        $data = $request->validated();
+        $employe = Employe::findOrFail($id);
 
-    // ==================================================
-    // NON SUPER ADMIN : champs limités mais MANAGER MODIFIABLE
-    // ==================================================
-    if (!auth()->user()->IsSuperAdmin) {
-        $newPin = $data['Pin'] ?? null;
+        // ==================================================
+        // NON SUPER ADMIN : champs limités mais MANAGER MODIFIABLE
+        // ==================================================
+        if (!auth()->user()->IsSuperAdmin) {
+            $newPin = $data['Pin'] ?? null;
 
-        if (!empty($newPin)) {
-            $hashedPin = $this->hashService->toHash($newPin);
-            if (Employe::where('SiegeID', $employe->SiegeID)
-                    ->where('Pin', $hashedPin)
-                    ->where('ID', '!=', $id)
-                    ->whereNotNull('Pin')
-                    ->exists()) {
-                return redirect()->back()
-                    ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
-                    ->withInput();
+            if (!empty($newPin)) {
+                $hashedPin = $this->hashService->toHash($newPin);
+                if (Employe::where('SiegeID', $employe->SiegeID)
+                        ->where('Pin', $hashedPin)
+                        ->where('ID', '!=', $id)
+                        ->whereNotNull('Pin')
+                        ->exists()) {
+                    return redirect()->back()
+                        ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                        ->withInput();
+                }
+                $newPin = $hashedPin;
+            } else {
+                $newPin = $employe->Pin;
             }
-            $newPin = $hashedPin;
-        } else {
-            $newPin = $employe->Pin;
-        }
 
-        // ✅ Organisation - TOUS LES CHAMPS SONT MODIFIABLES
-        $data = [
-            'Nom' => $data['Nom'],
-            'num_mat' => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
-            'Pin' => $newPin,
-            'SiegeID' => $employe->SiegeID,
-            'BadgeID' => $employe->BadgeID,
-            'HasBiometricSetup' => $employe->HasBiometricSetup,
-            'HasFaceSetup' => $employe->HasFaceSetup,
-            'FaceEncodingPath' => $employe->FaceEncodingPath,
-            'Actived' => $employe->Actived,
+            $data = [
+                'Nom' => $data['Nom'],
+                'num_mat' => !empty($data['num_mat']) ? $data['num_mat'] : $employe->num_mat,
+                'Pin' => $newPin,
+                'SiegeID' => $employe->SiegeID,
+                'BadgeID' => $employe->BadgeID,
+                'HasBiometricSetup' => $employe->HasBiometricSetup,
+                'HasFaceSetup' => $employe->HasFaceSetup,
+                'FaceEncodingPath' => $employe->FaceEncodingPath,
+                'Actived' => $employe->Actived,
+                // Organisation
+                'department_id' => $request->input('department_id') ?: null,
+                'job_title_id' => $request->input('job_title_id') ?: null,
+                'hierarchy_level_id' => $request->input('hierarchy_level_id') ?: null,
+                'manager_id' => $request->input('manager_id') ?: null,
+                'employment_status' => $request->input('employment_status', 'actif'),
+                'hire_date' => $request->input('hire_date') ?: null,
+                'company_id' => $employe->company_id,
+                'site_id' => $employe->site_id,
+            ];
+        }
+        // ==================================================
+        // SUPER ADMIN : peut tout modifier
+        // ==================================================
+        else {
+            // Badge
+            if (empty($data['BadgeID'])) {
+                $data['BadgeID'] = $employe->BadgeID;
+            } else {
+                $hashedBadge = $this->hashService->toHash($data['BadgeID']);
+                if (Employe::where('SiegeID', $employe->SiegeID)
+                        ->where('BadgeID', $hashedBadge)
+                        ->where('ID', '!=', $id)
+                        ->exists()) {
+                    return redirect()->back()
+                        ->withErrors(['BadgeID' => 'Ce Badge ID est déjà utilisé dans ce siège.'])
+                        ->withInput();
+                }
+                $data['BadgeID'] = $hashedBadge;
+            }
+
+            // PIN
+            if (!empty($data['Pin'])) {
+                $hashedPin = $this->hashService->toHash($data['Pin']);
+                if (Employe::where('SiegeID', $employe->SiegeID)
+                        ->where('Pin', $hashedPin)
+                        ->where('ID', '!=', $id)
+                        ->whereNotNull('Pin')
+                        ->exists()) {
+                    return redirect()->back()
+                        ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
+                        ->withInput();
+                }
+                $data['Pin'] = $hashedPin;
+            } else {
+                $data['Pin'] = $employe->Pin;
+            }
+
+            // Matricule
+            if (empty($data['num_mat'])) {
+                $data['num_mat'] = $employe->num_mat;
+            }
+
+            // Photo
+            if ($request->hasFile('FaceEncodingFile')) {
+                $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
+                $data['HasFaceSetup'] = true;
+            } else {
+                unset($data['FaceEncodingPath'], $data['HasFaceSetup']);
+            }
+
             // Organisation
-            'department_id' => $request->input('department_id') ?: null,
-            'job_title_id' => $request->input('job_title_id') ?: null,
-            'hierarchy_level_id' => $request->input('hierarchy_level_id') ?: null,
-            'manager_id' => $request->input('manager_id') ?: null, // ✅ MODIFIABLE
-            'employment_status' => $request->input('employment_status', 'actif'),
-            'hire_date' => $request->input('hire_date') ?: null,
-            'company_id' => $employe->company_id,
-            'site_id' => $employe->site_id,
-        ];
+            $data['department_id'] = $request->input('department_id') ?: null;
+            $data['job_title_id'] = $request->input('job_title_id') ?: null;
+            $data['hierarchy_level_id'] = $request->input('hierarchy_level_id') ?: null;
+            $data['manager_id'] = $request->input('manager_id') ?: null;
+            $data['employment_status'] = $request->input('employment_status', 'actif');
+            $data['hire_date'] = $request->input('hire_date') ?: null;
+            $data['company_id'] = $employe->SiegeID;
+            $data['site_id'] = $employe->SiegeID;
+        }
+
+        unset($data['FaceEncodingFile']);
+
+        $this->repository->update($id, $data);
+
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé modifié avec succès.');
     }
-    
-    // ==================================================
-    // SUPER ADMIN : peut tout modifier
-    // ==================================================
-    else {
-        // Badge
-        if (empty($data['BadgeID'])) {
-            $data['BadgeID'] = $employe->BadgeID;
-        } else {
-            $hashedBadge = $this->hashService->toHash($data['BadgeID']);
-            if (Employe::where('SiegeID', $employe->SiegeID)
-                    ->where('BadgeID', $hashedBadge)
-                    ->where('ID', '!=', $id)
-                    ->exists()) {
-                return redirect()->back()
-                    ->withErrors(['BadgeID' => 'Ce Badge ID est déjà utilisé dans ce siège.'])
-                    ->withInput();
-            }
-            $data['BadgeID'] = $hashedBadge;
-        }
-
-        // PIN
-        if (!empty($data['Pin'])) {
-            $hashedPin = $this->hashService->toHash($data['Pin']);
-            if (Employe::where('SiegeID', $employe->SiegeID)
-                    ->where('Pin', $hashedPin)
-                    ->where('ID', '!=', $id)
-                    ->whereNotNull('Pin')
-                    ->exists()) {
-                return redirect()->back()
-                    ->withErrors(['Pin' => 'Ce code PIN est déjà utilisé dans ce siège.'])
-                    ->withInput();
-            }
-            $data['Pin'] = $hashedPin;
-        } else {
-            $data['Pin'] = $employe->Pin;
-        }
-
-        // Matricule
-        if (empty($data['num_mat'])) {
-            $data['num_mat'] = $employe->num_mat;
-        }
-
-        // Photo
-        if ($request->hasFile('FaceEncodingFile')) {
-            $data['FaceEncodingPath'] = $this->optimizeAndConvertToBase64($request->file('FaceEncodingFile'));
-            $data['HasFaceSetup'] = true;
-        } else {
-            unset($data['FaceEncodingPath'], $data['HasFaceSetup']);
-        }
-
-        // Organisation
-        $data['department_id'] = $request->input('department_id') ?: null;
-        $data['job_title_id'] = $request->input('job_title_id') ?: null;
-        $data['hierarchy_level_id'] = $request->input('hierarchy_level_id') ?: null;
-        $data['manager_id'] = $request->input('manager_id') ?: null;
-        $data['employment_status'] = $request->input('employment_status', 'actif');
-        $data['hire_date'] = $request->input('hire_date') ?: null;
-        $data['company_id'] = $employe->SiegeID;
-        $data['site_id'] = $employe->SiegeID;
-    }
-
-    unset($data['FaceEncodingFile']);
-
-    // ✅ Mise à jour de l'employé
-    $this->repository->update($id, $data);
-
-    // ✅ SUPPRIMÉ : le code qui utilisait EmployeeManager
-    // La table employes a déjà le champ manager_id, pas besoin de table supplémentaire
-
-    return redirect()->route('employes.index')
-        ->with('success', 'Employé modifié avec succès.');
-}
 
     /* =========================================================
        DESTROY
        ========================================================= */
     public function destroy($id)
     {
+        $this->ensureAccessible($id);
         $user = auth()->user();
         if (!$user->isTrueSuperAdmin()) {
             return redirect()->back()->with('error', 'Vous n\'avez pas accès à cette fonctionnalité.');
@@ -382,6 +383,7 @@ public function update(EmployeRequest $request, $id)
        ========================================================= */
     public function reset($id)
     {
+        $this->ensureAccessible($id);
         $user = auth()->user();
         if (!$user->isTrueSuperAdmin()) {
             return redirect()->back()->with('error', 'Vous n\'avez pas accès à cette fonctionnalité.');
@@ -407,6 +409,7 @@ public function update(EmployeRequest $request, $id)
        ========================================================= */
     public function resetCodePin($id)
     {
+        $this->ensureAccessible($id);
         $employe = $this->repository->findById($id);
         $employe->Pin = null;
         $employe->save();
@@ -419,6 +422,7 @@ public function update(EmployeRequest $request, $id)
        ========================================================= */
     public function assignWebAccess(Request $request, $id)
     {
+        $this->ensureAccessible($id);
         $request->validate([
             'email' => 'required|email|max:255|unique:Employes,email,' . $id . ',ID',
             'password' => 'nullable|min:6',
@@ -451,7 +455,9 @@ public function update(EmployeRequest $request, $id)
             'search', 'SiegeID', 'Actived', 'HasBiometricSetup', 'HasFaceSetup'
         ]);
 
-        $employes = $this->repository->getAllForExport($filters);
+        $user = auth()->user();
+        $accessibleIds = $this->getAccessibleEmployeeIds($user);
+        $employes = $this->repository->getAllForExport($filters, $accessibleIds);
 
         ActivityLogService::log(action: 'export_excel', modelType: 'Employe');
         return $this->exportService->exportToExcel($employes, 'Employés');
@@ -463,7 +469,9 @@ public function update(EmployeRequest $request, $id)
             'search', 'SiegeID', 'Actived', 'HasBiometricSetup', 'HasFaceSetup'
         ]);
 
-        $employes = $this->repository->getAllForExport($filters);
+        $user = auth()->user();
+        $accessibleIds = $this->getAccessibleEmployeeIds($user);
+        $employes = $this->repository->getAllForExport($filters, $accessibleIds);
 
         ActivityLogService::log(action: 'export_pdf', modelType: 'Employe');
         return $this->exportService->exportToPdf($employes, 'Liste des employés', 'exports.generic');
@@ -474,6 +482,7 @@ public function update(EmployeRequest $request, $id)
        ========================================================= */
     public function getFaceEncoding($id)
     {
+        $this->ensureAccessible($id);
         $employe = Employe::findOrFail($id);
 
         if (!$employe->FaceEncodingPath) {
@@ -492,6 +501,7 @@ public function update(EmployeRequest $request, $id)
 
     public function getFaceThumbnail($id)
     {
+        $this->ensureAccessible($id);
         $employe = Employe::findOrFail($id);
 
         if (!$employe->FaceEncodingPath) {
@@ -505,6 +515,20 @@ public function update(EmployeRequest $request, $id)
     /* =========================================================
        HELPERS PRIVÉS
        ========================================================= */
+
+    /**
+     * Vérifie que l'employé donné est accessible par l'utilisateur connecté.
+     * Retourne l'employé ou lance une exception 403.
+     */
+    private function ensureAccessible($id)
+    {
+        $user = auth()->user();
+        $accessibleIds = $this->getAccessibleEmployeeIds($user);
+        if (!in_array($id, $accessibleIds)) {
+            abort(403, 'Vous n\'avez pas accès à cet employé.');
+        }
+    }
+
     private function optimizeAndConvertToBase64($file)
     {
         $image = imagecreatefromstring(file_get_contents($file->getRealPath()));

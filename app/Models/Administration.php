@@ -28,6 +28,7 @@ class Administration extends Authenticatable
         'IsSuperAdmin',
         'IsSeller',
         'IsManager',
+        'IsSupervisor',   // ← AJOUTÉ
         'SiegeID',
         'Actived',
         'deleted',
@@ -42,6 +43,7 @@ class Administration extends Authenticatable
         'IsSuperAdmin' => 'boolean',
         'IsSeller' => 'boolean',
         'IsManager' => 'boolean',
+        'IsSupervisor' => 'boolean',   // ← AJOUTÉ
         'Actived' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
@@ -98,6 +100,11 @@ class Administration extends Authenticatable
         return $this->IsSuperAdmin == 0 && $this->IsSeller == 0;
     }
 
+    public function isSupervisor(): bool
+    {
+        return $this->IsSupervisor == 1 && $this->IsSuperAdmin == 0 && $this->IsSeller == 0;
+    }
+
     // Vérifie si l'utilisateur est un Manager Simple Admin
     public function isManagerSimpleAdmin(): bool
     {
@@ -143,6 +150,19 @@ class Administration extends Authenticatable
         return [];
     }
 
+    // Relation avec les services supervisés
+    public function supervisorServices()
+    {
+        return $this->belongsToMany(
+            Department::class,
+            'supervisor_services',
+            'admin_id',
+            'service_id',
+            'ID',
+            'id'
+        );
+    }
+
     // Vérifie si l'utilisateur a accès à un siège spécifique
     public function hasAccessToSiege(int $siegeId): bool
     {
@@ -153,8 +173,56 @@ class Administration extends Authenticatable
     {
         return $this->attributes['Password_'];
     }
+
     public function isAdmin(): bool
-{
-    return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
-}
+    {
+        return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
+    }
+
+    // =========================================================
+    // NOUVELLES MÉTHODES POUR L'AFFICHAGE DU RÔLE
+    // =========================================================
+
+    /**
+     * Retourne le libellé du rôle de l'utilisateur
+     */
+    public function getRoleLabel(): string
+    {
+        if ($this->IsSuperAdmin && $this->IsSeller) {
+            return 'Vendeur Super Admin';
+        }
+        if ($this->IsSuperAdmin) {
+            return 'Super Admin';
+        }
+        if ($this->IsSeller) {
+            return 'Vendeur';
+        }
+        if ($this->IsSupervisor) {
+            return 'Responsable de service';
+        }
+        if ($this->IsManager) {
+            return 'Manager';
+        }
+        return 'Utilisateur';
+    }
+
+    /**
+     * Retourne la classe CSS Bootstrap pour le badge du rôle
+     */
+    public function getRoleBadgeClass(): string
+    {
+        if ($this->IsSuperAdmin) {
+            return 'bg-danger';
+        }
+        if ($this->IsSeller) {
+            return 'bg-warning text-dark';
+        }
+        if ($this->IsSupervisor) {
+            return 'bg-info';
+        }
+        if ($this->IsManager) {
+            return 'bg-success';
+        }
+        return 'bg-secondary';
+    }
 }

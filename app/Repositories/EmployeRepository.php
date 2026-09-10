@@ -12,48 +12,58 @@ class EmployeRepository extends BaseRepository
         parent::__construct($employe);
     }
     
-    public function getFiltered($filters = [], $perPage = 5)
-    {
-        $query = $this->model->newQuery();
-        
-        // Filtre par recherche (nom ou badgeID)
-        if (isset($filters['search']) && !empty($filters['search'])) {
-            $query->where(function($q) use ($filters) {
-                $q->where('Nom', 'LIKE', "%{$filters['search']}%")
-                  ->orWhere('num_mat', 'LIKE', "%{$filters['search']}%");
-            });
-        }
-        
-        // Filtre par siège
-        if (isset($filters['SiegeID']) && !empty($filters['SiegeID'])) {
-            $query->where('SiegeID', $filters['SiegeID']);
-        }
-        
-        // Filtre par statut actif/inactif
-        if (isset($filters['Actived']) && $filters['Actived'] !== '') {
-            $query->where('Actived', $filters['Actived']);
-        }
-        
-        // Filtre par configuration biométrique
-        if (isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] !== '') {
-            $query->where('HasBiometricSetup', $filters['HasBiometricSetup']);
-        }
-        
-        // Filtre par configuration faciale
-        if (isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] !== '') {
-            $query->where('HasFaceSetup', $filters['HasFaceSetup']);
-        }
-        
-        // Tri
-        $sortBy = $filters['sort_by'] ?? 'Nom';
-        $sortOrder = $filters['sort_order'] ?? 'asc';
-        $query->orderBy($sortBy, $sortOrder);
-        
-        // Inclure les relations
-        $query->with('siege');
-        
-        return $query->paginate($perPage);
+   public function getFiltered($filters = [], $perPage = 5, $accessibleIds = null)
+{
+    $query = $this->model->newQuery();
+
+    // ✅ FILTRE D'ACCÈS (SUPERVISOR, etc.)
+    if ($accessibleIds !== null && is_array($accessibleIds) && count($accessibleIds) > 0) {
+        $query->whereIn('ID', $accessibleIds);
+    } elseif ($accessibleIds !== null && is_array($accessibleIds) && count($accessibleIds) === 0) {
+        // Aucun ID autorisé → retourner une collection vide
+        return $query->whereRaw('1 = 0')->paginate($perPage);
     }
+
+    // ... (le reste du code reste identique)
+
+    // Filtre par recherche (nom ou badgeID)
+    if (isset($filters['search']) && !empty($filters['search'])) {
+        $query->where(function($q) use ($filters) {
+            $q->where('Nom', 'LIKE', "%{$filters['search']}%")
+              ->orWhere('num_mat', 'LIKE', "%{$filters['search']}%");
+        });
+    }
+
+    // Filtre par siège
+    if (isset($filters['SiegeID']) && !empty($filters['SiegeID'])) {
+        $query->where('SiegeID', $filters['SiegeID']);
+    }
+
+    // Filtre par statut actif/inactif
+    if (isset($filters['Actived']) && $filters['Actived'] !== '') {
+        $query->where('Actived', $filters['Actived']);
+    }
+
+    // Filtre par configuration biométrique
+    if (isset($filters['HasBiometricSetup']) && $filters['HasBiometricSetup'] !== '') {
+        $query->where('HasBiometricSetup', $filters['HasBiometricSetup']);
+    }
+
+    // Filtre par configuration faciale
+    if (isset($filters['HasFaceSetup']) && $filters['HasFaceSetup'] !== '') {
+        $query->where('HasFaceSetup', $filters['HasFaceSetup']);
+    }
+
+    // Tri
+    $sortBy = $filters['sort_by'] ?? 'Nom';
+    $sortOrder = $filters['sort_order'] ?? 'asc';
+    $query->orderBy($sortBy, $sortOrder);
+
+    // Inclure les relations
+    $query->with('siege');
+
+    return $query->paginate($perPage);
+}
     
     public function getAllForExport($filters = [])
     {
