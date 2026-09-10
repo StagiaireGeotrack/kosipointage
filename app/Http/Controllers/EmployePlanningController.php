@@ -14,118 +14,159 @@ use Carbon\Carbon;
 
 class EmployePlanningController extends Controller
 {
-    /**
-     * Page du planning pour l'employé (ou manager)
-     */
     public function index(Request $request)
     {
         $employe = auth()->guard('employe')->user();
         $employeId = $employe->ID;
-        $weekOffset = $request->get('week_offset', 0);
 
-        $days = $this->getWeekDays($weekOffset);
-        $startOfWeek = Carbon::now()->startOfWeek()->addWeeks($weekOffset);
-        $endOfWeek = Carbon::now()->endOfWeek()->addWeeks($weekOffset);
+        $view = $request->get('view', 'week');
+        if (!in_array($view, ['day', 'week'])) {
+            $view = 'week';
+        }
+
+        $pivotDate = $request->get('date', Carbon::now()->format('Y-m-d'));
+        try {
+            $pivot = Carbon::parse($pivotDate);
+        } catch (\Exception $e) {
+            $pivot = Carbon::now();
+        }
+
+        $endOfCurrentWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+        if ($pivot->greaterThan($endOfCurrentWeek)) {
+            $pivot = Carbon::now();
+        }
+
+        if ($view === 'day') {
+            $start = $pivot->copy()->startOfDay();
+            $end = $pivot->copy()->endOfDay();
+        } else {
+            $start = $pivot->copy()->startOfWeek(Carbon::MONDAY);
+            $end = $pivot->copy()->endOfWeek(Carbon::SUNDAY);
+        }
+
+        if ($end->greaterThan($endOfCurrentWeek)) {
+            $end = $endOfCurrentWeek->copy();
+        }
+
+        $prevDate = $this->getNavigationDate($view, $pivot, -1);
+        $nextPivot = $this->getNavigationDate($view, $pivot, 1);
+        $canGoNext = Carbon::parse($nextPivot)->startOfDay()->lessThanOrEqualTo($endOfCurrentWeek->copy()->startOfDay());
+        $nextDate = $canGoNext ? $nextPivot : $pivot->format('Y-m-d');
+
+        $todayDate = Carbon::now()->format('Y-m-d');
+        $periodLabel = $this->getPeriodLabel($view, $start, $end, $pivot);
+
+        $days = $this->getDaysForView($view, $start, $end);
 
         $isManager = $this->isManager($employe);
 
         if ($isManager) {
-            return $this->managerView($employe, $days, $startOfWeek, $endOfWeek);
+            return $this->managerView($employe, $days, $start, $end, [
+                'view' => $view,
+                'periodLabel' => $periodLabel,
+                'prevDate' => $prevDate,
+                'nextDate' => $nextDate,
+                'todayDate' => $todayDate,
+                'pivotDate' => $pivot->format('Y-m-d'),
+                'canGoNext' => $canGoNext,
+            ]);
         } else {
-            return $this->employeeView($employe, $days, $startOfWeek, $endOfWeek);
+            return $this->employeeView($employe, $days, $start, $end, [
+                'view' => $view,
+                'periodLabel' => $periodLabel,
+                'prevDate' => $prevDate,
+                'nextDate' => $nextDate,
+                'todayDate' => $todayDate,
+                'pivotDate' => $pivot->format('Y-m-d'),
+                'canGoNext' => $canGoNext,
+            ]);
         }
     }
 
-    /**
-     * Vérifier si un employé est manager
-     */
     private function isManager($employe)
     {
-         $hasSubordinates = Employe::where('manager_id', $employe->ID)
+        return Employe::where('manager_id', $employe->ID)
             ->where('ID', '!=', $employe->ID)
-            ->exists();
-    
-        return $hasSubordinates;
-    }
-
-    /**
-     * Vue Manager : planning du manager + ses employés
-     */
-    private function managerView($employe, $days, $startOfWeek, $endOfWeek)
-    {
-        $siegeId = $employe->SiegeID;
-        $departmentId = $employe->department_id;
-
-        $employes = Employe::where('SiegeID', $siegeId)
-            ->where('department_id', $departmentId)
             ->where('Actived', 1)
             ->where('deleted', 0)
-            ->with('jobTitle')
-            ->orderBy('Nom')
-            ->get();
+            ->exists();
+    }
 
-        // Récupérer les plannings des employés
-        $allPlanningDetails = PlanningDetail::whereIn('employe_id', $employes->pluck('ID'))
-            ->whereBetween('date', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
+    private function managerView($employe, $days, $start, $end, $navData)
+    {
+        $allEmployes = $this->getAllSubordinates($employe->ID);
+
+        if (!$allEmployes->contains('ID', $employe->ID)) {
+            $allEmployes->push($employe);
+        }
+
+        $allEmployesIds = $allEmployes->pluck('ID')->unique()->toArray();
+
+        $allPlanningDetails = PlanningDetail::whereIn('employe_id', $allEmployesIds)
+            ->whereBetween('date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
             ->with(['employe', 'employe.jobTitle'])
             ->get()
             ->groupBy('employe_id');
 
-        // Récupérer les congés et événements
-        $employeIds = $employes->pluck('ID')->toArray();
-        $allConges = $this->getCongesForEmployes($employeIds, $startOfWeek, $endOfWeek);
-        $allEvenements = $this->getEvenementsForEmployes($employeIds, $startOfWeek, $endOfWeek);
+        $allConges = $this->getCongesForEmployes($allEmployesIds, $start, $end);
+        $allEvenements = $this->getEvenementsForEmployes($allEmployesIds, $start, $end);
 
         $employeesData = [];
-        foreach ($employes as $emp) {
+        foreach ($allEmployes as $emp) {
             $planningDetails = $allPlanningDetails->get($emp->ID, collect());
             $conges = $allConges[$emp->ID] ?? [];
             $evenements = $allEvenements[$emp->ID] ?? [];
 
             $schedule = $this->buildSchedule($emp, $days, $planningDetails, $conges, $evenements);
 
-            $isManagerEmp = $emp->ID == $employe->ID;
+            $isManagerEmp = $this->isManager($emp);
 
             $employeesData[] = [
                 'id' => $emp->ID,
                 'name' => $emp->Nom,
                 'role' => $emp->jobTitle?->name ?? 'N/A',
                 'initiales' => strtoupper(substr($emp->Nom ?? '', 0, 1)),
-                'color' => $isManagerEmp ? '#3B82F6' : '#22C55E',
+                'color' => $emp->ID == $employe->ID ? '#3B82F6' : ($isManagerEmp ? '#8B5CF6' : '#22C55E'),
                 'is_manager' => $isManagerEmp,
                 'schedule' => $schedule,
             ];
         }
 
-        $serviceName = $employe->department?->name ?? 'Mon service';
+        $groupedByService = [];
+        foreach ($employeesData as $empData) {
+            $empModel = Employe::find($empData['id']);
+            $serviceId = $empModel->department_id ?? 0;
+            $serviceName = $empModel->department?->name ?? 'Sans service';
 
-        $servicesData = [[
-            'id' => $departmentId,
-            'name' => $serviceName,
-            'count' => count($employeesData),
-            'employees' => $employeesData,
-        ]];
+            if (!isset($groupedByService[$serviceId])) {
+                $groupedByService[$serviceId] = [
+                    'id' => $serviceId,
+                    'name' => $serviceName,
+                    'count' => 0,
+                    'employees' => [],
+                ];
+            }
+            $groupedByService[$serviceId]['employees'][] = $empData;
+            $groupedByService[$serviceId]['count']++;
+        }
 
-        return view('planning.manager', compact('servicesData', 'days'));
+        $servicesData = array_values($groupedByService);
+
+        return view('planning.manager', array_merge(
+            ['servicesData' => $servicesData, 'days' => $days],
+            $navData
+        ));
     }
 
-    /**
-     * Vue Employé : planning de l'employé uniquement
-     */
-    private function employeeView($employe, $days, $startOfWeek, $endOfWeek)
+    private function employeeView($employe, $days, $start, $end, $navData)
     {
-        // Récupérer les plannings de l'employé
         $planningDetails = PlanningDetail::where('employe_id', $employe->ID)
-            ->whereBetween('date', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
+            ->whereBetween('date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
             ->get();
 
-        // Récupérer les congés
-        $conges = $this->getCongesForEmploye($employe->ID, $startOfWeek, $endOfWeek);
+        $conges = $this->getCongesForEmploye($employe->ID, $start, $end);
+        $evenements = $this->getEvenementsForEmploye($employe->ID, $start, $end);
 
-        // Récupérer les événements
-        $evenements = $this->getEvenementsForEmploye($employe->ID, $startOfWeek, $endOfWeek);
-
-        // Construire le planning
         $schedule = $this->buildSchedule($employe, $days, $planningDetails, $conges, $evenements);
 
         $employeeData = [
@@ -138,34 +179,69 @@ class EmployePlanningController extends Controller
             'schedule' => $schedule,
         ];
 
-        return view('planning.employe', compact('employeeData', 'days'));
+        return view('planning.employe', array_merge(
+            ['employeeData' => $employeeData, 'days' => $days],
+            $navData
+        ));
+    }
+
+    private function getAllSubordinates($managerId)
+    {
+        $result = collect();
+        $directs = Employe::where('manager_id', $managerId)
+            ->where('Actived', 1)
+            ->where('deleted', 0)
+            ->get();
+
+        foreach ($directs as $direct) {
+            $result->push($direct);
+            $result = $result->merge($this->getAllSubordinates($direct->ID));
+        }
+
+        return $result;
     }
 
     /**
-     * Construire le planning d'un employé
-     * PRIORITÉ : Congés > Événements > Planning généré > Horaires types > Repos
+     * Construire le planning
+     * PRIORITÉ : Événements > REPOS (si pas travaillé) > Congés > Planning > Horaires types
      */
     private function buildSchedule($employe, $days, $planningDetails, $conges, $evenements)
     {
         $schedule = [];
 
         foreach ($days as $day) {
-            $dateKey = $day['date']; // format: d/m
-            $dateFull = $day['full']; // format: Y-m-d
+            $dateKey = $day['date'];
+            $dateFull = $day['full'];
 
-            // ✅ 1. PRIORITÉ MAX : VÉRIFIER LES CONGÉS
-            if (isset($conges[$dateKey]) && !empty($conges[$dateKey])) {
-                $schedule[$dateKey] = $conges[$dateKey];
-                continue;
+            // ✅ 1. Vérifier si c'est un jour travaillé
+            $horaireType = HoraireType::where('poste_id', $employe->job_title_id)->first();
+            $isWorkDay = false;
+
+            if ($horaireType && $horaireType->jours_travailles) {
+                $jourFr = $this->getJourFrancais($dateFull);
+                $joursTravailles = explode(',', $horaireType->jours_travailles);
+                $isWorkDay = in_array($jourFr, $joursTravailles);
             }
 
-            // ✅ 2. VÉRIFIER LES ÉVÉNEMENTS EXCEPTIONNELS
+            // ✅ 2. Événements (forcent l'affichage même jour non travaillé)
             if (isset($evenements[$dateKey]) && !empty($evenements[$dateKey])) {
                 $schedule[$dateKey] = $evenements[$dateKey];
                 continue;
             }
 
-            // ✅ 3. VÉRIFIER LE PLANNING GÉNÉRÉ
+            // ✅ 3. Si PAS un jour travaillé → REPOS (prioritaire sur congés)
+            if (!$isWorkDay) {
+                $schedule[$dateKey] = [['type' => 'rest']];
+                continue;
+            }
+
+            // ✅ 4. Congés (seulement si jour travaillé)
+            if (isset($conges[$dateKey]) && !empty($conges[$dateKey])) {
+                $schedule[$dateKey] = $conges[$dateKey];
+                continue;
+            }
+
+            // ✅ 5. Planning généré
             $detail = $planningDetails->first(function($item) use ($day) {
                 return Carbon::parse($item->date)->format('d/m') === $day['date'];
             });
@@ -173,61 +249,29 @@ class EmployePlanningController extends Controller
             if ($detail) {
                 $items = [];
                 if ($detail->heure_debut && $detail->heure_fin) {
-                    $items[] = [
-                        'type' => 'work',
-                        'time' => $detail->heure_debut . ' - ' . $detail->heure_fin,
-                        'id' => $detail->id,
-                    ];
+                    $items[] = ['type' => 'work', 'time' => $detail->heure_debut . ' - ' . $detail->heure_fin, 'id' => $detail->id];
                 }
                 if ($detail->pause_debut && $detail->pause_fin) {
-                    $items[] = [
-                        'type' => 'pause',
-                        'time' => $detail->pause_debut . ' - ' . $detail->pause_fin,
-                        'id' => $detail->id,
-                    ];
+                    $items[] = ['type' => 'pause', 'time' => $detail->pause_debut . ' - ' . $detail->pause_fin, 'id' => $detail->id];
                 }
                 if ($detail->deuxieme_debut && $detail->deuxieme_fin) {
-                    $items[] = [
-                        'type' => 'work',
-                        'time' => $detail->deuxieme_debut . ' - ' . $detail->deuxieme_fin,
-                        'id' => $detail->id,
-                    ];
+                    $items[] = ['type' => 'work', 'time' => $detail->deuxieme_debut . ' - ' . $detail->deuxieme_fin, 'id' => $detail->id];
                 }
                 $schedule[$dateKey] = $items;
                 continue;
             }
 
-            // ✅ 4. SINON, UTILISER LES HORAIRES TYPES
-            $horaireType = HoraireType::where('poste_id', $employe->job_title_id)->first();
-            $isWorkDay = false;
-
-            if ($horaireType && $horaireType->jours_travailles) {
-                $jourFrancais = strtolower(Carbon::parse($dateFull)->format('l'));
-                $joursTravailles = explode(',', $horaireType->jours_travailles);
-                $isWorkDay = in_array($jourFrancais, $joursTravailles);
-            }
-
-            if (!$isWorkDay) {
-                $schedule[$dateKey] = [['type' => 'rest']];
-            } elseif ($horaireType) {
+            // ✅ 6. Horaires types
+            if ($horaireType) {
                 $items = [];
                 if ($horaireType->heure_debut && $horaireType->heure_fin) {
-                    $items[] = [
-                        'type' => 'work',
-                        'time' => $horaireType->heure_debut . ' - ' . $horaireType->heure_fin,
-                    ];
+                    $items[] = ['type' => 'work', 'time' => $horaireType->heure_debut . ' - ' . $horaireType->heure_fin];
                 }
                 if ($horaireType->pause_debut && $horaireType->pause_fin) {
-                    $items[] = [
-                        'type' => 'pause',
-                        'time' => $horaireType->pause_debut . ' - ' . $horaireType->pause_fin,
-                    ];
+                    $items[] = ['type' => 'pause', 'time' => $horaireType->pause_debut . ' - ' . $horaireType->pause_fin];
                 }
                 if ($horaireType->deuxieme_debut && $horaireType->deuxieme_fin) {
-                    $items[] = [
-                        'type' => 'work',
-                        'time' => $horaireType->deuxieme_debut . ' - ' . $horaireType->deuxieme_fin,
-                    ];
+                    $items[] = ['type' => 'work', 'time' => $horaireType->deuxieme_debut . ' - ' . $horaireType->deuxieme_fin];
                 }
                 $schedule[$dateKey] = $items;
             } else {
@@ -239,32 +283,64 @@ class EmployePlanningController extends Controller
     }
 
     /**
-     * Récupérer les congés approuvés d'un employé
+     * Convertir une date en jour français (minuscule)
      */
-    private function getCongesForEmploye($employeId, $startOfWeek, $endOfWeek)
+    private function getJourFrancais($dateFull)
+    {
+        $jourAnglais = strtolower(Carbon::parse($dateFull)->format('l'));
+        $map = [
+            'monday' => 'lundi',
+            'tuesday' => 'mardi',
+            'wednesday' => 'mercredi',
+            'thursday' => 'jeudi',
+            'friday' => 'vendredi',
+            'saturday' => 'samedi',
+            'sunday' => 'dimanche',
+        ];
+        return $map[$jourAnglais] ?? $jourAnglais;
+    }
+
+    /**
+     * Convertir en jour français abrégé (Lun, Mar, ...)
+     */
+    private function getJourFrancaisCourt($date)
+    {
+        $jourAnglais = $date->format('l');
+        $map = [
+            'Monday' => 'Lun',
+            'Tuesday' => 'Mar',
+            'Wednesday' => 'Mer',
+            'Thursday' => 'Jeu',
+            'Friday' => 'Ven',
+            'Saturday' => 'Sam',
+            'Sunday' => 'Dim',
+        ];
+        return $map[$jourAnglais] ?? $date->format('D');
+    }
+
+    private function getCongesForEmploye($employeId, $start, $end)
     {
         $conges = [];
 
-        // Nouveau système LeaveRequest
         $leaveRequests = LeaveRequest::where('employee_id', $employeId)
             ->where('status', 'approved')
-            ->where(function($q) use ($startOfWeek, $endOfWeek) {
-                $q->whereBetween('start_date', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
-                  ->orWhereBetween('end_date', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
-                  ->orWhere(function($q2) use ($startOfWeek, $endOfWeek) {
-                      $q2->where('start_date', '<=', $startOfWeek->format('Y-m-d'))
-                         ->where('end_date', '>=', $endOfWeek->format('Y-m-d'));
+            ->where(function($q) use ($start, $end) {
+                $q->whereBetween('start_date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                  ->orWhereBetween('end_date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                  ->orWhere(function($q2) use ($start, $end) {
+                      $q2->where('start_date', '<=', $start->format('Y-m-d'))
+                         ->where('end_date', '>=', $end->format('Y-m-d'));
                   });
             })
             ->with('leaveType')
             ->get();
 
         foreach ($leaveRequests as $conge) {
-            $start = Carbon::parse($conge->start_date);
-            $end = Carbon::parse($conge->end_date);
-            $current = $start->copy();
+            $cStart = Carbon::parse($conge->start_date);
+            $cEnd = Carbon::parse($conge->end_date);
+            $current = $cStart->copy();
 
-            while ($current <= $end) {
+            while ($current <= $cEnd) {
                 $dateKey = $current->format('d/m');
                 $type = $this->getCongeType($conge->leaveType?->name ?? 'Congé');
                 $conges[$dateKey][] = [
@@ -277,24 +353,23 @@ class EmployePlanningController extends Controller
             }
         }
 
-        // Ancien système Conge
         $congesAnciens = Conge::where('employee_id', $employeId)
-            ->where(function($q) use ($startOfWeek, $endOfWeek) {
-                $q->whereBetween('date_debut', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
-                  ->orWhereBetween('date_fin', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
-                  ->orWhere(function($q2) use ($startOfWeek, $endOfWeek) {
-                      $q2->where('date_debut', '<=', $startOfWeek->format('Y-m-d'))
-                         ->where('date_fin', '>=', $endOfWeek->format('Y-m-d'));
+            ->where(function($q) use ($start, $end) {
+                $q->whereBetween('date_debut', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                  ->orWhereBetween('date_fin', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                  ->orWhere(function($q2) use ($start, $end) {
+                      $q2->where('date_debut', '<=', $start->format('Y-m-d'))
+                         ->where('date_fin', '>=', $end->format('Y-m-d'));
                   });
             })
             ->get();
 
         foreach ($congesAnciens as $conge) {
-            $start = Carbon::parse($conge->date_debut);
-            $end = Carbon::parse($conge->date_fin);
-            $current = $start->copy();
+            $cStart = Carbon::parse($conge->date_debut);
+            $cEnd = Carbon::parse($conge->date_fin);
+            $current = $cStart->copy();
 
-            while ($current <= $end) {
+            while ($current <= $cEnd) {
                 $dateKey = $current->format('d/m');
                 $type = $this->getCongeType($conge->type_conge ?? 'Congé');
                 $conges[$dateKey][] = [
@@ -310,29 +385,23 @@ class EmployePlanningController extends Controller
         return $conges;
     }
 
-    /**
-     * Récupérer les congés pour plusieurs employés
-     */
-    private function getCongesForEmployes($employeIds, $startOfWeek, $endOfWeek)
+    private function getCongesForEmployes($employeIds, $start, $end)
     {
         $result = [];
         foreach ($employeIds as $id) {
-            $result[$id] = $this->getCongesForEmploye($id, $startOfWeek, $endOfWeek);
+            $result[$id] = $this->getCongesForEmploye($id, $start, $end);
         }
         return $result;
     }
 
-    /**
-     * Récupérer les événements exceptionnels d'un employé
-     */
-    private function getEvenementsForEmploye($employeId, $startOfWeek, $endOfWeek)
+    private function getEvenementsForEmploye($employeId, $start, $end)
     {
         $evenements = [];
 
         $events = EvenementPlanning::whereHas('employes', function($q) use ($employeId) {
             $q->where('employe_id', $employeId);
         })
-        ->whereBetween('debut', [$startOfWeek->format('Y-m-d 00:00:00'), $endOfWeek->format('Y-m-d 23:59:59')])
+        ->whereBetween('debut', [$start->format('Y-m-d 00:00:00'), $end->format('Y-m-d 23:59:59')])
         ->get();
 
         foreach ($events as $event) {
@@ -348,21 +417,15 @@ class EmployePlanningController extends Controller
         return $evenements;
     }
 
-    /**
-     * Récupérer les événements pour plusieurs employés
-     */
-    private function getEvenementsForEmployes($employeIds, $startOfWeek, $endOfWeek)
+    private function getEvenementsForEmployes($employeIds, $start, $end)
     {
         $result = [];
         foreach ($employeIds as $id) {
-            $result[$id] = $this->getEvenementsForEmploye($id, $startOfWeek, $endOfWeek);
+            $result[$id] = $this->getEvenementsForEmploye($id, $start, $end);
         }
         return $result;
     }
 
-    /**
-     * Obtenir le type de congé
-     */
     private function getCongeType($type)
     {
         $types = [
@@ -375,9 +438,59 @@ class EmployePlanningController extends Controller
         return $types[$type] ?? 'conge';
     }
 
-    /**
-     * Récupérer les événements pour FullCalendar (AJAX)
-     */
+    private function getDaysForView($view, $start, $end)
+    {
+        $days = [];
+
+        if ($view === 'day') {
+            $days[] = [
+                'short' => $this->getJourFrancaisCourt($start) . '.',
+                'date' => $start->format('d/m'),
+                'full' => $start->format('Y-m-d'),
+            ];
+        } else {
+            for ($i = 0; $i < 7; $i++) {
+                $date = $start->copy()->addDays($i);
+                if ($date->greaterThan($end)) break;
+                $days[] = [
+                    'short' => $this->getJourFrancaisCourt($date) . '.',
+                    'date' => $date->format('d/m'),
+                    'full' => $date->format('Y-m-d'),
+                ];
+            }
+        }
+
+        return $days;
+    }
+
+    private function getNavigationDate($view, $pivot, $direction)
+    {
+        $date = $pivot->copy();
+        if ($view === 'day') {
+            $date->addDays($direction);
+        } else {
+            $date->addWeeks($direction);
+        }
+        return $date->format('Y-m-d');
+    }
+
+    private function getPeriodLabel($view, $start, $end, $pivot)
+    {
+        $mois = [
+            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
+            5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
+            9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
+        ];
+
+        if ($view === 'day') {
+            return $start->format('d') . ' ' . $mois[(int)$start->format('n')] . ' ' . $start->format('Y');
+        }
+
+        $startLabel = $start->format('d') . ' ' . substr($mois[(int)$start->format('n')], 0, 3);
+        $endLabel = $end->format('d') . ' ' . substr($mois[(int)$end->format('n')], 0, 3);
+        return $startLabel . ' - ' . $endLabel . ' ' . $end->format('Y');
+    }
+
     public function getEvents(Request $request)
     {
         $employe = auth()->guard('employe')->user();
@@ -386,21 +499,18 @@ class EmployePlanningController extends Controller
         $end = $request->input('end');
 
         $events = [];
-
         $isManager = $this->isManager($employe);
 
         if ($isManager) {
-            $departmentId = $employe->department_id;
-            $employeIds = Employe::where('department_id', $departmentId)
-                ->where('Actived', 1)
-                ->where('deleted', 0)
-                ->pluck('ID')
-                ->toArray();
+            $allEmployes = $this->getAllSubordinates($employeId);
+            if (!$allEmployes->contains('ID', $employeId)) {
+                $allEmployes->push($employe);
+            }
+            $employeIds = $allEmployes->pluck('ID')->toArray();
         } else {
             $employeIds = [$employeId];
         }
 
-        // Plannings
         $planningDetails = PlanningDetail::whereIn('employe_id', $employeIds)
             ->whereBetween('date', [$start, $end])
             ->with('employe')
@@ -428,51 +538,6 @@ class EmployePlanningController extends Controller
             ];
         }
 
-        // Événements exceptionnels
-        $evenements = EvenementPlanning::whereHas('employes', function($q) use ($employeIds) {
-            $q->whereIn('employe_id', $employeIds);
-        })
-        ->whereBetween('debut', [$start, $end])
-        ->get();
-
-        foreach ($evenements as $evenement) {
-            $events[] = [
-                'id' => 'event_' . $evenement->id,
-                'title' => '📌 ' . $evenement->titre,
-                'start' => $evenement->debut->format('Y-m-d\TH:i:s'),
-                'end' => $evenement->fin->format('Y-m-d\TH:i:s'),
-                'backgroundColor' => '#8B5CF6',
-                'borderColor' => '#8B5CF6',
-                'extendedProps' => [
-                    'type' => 'evenement',
-                    'titre' => $evenement->titre,
-                    'description' => $evenement->description,
-                    'type_event' => $evenement->type,
-                    'evenement_id' => $evenement->id,
-                ]
-            ];
-        }
-
         return response()->json($events);
-    }
-
-    /**
-     * Récupérer les jours de la semaine
-     */
-    private function getWeekDays($offset = 0)
-    {
-        $days = [];
-        $startOfWeek = Carbon::now()->startOfWeek()->addWeeks($offset);
-
-        for ($i = 0; $i < 7; $i++) {
-            $date = $startOfWeek->copy()->addDays($i);
-            $days[] = [
-                'short' => substr($date->format('D'), 0, 3) . '.',
-                'date' => $date->format('d/m'),
-                'full' => $date->format('Y-m-d'),
-            ];
-        }
-
-        return $days;
     }
 }

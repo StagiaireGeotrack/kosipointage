@@ -224,6 +224,7 @@ Route::middleware('auth')->group(function () {
             // Événements
             Route::get('/events', [App\Http\Controllers\PlanningController::class, 'getEvents'])->name('events');
             Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
+            Route::delete('/events/{id}', [App\Http\Controllers\PlanningController::class, 'destroyEvent'])->name('events.destroy');
 
             // API AJAX
             Route::get('/api/employees-by-service/{serviceId}',

@@ -4,25 +4,13 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-    .planning-scope {
-        font-family: 'Roboto', sans-serif;
-    }
+    .planning-scope { font-family: 'Roboto', sans-serif; }
     .employee-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 18px;
-        color: white;
-        flex-shrink: 0;
+        width: 40px; height: 40px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 18px; color: white; flex-shrink: 0;
     }
-    .schedule-item {
-        transition: all 0.15s ease;
-        cursor: default;
-    }
+    .schedule-item { transition: all 0.15s ease; cursor: default; }
     .bg-work { background: #DCFCE7; border-color: #86EFAC; color: #166534; }
     .bg-pause { background: #FEF3C7; border-color: #FCD34D; color: #92400E; }
     .bg-rest { background: #F1F5F9; border-color: #CBD5E1; color: #475569; }
@@ -33,10 +21,24 @@
     .bg-formation { background: #EDE9FE; border-color: #C4B5FD; color: #5B21B6; }
     .bg-mission { background: #FFEDD5; border-color: #FDBA74; color: #9A3412; }
 
-    .sticky-left {
-        position: sticky;
-        left: 0;
-        z-index: 10;
+    .sticky-left { position: sticky; left: 0; z-index: 10; }
+
+    /* ✅ Légende filtrable */
+    .legend-filter {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.15s ease;
+        opacity: 0.85;
+    }
+    .legend-filter:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        opacity: 1;
+    }
+    .legend-filter.active {
+        box-shadow: 0 0 0 2px #3B82F6, 0 2px 6px rgba(59,130,246,0.3);
+        opacity: 1;
+        font-weight: 700;
     }
 </style>
 @endpush
@@ -48,33 +50,87 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
                 <h1 class="text-xl font-bold text-slate-900">📅 Mon planning</h1>
-                <p class="text-xs text-slate-500">Vue semaine</p>
+                <p class="text-xs text-slate-500">
+                    Vue {{ $view === 'day' ? 'Jour' : 'Semaine' }}
+                </p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
                 <div class="flex items-center bg-slate-100 rounded-lg border border-slate-200 p-0.5">
-                    <button class="p-1.5 hover:bg-white rounded-md transition" id="prev-week">
+                    <a href="{{ route('employe.planning.index', ['view' => $view, 'date' => $prevDate]) }}"
+                       class="p-1.5 hover:bg-white rounded-md transition" title="Précédent">
                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                    </button>
-                    <div class="flex items-center gap-2 px-3 text-xs font-semibold" id="week-label">
+                    </a>
+                    <div class="flex items-center gap-2 px-3 text-xs font-semibold min-w-[180px] justify-center">
                         <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
-                        <span id="week-range">
-                            @php
-                                $dateDebut = $days[0]['date'] ?? '--';
-                                $dateFin = $days[6]['date'] ?? '--';
-                            @endphp
-                            {{ $dateDebut }} – {{ $dateFin }}
-                        </span>
+                        <span>{{ $periodLabel }}</span>
                     </div>
-                    <button class="p-1.5 hover:bg-white rounded-md transition" id="next-week">
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
+                    @if($canGoNext)
+                        <a href="{{ route('employe.planning.index', ['view' => $view, 'date' => $nextDate]) }}"
+                           class="p-1.5 hover:bg-white rounded-md transition" title="Suivant">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </a>
+                    @else
+                        <span class="p-1.5 text-slate-300 cursor-not-allowed" title="Pas de semaine future">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </span>
+                    @endif
                 </div>
 
-                <button class="px-3 py-1.5 bg-slate-100 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-200" id="today-btn">
+                <a href="{{ route('employe.planning.index', ['view' => $view, 'date' => $todayDate]) }}"
+                   class="px-3 py-1.5 bg-slate-100 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-200">
                     Aujourd'hui
-                </button>
+                </a>
+
+                <!-- ✅ Uniquement Jour et Semaine pour l'employé -->
+                <div class="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+                    <a href="{{ route('employe.planning.index', ['view' => 'day', 'date' => $pivotDate]) }}"
+                       class="px-3 py-1.5 rounded-md {{ $view === 'day' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white' }}">Jour</a>
+                    <a href="{{ route('employe.planning.index', ['view' => 'week', 'date' => $pivotDate]) }}"
+                       class="px-3 py-1.5 rounded-md {{ $view === 'week' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white' }}">Semaine</a>
+                </div>
             </div>
+        </div>
+
+        <!-- ✅ Bannière informative -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-2 text-center text-xs text-blue-700">
+            <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>
+            Vous consultez uniquement votre planning personnel. Les semaines futures ne sont pas accessibles.
+        </div>
+
+        <!-- ✅ Légende filtrable -->
+        <div class="flex items-center gap-2 overflow-x-auto text-xs pt-1 pb-1 flex-wrap">
+            <span class="text-slate-400 font-medium mr-1">Filtrer par :</span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-50 text-green-700 border border-green-200 font-medium whitespace-nowrap" data-filter-type="work">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5"></i> Travail
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-50 text-amber-700 border border-amber-200 font-medium whitespace-nowrap" data-filter-type="pause">
+                <i data-lucide="coffee" class="w-3.5 h-3.5"></i> Pause
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200 font-medium whitespace-nowrap" data-filter-type="formation">
+                <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Formation
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-50 text-amber-600 border border-amber-200 font-medium whitespace-nowrap" data-filter-type="conge">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Congé
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-pink-50 text-pink-700 border border-pink-200 font-medium whitespace-nowrap" data-filter-type="rtt">
+                <i data-lucide="hourglass" class="w-3.5 h-3.5"></i> RTT
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-orange-50 text-orange-700 border border-orange-200 font-medium whitespace-nowrap" data-filter-type="deplacement">
+                <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Déplacement
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-50 text-rose-700 border border-rose-200 font-medium whitespace-nowrap" data-filter-type="maladie">
+                <i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i> Maladie
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200 font-medium whitespace-nowrap" data-filter-type="absence">
+                <i data-lucide="user-x" class="w-3.5 h-3.5"></i> Absence
+            </span>
+            <span class="legend-filter flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 text-slate-600 border border-slate-200 font-medium whitespace-nowrap" data-filter-type="rest">
+                <i data-lucide="moon" class="w-3.5 h-3.5"></i> Repos
+            </span>
+            <button id="clear-filter" class="hidden ml-2 flex items-center gap-1 px-2.5 py-1 rounded bg-red-50 text-red-600 border border-red-200 font-medium text-[11px] hover:bg-red-100">
+                <i data-lucide="x" class="w-3 h-3"></i> Effacer filtre
+            </button>
         </div>
     </header>
 
@@ -98,7 +154,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover:bg-slate-50/50">
+                        @php
+                            $empTypes = [];
+                            foreach ($employeeData['schedule'] as $items) {
+                                foreach ($items as $item) {
+                                    $t = $item['type'] ?? '';
+                                    if ($t === 'work') $empTypes['work'] = true;
+                                    elseif ($t === 'pause') $empTypes['pause'] = true;
+                                    elseif ($t === 'conge') $empTypes['conge'] = true;
+                                    elseif ($t === 'rtt') $empTypes['rtt'] = true;
+                                    elseif ($t === 'maladie') $empTypes['maladie'] = true;
+                                    elseif ($t === 'absence') $empTypes['absence'] = true;
+                                    elseif ($t === 'formation') $empTypes['formation'] = true;
+                                    elseif ($t === 'mission' || $t === 'deplacement') $empTypes['deplacement'] = true;
+                                    elseif ($t === 'rest') $empTypes['rest'] = true;
+                                }
+                            }
+                        @endphp
+                        <tr class="hover:bg-slate-50/50 employee-row" data-types="{{ implode(',', array_keys($empTypes)) }}">
                             <td class="p-3 align-top sticky-left bg-white">
                                 <div class="flex items-center gap-3">
                                     <div class="employee-avatar" style="background: {{ $employeeData['color'] ?? '#3B82F6' }}">
@@ -131,7 +204,7 @@
                                                     </div>
                                                     <div class="text-[10px]">{{ $item['sub'] ?? '' }}</div>
                                                 </div>
-                                            @elseif($item['type'] === 'formation' || $item['type'] === 'mission')
+                                            @elseif($item['type'] === 'formation' || $item['type'] === 'mission' || $item['type'] === 'deplacement')
                                                 <div class="p-2 rounded-lg {{ $item['type'] === 'formation' ? 'bg-purple-100 border-purple-200 text-purple-900' : 'bg-orange-50 border-orange-200 text-orange-900' }} border text-center">
                                                     <div class="font-bold text-[11px] flex items-center justify-center gap-1">
                                                         <i data-lucide="{{ $item['type'] === 'formation' ? 'graduation-cap' : 'navigation' }}" class="w-3.5 h-3.5 flex-shrink-0"></i>
@@ -167,129 +240,49 @@
 @endsection
 
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialiser Lucide
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
 
         // ============================================================
-        // NAVIGATION SEMAINE
+        // FILTRE PAR TYPE (clic sur la légende)
         // ============================================================
-        var currentOffset = 0;
+        var activeTypeFilter = null;
+        var clearBtn = document.getElementById('clear-filter');
 
-        function updateWeek(offset) {
-            currentOffset += offset;
-            window.location.href = '{{ route("employe.planning.index") }}?week_offset=' + currentOffset;
+        function applyFilter() {
+            document.querySelectorAll('.employee-row').forEach(function(row) {
+                var empTypes = (row.dataset.types || '').split(',').filter(Boolean);
+                var matchType = (activeTypeFilter === null || empTypes.includes(activeTypeFilter));
+                row.style.display = matchType ? '' : 'none';
+            });
         }
 
-        document.getElementById('prev-week').addEventListener('click', function() {
-            updateWeek(-1);
+        document.querySelectorAll('.legend-filter').forEach(function(el) {
+            el.addEventListener('click', function() {
+                var type = this.dataset.filterType;
+
+                if (activeTypeFilter === type) {
+                    activeTypeFilter = null;
+                    this.classList.remove('active');
+                    clearBtn.classList.add('hidden');
+                } else {
+                    activeTypeFilter = type;
+                    document.querySelectorAll('.legend-filter').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    clearBtn.classList.remove('hidden');
+                }
+                applyFilter();
+            });
         });
 
-        document.getElementById('next-week').addEventListener('click', function() {
-            updateWeek(1);
-        });
-
-        document.getElementById('today-btn').addEventListener('click', function() {
-            window.location.href = '{{ route("employe.planning.index") }}';
-        });
-
-        // ============================================================
-        // CHARGER LES DÉTAILS D'UN ÉVÉNEMENT (AJAX)
-        // ============================================================
-        $(document).on('click', '.schedule-item', function() {
-            var $this = $(this);
-            var content = $('#detail-content');
-
-            var eventId = $this.data('id');
-            var eventType = $this.data('type');
-
-            if (eventId && eventType) {
-                content.html('<div class="text-center py-8"><div class="spinner-border text-primary" role="status"></div><p class="text-xs text-slate-400 mt-2">Chargement...</p></div>');
-
-                $.ajax({
-                    url: '/planning/event-detail/' + eventId + '/' + eventType,
-                    method: 'GET',
-                    success: function(data) {
-                        if (data && data.type) {
-                            if (data.type === 'planning') {
-                                content.html(`
-                                    <div class="flex items-center gap-3 mb-4">
-                                        <div class="employee-avatar" style="background: #3B82F6; width:48px; height:48px; font-size:20px;">
-                                            ${data.avatar ? 'AN' : '?'}
-                                        </div>
-                                        <div>
-                                            <h4 class="font-bold text-slate-800 text-sm">${data.employe || 'N/A'}</h4>
-                                            <p class="text-xs text-slate-400">${data.role || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div class="space-y-3 text-xs">
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Date</span>
-                                            <span class="col-span-2 font-semibold text-slate-700">${data.date || '-'}</span>
-                                        </div>
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Horaires</span>
-                                            <span class="col-span-2 font-semibold text-slate-700">${data.heure_debut || '-'} - ${data.heure_fin || '-'}</span>
-                                        </div>
-                                        ${data.pause_debut ? `
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Pause</span>
-                                            <span class="col-span-2 font-semibold text-slate-700">${data.pause_debut} - ${data.pause_fin}</span>
-                                        </div>
-                                        ` : ''}
-                                        ${data.commentaire ? `
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Commentaire</span>
-                                            <span class="col-span-2 text-slate-600">${data.commentaire}</span>
-                                        </div>
-                                        ` : ''}
-                                        <div class="grid grid-cols-3 items-center">
-                                            <span class="text-slate-400 font-medium">Statut</span>
-                                            <span class="col-span-2">
-                                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-50 text-green-700 border border-green-200">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> ${data.statut || 'Planifié'}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                `);
-                            } else if (data.type === 'evenement') {
-                                content.html(`
-                                    <div class="flex items-center gap-2 text-${data.type_event === 'formation' ? 'purple' : data.type_event === 'deplacement' ? 'orange' : 'blue'}-600 font-bold text-xs mb-4">
-                                        <i data-lucide="${data.type_event === 'formation' ? 'graduation-cap' : data.type_event === 'deplacement' ? 'navigation' : 'calendar'}" class="w-4 h-4 flex-shrink-0"></i>
-                                        ${data.type_event || 'Événement'}
-                                    </div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-2">${data.titre || 'Sans titre'}</h4>
-                                    <div class="space-y-3 text-xs">
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Début</span>
-                                            <span class="col-span-2 font-semibold text-slate-700">${data.debut || '-'}</span>
-                                        </div>
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Fin</span>
-                                            <span class="col-span-2 font-semibold text-slate-700">${data.fin || '-'}</span>
-                                        </div>
-                                        ${data.description ? `
-                                        <div class="grid grid-cols-3">
-                                            <span class="text-slate-400 font-medium">Description</span>
-                                            <span class="col-span-2 text-slate-600">${data.description}</span>
-                                        </div>
-                                        ` : ''}
-                                    </div>
-                                `);
-                            }
-                            if (typeof lucide !== 'undefined') {
-                                lucide.createIcons();
-                            }
-                        }
-                    }
-                });
-            }
+        clearBtn.addEventListener('click', function() {
+            activeTypeFilter = null;
+            document.querySelectorAll('.legend-filter').forEach(l => l.classList.remove('active'));
+            this.classList.add('hidden');
+            applyFilter();
         });
     });
 </script>
