@@ -12,11 +12,26 @@ class PointageRepository extends BaseRepository
     {
         parent::__construct($pointage);
     }
-    
-    public function getFiltered($filters = [], $perPage = 5)
+
+    /**
+     * @param array $filters
+     * @param int $perPage
+     * @param array|null $accessibleIds  Si null → pas de restriction (autres rôles).
+     *                                   Si tableau → limiter aux employee_id listés (Supervisor).
+     */
+    public function getFiltered($filters = [], $perPage = 5, $accessibleIds = null)
     {
         $query = $this->model->newQuery();
-        
+
+        // ✅ Filtre Supervisor (n'a aucun effet si $accessibleIds === null)
+        if ($accessibleIds !== null) {
+            if (count($accessibleIds) === 0) {
+                // Aucun employé accessible → aucun pointage
+                return $query->whereRaw('1 = 0')->paginate($perPage);
+            }
+            $query->whereIn('employee_id', $accessibleIds);
+        }
+
         // Filtre par recherche (employé)
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->whereHas('employe', function($q) use ($filters) {
@@ -24,87 +39,97 @@ class PointageRepository extends BaseRepository
                     ->orWhere('num_mat', 'LIKE', "%{$filters['search']}%");
             });
         }
-        
+
         // Filtre par employé
         if (isset($filters['employee_id']) && !empty($filters['employee_id'])) {
             $query->where('employee_id', $filters['employee_id']);
         }
-        
+
         // Filtre par siège
         if (isset($filters['SiegeID']) && !empty($filters['SiegeID'])) {
             $query->where('SiegeID', $filters['SiegeID']);
         }
-        
+
         // Filtre par type (entrée/sortie)
         if (isset($filters['type_']) && !empty($filters['type_'])) {
             $query->where('type_', $filters['type_']);
         }
-        
+
         // Filtre par méthode d'authentification
         if (isset($filters['auth_method']) && !empty($filters['auth_method'])) {
             $query->where('auth_method', $filters['auth_method']);
         }
-        
+
         // Filtre par plage de dates
         if (isset($filters['date_from']) && !empty($filters['date_from'])) {
             $query->where('timestamp_', '>=', Carbon::parse($filters['date_from'])->startOfDay());
         }
-        
+
         if (isset($filters['date_to']) && !empty($filters['date_to'])) {
             $query->where('timestamp_', '<=', Carbon::parse($filters['date_to'])->endOfDay());
         }
-        
+
         // Tri
         $sortBy = $filters['sort_by'] ?? 'timestamp_';
         $sortOrder = $filters['sort_order'] ?? 'desc';
         $query->orderBy($sortBy, $sortOrder);
-        
+
         // Inclure les relations
         $query->with(['employe', 'siege']);
-        
+
         return $query->paginate($perPage);
     }
-    
-    public function getAllForExport($filters = [])
+
+    /**
+     * @param array $filters
+     * @param array|null $accessibleIds  Filtre Supervisor (null = pas de restriction)
+     */
+    public function getAllForExport($filters = [], $accessibleIds = null)
     {
         $query = $this->model->newQuery();
-        
-        // Appliquer les filtres comme dans getFiltered
+
+        // ✅ Filtre Supervisor
+        if ($accessibleIds !== null) {
+            if (count($accessibleIds) === 0) {
+                return collect();
+            }
+            $query->whereIn('employee_id', $accessibleIds);
+        }
+
+        // Filtres existants
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->whereHas('employe', function($q) use ($filters) {
                 $q->where('Nom', 'LIKE', "%{$filters['search']}%")
                   ->orWhere('BadgeID', 'LIKE', "%{$filters['search']}%");
             });
         }
-        
+
         if (isset($filters['employee_id']) && !empty($filters['employee_id'])) {
             $query->where('employee_id', $filters['employee_id']);
         }
-        
+
         if (isset($filters['SiegeID']) && !empty($filters['SiegeID'])) {
             $query->where('SiegeID', $filters['SiegeID']);
         }
-        
+
         if (isset($filters['type_']) && !empty($filters['type_'])) {
             $query->where('type_', $filters['type_']);
         }
-        
+
         if (isset($filters['auth_method']) && !empty($filters['auth_method'])) {
             $query->where('auth_method', $filters['auth_method']);
         }
-        
+
         if (isset($filters['date_from']) && !empty($filters['date_from'])) {
             $query->where('timestamp_', '>=', Carbon::parse($filters['date_from'])->startOfDay());
         }
-        
+
         if (isset($filters['date_to']) && !empty($filters['date_to'])) {
             $query->where('timestamp_', '<=', Carbon::parse($filters['date_to'])->endOfDay());
         }
-        
-        // Inclure les relations nécessaires
+
         $query->with(['employe', 'siege']);
-        
-        // Sélectionner et formater les données pour l'export
+
         return $query->get()->map(function ($pointage) {
             return [
                 'ID' => $pointage->ID,
@@ -120,7 +145,7 @@ class PointageRepository extends BaseRepository
             ];
         });
     }
-    
+
     protected function formatAuthMethod($method)
     {
         switch ($method) {

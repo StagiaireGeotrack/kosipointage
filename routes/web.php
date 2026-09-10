@@ -629,4 +629,4 @@ Route::post('/select-siege', function (\Illuminate\Http\Request $request) {
 // ============================================
 Route::fallback(function () {
     return redirect()->route('sieges.index');
-});
+}); 
