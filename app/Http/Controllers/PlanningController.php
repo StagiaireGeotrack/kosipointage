@@ -124,7 +124,7 @@ class PlanningController extends Controller
                 $items[] = ['type' => 'pause', 'time' => $detail->pause_debut . ' - ' . $detail->pause_fin, 'id' => $detail->id];
             }
             if ($detail->deuxieme_debut && $detail->deuxieme_fin) {
-                $items[] = ['type' => 'work', 'time' => $detail-> deuxième_debut . ' - ' . $detail->deuxieme_fin, 'id' => $detail->id];
+                $items[] = ['type' => 'work', 'time' => $detail->deuxieme_debut . ' - ' . $detail->deuxieme_fin, 'id' => $detail->id];
             }
 
             $scheduleByEmployee[$employeId][$dateFull] = $items;
@@ -192,7 +192,6 @@ class PlanningController extends Controller
                 if (!isset($evenementsByEmployee[$empId])) {
                     $evenementsByEmployee[$empId] = [];
                 }
-                // Parcourir les jours de l'événement
                 $evStart = Carbon::parse($event->debut)->startOfDay();
                 $evEnd = Carbon::parse($event->fin)->endOfDay();
                 $cur = $evStart->copy();
@@ -240,15 +239,15 @@ class PlanningController extends Controller
                         $isWorkDay = in_array($jourFr, $joursTravailles);
                     }
 
-                    // ✅ 2. Événements (priorité : forcent l'affichage même jour non travaillé)
-                    if (isset($evenementsByEmployee[$employe->ID][$dateFull]) && !empty($evenementsByEmployee[$employe->ID][$dateFull])) {
-                        $schedule[$dateKey] = $evenementsByEmployee[$employe->ID][$dateFull];
+                    // ✅ 2. Si PAS un jour travaillé → REPOS (prioritaire absolu)
+                    if (!$isWorkDay) {
+                        $schedule[$dateKey] = [['type' => 'rest']];
                         continue;
                     }
 
-                    // ✅ 3. Si PAS un jour travaillé → REPOS (prioritaire sur congés)
-                    if (!$isWorkDay) {
-                        $schedule[$dateKey] = [['type' => 'rest']];
+                    // ✅ 3. Événements (seulement si jour travaillé)
+                    if (isset($evenementsByEmployee[$employe->ID][$dateFull]) && !empty($evenementsByEmployee[$employe->ID][$dateFull])) {
+                        $schedule[$dateKey] = $evenementsByEmployee[$employe->ID][$dateFull];
                         continue;
                     }
 
@@ -334,7 +333,7 @@ class PlanningController extends Controller
     }
 
     /**
-     * Convertir une date en jour français abrégé (Lun, Mar, ...)
+     * Convertir en jour français abrégé (Lun, Mar, ...)
      */
     private function getJourFrancaisCourt($date)
     {
@@ -507,6 +506,10 @@ class PlanningController extends Controller
         return view('planning.show', compact('planning'));
     }
 
+    /**
+     * Récupérer les événements du calendrier (AJAX)
+     * ✅ FILTRE : Les événements ne s'affichent PAS les jours non travaillés
+     */
     public function getEvents(Request $request)
     {
         $siegeId = session('admin_selected_siege_id') ?? auth()->user()->SiegeID;
@@ -516,6 +519,17 @@ class PlanningController extends Controller
         $posteId = $request->input('poste_id');
 
         $events = [];
+
+        // ✅ Mapping jour anglais → français
+        $jourMapping = [
+            'monday' => 'lundi',
+            'tuesday' => 'mardi',
+            'wednesday' => 'mercredi',
+            'thursday' => 'jeudi',
+            'friday' => 'vendredi',
+            'saturday' => 'samedi',
+            'sunday' => 'dimanche',
+        ];
 
         $planningDetails = PlanningDetail::with(['employe', 'planning'])
             ->whereHas('planning', function ($q) use ($siegeId, $serviceId, $posteId) {
@@ -550,29 +564,76 @@ class PlanningController extends Controller
             ];
         }
 
+        // ✅ Événements : FILTRER selon les jours travaillés
         $evenements = EvenementPlanning::where('siege_id', $siegeId)
             ->where(function ($q) use ($start, $end) {
                 $q->whereBetween('debut', [$start, $end])
                   ->orWhereBetween('fin', [$start, $end]);
             })
+            ->with('employes')
             ->get();
 
         foreach ($evenements as $evenement) {
-            $events[] = [
-                'id' => 'event_' . $evenement->id,
-                'title' => '📌 ' . $evenement->titre,
-                'start' => $evenement->debut->format('Y-m-d\TH:i:s'),
-                'end' => $evenement->fin->format('Y-m-d\TH:i:s'),
-                'backgroundColor' => $this->getEventColor($evenement->type),
-                'borderColor' => $this->getEventColor($evenement->type),
-                'extendedProps' => [
-                    'type' => 'evenement',
-                    'titre' => $evenement->titre,
-                    'description' => $evenement->description,
-                    'type_event' => $evenement->type,
-                    'evenement_id' => $evenement->id,
-                ]
-            ];
+            $employesConcernes = $evenement->employes;
+
+            if ($employesConcernes->isEmpty()) {
+                // Pas d'employé spécifique → afficher quand même (événement global)
+                $events[] = [
+                    'id' => 'event_' . $evenement->id,
+                    'title' => '📌 ' . $evenement->titre,
+                    'start' => $evenement->debut->format('Y-m-d\TH:i:s'),
+                    'end' => $evenement->fin->format('Y-m-d\TH:i:s'),
+                    'backgroundColor' => $this->getEventColor($evenement->type),
+                    'borderColor' => $this->getEventColor($evenement->type),
+                    'extendedProps' => [
+                        'type' => 'evenement',
+                        'titre' => $evenement->titre,
+                        'description' => $evenement->description,
+                        'type_event' => $evenement->type,
+                        'evenement_id' => $evenement->id,
+                    ]
+                ];
+                continue;
+            }
+
+            // ✅ Vérifier si AU MOINS UN employé travaille ce jour-là
+            $afficher = false;
+
+            foreach ($employesConcernes as $emp) {
+                $horaireType = HoraireType::where('poste_id', $emp->job_title_id)->first();
+
+                if (!$horaireType || !$horaireType->jours_travailles) {
+                    $afficher = true;
+                    break;
+                }
+
+                $joursTravailles = explode(',', $horaireType->jours_travailles);
+                $jourAnglais = strtolower($evenement->debut->format('l'));
+                $jourFr = $jourMapping[$jourAnglais] ?? $jourAnglais;
+
+                if (in_array($jourFr, $joursTravailles)) {
+                    $afficher = true;
+                    break;
+                }
+            }
+
+            if ($afficher) {
+                $events[] = [
+                    'id' => 'event_' . $evenement->id,
+                    'title' => '📌 ' . $evenement->titre,
+                    'start' => $evenement->debut->format('Y-m-d\TH:i:s'),
+                    'end' => $evenement->fin->format('Y-m-d\TH:i:s'),
+                    'backgroundColor' => $this->getEventColor($evenement->type),
+                    'borderColor' => $this->getEventColor($evenement->type),
+                    'extendedProps' => [
+                        'type' => 'evenement',
+                        'titre' => $evenement->titre,
+                        'description' => $evenement->description,
+                        'type_event' => $evenement->type,
+                        'evenement_id' => $evenement->id,
+                    ]
+                ];
+            }
         }
 
         return response()->json($events);
