@@ -96,4 +96,19 @@ class Department extends Model
             }
         });
     }
+
+        /**
+     * Relation inverse : les Supervisors affectés à ce service
+     */
+    public function supervisors()
+    {
+        return $this->belongsToMany(
+            Administration::class,
+            'supervisor_services',
+            'service_id',
+            'admin_id',
+            'id',
+            'ID'
+        )->withPivot('created_at', 'created_by');
+    }
 }

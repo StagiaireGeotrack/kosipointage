@@ -28,6 +28,7 @@ class ActivityLogService
             if ($user) {
                 if ($user->isTrueSuperAdmin())  $role = 'superadmin';
                 elseif ($user->isSeller())       $role = 'seller';
+                elseif ($user->isSupervisor())   $role = 'supervisor';
                 elseif ($user->isSimpleAdmin())  $role = 'simple_admin';
             }
 

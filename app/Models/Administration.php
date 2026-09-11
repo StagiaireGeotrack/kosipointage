@@ -14,12 +14,10 @@ class Administration extends Authenticatable
 
     protected $table = 'administration';
     protected $primaryKey = 'ID';
-    
-    // Spécifier les colonnes pour created_at et updated_at
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-    
-    // Définir le champ de mot de passe personnalisé
+
     protected $passwordName = 'Password_';
 
     protected $fillable = [
@@ -28,6 +26,7 @@ class Administration extends Authenticatable
         'IsSuperAdmin',
         'IsSeller',
         'IsManager',
+        'IsSupervisor',
         'SiegeID',
         'Actived',
         'deleted',
@@ -37,11 +36,12 @@ class Administration extends Authenticatable
         'Password_',
         'remember_token',
     ];
-    
+
     protected $casts = [
         'IsSuperAdmin' => 'boolean',
         'IsSeller' => 'boolean',
         'IsManager' => 'boolean',
+        'IsSupervisor' => 'boolean',
         'Actived' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
@@ -49,13 +49,12 @@ class Administration extends Authenticatable
 
     public $timestamps = false;
 
-    // Relation avec le siège principal
+    // ============ RELATIONS ============
     public function siege()
     {
         return $this->belongsTo(EntrepriseSiege::class, 'SiegeID', 'ID');
     }
 
-    // Relation many-to-many avec les sièges accessibles (pour les vendeurs)
     public function sellerSieges()
     {
         return $this->belongsToMany(
@@ -68,42 +67,89 @@ class Administration extends Authenticatable
         )->withPivot('CreatedAt');
     }
 
-    // Vérifie si l'utilisateur est un vendeur
+    /**
+     * Relation Supervisor ↔ Services (départements)
+     */
+    public function supervisorServices()
+    {
+        return $this->belongsToMany(
+            Department::class,
+            'supervisor_services',
+            'admin_id',
+            'service_id',
+            'ID',
+            'id'
+        )->withPivot('created_at', 'created_by');
+    }
+
+    // ============ MÉTHODES DE RÔLE (EXISTANTES — NE PAS MODIFIER) ============
     public function isSeller(): bool
     {
         return $this->IsSeller == 1 && $this->IsSuperAdmin == 1;
     }
 
-    // Vérifie si l'utilisateur est un Manager Vendeur
     public function isManagerSeller(): bool
     {
         return $this->IsSeller == 1 && $this->IsSuperAdmin == 1 && $this->IsManager == 1;
     }
 
-    // Vérifie si l'utilisateur est un vrai Super Admin (pas un vendeur)
     public function isTrueSuperAdmin(): bool
     {
         return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
     }
 
-    // Vérifie si l'utilisateur est un Manager Super Admin
     public function isManagerSuperAdmin(): bool
     {
         return $this->IsSuperAdmin == 1 && $this->IsSeller == 0 && $this->IsManager == 1;
     }
 
-    // Vérifie si l'utilisateur est un Simple Admin
     public function isSimpleAdmin(): bool
     {
         return $this->IsSuperAdmin == 0 && $this->IsSeller == 0;
     }
 
-    // Vérifie si l'utilisateur est un Manager Simple Admin
     public function isManagerSimpleAdmin(): bool
     {
         return $this->IsSuperAdmin == 0 && $this->IsSeller == 0 && $this->IsManager == 1;
     }
 
+    // ============ NOUVELLES MÉTHODES — RÔLE SUPERVISOR ============
+
+    /**
+     * Vérifie si l'utilisateur est un Responsable de service
+     */
+    public function isSupervisor(): bool
+    {
+        return $this->IsSupervisor == 1
+            && $this->IsSuperAdmin == 0
+            && $this->IsSeller == 0
+            && $this->IsManager == 0;
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un Simple Admin au sens du nouveau modèle
+     * (IsManager=1, sans les autres flags)
+     */
+    public function isSimpleAdminStrict(): bool
+    {
+        return $this->IsManager == 1
+            && $this->IsSuperAdmin == 0
+            && $this->IsSeller == 0
+            && $this->IsSupervisor == 0;
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un Revendeur au sens du nouveau modèle
+     */
+    public function isSellerStrict(): bool
+    {
+        return $this->IsSeller == 1
+            && $this->IsSuperAdmin == 0
+            && $this->IsManager == 0
+            && $this->IsSupervisor == 0;
+    }
+
+    // ============ MÉTHODES EXISTANTES (conservées) ============
     public function getEmailForPasswordReset()
     {
         return $this->Identifiant_email;
@@ -114,20 +160,14 @@ class Administration extends Authenticatable
         return $this->where('Identifiant_email', $username)->first();
     }
 
-    /**
-     * Récupère tous les IDs des sièges accessibles pour cet utilisateur
-     * ⚠️ CRITIQUE : Utiliser withoutGlobalScope pour éviter la boucle infinie
-     */
     public function getSiegeIdsAccessibles(): array
     {
-        // Vrai Super Admin : accès à tous les sièges
         if ($this->isTrueSuperAdmin()) {
             return EntrepriseSiege::withoutGlobalScope(SiegeScope::class)
                 ->pluck('ID')
                 ->toArray();
         }
 
-        // Vendeur : accès aux sièges assignés dans seller_sieges
         if ($this->isSeller()) {
             return $this->sellerSieges()
                 ->withoutGlobalScope(SiegeScope::class)
@@ -135,7 +175,6 @@ class Administration extends Authenticatable
                 ->toArray();
         }
 
-        // Simple Admin : accès uniquement à son siège
         if ($this->isSimpleAdmin()) {
             return $this->SiegeID ? [$this->SiegeID] : [];
         }
@@ -143,7 +182,6 @@ class Administration extends Authenticatable
         return [];
     }
 
-    // Vérifie si l'utilisateur a accès à un siège spécifique
     public function hasAccessToSiege(int $siegeId): bool
     {
         return in_array($siegeId, $this->getSiegeIdsAccessibles());
@@ -153,8 +191,23 @@ class Administration extends Authenticatable
     {
         return $this->attributes['Password_'];
     }
+
     public function isAdmin(): bool
-{
-    return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
-}
+    {
+        return $this->IsSuperAdmin == 1 && $this->IsSeller == 0;
+    }
+
+    /**
+     * Retourne les IDs des services affectés (pour un Supervisor)
+     */
+    public function getSupervisorServiceIds(): array
+    {
+        if (!$this->isSupervisor()) {
+            return [];
+        }
+
+        return $this->supervisorServices()
+            ->pluck('departments.id')
+            ->toArray();
+    }
 }
