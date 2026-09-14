@@ -190,8 +190,12 @@ class AllDashboardController extends Controller
     {
         $user = auth()->user();
         
-        if (!$user->isSimpleAdmin()) {
-            abort(403, 'Accès réservé aux administrateurs simples');
+        if (!$user->isSimpleAdmin() && !$user->isSupervisor()) {
+            abort(403, 'Accès réservé aux administrateurs');
+        }
+
+        if ($user->isSupervisor()) {
+            return $this->dashboardSupervisor($user);
         }
         
         if (!$user->SiegeID) {
@@ -344,6 +348,49 @@ class AllDashboardController extends Controller
             'datesLast30Days',
             'employesCeMois',
             'entreprisesCeMois'
+        ));
+    }
+
+    private function dashboardSupervisor($user)
+    {
+        $serviceIds = $user->getSupervisorServiceIds();
+        $employeeIds = empty($serviceIds) ? [-1] : \App\Models\Employe::whereIn('department_id', $serviceIds)
+            ->where('SiegeID', $user->SiegeID)
+            ->pluck('ID')
+            ->toArray();
+
+        $today = \Carbon\Carbon::today();
+        $startOfMonth = \Carbon\Carbon::now()->startOfMonth();
+        $endOfMonth = \Carbon\Carbon::now()->endOfMonth();
+
+        $totalEmployes = \App\Models\Employe::whereIn('ID', $employeeIds)->count();
+        $employesActifs = \App\Models\Employe::whereIn('ID', $employeeIds)->where('Actived', 1)->count();
+
+        $pointagesToday = \App\Models\Pointage::whereIn('employee_id', $employeeIds)
+            ->whereDate('timestamp_', $today)
+            ->count();
+
+        $employesPresentsToday = \App\Models\Pointage::whereIn('employee_id', $employeeIds)
+            ->where('type_', 'entry')
+            ->whereDate('timestamp_', $today)
+            ->distinct('employee_id')
+            ->count('employee_id');
+
+        $tauxPresence = $totalEmployes > 0 ? round(($employesPresentsToday / $totalEmployes) * 100, 1) : 0;
+
+        // Réutiliser les variables attendues par la vue dashboards.simple-admin
+        $siege = \App\Models\EntrepriseSiege::find($user->SiegeID);
+
+        $services = \App\Models\Department::whereIn('id', $serviceIds)->get();
+
+        return view('dashboards.supervisor', compact(
+            'user',
+            'services',
+            'totalEmployes',
+            'employesActifs',
+            'pointagesToday',
+            'employesPresentsToday',
+            'tauxPresence'
         ));
     }
 }

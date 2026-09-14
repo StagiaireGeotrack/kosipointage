@@ -37,10 +37,26 @@ class EmployeController extends Controller
        ========================================================= */
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         $filters = $request->only([
             'search', 'SiegeID', 'Actived', 'HasBiometricSetup', 'HasFaceSetup',
             'sort_by', 'sort_order'
         ]);
+
+        // ✅ Si Supervisor : forcer le filtre par ses services
+        if ($user->isSupervisor()) {
+            $serviceIds = $user->getSupervisorServiceIds();
+
+            if (empty($serviceIds)) {
+                $filters['department_ids'] = [-1]; // Aucun résultat
+            } else {
+                $filters['department_ids'] = $serviceIds;
+            }
+
+            // Forcer son propre siège
+            $filters['SiegeID'] = $user->SiegeID;
+        }
 
         $employes = $this->repository->getFiltered($filters);
         $employes->load(['department', 'jobTitle', 'hierarchyLevel', 'manager', 'siege']);

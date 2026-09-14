@@ -15,21 +15,31 @@ class SiegeAccessMiddleware
         if (!Auth::check()) {
             return redirect('login');
         }
-        
+
         $user = Auth::user();
-        
-        // ✅ Si c'est un vrai Super Admin, on le laisse passer
+
+        // ✅ Super Admin : passage libre
         if ($user->isTrueSuperAdmin()) {
             return $next($request);
         }
-        
-        // ✅ Si c'est un Vendeur, on le laisse passer (le SiegeScope filtrera les données)
+
+        // ✅ Revendeur : passage libre (SiegeScope filtre les données)
         if ($user->isSeller()) {
             return $next($request);
         }
-        
-        // ✅ Pour les Simple Administrateurs, vérifier l'accès au siège
-        if ($user->isSimpleAdmin()) {
+
+        // ✅ Responsable de service : vérifier l'accès à SON siège
+        if ($user->isSupervisor()) {
+            if (!$user->SiegeID || !Gate::allows('access-siege', $user->SiegeID)) {
+                abort(403, 'Accès non autorisé à ce siège.');
+            }
+
+            return $next($request);
+        }
+
+        // ✅ Simple Admin / Master : vérifier l'accès au siège
+                // ✅ Pour les Simple Administrateurs ET Supervisors, vérifier l'accès au siège
+        if ($user->isSimpleAdmin() || $user->isSupervisor()) {
             $siegeId = $request->route('siege_id') ?? $user->SiegeID;
             
             if (!$siegeId || !Gate::allows('access-siege', $siegeId)) {
@@ -38,8 +48,8 @@ class SiegeAccessMiddleware
             
             return $next($request);
         }
-        
-        // Si aucun des cas ci-dessus, bloquer l'accès
+
+        // Aucun rôle reconnu
         abort(403, 'Accès non autorisé.');
     }
 }

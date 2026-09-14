@@ -21,39 +21,78 @@ class CongeController extends Controller
         $this->jourOuvrableService = $jourOuvrableService;
     }
 
-    public function index(Request $request)
-    {
-        $sieges = EntrepriseSiege::all();
-        $filters = $request->only([ 'SiegeID' , 'search' , 'type_conge', 'employee_id' ]); 
-        
-        // Le scope global s'applique automatiquement
-        $query = Conge::with('employe');
+public function index(Request $request)
+{
+    $user = auth()->user();
+    $isSupervisor = $user->isSupervisor();
 
-        if (!empty($filters['SiegeID'])) {
-            $query->where('SiegeID', $filters['SiegeID']);
+    $sieges = EntrepriseSiege::all();
+    $filters = $request->only(['SiegeID', 'search', 'type_conge', 'employee_id']);
+
+    // Le scope global s'applique automatiquement
+    $query = Conge::with('employe');
+
+    // ============================================================
+    // ✅ Si Supervisor : filtrer par ses employés accessibles
+    // ============================================================
+    $supervisorEmployeeIds = null;
+    if ($isSupervisor) {
+        $supervisorEmployeeIds = \App\Services\AccessScopeService::getAccessibleEmployeeIds($user);
+
+        if (empty($supervisorEmployeeIds)) {
+            $query->whereRaw('1 = 0'); // Aucun résultat
+        } else {
+            $query->whereIn('employee_id', $supervisorEmployeeIds);
         }
-        
-        if (!empty($filters['search'])) {
-            $query->whereHas('employe', function($q) use ($filters) {
-                $q->where('Nom', 'like', '%' . $filters['search'] . '%'); 
-            });
-        }
-        
-        if (!empty($filters['type_conge'])) {
-            $query->where('type_conge', $filters['type_conge']);
-        }
-        
-        if (!empty($filters['employee_id'])) {
+
+        // Forcer son propre siège
+        $filters['SiegeID'] = $user->SiegeID;
+    }
+
+    if (!empty($filters['SiegeID'])) {
+        $query->where('SiegeID', $filters['SiegeID']);
+    }
+
+    if (!empty($filters['search'])) {
+        $query->whereHas('employe', function($q) use ($filters) {
+            $q->where('Nom', 'like', '%' . $filters['search'] . '%');
+        });
+    }
+
+    if (!empty($filters['type_conge'])) {
+        $query->where('type_conge', $filters['type_conge']);
+    }
+
+    if (!empty($filters['employee_id'])) {
+        // ✅ Si Supervisor : vérifier que l'employé est bien dans son périmètre
+        if ($isSupervisor) {
+            if (in_array((int) $filters['employee_id'], $supervisorEmployeeIds, true)) {
+                $query->where('employee_id', $filters['employee_id']);
+            } else {
+                // L'employé demandé n'est pas accessible → aucun résultat
+                $query->whereRaw('1 = 0');
+            }
+        } else {
             $query->where('employee_id', $filters['employee_id']);
         }
-        
-        $conges = $query->orderBy('id', 'desc')->paginate(5)->appends($filters);
-        
-        // Les employés sont déjà filtrés par le scope global
-        $employes = Employe::orderBy('Nom')->get();
-        
-        return view( 'conges.index', compact('conges', 'employes', 'filters' , 'sieges') );
     }
+
+    $conges = $query->orderBy('id', 'desc')->paginate(5)->appends($filters);
+
+    // Les employés sont déjà filtrés par le scope global
+    $employes = Employe::orderBy('Nom')->get();
+
+    // ✅ Si Supervisor : limiter la liste des employés pour le filtre déroulant
+    if ($isSupervisor) {
+        if (empty($supervisorEmployeeIds)) {
+            $employes = collect(); // Liste vide
+        } else {
+            $employes = $employes->whereIn('ID', $supervisorEmployeeIds);
+        }
+    }
+
+    return view('conges.index', compact('conges', 'employes', 'filters', 'sieges'));
+}
 
     public function create()
     {         

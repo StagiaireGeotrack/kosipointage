@@ -75,27 +75,47 @@
 
                     <!-- SiegeID -->
                     @if(auth()->user()->isTrueSuperAdmin())
-                    <div class="mb-3" id="siege-field" style="display: {{ old('IsSuperAdmin') ? 'none' : 'block' }};">
-                        <x-input-label for="SiegeID" :value="__('Siège')" />
-                        <select id="SiegeID" name="SiegeID" class="form-select mt-1">
-                            <option value="">{{ __('Sélectionner un siège') }}</option>
-                            @foreach($sieges as $siege)
-                                <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
-                                    {{ $siege->Nom }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
-                    </div>
+                        {{-- Super Admin : dropdown de TOUS les sièges --}}
+                        <div class="mb-3" id="siege-field" style="display: {{ old('IsSuperAdmin') ? 'none' : 'block' }};">
+                            <x-input-label for="SiegeID" :value="__('Siège')" />
+                            <select id="SiegeID" name="SiegeID" class="form-select mt-1">
+                                <option value="">{{ __('Sélectionner un siège') }}</option>
+                                @foreach($sieges as $siege)
+                                    <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
+                                        {{ $siege->Nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
+                        </div>
+
+                    @elseif(auth()->user()->isSeller())
+                        {{-- Revendeur : dropdown de SES sièges accessibles uniquement --}}
+                        <div class="mb-3" id="siege-field">
+                            <x-input-label for="SiegeID" :value="__('Siège')" />
+                            <select id="SiegeID" name="SiegeID" class="form-select mt-1" required>
+                                <option value="">{{ __('Sélectionner un siège') }}</option>
+                                @foreach($sieges as $siege)
+                                    <option value="{{ $siege->ID }}" {{ old('SiegeID') == $siege->ID ? 'selected' : '' }}>
+                                        {{ $siege->Nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">{{ __('Seuls vos sièges accessibles sont listés') }}</small>
+                            <x-input-error :messages="$errors->get('SiegeID')" class="mt-2" />
+                        </div>
+
                     @elseif(auth()->user()->isSimpleAdmin())
-                    <div class="mb-3" id="siege-field">
-                        <x-input-label for="SiegeID" :value="__('Siège (Auto-assigné)')" />
-                        <select id="SiegeID" name="SiegeID" class="form-select mt-1" disabled>
-                            <option value="{{ auth()->user()->SiegeID }}" selected>
-                                {{ auth()->user()->siege->Nom ?? 'Votre Siège' }}
-                            </option>
-                        </select>
-                    </div>
+                        {{-- Simple Admin : auto-assigné (champ caché pour soumettre la valeur) --}}
+                        <div class="mb-3" id="siege-field">
+                            <x-input-label for="SiegeID" :value="__('Siège (Auto-assigné)')" />
+                            <select id="SiegeID" class="form-select mt-1" disabled>
+                                <option value="{{ auth()->user()->SiegeID }}" selected>
+                                    {{ auth()->user()->siege->Nom ?? 'Votre Siège' }}
+                                </option>
+                            </select>
+                            <input type="hidden" name="SiegeID" value="{{ auth()->user()->SiegeID }}">
+                        </div>
                     @endif
 
                     <!-- Actived (pour les administrateurs simples uniquement) -->

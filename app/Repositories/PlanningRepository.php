@@ -50,6 +50,14 @@ class PlanningRepository extends BaseRepository
                   ->where('date_fin_semaine', $fin->format('Y-m-d'));
         }
 
+        if (isset($filters['employee_ids']) && is_array($filters['employee_ids'])) {
+            if (empty($filters['employee_ids'])) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereIn('employee_id', $filters['employee_ids']);
+            }
+        }
+
         $sortBy = $filters['tri_par'] ?? 'date_debut_semaine';
         $sortOrder = $filters['ordre_tri'] ?? 'desc';
         $query->orderBy($sortBy, $sortOrder);

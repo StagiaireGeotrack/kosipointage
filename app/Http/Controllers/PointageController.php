@@ -33,29 +33,40 @@ class PointageController extends Controller
     
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         $filters = $request->only([
-            'search', 'employee_id', 'SiegeID', 'type_', 'auth_method', 
+            'search', 'employee_id', 'SiegeID', 'type_', 'auth_method',
             'date_from', 'date_to', 'sort_by', 'sort_order'
         ]);
-        
-        $pointages = $this->repository->getFiltered($filters);
 
+        // ✅ Si Supervisor : forcer les filtres
+        if ($user->isSupervisor()) {
+            $employeeIds = \App\Services\AccessScopeService::getAccessibleEmployeeIds($user);
+            $filters['employee_ids'] = empty($employeeIds) ? [-1] : $employeeIds;
+            $filters['SiegeID'] = $user->SiegeID;
+        }
+
+        $pointages = $this->repository->getFiltered($filters);
         $pointages->appends($filters);
 
-        $sieges = EntrepriseSiege::all(); // Pour le filtre par siège
-        
-        // Récupérer les employés du siège sélectionné, ou tous si aucun siège sélectionné
+        $sieges = EntrepriseSiege::all();
+
         if (!empty($filters['SiegeID'])) {
             $employes = Employe::where('SiegeID', $filters['SiegeID'])->get();
         } else {
-            // Si l'utilisateur est un Admin standard, limiter aux employés de son siège
-            if (!auth()->user()->IsSuperAdmin) {
-                $employes = Employe::where('SiegeID', auth()->user()->SiegeID)->get();
+            if (!$user->IsSuperAdmin) {
+                $employes = Employe::where('SiegeID', $user->SiegeID)->get();
             } else {
                 $employes = Employe::all();
             }
         }
-        
+
+        // ✅ Si Supervisor : limiter la liste des employés pour les filtres
+        if ($user->isSupervisor()) {
+            $employes = $employes->whereIn('ID', $filters['employee_ids'] ?? []);
+        }
+
         return view('pointages.index', compact('pointages', 'sieges', 'employes', 'filters'));
     }
 

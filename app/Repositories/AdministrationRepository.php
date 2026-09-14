@@ -12,21 +12,26 @@ class AdministrationRepository extends BaseRepository
     {
         parent::__construct($administration);
     }
-    
+
     public function getFiltered($filters = [], $perPage = 5)
     {
         $query = $this->model->newQuery();
-        
+
         // Filtre par recherche (email)
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->where('Identifiant_email', 'LIKE', "%{$filters['search']}%");
         }
-        
+
         // Filtre par siège
         if (isset($filters['SiegeID']) && !empty($filters['SiegeID'])) {
             $query->where('SiegeID', $filters['SiegeID']);
         }
-        
+
+        // Filtre par liste de sièges accessibles (pour les Revendeurs)
+        if (isset($filters['siege_ids']) && is_array($filters['siege_ids'])) {
+            $query->whereIn('SiegeID', $filters['siege_ids']);
+        }
+
         // Filtre par type d'administrateur
         if (isset($filters['role']) && $filters['role'] !== '') {
             switch ($filters['role']) {
@@ -45,6 +50,9 @@ class AdministrationRepository extends BaseRepository
                 case 'simple_admin':
                     $query->where('IsSuperAdmin', 0)->where('IsManager', 0);
                     break;
+                case 'supervisor':
+                    $query->where('IsSupervisor', 1)->where('IsSuperAdmin', 0)->where('IsSeller', 0)->where('IsManager', 0);
+                    break;
                 case 'manager_simple_admin':
                     $query->where('IsSuperAdmin', 0)->where('IsManager', 1);
                     break;
@@ -52,28 +60,32 @@ class AdministrationRepository extends BaseRepository
         } elseif (isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] !== '') {
             $query->where('IsSuperAdmin', $filters['IsSuperAdmin']);
         }
-        
+
         $query->orderBy("created_at", "desc");
-        
+
         // Inclure la relation siège
         $query->with('siege');
-        
+
         return $query->paginate($perPage);
     }
-    
+
     public function getAllForExport($filters = [])
     {
         $query = $this->model->newQuery();
-        
+
         // Appliquer les mêmes filtres que pour getFiltered
         if (isset($filters['search']) && !empty($filters['search'])) {
             $query->where('Identifiant_email', 'LIKE', "%{$filters['search']}%");
         }
-        
+
         if (isset($filters['SiegeID']) && !empty($filters['SiegeID'])) {
             $query->where('SiegeID', $filters['SiegeID']);
         }
-        
+
+        if (isset($filters['siege_ids']) && is_array($filters['siege_ids'])) {
+            $query->whereIn('SiegeID', $filters['siege_ids']);
+        }
+
         if (isset($filters['role']) && $filters['role'] !== '') {
             switch ($filters['role']) {
                 case 'super_admin':
@@ -98,10 +110,10 @@ class AdministrationRepository extends BaseRepository
         } elseif (isset($filters['IsSuperAdmin']) && $filters['IsSuperAdmin'] !== '') {
             $query->where('IsSuperAdmin', $filters['IsSuperAdmin']);
         }
-        
+
         // Inclure la relation siège
         $query->with('siege');
-        
+
         // Sélectionner et formater les données pour l'export
         return $query->orderBy('created_at', 'asc')->get()->map(function ($admin) {
             $type = __('Administrateur simple');
@@ -120,5 +132,31 @@ class AdministrationRepository extends BaseRepository
                 'Dernière mise à jour' => ucfirst($admin->updated_at ? $admin->updated_at->isoFormat('dddd D MMMM YYYY - HH:mm:ss') : ''),
             ];
         });
+    }
+        /**
+     * Récupère les Supervisors d'un siège
+     */
+    public function getSupervisorsBySiege(int $siegeId)
+    {
+        return $this->model->newQuery()
+            ->where('IsSupervisor', 1)
+            ->where('IsSuperAdmin', 0)
+            ->where('IsSeller', 0)
+            ->where('IsManager', 0)
+            ->where('SiegeID', $siegeId)
+            ->orderBy('Identifiant_email')
+            ->paginate(15);
+    }
+
+    /**
+     * Récupère un Supervisor par ID (avec vérification du siège)
+     */
+    public function findSupervisorById(int $id, int $siegeId)
+    {
+        return $this->model->newQuery()
+            ->where('ID', $id)
+            ->where('IsSupervisor', 1)
+            ->where('SiegeID', $siegeId)
+            ->firstOrFail();
     }
 }

@@ -27,7 +27,32 @@ class PlanningController extends Controller
      */
     public function index(Request $request)
     {
-        $siegeId = session('admin_selected_siege_id') ?? auth()->user()->SiegeID;
+        $user = auth()->user();
+        $isSupervisor = $user->isSupervisor();
+
+        // ✅ Si Supervisor : récupérer ses services affectés
+        $supervisorServiceIds = $isSupervisor ? $user->getSupervisorServiceIds() : null;
+
+        // ✅ Si Supervisor sans service : liste vide pour tout bloquer
+        if ($isSupervisor && empty($supervisorServiceIds)) {
+            $supervisorServiceIds = [-1]; // Aucun résultat
+        }
+
+        // ✅ Récupérer les IDs des employés accessibles (Supervisor uniquement)
+        $supervisorEmployeeIds = null;
+        if ($isSupervisor) {
+            $supervisorEmployeeIds = empty($supervisorServiceIds) || $supervisorServiceIds === [-1]
+                ? [-1]
+                : \App\Models\Employe::whereIn('department_id', $supervisorServiceIds)
+                    ->where('SiegeID', $user->SiegeID)
+                    ->pluck('ID')
+                    ->toArray();
+            if (empty($supervisorEmployeeIds)) {
+                $supervisorEmployeeIds = [-1];
+            }
+        }
+
+        $siegeId = session('admin_selected_siege_id') ?? $user->SiegeID;
 
         $view = $request->get('view', 'week');
         if (!in_array($view, ['day', 'week', 'month'])) {
@@ -64,49 +89,76 @@ class PlanningController extends Controller
         $todayDate = Carbon::now()->format('Y-m-d');
         $periodLabel = $this->getPeriodLabel($view, $start, $end, $pivot);
 
-        // Plannings générés
+        // ============================================================
+        // Plannings générés (filtré pour Supervisor)
+        // ============================================================
         $plannings = Planning::where('siege_id', $siegeId)
             ->where('date_debut_semaine', '<=', $end->format('Y-m-d'))
             ->where('date_fin_semaine', '>=', $start->format('Y-m-d'))
             ->where('statut', '!=', 'archive')
+            ->when($isSupervisor, function($q) use ($supervisorServiceIds) {
+                $q->whereIn('service_id', $supervisorServiceIds);
+            })
             ->with(['details.employe', 'details.employe.jobTitle'])
             ->get();
 
-        // Détails plannings
-        $planningDetails = PlanningDetail::whereHas('planning', function($q) use ($siegeId, $start, $end) {
-            $q->where('siege_id', $siegeId)
-              ->where('date_debut_semaine', '<=', $end->format('Y-m-d'))
-              ->where('date_fin_semaine', '>=', $start->format('Y-m-d'))
-              ->where('statut', '!=', 'archive');
-        })
-        ->whereBetween('date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
-        ->with(['employe', 'employe.jobTitle'])
-        ->get();
+        // ============================================================
+        // Détails plannings (filtré pour Supervisor)
+        // ============================================================
+        $planningDetails = PlanningDetail::whereHas('planning', function($q) use ($siegeId, $start, $end, $isSupervisor, $supervisorServiceIds) {
+                $q->where('siege_id', $siegeId)
+                ->where('date_debut_semaine', '<=', $end->format('Y-m-d'))
+                ->where('date_fin_semaine', '>=', $start->format('Y-m-d'))
+                ->where('statut', '!=', 'archive');
 
-        // Congés approuvés
+                if ($isSupervisor) {
+                    $q->whereIn('service_id', $supervisorServiceIds);
+                }
+            })
+            ->whereBetween('date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+            ->when($isSupervisor, function($q) use ($supervisorEmployeeIds) {
+                $q->whereIn('employe_id', $supervisorEmployeeIds);
+            })
+            ->with(['employe', 'employe.jobTitle'])
+            ->get();
+
+        // ============================================================
+        // Congés approuvés (filtré pour Supervisor)
+        // ============================================================
         $conges = \App\Models\LeaveRequest::where('status', 'approved')
+            ->when($isSupervisor, function($q) use ($supervisorEmployeeIds) {
+                $q->whereIn('employee_id', $supervisorEmployeeIds);
+            })
             ->where(function($q) use ($start, $end) {
                 $q->whereBetween('start_date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
-                  ->orWhereBetween('end_date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
-                  ->orWhere(function($q2) use ($start, $end) {
-                      $q2->where('start_date', '<=', $start->format('Y-m-d'))
-                         ->where('end_date', '>=', $end->format('Y-m-d'));
-                  });
+                ->orWhereBetween('end_date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                ->orWhere(function($q2) use ($start, $end) {
+                    $q2->where('start_date', '<=', $start->format('Y-m-d'))
+                        ->where('end_date', '>=', $end->format('Y-m-d'));
+                });
             })
             ->with(['employee', 'leaveType'])
             ->get();
 
-        // Congés anciens
-        $congesAnciens = \App\Models\Conge::where(function($q) use ($start, $end) {
-            $q->whereBetween('date_debut', [$start->format('Y-m-d'), $end->format('Y-m-d')])
-              ->orWhereBetween('date_fin', [$start->format('Y-m-d'), $end->format('Y-m-d')])
-              ->orWhere(function($q2) use ($start, $end) {
-                  $q2->where('date_debut', '<=', $start->format('Y-m-d'))
-                     ->where('date_fin', '>=', $end->format('Y-m-d'));
-              });
-        })->get();
+        // ============================================================
+        // Congés anciens (filtré pour Supervisor)
+        // ============================================================
+        $congesAnciens = \App\Models\Conge::query()
+            ->when($isSupervisor, function($q) use ($supervisorEmployeeIds) {
+                $q->whereIn('employee_id', $supervisorEmployeeIds);
+            })
+            ->where(function($q) use ($start, $end) {
+                $q->whereBetween('date_debut', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                ->orWhereBetween('date_fin', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                ->orWhere(function($q2) use ($start, $end) {
+                    $q2->where('date_debut', '<=', $start->format('Y-m-d'))
+                        ->where('date_fin', '>=', $end->format('Y-m-d'));
+                });
+            })->get();
 
+        // ============================================================
         // Grouper les détails par employé et par date (clé: Y-m-d)
+        // ============================================================
         $scheduleByEmployee = [];
         foreach ($planningDetails as $detail) {
             $employeId = $detail->employe_id;
@@ -130,7 +182,9 @@ class PlanningController extends Controller
             $scheduleByEmployee[$employeId][$dateFull] = $items;
         }
 
-        // Index des congés par employé et par date (clé: Y-m-d)
+        // ============================================================
+        // Index des congés par employé et par date
+        // ============================================================
         $congesByEmployee = [];
         foreach ($conges as $conge) {
             $employeId = $conge->employee_id;
@@ -172,16 +226,23 @@ class PlanningController extends Controller
             }
         }
 
-        // Événements exceptionnels groupés par employé et par date
+        // ============================================================
+        // Événements exceptionnels (filtré pour Supervisor)
+        // ============================================================
         $evenementsByEmployee = [];
         $allEvenements = EvenementPlanning::where('siege_id', $siegeId)
+            ->when($isSupervisor, function($q) use ($supervisorEmployeeIds) {
+                $q->whereHas('employes', function($sub) use ($supervisorEmployeeIds) {
+                    $sub->whereIn('Employes.ID', $supervisorEmployeeIds);
+                });
+            })
             ->where(function($q) use ($start, $end) {
                 $q->whereBetween('debut', [$start->format('Y-m-d 00:00:00'), $end->format('Y-m-d 23:59:59')])
-                  ->orWhereBetween('fin', [$start->format('Y-m-d 00:00:00'), $end->format('Y-m-d 23:59:59')])
-                  ->orWhere(function($q2) use ($start, $end) {
-                      $q2->where('debut', '<=', $start->format('Y-m-d 00:00:00'))
-                         ->where('fin', '>=', $end->format('Y-m-d 23:59:59'));
-                  });
+                ->orWhereBetween('fin', [$start->format('Y-m-d 00:00:00'), $end->format('Y-m-d 23:59:59')])
+                ->orWhere(function($q2) use ($start, $end) {
+                    $q2->where('debut', '<=', $start->format('Y-m-d 00:00:00'))
+                        ->where('fin', '>=', $end->format('Y-m-d 23:59:59'));
+                });
             })
             ->with('employes')
             ->get();
@@ -211,8 +272,13 @@ class PlanningController extends Controller
             }
         }
 
-        // Services + employés
+        // ============================================================
+        // Services + employés (filtré pour Supervisor)
+        // ============================================================
         $services = Department::where('site_id', $siegeId)
+            ->when($isSupervisor, function($q) use ($supervisorServiceIds) {
+                $q->whereIn('id', $supervisorServiceIds);
+            })
             ->with(['employes' => function($q) {
                 $q->where('Actived', 1)->where('deleted', 0);
             }, 'employes.jobTitle'])
@@ -229,7 +295,7 @@ class PlanningController extends Controller
                     $dateFull = $day['full'];
                     $dateKey = $day['date'];
 
-                    // ✅ 1. Vérifier si c'est un jour travaillé
+                    // 1. Vérifier si c'est un jour travaillé
                     $horaireType = HoraireType::where('poste_id', $employe->job_title_id)->first();
                     $isWorkDay = false;
 
@@ -239,31 +305,31 @@ class PlanningController extends Controller
                         $isWorkDay = in_array($jourFr, $joursTravailles);
                     }
 
-                    // ✅ 2. Si PAS un jour travaillé → REPOS (prioritaire absolu)
+                    // 2. Si PAS un jour travaillé → REPOS
                     if (!$isWorkDay) {
                         $schedule[$dateKey] = [['type' => 'rest']];
                         continue;
                     }
 
-                    // ✅ 3. Événements (seulement si jour travaillé)
+                    // 3. Événements
                     if (isset($evenementsByEmployee[$employe->ID][$dateFull]) && !empty($evenementsByEmployee[$employe->ID][$dateFull])) {
                         $schedule[$dateKey] = $evenementsByEmployee[$employe->ID][$dateFull];
                         continue;
                     }
 
-                    // ✅ 4. Congés (seulement si jour travaillé)
+                    // 4. Congés
                     if (isset($congesByEmployee[$employe->ID][$dateFull]) && !empty($congesByEmployee[$employe->ID][$dateFull])) {
                         $schedule[$dateKey] = $congesByEmployee[$employe->ID][$dateFull];
                         continue;
                     }
 
-                    // ✅ 5. Planning généré (seulement si jour travaillé)
+                    // 5. Planning généré
                     if (isset($scheduleByEmployee[$employe->ID][$dateFull])) {
                         $schedule[$dateKey] = $scheduleByEmployee[$employe->ID][$dateFull];
                         continue;
                     }
 
-                    // ✅ 6. Horaires types (seulement si jour travaillé)
+                    // 6. Horaires types
                     if ($horaireType) {
                         $items = [];
                         if ($horaireType->heure_debut && $horaireType->heure_fin) {

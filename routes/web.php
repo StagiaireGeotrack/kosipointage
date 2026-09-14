@@ -43,7 +43,7 @@ use App\Http\Controllers\Employe\EmployeNotificationController;
 use App\Http\Controllers\Api\LeaveDurationController;
 use App\Http\Controllers\LeaveValidatorController;
 use App\Http\Controllers\Employe\LeaveValidationController;
-use App\Http\Controllers\EmployePlanningController; // ✅ AJOUTER CET IMPORT
+use App\Http\Controllers\EmployePlanningController;
 
 // Authentification (Breeze)
 require __DIR__.'/auth.php';
@@ -64,16 +64,12 @@ Route::middleware('auth:employe')->group(function () {
     Route::get('/portail/pointages', [EmployePortalController::class, 'pointages'])->name('employe.pointages');
     Route::get('/portail/rapports', [EmployePortalController::class, 'rapports'])->name('employe.rapports');
 
-    // Congés employé
     Route::get('/portail/conges', [EmployeCongeController::class, 'index'])->name('employe.conges.index');
     Route::get('/portail/conges/nouvelle-demande', [EmployeCongeController::class, 'create'])->name('employe.conges.create');
     Route::post('/portail/conges', [EmployeCongeController::class, 'store'])->name('employe.conges.store');
     Route::get('/portail/conges/{id}', [EmployeCongeController::class, 'show'])->name('employe.conges.show');
     Route::delete('/portail/conges/{id}', [EmployeCongeController::class, 'destroy'])->name('employe.conges.destroy');
 
-    // ============================================
-    // ✅ PLANNING - Employé (Mon planning) - DÉPLACÉ ICI
-    // ============================================
     Route::prefix('employe/planning')->name('employe.planning.')->group(function () {
         Route::get('/', [EmployePlanningController::class, 'index'])->name('index');
         Route::get('/events', [EmployePlanningController::class, 'getEvents'])->name('events');
@@ -83,8 +79,7 @@ Route::middleware('auth:employe')->group(function () {
 // ============================================
 // REDIRECTION ACCUEIL
 // ============================================
-Route::get('/', function ()
-{
+Route::get('/', function () {
     if (!auth()->check()) {
         return redirect()->route('login');
     }
@@ -93,10 +88,13 @@ Route::get('/', function ()
 
     if ($user->isTrueSuperAdmin()) {
         return redirect()->route('dashboard');
-    } elseif ($user->isSimpleAdmin()) {
-        return redirect()->route('dashboard.simple-admin');
     } elseif ($user->isSeller()) {
         return redirect()->route('dashboard.seller');
+    } elseif ($user->isSupervisor()) {
+        // ✅ Supervisor utilise le MÊME dashboard que le Simple Admin
+        return redirect()->route('dashboard.simple-admin');
+    } elseif ($user->isSimpleAdmin()) {
+        return redirect()->route('dashboard.simple-admin');
     }
 
     return redirect()->route('sieges.index');
@@ -107,16 +105,13 @@ Route::get('/', function ()
 // ============================================
 Route::middleware('auth')->group(function () {
 
-    // Langue
     Route::get('/language/{locale}', [LanguageController::class, 'changeLanguage'])->name('language.change');
 
-    // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile_update_email', [ProfileController::class, 'update_Identifiant_email'])->name('profile.update_Identifiant_email');
     Route::patch('/profile_update_password', [ProfileController::class, 'update_Password'])->name('profile.update_Password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Impersonation
     Route::post('/impersonate-leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
     Route::post('/impersonate-employe-leave', [ImpersonateController::class, 'leaveEmploye'])->name('impersonate.employe.leave');
 
@@ -135,7 +130,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('siege.access')->group(function () {
 
         // ===== SIÈGES =====
-        Route::middleware(['block.sellers', 'block.simple.admin.sieges'])->group(function () {
+        Route::middleware(['block.simple.admin.sieges', 'block.supervisor'])->group(function () {
             Route::get('/sieges/create', [EntrepriseSiegeController::class, 'create'])->name('sieges.create');
             Route::post('/sieges', [EntrepriseSiegeController::class, 'store'])->name('sieges.store');
             Route::get('/sieges/{siege}/edit', [EntrepriseSiegeController::class, 'edit'])->name('sieges.edit');
@@ -152,7 +147,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/sieges/{siege}', [EntrepriseSiegeController::class, 'show'])->name('sieges.show');
 
         // ===== ENTREPRISES =====
-        Route::middleware('block.sellers')->group(function () {
+        Route::middleware(['block.supervisor'])->group(function () {
             Route::get('/entreprises/create', [EntrepriseController::class, 'create'])->name('entreprises.create');
             Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
             Route::get('/entreprises/{entreprise}/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
@@ -170,7 +165,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/entreprises/{id}/logo/thumbnail', [EntrepriseController::class, 'getLogoThumbnail'])->name('entreprises.logo.thumbnail');
 
         // ===== EMPLOYÉS =====
-        Route::middleware('block.sellers')->group(function () {
+        // Écriture : bloquée pour Supervisor
+        Route::middleware(['block.sellers', 'block.supervisor'])->group(function () {
             Route::post('/employes/{employe}/assign-web-access', [EmployeController::class, 'assignWebAccess'])->name('employes.assign-web-access');
             Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
             Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
@@ -182,9 +178,10 @@ Route::middleware('auth')->group(function () {
             Route::patch('employes/{id}/reset-pin', [EmployeController::class, 'resetCodePin'])->name('employes.reset-pin');
         });
 
+        // Lecture : accessible au Supervisor
         Route::get('/employes', [EmployeController::class, 'index'])->name('employes.index');
-        Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel');
-        Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf');
+        Route::get('/employes-export/excel', [EmployeController::class, 'exportExcel'])->name('employes.export.excel')->middleware('block.supervisor');
+        Route::get('/employes-export/pdf', [EmployeController::class, 'exportPdf'])->name('employes.export.pdf')->middleware('block.supervisor');
         Route::get('/employes/{employe}', [EmployeController::class, 'show'])->name('employes.show');
         Route::get('/employes/{id}/face', [EmployeController::class, 'getFaceEncoding'])->name('employes.face');
         Route::get('/employes/{id}/face/thumbnail', [EmployeController::class, 'getFaceThumbnail'])->name('employes.face.thumbnail');
@@ -194,8 +191,8 @@ Route::middleware('auth')->group(function () {
         // ============================================
         Route::middleware(['auth', 'siege.access', 'block.sellers'])->prefix('planning')->name('planning.')->group(function () {
 
-            // Configuration des horaires types
-            Route::prefix('horaires-types')->name('horaires-types.')->group(function () {
+            // Écriture horaires-types : bloquée pour Supervisor
+            Route::middleware('block.supervisor')->prefix('horaires-types')->name('horaires-types.')->group(function () {
                 Route::get('/', [App\Http\Controllers\HoraireTypeController::class, 'index'])->name('index');
                 Route::get('/create', [App\Http\Controllers\HoraireTypeController::class, 'create'])->name('create');
                 Route::post('/', [App\Http\Controllers\HoraireTypeController::class, 'store'])->name('store');
@@ -204,29 +201,29 @@ Route::middleware('auth')->group(function () {
                 Route::delete('/{id}', [App\Http\Controllers\HoraireTypeController::class, 'destroy'])->name('destroy');
             });
 
-            // API pour charger les postes par service
             Route::get('/api/job-titles-by-department/{departmentId}',
                 [App\Http\Controllers\PlanningController::class, 'getJobTitlesByDepartment'])
                 ->name('api.job-titles-by-department');
 
-            // Détail d'un événement (AJAX)
             Route::get('/event-detail/{id}/{type}',
                 [App\Http\Controllers\PlanningController::class, 'getEventDetail'])
                 ->name('event.detail');
 
-            // Gestion des plannings
             Route::get('/', [App\Http\Controllers\PlanningController::class, 'index'])->name('index');
             Route::get('/calendar', [App\Http\Controllers\PlanningController::class, 'calendar'])->name('calendar');
-            Route::get('/create', [App\Http\Controllers\PlanningController::class, 'create'])->name('create');
-            Route::post('/', [App\Http\Controllers\PlanningController::class, 'store'])->name('store');
+
+            // Écriture planning : bloquée pour Supervisor
+            Route::middleware('block.supervisor')->group(function () {
+                Route::get('/create', [App\Http\Controllers\PlanningController::class, 'create'])->name('create');
+                Route::post('/', [App\Http\Controllers\PlanningController::class, 'store'])->name('store');
+                Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
+                Route::delete('/events/{id}', [App\Http\Controllers\PlanningController::class, 'destroyEvent'])->name('events.destroy');
+            });
+
             Route::get('/{id}', [App\Http\Controllers\PlanningController::class, 'show'])->name('show');
 
-            // Événements
             Route::get('/events', [App\Http\Controllers\PlanningController::class, 'getEvents'])->name('events');
-            Route::post('/events', [App\Http\Controllers\PlanningController::class, 'storeEvent'])->name('events.store');
-            Route::delete('/events/{id}', [App\Http\Controllers\PlanningController::class, 'destroyEvent'])->name('events.destroy');
 
-            // API AJAX
             Route::get('/api/employees-by-service/{serviceId}',
                 [App\Http\Controllers\PlanningController::class, 'getEmployeesByService'])
                 ->name('api.employees-by-service');
@@ -235,25 +232,31 @@ Route::middleware('auth')->group(function () {
                 [App\Http\Controllers\PlanningController::class, 'getWorkSchedulesByJobTitle'])
                 ->name('api.work-schedules-by-job-title');
 
-            // Exports
-            Route::get('/export/excel', [App\Http\Controllers\PlanningController::class, 'exportExcel'])->name('export.excel');
-            Route::get('/export/pdf', [App\Http\Controllers\PlanningController::class, 'exportPdf'])->name('export.pdf');
+            Route::middleware('block.supervisor')->group(function () {
+                Route::get('/export/excel', [App\Http\Controllers\PlanningController::class, 'exportExcel'])->name('export.excel');
+                Route::get('/export/pdf', [App\Http\Controllers\PlanningController::class, 'exportPdf'])->name('export.pdf');
+            });
         });
 
         // ===== POINTAGES =====
-        Route::middleware('block.sellers')->group(function () {
-            Route::get('/pointages', [PointageController::class, 'index'])->name('pointages.index');
+        // Écriture : bloquée pour Supervisor
+        Route::middleware(['block.sellers', 'block.supervisor'])->group(function () {
             Route::get('/pointages/create', [PointageController::class, 'create'])->name('pointages.create');
             Route::post('/pointages', [PointageController::class, 'store'])->name('pointages.store');
-            Route::get('/pointages-export/excel', [PointageController::class, 'exportExcel'])->name('pointages.export.excel');
-            Route::get('/pointages-export/pdf', [PointageController::class, 'exportPdf'])->name('pointages.export.pdf');
-            Route::get('/pointages/get-employes-by-siege/{SiegeID}', [PointageController::class, 'getEmployesBySiege'])->name('pointages.employees-by-siege');
-            Route::get('/pointages/details/{employe}/{date}/{type_travail?}', [PointageController::class, 'showDetails'])->name('pointages.show.details');
-            Route::get('/pointages/{pointage}', [PointageController::class, 'show'])->name('pointages.show');
             Route::get('/pointages/{pointage}/edit', [PointageController::class, 'edit'])->name('pointages.edit');
             Route::put('/pointages/{pointage}', [PointageController::class, 'update'])->name('pointages.update');
             Route::patch('/pointages/{pointage}', [PointageController::class, 'update']);
             Route::delete('/pointages/{pointage}', [PointageController::class, 'destroy'])->name('pointages.destroy');
+        });
+
+        // Lecture : accessible au Supervisor
+        Route::middleware('block.sellers')->group(function () {
+            Route::get('/pointages', [PointageController::class, 'index'])->name('pointages.index');
+            Route::get('/pointages-export/excel', [PointageController::class, 'exportExcel'])->name('pointages.export.excel')->middleware('block.supervisor');
+            Route::get('/pointages-export/pdf', [PointageController::class, 'exportPdf'])->name('pointages.export.pdf')->middleware('block.supervisor');
+            Route::get('/pointages/get-employes-by-siege/{SiegeID}', [PointageController::class, 'getEmployesBySiege'])->name('pointages.employees-by-siege');
+            Route::get('/pointages/details/{employe}/{date}/{type_travail?}', [PointageController::class, 'showDetails'])->name('pointages.show.details');
+            Route::get('/pointages/{pointage}', [PointageController::class, 'show'])->name('pointages.show');
             Route::get('/pointages/{id}/photo', [PointageController::class, 'getPhoto'])->name('pointages.photo');
             Route::get('/pointages/{id}/photo/thumbnail', [PointageController::class, 'getPhotoThumbnail'])->name('pointages.photo.thumbnail');
         });
@@ -263,34 +266,42 @@ Route::middleware('auth')->group(function () {
             Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
             Route::get('/reports/daily', [ReportController::class, 'daily'])->name('reports.daily');
             Route::get('/reports/day-night', [ReportController::class, 'dayNight'])->name('reports.day-night');
-            Route::get('/reports/export/excel/{type}', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
-            Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
-            Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
+
+            Route::middleware('block.supervisor')->group(function () {
+                Route::get('/reports/export/excel/{type}', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
+                Route::get('/reports/export/pdf/{type}', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
+                Route::post('/reports/rapport-auto', [ReportController::class, 'getRapportAuto'])->name('reports.rapport-auto');
+            });
         });
 
         // ===== CONGÉS (Ancien système) =====
-        Route::middleware('block.sellers')->group(function () {
-            Route::get('/conges', [CongeController::class, 'index'])->name('conges.index');
+        // Écriture : bloquée pour Supervisor
+        Route::middleware(['block.sellers', 'block.supervisor'])->group(function () {
             Route::get('/conges/create', [CongeController::class, 'create'])->name('conges.create');
             Route::post('/conges', [CongeController::class, 'store'])->name('conges.store');
             Route::get('/conges-export/excel', [CongeController::class, 'exportExcel'])->name('conges.export.excel');
             Route::get('/conges-export/pdf', [CongeController::class, 'exportPdf'])->name('conges.export.pdf');
-            Route::get('/conges/{conge}', [CongeController::class, 'show'])->name('conges.show');
             Route::get('/conges/{conge}/edit', [CongeController::class, 'edit'])->name('conges.edit');
             Route::put('/conges/{conge}', [CongeController::class, 'update'])->name('conges.update');
             Route::patch('/conges/{conge}', [CongeController::class, 'update']);
             Route::delete('/conges/{conge}', [CongeController::class, 'destroy'])->name('conges.destroy');
         });
 
-        // ===== VALIDATION CONGÉS =====
+        // Lecture : accessible au Supervisor
         Route::middleware('block.sellers')->group(function () {
+            Route::get('/conges', [CongeController::class, 'index'])->name('conges.index');
+            Route::get('/conges/{conge}', [CongeController::class, 'show'])->name('conges.show');
+        });
+
+        // ===== VALIDATION CONGÉS (bloquée pour Supervisor) =====
+        Route::middleware(['block.sellers', 'block.supervisor'])->group(function () {
             Route::get('/conge-validations', [CongeValidationController::class, 'index'])->name('conge-validations.index');
             Route::post('/conge-validations/{id}/approve', [CongeValidationController::class, 'approve'])->name('conge-validations.approve');
             Route::post('/conge-validations/{id}/reject', [CongeValidationController::class, 'reject'])->name('conge-validations.reject');
         });
 
-        // ===== JOURS NON TRAVAILLÉS =====
-        Route::middleware('block.sellers')->group(function () {
+        // ===== JOURS NON TRAVAILLÉS (bloqué pour Supervisor) =====
+        Route::middleware(['block.sellers', 'block.supervisor'])->group(function () {
             Route::get('/jours-non-travailles', [JourNonTravailleController::class, 'index'])->name('jours-non-travailles.index');
             Route::get('/jours-non-travailles/create', [JourNonTravailleController::class, 'create'])->name('jours-non-travailles.create');
             Route::post('/jours-non-travailles', [JourNonTravailleController::class, 'store'])->name('jours-non-travailles.store');
@@ -303,16 +314,39 @@ Route::middleware('auth')->group(function () {
             Route::delete('/jours-non-travailles/{jours_non_travaille}', [JourNonTravailleController::class, 'destroy'])->name('jours-non-travailles.destroy');
         });
 
-        // ===== ÉVÉNEMENTS POINTAGE =====
-        Route::middleware('block.sellers')->group(function () {
+        // ===== ÉVÉNEMENTS POINTAGE (bloqué pour Supervisor) =====
+        Route::middleware(['block.sellers', 'block.supervisor'])->group(function () {
             Route::get('/evenements', [EventPointageController::class, 'index'])->name('evenements.index');
             Route::post('/evenements/acknowledge', [EventPointageController::class, 'acknowledge'])->name('evenements.acknowledge');
             Route::delete('/evenements/acknowledge/{id}', [EventPointageController::class, 'removeAcknowledge'])->name('evenements.remove-acknowledge');
         });
+
+        // ===== MASTER =====
+        Route::middleware(['block.sellers', 'block.supervisor'])->prefix('master')->name('master.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\MasterController::class, 'show'])->name('show');
+            Route::get('/create', [\App\Http\Controllers\MasterController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\MasterController::class, 'store'])->name('store');
+            Route::get('/edit', [\App\Http\Controllers\MasterController::class, 'edit'])->name('edit');
+            Route::put('/', [\App\Http\Controllers\MasterController::class, 'update'])->name('update');
+            Route::delete('/', [\App\Http\Controllers\MasterController::class, 'destroy'])->name('destroy');
+            Route::delete('/reset', [\App\Http\Controllers\MasterController::class, 'reset'])->name('reset');
+        });
+
+        // ===== RESPONSABLES DE SERVICE (Supervisors) =====
+        Route::middleware(['block.sellers', 'block.supervisor'])->prefix('supervisors')->name('supervisors.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\SupervisorController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\SupervisorController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\SupervisorController::class, 'store'])->name('store');
+            Route::get('/{id}', [\App\Http\Controllers\SupervisorController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [\App\Http\Controllers\SupervisorController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\SupervisorController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\SupervisorController::class, 'destroy'])->name('destroy');
+            Route::delete('/{id}/reset', [\App\Http\Controllers\SupervisorController::class, 'reset'])->name('reset');
+        });
     });
 
-    // ===== ADMINISTRATEURS =====
-    Route::middleware('block.sellers')->group(function () {
+    // ===== ADMINISTRATEURS (bloqué pour Supervisor) =====
+    Route::middleware(['block.supervisor'])->group(function () {
         Route::get('/administrateurs', [AdministrationController::class, 'index'])->name('administrateurs.index');
         Route::get('/administrateurs/create', [AdministrationController::class, 'create'])->name('administrateurs.create');
         Route::post('/administrateurs', [AdministrationController::class, 'store'])->name('administrateurs.store');
@@ -326,8 +360,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/administrateurs/reset/{administrateur}', [AdministrationController::class, 'reset'])->name('administrateurs.reset');
     });
 
-    // ===== VENDEURS =====
-    Route::middleware('block.simple.admin.sieges')->group(function () {
+    // ===== VENDEURS (bloqué pour Supervisor) =====
+    Route::middleware(['block.simple.admin.sieges', 'block.supervisor'])->group(function () {
         Route::get('/sellers', [SellerController::class, 'index'])->name('sellers.index');
         Route::get('/sellers/create', [SellerController::class, 'create'])->name('sellers.create');
         Route::post('/sellers', [SellerController::class, 'store'])->name('sellers.store');
@@ -352,51 +386,43 @@ Route::middleware('auth')->group(function () {
     });
 
     // ==========================================
-    // ADMIN / CONGÉS — Paramétrage
+    // ADMIN / CONGÉS — Paramétrage (bloqué pour Supervisor)
     // ==========================================
-    Route::prefix('admin')->name('admin.')->group(function () {
-        // ===== LEAVE ROLES =====
+    Route::middleware(['block.supervisor'])->prefix('admin')->name('admin.')->group(function () {
         Route::resource('leave-roles', LeaveRoleController::class);
         Route::patch('leave-roles/{id}/restore', [LeaveRoleController::class, 'restore'])->name('leave-roles.restore');
         Route::get('leave-roles-export/excel', [LeaveRoleController::class, 'exportExcel'])->name('leave-roles.export.excel');
         Route::get('leave-roles-export/pdf', [LeaveRoleController::class, 'exportPdf'])->name('leave-roles.export.pdf');
 
-        // ===== LEAVE TYPES =====
         Route::resource('leave-types', LeaveTypeController::class);
         Route::patch('leave-types/{id}/restore', [LeaveTypeController::class, 'restore'])->name('leave-types.restore');
         Route::get('leave-types-export/excel', [LeaveTypeController::class, 'exportExcel'])->name('leave-types.export.excel');
         Route::get('leave-types-export/pdf', [LeaveTypeController::class, 'exportPdf'])->name('leave-types.export.pdf');
 
-        // ===== LEAVE POLICIES =====
         Route::resource('leave-policies', LeavePolicyController::class);
         Route::patch('leave-policies/{id}/restore', [LeavePolicyController::class, 'restore'])->name('leave-policies.restore');
         Route::get('leave-policies-export/excel', [LeavePolicyController::class, 'exportExcel'])->name('leave-policies.export.excel');
         Route::get('leave-policies-export/pdf', [LeavePolicyController::class, 'exportPdf'])->name('leave-policies.export.pdf');
 
-        // ===== LEAVE PERIODS =====
         Route::resource('leave-periods', LeavePeriodController::class);
         Route::patch('leave-periods/{id}/restore', [LeavePeriodController::class, 'restore'])->name('leave-periods.restore');
         Route::get('leave-periods-export/excel', [LeavePeriodController::class, 'exportExcel'])->name('leave-periods.export.excel');
         Route::get('leave-periods-export/pdf', [LeavePeriodController::class, 'exportPdf'])->name('leave-periods.export.pdf');
 
-        // ===== COMPANY HOLIDAYS =====
         Route::resource('company-holidays', CompanyHolidayController::class);
         Route::patch('company-holidays/{id}/restore', [CompanyHolidayController::class, 'restore'])->name('company-holidays.restore');
         Route::get('company-holidays-export/excel', [CompanyHolidayController::class, 'exportExcel'])->name('company-holidays.export.excel');
         Route::get('company-holidays-export/pdf', [CompanyHolidayController::class, 'exportPdf'])->name('company-holidays.export.pdf');
 
-        // ===== LEAVE WORKFLOWS =====
         Route::resource('leave-workflows', LeaveWorkflowController::class);
         Route::patch('leave-workflows/{id}/restore', [LeaveWorkflowController::class, 'restore'])->name('leave-workflows.restore');
         Route::get('leave-workflows-export/excel', [LeaveWorkflowController::class, 'exportExcel'])->name('leave-workflows.export.excel');
         Route::get('leave-workflows-export/pdf', [LeaveWorkflowController::class, 'exportPdf'])->name('leave-workflows.export.pdf');
 
-        // ===== LEAVE VALIDATORS =====
         Route::resource('leave-validators', LeaveValidatorController::class);
         Route::get('leave-validators/get-employees/{site_id}', [LeaveValidatorController::class, 'getEmployeesBySite'])
             ->name('leave-validators.get-employees');
 
-        // ===== RULE FIELDS =====
         Route::get('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'index'])->name('leave-types.rule-fields');
         Route::post('/leave-types/{leaveType}/rule-fields', [RuleFieldController::class, 'store'])->name('leave-types.rule-fields.store');
         Route::post('/leave-types/{leaveType}/rule-fields/seed-defaults', [RuleFieldController::class, 'seedDefaults'])->name('leave-types.rule-fields.seed');
@@ -404,14 +430,12 @@ Route::middleware('auth')->group(function () {
         Route::put('/rule-fields/{ruleField}', [RuleFieldController::class, 'update'])->name('rule-fields.update');
         Route::delete('/rule-fields/{ruleField}', [RuleFieldController::class, 'destroy'])->name('rule-fields.destroy');
 
-        // ===== CALCULATION RULES =====
         Route::get('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'index'])->name('leave-types.calculations');
         Route::post('/leave-types/{leaveType}/calculations', [CalculationRuleController::class, 'store'])->name('leave-types.calculations.store');
         Route::put('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'update'])->name('calculation-rules.update');
         Route::delete('/calculation-rules/{calculationRule}', [CalculationRuleController::class, 'destroy'])->name('calculation-rules.destroy');
         Route::post('/calculation-rules/test', [CalculationRuleController::class, 'testFormula'])->name('calculation-rules.test');
 
-        // ===== RÉFÉRENTIELS ORGANISATION =====
         Route::resource('departments', DepartmentController::class);
         Route::patch('departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
         Route::get('departments-export/excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
@@ -427,34 +451,34 @@ Route::middleware('auth')->group(function () {
         Route::get('hierarchy-levels-export/excel', [HierarchyLevelController::class, 'exportExcel'])->name('hierarchy-levels.export.excel');
         Route::get('hierarchy-levels-export/pdf', [HierarchyLevelController::class, 'exportPdf'])->name('hierarchy-levels.export.pdf');
 
-        // ===== LEAVE POLICY ASSIGNMENTS =====
         Route::resource('leave-policy-assignments', LeavePolicyAssignmentController::class);
         Route::patch('leave-policy-assignments/{id}/toggle', [LeavePolicyAssignmentController::class, 'toggle'])
             ->name('leave-policy-assignments.toggle');
 
-        // ===== AJAX ROUTES =====
         Route::get('/get-job-titles-by-department', [EmployeController::class, 'getJobTitlesByDepartment'])
             ->name('get.job-titles.by.department')
             ->middleware('auth');
     });
 
     // ==========================================
-    // LEAVE BALANCES
+    // LEAVE BALANCES (bloqué pour Supervisor)
     // ==========================================
-    Route::get('leave-balances', [LeaveBalanceController::class, 'index'])->name('leave-balances.index');
-    Route::get('leave-balances/initialize', [LeaveBalanceController::class, 'initialize'])->name('leave-balances.initialize');
-    Route::post('leave-balances/initialize', [LeaveBalanceController::class, 'storeInitialization'])->name('leave-balances.store-initialization');
-    Route::get('leave-balances/{id}/transactions', [LeaveBalanceController::class, 'transactions'])->name('leave-balances.transactions');
-    Route::post('leave-balances/{id}/adjust', [LeaveBalanceController::class, 'adjust'])->name('leave-balances.adjust');
-    Route::get('leave-balances/import', [LeaveBalanceController::class, 'import'])->name('leave-balances.import');
-    Route::post('leave-balances/import', [LeaveBalanceController::class, 'storeImport'])->name('leave-balances.store-import');
-    Route::get('leave-balances/export', [LeaveBalanceController::class, 'export'])->name('leave-balances.export');
-    Route::get('leave-balances/download-template', [LeaveBalanceController::class, 'downloadTemplate'])->name('leave-balances.download-template');
+    Route::middleware(['block.supervisor'])->group(function () {
+        Route::get('leave-balances', [LeaveBalanceController::class, 'index'])->name('leave-balances.index');
+        Route::get('leave-balances/initialize', [LeaveBalanceController::class, 'initialize'])->name('leave-balances.initialize');
+        Route::post('leave-balances/initialize', [LeaveBalanceController::class, 'storeInitialization'])->name('leave-balances.store-initialization');
+        Route::get('leave-balances/{id}/transactions', [LeaveBalanceController::class, 'transactions'])->name('leave-balances.transactions');
+        Route::post('leave-balances/{id}/adjust', [LeaveBalanceController::class, 'adjust'])->name('leave-balances.adjust');
+        Route::get('leave-balances/import', [LeaveBalanceController::class, 'import'])->name('leave-balances.import');
+        Route::post('leave-balances/import', [LeaveBalanceController::class, 'storeImport'])->name('leave-balances.store-import');
+        Route::get('leave-balances/export', [LeaveBalanceController::class, 'export'])->name('leave-balances.export');
+        Route::get('leave-balances/download-template', [LeaveBalanceController::class, 'downloadTemplate'])->name('leave-balances.download-template');
+    });
 
     // ==========================================
-    // ROUTES SUPPLÉMENTAIRES (leave-periods override)
+    // OVERRIDE LEAVE PERIODS (bloqué pour Supervisor)
     // ==========================================
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['block.supervisor'])->prefix('admin')->name('admin.')->group(function () {
         Route::delete('leave-periods/override/{override}', [LeavePeriodController::class, 'destroySiteOverride'])
             ->name('leave-periods.site-override.destroy');
         Route::post('leave-periods/{leave_period}/site-override', [LeavePeriodController::class, 'storeSiteOverride'])
@@ -469,111 +493,56 @@ Route::middleware('auth')->group(function () {
 // ============================================
 Route::middleware(['auth:employe'])->prefix('employe')->name('employe.')->group(function () {
 
-    // ============================================
-    // 1. DASHBOARD
-    // ============================================
     Route::get('dashboard', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
 
-    // ============================================
-    // 2. ROUTES SPÉCIFIQUES (SANS PARAMÈTRE {id})
-    // ⚠️ DOIVENT ÊTRE AVANT les routes avec {id}
-    // ============================================
-
-    // ✅ Calcul AJAX de la durée (SANS ID)
     Route::get('leave-requests/calculate-duration', [LeaveRequestController::class, 'calculateDurationAjax'])
         ->name('leave-requests.calculate-duration');
 
-    // ✅ Périodes par type de congé
     Route::get('leave-requests/periods/{leaveTypeId}', [LeaveRequestController::class, 'getPeriodsByType'])
         ->name('leave-requests.periods-by-type');
 
-    // ✅ Solde de l'employé
     Route::get('leave-requests/balance', [LeaveRequestController::class, 'getBalance'])
         ->name('leave-requests.get-balance');
 
-    // ✅ Notifications
     Route::get('notifications', [EmployeNotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [EmployeNotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::get('notifications/unread-count', [EmployeNotificationController::class, 'unreadCount'])->name('notifications.unread');
 
-    // ============================================
-    // 3. ROUTES CRUD (AVEC PARAMÈTRE {id})
-    // ============================================
-
-    // Liste des demandes
     Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
-
-    // Formulaire de création
     Route::get('leave-requests/create', [LeaveRequestController::class, 'create'])->name('leave-requests.create');
-
-    // Enregistrement d'une nouvelle demande
     Route::post('leave-requests', [LeaveRequestController::class, 'store'])->name('leave-requests.store');
-
-    // Afficher une demande
     Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])->name('leave-requests.show');
-
-    // Formulaire d'édition
     Route::get('leave-requests/{id}/edit', [LeaveRequestController::class, 'edit'])->name('leave-requests.edit');
-
-    // Mettre à jour une demande
     Route::put('leave-requests/{id}', [LeaveRequestController::class, 'update'])->name('leave-requests.update');
-
-    // Supprimer une demande (brouillon)
     Route::delete('leave-requests/{id}', [LeaveRequestController::class, 'destroy'])->name('leave-requests.destroy');
-
-    // Soumettre une demande
     Route::post('leave-requests/{id}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
-
-    // Annuler un congé validé
     Route::post('leave-requests/{id}/cancel-approved', [LeaveRequestController::class, 'cancelApproved'])
         ->name('leave-requests.cancel-approved');
 
-    // ============================================
-    // 4. ROUTES SPÉCIFIQUES AVEC ID (APRÈS LES CRUD DE BASE)
-    // ============================================
     Route::get('validations', [LeaveValidationController::class, 'index'])->name('validations.index');
     Route::post('validations/{id}/approve', [LeaveValidationController::class, 'approve'])->name('validations.approve');
     Route::post('validations/{id}/reject', [LeaveValidationController::class, 'reject'])->name('validations.reject');
     Route::get('validations/{id}', [LeaveValidationController::class, 'show'])->name('validations.show');
 
-    // ✅ Calcul de durée pour un brouillon existant
     Route::get('leave-requests/{id}/calculate-duration', [LeaveRequestController::class, 'calculateDurationForDraft'])
         ->name('leave-requests.calculate-duration-draft');
 
-    // ✅ Statut des pièces jointes
     Route::get('leave-requests/{id}/attachments/status', [LeaveRequestController::class, 'getAttachmentsStatus'])
         ->name('leave-requests.attachments-status');
 
-    // ============================================
-    // 5. ROUTES POUR LES PIÈCES JOINTES
-    // ============================================
-
-    // Upload d'une pièce jointe
     Route::post('leave-requests/{id}/attachments', [LeaveRequestController::class, 'uploadAttachment'])
         ->name('leave-requests.upload-attachment');
 
-    // Supprimer une pièce jointe
     Route::delete('leave-requests/attachments/{id}', [LeaveRequestController::class, 'deleteAttachment'])
         ->name('leave-requests.delete-attachment');
 
-    // Télécharger une pièce jointe
     Route::get('leave-requests/attachments/{id}/download', [LeaveRequestController::class, 'downloadAttachment'])
         ->name('leave-requests.download-attachment');
 
-    // ============================================
-    // 6. CALENDRIER
-    // ============================================
-
-    // Vue du calendrier
     Route::get('leave-calendar', [LeaveRequestController::class, 'calendar'])->name('leave-calendar.index');
-
-    // Événements du calendrier (API)
     Route::get('calendar/events', [LeaveRequestController::class, 'getCalendarEvents'])->name('calendar.events');
 });
 
-// ============================================
-// ROUTES POUR LE PORTAIL (employé)
-// ============================================
 Route::middleware(['auth:employe'])->prefix('portail')->name('portail.')->group(function () {
     Route::get('/', [LeaveRequestController::class, 'dashboard'])->name('dashboard');
     Route::get('leave-requests', [LeaveRequestController::class, 'index'])->name('leave-requests.index');
@@ -584,15 +553,12 @@ Route::middleware(['auth:employe'])->prefix('portail')->name('portail.')->group(
 // ============================================
 Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function () {
 
-    // Dashboard
     Route::get('dashboard', [ManagerLeaveRequestController::class, 'dashboard'])->name('dashboard');
 
-    // Notifications
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread');
 
-    // Demandes de congé
     Route::get('leave-requests', [ManagerLeaveRequestController::class, 'index'])->name('leave-requests.index');
     Route::get('leave-requests/{id}', [ManagerLeaveRequestController::class, 'show'])->name('leave-requests.show');
     Route::post('leave-requests/{id}/approve', [ManagerLeaveRequestController::class, 'approve'])->name('leave-requests.approve');
@@ -600,7 +566,7 @@ Route::middleware(['auth'])->prefix('manager')->name('manager.')->group(function
 });
 
 // ============================================
-// API / AJAX (Routes pour les appels AJAX)
+// API / AJAX
 // ============================================
 Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
 

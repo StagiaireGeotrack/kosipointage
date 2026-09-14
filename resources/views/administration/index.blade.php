@@ -129,9 +129,7 @@
                                         @endif
                                     </td>
                                     <td class="align-middle d-none d-md-table-cell">
-                                        @if ($admin->SiegeID)
-                                            {{ $admin->siege->Nom }}
-                                        @endif
+                                        {{ $admin->siege?->Nom ?? '-' }}
                                     </td>
                                     <td class="align-middle d-none d-lg-table-cell">
                                         @if( $admin->created_at  )                                        

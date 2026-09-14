@@ -11,70 +11,78 @@ use Illuminate\Http\Request;
 
 class CongeValidationController extends Controller
 {
-    public function index(Request $request)
-    {
-        $user         = auth()->user();
-        $isSuperAdmin = $user->isTrueSuperAdmin();
-        $siegeId      = $user->SiegeID;
+public function index(Request $request)
+{
+    $user = auth()->user();
 
-        $filters = $request->only(['status', 'search', 'date_from', 'date_to', 'siege_id']);
-
-        $query = CongeValidation::with('siege');
-
-        if ($isSuperAdmin) {
-            if (!empty($filters['siege_id'])) {
-                $query->where('SiegeID', $filters['siege_id']);
-            }
-        } else {
-            $query->where('SiegeID', $siegeId);
-        }
-
-        if (!empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
-
-        if (!empty($filters['date_from'])) {
-            $query->whereDate('date_heure_debut', '>=', $filters['date_from']);
-        }
-
-        if (!empty($filters['date_to'])) {
-            $query->whereDate('date_heure_fin', '<=', $filters['date_to']);
-        }
-
-        if (!empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('nom_prenom', 'like', "%{$search}%")
-                  ->orWhere('email',     'like', "%{$search}%")
-                  ->orWhere('matricule', 'like', "%{$search}%");
-            });
-        }
-
-        $validations = $query
-            ->orderByRaw("FIELD(status, 'en_cours', 'validated', 'not_validated')")
-            ->orderBy('date_creation', 'desc')
-            ->paginate(15)
-            ->appends($filters);
-
-        $baseCount = $isSuperAdmin
-            ? CongeValidation::query()
-            : CongeValidation::where('SiegeID', $siegeId);
-
-        $counts = [
-            'all'           => (clone $baseCount)->count(),
-            'en_cours'      => (clone $baseCount)->where('status', 'en_cours')->count(),
-            'validated'     => (clone $baseCount)->where('status', 'validated')->count(),
-            'not_validated' => (clone $baseCount)->where('status', 'not_validated')->count(),
-        ];
-
-        $sieges   = $isSuperAdmin ? EntrepriseSiege::orderBy('Nom')->get() : collect();
-        // SiegeScope auto-filtre les employés selon le rôle connecté
-        $employes = Employe::orderBy('Nom')->get();
-
-        return view('conge-validations.index', compact(
-            'validations', 'filters', 'counts', 'sieges', 'isSuperAdmin', 'employes'
-        ));
+    // ============================================================
+    // ✅ BLOQUER le Supervisor : interdiction de valider les congés
+    // (cahier des charges §14 : le Supervisor ne valide PAS les congés)
+    // ============================================================
+    if ($user->isSupervisor()) {
+        abort(403, __('Vous n\'avez pas l\'autorisation de valider les congés.'));
     }
+
+    $isSuperAdmin = $user->isTrueSuperAdmin();
+    $siegeId      = $user->SiegeID;
+
+    $filters = $request->only(['status', 'search', 'date_from', 'date_to', 'siege_id']);
+
+    $query = CongeValidation::with('siege');
+
+    if ($isSuperAdmin) {
+        if (!empty($filters['siege_id'])) {
+            $query->where('SiegeID', $filters['siege_id']);
+        }
+    } else {
+        $query->where('SiegeID', $siegeId);
+    }
+
+    if (!empty($filters['status'])) {
+        $query->where('status', $filters['status']);
+    }
+
+    if (!empty($filters['date_from'])) {
+        $query->whereDate('date_heure_debut', '>=', $filters['date_from']);
+    }
+
+    if (!empty($filters['date_to'])) {
+        $query->whereDate('date_heure_fin', '<=', $filters['date_to']);
+    }
+
+    if (!empty($filters['search'])) {
+        $search = $filters['search'];
+        $query->where(function ($q) use ($search) {
+            $q->where('nom_prenom', 'like', "%{$search}%")
+              ->orWhere('email',     'like', "%{$search}%")
+              ->orWhere('matricule', 'like', "%{$search}%");
+        });
+    }
+
+    $validations = $query
+        ->orderByRaw("FIELD(status, 'en_cours', 'validated', 'not_validated')")
+        ->orderBy('date_creation', 'desc')
+        ->paginate(15)
+        ->appends($filters);
+
+    $baseCount = $isSuperAdmin
+        ? CongeValidation::query()
+        : CongeValidation::where('SiegeID', $siegeId);
+
+    $counts = [
+        'all'           => (clone $baseCount)->count(),
+        'en_cours'      => (clone $baseCount)->where('status', 'en_cours')->count(),
+        'validated'     => (clone $baseCount)->where('status', 'validated')->count(),
+        'not_validated' => (clone $baseCount)->where('status', 'not_validated')->count(),
+    ];
+
+    $sieges   = $isSuperAdmin ? EntrepriseSiege::orderBy('Nom')->get() : collect();
+    $employes = Employe::orderBy('Nom')->get();
+
+    return view('conge-validations.index', compact(
+        'validations', 'filters', 'counts', 'sieges', 'isSuperAdmin', 'employes'
+    ));
+}
 
     // ─────────────────────────────────────────────────────────────────
     // Valider une demande → crée un Conge + met à jour le statut

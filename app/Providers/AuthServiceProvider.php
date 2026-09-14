@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\CompanyHoliday::class => \App\Policies\CompanyHolidayPolicy::class,
         \App\Models\LeavePolicy::class => \App\Policies\LeavePolicyPolicy::class,
         \App\Models\LeaveWorkflow::class => \App\Policies\LeaveWorkflowPolicy::class,
-        
+
         // ✅ AJOUT : Policy pour LeavePolicyAssignment
         LeavePolicyAssignment::class => LeavePolicyAssignmentPolicy::class,
     ];
@@ -34,17 +34,17 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies(); 
-        
+        $this->registerPolicies();
+
         // ============================================
         // GATES EXISTANTS
         // ============================================
-        
+
         // Définition du Gate pour les SuperAdmins
         Gate::define('superadmin', function (Administration $user) {
             return $user->isTrueSuperAdmin();
         });
-        
+
         // Définition du Gate pour l'accès au siège
         Gate::define('access-siege', function (Administration $user, $siegeId = null) {
             if ($siegeId === null) {
@@ -56,74 +56,101 @@ class AuthServiceProvider extends ServiceProvider
         // ============================================
         // ✅ NOUVEAUX GATES POUR LES ASSIGNATIONS
         // ============================================
-        
+
         // ✅ Gate pour vérifier si l'utilisateur est admin
         Gate::define('is-admin', function ($user) {
             if (!$user) return false;
-            
+
             // Super admin
             if (isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1) {
                 return true;
             }
-            
+
             // Admin siège (simple admin)
             if (isset($user->is_simple_admin) && $user->is_simple_admin == 1) {
                 return true;
             }
-            
+
             // Admin avec droits spécifiques (si la colonne existe)
             if (isset($user->can_manage_leave_policies) && $user->can_manage_leave_policies == 1) {
                 return true;
             }
-            
+
             return false;
         });
 
         // ✅ Gate pour gérer les assignations de politiques
         Gate::define('manage-leave-policy-assignments', function ($user) {
             if (!$user) return false;
-            
+
             // Super admin
             if (isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1) {
                 return true;
             }
-            
+
             // Admin siège (simple admin)
             if (isset($user->is_simple_admin) && $user->is_simple_admin == 1) {
                 return true;
             }
-            
+
             return false;
         });
 
         // ✅ Gate pour voir les assignations
         Gate::define('view-leave-policy-assignments', function ($user) {
             if (!$user) return false;
-            
+
             if (isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1) {
                 return true;
             }
-            
+
             if (isset($user->is_simple_admin) && $user->is_simple_admin == 1) {
                 return true;
             }
-            
+
             return false;
         });
 
         // ✅ Gate pour créer/modifier/supprimer des assignations
         Gate::define('edit-leave-policy-assignments', function ($user) {
             if (!$user) return false;
-            
+
             if (isset($user->IsSuperAdmin) && $user->IsSuperAdmin == 1) {
                 return true;
             }
-            
+
             if (isset($user->is_simple_admin) && $user->is_simple_admin == 1) {
                 return true;
             }
-            
+
             return false;
+        });
+
+        // ============================================
+        // GATES SUPERVISOR
+        // ============================================
+
+        Gate::define('is-supervisor', function (Administration $user) {
+            return $user->isSupervisor();
+        });
+
+        Gate::define('manage-supervisors', function (Administration $user) {
+            // Seul le Simple Admin (IsManager=1) peut gérer les Supervisors
+            return $user->isSimpleAdminStrict();
+        });
+
+        Gate::define('block-supervisor-actions', function (Administration $user) {
+            // Retourne true si l'utilisateur N'EST PAS un Supervisor
+            return !$user->isSupervisor();
+        });
+        
+        Gate::define('is-master', function (Administration $user) {
+            return $user->isMaster();
+        });
+
+        Gate::define('manage-master', function (Administration $user) {
+            // Seul le Simple Admin PUR peut créer/modifier le Master
+            return $user->isSimpleAdminPure();
         });
     }
 }

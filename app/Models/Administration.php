@@ -27,6 +27,7 @@ class Administration extends Authenticatable
         'IsSeller',
         'IsManager',
         'IsSupervisor',
+        'IsMaster',
         'SiegeID',
         'Actived',
         'deleted',
@@ -42,6 +43,7 @@ class Administration extends Authenticatable
         'IsSeller' => 'boolean',
         'IsManager' => 'boolean',
         'IsSupervisor' => 'boolean',
+        'IsMaster' => 'boolean',
         'Actived' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
@@ -85,7 +87,7 @@ class Administration extends Authenticatable
     // ============ MÉTHODES DE RÔLE (EXISTANTES — NE PAS MODIFIER) ============
     public function isSeller(): bool
     {
-        return $this->IsSeller == 1 && $this->IsSuperAdmin == 1;
+        return $this->IsSeller == 1;
     }
 
     public function isManagerSeller(): bool
@@ -105,7 +107,9 @@ class Administration extends Authenticatable
 
     public function isSimpleAdmin(): bool
     {
-        return $this->IsSuperAdmin == 0 && $this->IsSeller == 0;
+         return $this->IsSuperAdmin == 0
+            && $this->IsSeller == 0
+            && $this->IsSupervisor == 0;
     }
 
     public function isManagerSimpleAdmin(): bool
@@ -124,6 +128,31 @@ class Administration extends Authenticatable
             && $this->IsSuperAdmin == 0
             && $this->IsSeller == 0
             && $this->IsManager == 0;
+    }
+
+        /**
+     * Vérifie si l'utilisateur est un Master (adjoint du Simple Admin)
+     */
+    public function isMaster(): bool
+    {
+        return $this->IsMaster == 1
+            && $this->IsManager == 1
+            && $this->IsSuperAdmin == 0
+            && $this->IsSeller == 0
+            && $this->IsSupervisor == 0;
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un Simple Admin PUR (pas Master)
+     * Utile pour les actions que seul le Simple Admin peut faire (créer Master, modifier Simple Admin)
+     */
+    public function isSimpleAdminPure(): bool
+    {
+        return $this->IsManager == 1
+            && $this->IsMaster == 0
+            && $this->IsSuperAdmin == 0
+            && $this->IsSeller == 0
+            && $this->IsSupervisor == 0;
     }
 
     /**
@@ -175,7 +204,8 @@ class Administration extends Authenticatable
                 ->toArray();
         }
 
-        if ($this->isSimpleAdmin()) {
+        // ✅ Supervisor et Simple Admin : uniquement leur propre siège
+        if ($this->isSupervisor() || $this->isSimpleAdmin()) {
             return $this->SiegeID ? [$this->SiegeID] : [];
         }
 

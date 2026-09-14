@@ -31,7 +31,12 @@ class ReportController extends Controller
     }
     
     public function index()
-    {
+    {   
+        $user = auth()->user();
+        if ($user->isSupervisor()) {
+            $employeeIds = \App\Services\AccessScopeService::getAccessibleEmployeeIds($user);
+            $query->whereIn('employee_id', empty($employeeIds) ? [-1] : $employeeIds);
+        }
         $sieges = EntrepriseSiege::all();
         $mois = collect(range(1, 12))->map(function($m) {
             return [
