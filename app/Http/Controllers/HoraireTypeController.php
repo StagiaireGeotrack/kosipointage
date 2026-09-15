@@ -38,7 +38,14 @@ class HoraireTypeController extends Controller
         $services = Department::where('site_id', $siegeId)->orderBy('name')->get();
         $postes = JobTitle::where('company_id', $siegeId)->orderBy('name')->get();
 
-        return view('planning.horaires-types.create', compact('services', 'postes'));
+        // ✅ Liste des sites (Entreprises) accessibles
+        if (auth()->user()->isTrueSuperAdmin()) {
+            $sites = \App\Models\Entreprise::orderBy('Nom')->get();
+        } else {
+            $sites = \App\Models\Entreprise::where('SiegeID', $siegeId)->orderBy('Nom')->get();
+        }
+
+        return view('planning.horaires-types.create', compact('services', 'postes', 'sites'));
     }
 
     public function store(Request $request)
@@ -56,6 +63,7 @@ class HoraireTypeController extends Controller
         $request->validate([
             'service_id' => 'required|exists:departments,id',
             'poste_id' => 'required|exists:job_titles,id',
+            'site_id' => 'nullable|exists:Entreprises,ID',
             'heure_debut' => 'required|date_format:H:i',
             'heure_fin' => 'required|date_format:H:i|after:heure_debut',
             'pause_debut' => 'nullable|date_format:H:i',
@@ -81,6 +89,7 @@ class HoraireTypeController extends Controller
 
         HoraireType::create([
             'poste_id' => $validated['poste_id'],
+            'site_id' => $validated['site_id'] ?? null,
             'jours_travailles' => $joursTravailles,
             'heure_debut' => $validated['heure_debut'],
             'heure_fin' => $validated['heure_fin'],
@@ -100,11 +109,17 @@ class HoraireTypeController extends Controller
     {
         $siegeId = session('admin_selected_siege_id') ?? auth()->user()->SiegeID;
 
-        $horaire = HoraireType::with('poste.department')->findOrFail($id);
+        $horaire = HoraireType::with('poste.department', 'site')->findOrFail($id);
         $services = Department::where('site_id', $siegeId)->orderBy('name')->get();
         $postes = JobTitle::where('company_id', $siegeId)->orderBy('name')->get();
 
-        return view('planning.horaires-types.edit', compact('horaire', 'services', 'postes'));
+        if (auth()->user()->isTrueSuperAdmin()) {
+            $sites = \App\Models\Entreprise::orderBy('Nom')->get();
+        } else {
+            $sites = \App\Models\Entreprise::where('SiegeID', $siegeId)->orderBy('Nom')->get();
+        }
+
+        return view('planning.horaires-types.edit', compact('horaire', 'services', 'postes', 'sites'));
     }
 
     public function update(Request $request, $id)
@@ -112,6 +127,7 @@ class HoraireTypeController extends Controller
         $request->validate([
             'service_id' => 'required|exists:departments,id',
             'poste_id' => 'required|exists:job_titles,id',
+            'site_id' => 'nullable|exists:Entreprises,ID',
             'heure_debut' => 'nullable|date_format:H:i',
             'heure_fin' => 'nullable|date_format:H:i|after:heure_debut',
             'pause_debut' => 'nullable|date_format:H:i',
@@ -148,6 +164,7 @@ class HoraireTypeController extends Controller
 
         $horaire->update([
             'poste_id' => $request->poste_id,
+            'site_id' => $request->site_id ?? null,
             'jours_travailles' => $joursTravailles,
             'heure_debut' => $request->heure_debut,
             'heure_fin' => $request->heure_fin,

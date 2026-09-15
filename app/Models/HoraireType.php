@@ -14,6 +14,7 @@ class HoraireType extends Model
 
     protected $fillable = [
         'poste_id',
+        'site_id',
         'jours_travailles',
         'heure_debut',
         'heure_fin',
@@ -84,5 +85,12 @@ class HoraireType extends Model
     public function scopeParDefaut($query)
     {
         return $query->where('par_defaut', true);
+    }
+    /**
+     * Site / établissement concerné par cet horaire type
+     */
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(Entreprise::class, 'site_id', 'ID');
     }
 }

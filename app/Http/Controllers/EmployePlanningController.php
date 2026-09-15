@@ -594,11 +594,19 @@ class EmployePlanningController extends Controller
         if ($type === 'planning') {
             $detail = PlanningDetail::with(['employe', 'employe.jobTitle'])->find($id);
 
-            if ($detail && in_array($detail->employe_id, $employeIds)) {
+            $siteName = null;
+                if ($detail->employe && $detail->employe->job_title_id) {
+                    $horaireType = \App\Models\HoraireType::with('site')
+                        ->where('poste_id', $detail->employe->job_title_id)
+                        ->first();
+                    $siteName = $horaireType?->site?->Nom;
+                }
+
                 $data = [
                     'type'         => 'planning',
                     'employe'      => $detail->employe?->Nom ?? 'N/A',
                     'role'         => $detail->employe?->jobTitle?->name ?? 'N/A',
+                    'site'         => $siteName,   
                     'date'         => $detail->date ? Carbon::parse($detail->date)->format('d/m/Y') : '-',
                     'heure_debut'  => $detail->heure_debut,
                     'heure_fin'    => $detail->heure_fin,
@@ -608,7 +616,6 @@ class EmployePlanningController extends Controller
                     'statut'       => $detail->statut,
                     'avatar'       => null,
                 ];
-            }
         }
 
         // ============================================================
@@ -627,6 +634,7 @@ class EmployePlanningController extends Controller
                         'type'         => 'evenement',
                         'titre'        => $evenement->titre,
                         'description'  => $evenement->description,
+                        'adresse'      => $evenement->adresse,
                         'type_event'   => $evenement->type,
                         'debut'        => $evenement->debut->format('d/m/Y H:i'),
                         'fin'          => $evenement->fin->format('d/m/Y H:i'),

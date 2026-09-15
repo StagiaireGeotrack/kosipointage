@@ -22,6 +22,22 @@
             @method('PUT')
 
             <div class="row g-3">
+                {{-- Site --}}
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Site / Établissement</label>
+                    <select name="site_id" id="site_id" class="form-select">
+                        <option value="">Aucun site spécifique</option>
+                        @foreach($sites as $site)
+                            <option value="{{ $site->ID }}"
+                                {{ ($horaire->site_id ?? old('site_id')) == $site->ID ? 'selected' : '' }}>
+                                {{ $site->Nom }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('site_id')
+                        <span class="text-danger small">{{ $message }}</span>
+                    @enderror
+                </div>
                 {{-- Service --}}
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Service *</label>

@@ -712,10 +712,18 @@ class PlanningController extends Controller
         if ($type === 'planning') {
             $detail = PlanningDetail::with(['employe', 'planning'])->find($id);
             if ($detail) {
+                $siteName = null;
+                if ($detail->employe && $detail->employe->job_title_id) {
+                    $horaireType = \App\Models\HoraireType::with('site')
+                        ->where('poste_id', $detail->employe->job_title_id)
+                        ->first();
+                    $siteName = $horaireType?->site?->Nom;
+                }
                 $data = [
                     'type' => 'planning',
                     'employe' => $detail->employe?->Nom ?? 'N/A',
                     'role' => $detail->employe?->jobTitle?->name ?? 'N/A',
+                    'siege' => $siteName ?? 'N/A',
                     'date' => $detail->date->format('d/m/Y'),
                     'heure_debut' => $detail->heure_debut,
                     'heure_fin' => $detail->heure_fin,
@@ -733,6 +741,7 @@ class PlanningController extends Controller
                     'type' => 'evenement',
                     'titre' => $evenement->titre,
                     'description' => $evenement->description,
+                    'adresse' => $evenement->adresse,
                     'type_event' => $evenement->type,
                     'debut' => $evenement->debut->format('d/m/Y H:i'),
                     'fin' => $evenement->fin->format('d/m/Y H:i'),
@@ -878,6 +887,7 @@ class PlanningController extends Controller
             'type' => 'required|in:formation,deplacement,reunion,conges_exceptionnel,autre',
             'debut' => 'required|date',
             'fin' => 'required|date|after:debut',
+            'adresse' => 'nullable|string|max:500',
             'employe_ids' => 'nullable|array',
             'employe_ids.*' => 'exists:Employes,ID',
             'service_id' => 'nullable|exists:departments,id',
@@ -900,6 +910,7 @@ class PlanningController extends Controller
             'poste_id' => $request->poste_id,
             'titre' => $request->titre,
             'description' => $request->description,
+            'adresse' => $request->adresse,
             'type' => $request->type,
             'debut' => $request->debut,
             'fin' => $request->fin,

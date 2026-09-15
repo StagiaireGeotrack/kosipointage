@@ -21,6 +21,21 @@
             @csrf
 
             <div class="row g-3">
+                {{-- Site --}}
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Site / Établissement</label>
+                    <select name="site_id" id="site_id" class="form-select">
+                        <option value="">Aucun site spécifique</option>
+                        @foreach($sites as $site)
+                            <option value="{{ $site->ID }}" {{ old('site_id') == $site->ID ? 'selected' : '' }}>
+                                {{ $site->Nom }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('site_id')
+                        <span class="text-danger small">{{ $message }}</span>
+                    @enderror
+                </div>
                 {{-- Service --}}
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Service *</label>
@@ -62,7 +77,7 @@
 
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Heure début *</label>
-                    <input type="time" name="heure_debut" class="form-control" 
+                    <input type="time" name="heure_debut" class="form-control"
                            value="{{ old('heure_debut', '08:00') }}" required>
                     @error('heure_debut')
                         <span class="text-danger small">{{ $message }}</span>
@@ -71,7 +86,7 @@
 
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Heure fin *</label>
-                    <input type="time" name="heure_fin" class="form-control" 
+                    <input type="time" name="heure_fin" class="form-control"
                            value="{{ old('heure_fin', '17:00') }}" required>
                     @error('heure_fin')
                         <span class="text-danger small">{{ $message }}</span>
@@ -87,13 +102,13 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Début pause</label>
-                    <input type="time" name="pause_debut" class="form-control" 
+                    <input type="time" name="pause_debut" class="form-control"
                            value="{{ old('pause_debut', '12:00') }}">
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Fin pause</label>
-                    <input type="time" name="pause_fin" class="form-control" 
+                    <input type="time" name="pause_fin" class="form-control"
                            value="{{ old('pause_fin', '13:00') }}">
                 </div>
 
@@ -106,13 +121,13 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Début 2ème période</label>
-                    <input type="time" name="deuxieme_debut" class="form-control" 
+                    <input type="time" name="deuxieme_debut" class="form-control"
                            value="{{ old('deuxieme_debut') }}">
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Fin 2ème période</label>
-                    <input type="time" name="deuxieme_fin" class="form-control" 
+                    <input type="time" name="deuxieme_fin" class="form-control"
                            value="{{ old('deuxieme_fin') }}">
                 </div>
 
@@ -126,56 +141,56 @@
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="lundi" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="lundi"
+                                       class="form-check-input"
                                        {{ in_array('lundi', old('jours_travailles', ['lundi','mardi','mercredi','jeudi','vendredi'])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Lundi</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="mardi" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="mardi"
+                                       class="form-check-input"
                                        {{ in_array('mardi', old('jours_travailles', ['lundi','mardi','mercredi','jeudi','vendredi'])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Mardi</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="mercredi" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="mercredi"
+                                       class="form-check-input"
                                        {{ in_array('mercredi', old('jours_travailles', ['lundi','mardi','mercredi','jeudi','vendredi'])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Mercredi</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="jeudi" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="jeudi"
+                                       class="form-check-input"
                                        {{ in_array('jeudi', old('jours_travailles', ['lundi','mardi','mercredi','jeudi','vendredi'])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Jeudi</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="vendredi" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="vendredi"
+                                       class="form-check-input"
                                        {{ in_array('vendredi', old('jours_travailles', ['lundi','mardi','mercredi','jeudi','vendredi'])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Vendredi</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="samedi" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="samedi"
+                                       class="form-check-input"
                                        {{ in_array('samedi', old('jours_travailles', [])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Samedi</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" name="jours_travailles[]" value="dimanche" 
-                                       class="form-check-input" 
+                                <input type="checkbox" name="jours_travailles[]" value="dimanche"
+                                       class="form-check-input"
                                        {{ in_array('dimanche', old('jours_travailles', [])) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold">Dimanche</label>
                             </div>
@@ -189,7 +204,7 @@
                 {{-- Par défaut --}}
                 <div class="col-md-12 mt-3">
                     <div class="form-check">
-                        <input type="checkbox" name="par_defaut" class="form-check-input" 
+                        <input type="checkbox" name="par_defaut" class="form-check-input"
                                value="1" {{ old('par_defaut') ? 'checked' : '' }}>
                         <label class="form-check-label">
                             <strong>Utiliser par défaut</strong>

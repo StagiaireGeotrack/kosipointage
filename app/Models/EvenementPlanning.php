@@ -19,6 +19,7 @@ class EvenementPlanning extends Model
         'poste_id',
         'titre',
         'description',
+        'adresse',
         'type',
         'debut',
         'fin',
