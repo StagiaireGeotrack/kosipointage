@@ -10,7 +10,10 @@ class EntrepriseSiegeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Gate::allows('superadmin');
+        $user = auth()->user();
+
+        // Le Revendeur et le SuperAdmin peuvent créer/modifier des sièges
+        return $user && ($user->isTrueSuperAdmin() || $user->isSeller());
     }
 
     public function rules(): array
@@ -38,13 +41,13 @@ class EntrepriseSiegeRequest extends FormRequest
             'Nom.string' => __('Le champ :attribute doit être une chaîne de caractères', ['attribute' => __('Nom du siège')]),
             'Nom.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Nom du siège'), 'max' => 255]),
             'Nom.unique' => __('Ce nom de siège est déjà utilisé'),
-            
+
             'Nom_Lieu_Ville.string' => __('Le champ :attribute doit être une chaîne de caractères', ['attribute' => __('Adresse ou ville')]),
             'Nom_Lieu_Ville.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Adresse ou ville'), 'max' => 255]),
 
             'Pays.string' => __('Le champ :attribute doit être une chaîne de caractères', ['attribute' => __('Pays')]),
             'Pays.max' => __('Le champ :attribute ne doit pas dépasser :max caractères', ['attribute' => __('Pays'), 'max' => 255]),
-            
+
             'Actived.boolean' => __('Le statut actif doit être vrai ou faux'),
         ];
     }

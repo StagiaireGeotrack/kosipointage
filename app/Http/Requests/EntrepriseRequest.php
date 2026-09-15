@@ -10,8 +10,20 @@ class EntrepriseRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Vérifie si l'utilisateur peut accéder au siège
-        return Gate::allows('access-siege', $this->input('SiegeID'));
+        $user = auth()->user();
+
+        // SuperAdmin : accès à tous les sièges
+        if ($user && $user->isTrueSuperAdmin()) {
+            return true;
+        }
+
+        // Revendeur / Simple Admin : vérifier l'accès au siège
+        if ($user && ($user->isSeller() || $user->isSimpleAdmin())) {
+            return Gate::allows('access-siege', $this->input('SiegeID'));
+        }
+
+        return false;
+
     }
 
     public function rules(): array
@@ -34,26 +46,26 @@ class EntrepriseRequest extends FormRequest
             'Nom.required' => 'Le nom est obligatoire.',
             'Nom.string' => 'Le nom doit être une chaîne de caractères.',
             'Nom.max' => 'Le nom ne peut pas dépasser :max caractères.',
-            
+
             'Nom_Lieu_Ville.string' => 'Le nom du lieu/ville doit être une chaîne de caractères.',
             'Nom_Lieu_Ville.max' => 'Le nom du lieu/ville ne peut pas dépasser :max caractères.',
-            
+
             'Latitude.required' => 'La latitude est obligatoire.',
             'Latitude.numeric' => 'La latitude doit être un nombre.',
             'Latitude.between' => 'La latitude doit être comprise entre :min et :max.',
-            
+
             'Longitude.required' => 'La longitude est obligatoire.',
             'Longitude.numeric' => 'La longitude doit être un nombre.',
             'Longitude.between' => 'La longitude doit être comprise entre :min et :max.',
-            
+
             'RadiusInMeters.numeric' => 'Le rayon doit être un nombre.',
             'RadiusInMeters.min' => 'Le rayon doit être au moins :min mètre.',
-            
+
             'Actived.boolean' => 'Le statut actif doit être vrai ou faux.',
-            
+
             'SiegeID.required' => 'Le siège est obligatoire.',
             'SiegeID.exists' => 'Le siège sélectionné n\'existe pas.',
-            
+
             'Logo.image' => 'Le logo doit être une image.',
             'Logo.mimes' => 'Le logo doit être au format : :values.',
             'Logo.max' => 'Le logo ne peut pas dépasser :max Ko (2 Mo).',

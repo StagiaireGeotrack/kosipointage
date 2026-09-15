@@ -7,6 +7,7 @@ use App\Models\Employe;
 use App\Models\EntrepriseSiege;
 use App\Models\Entreprise;
 use App\Models\Pointage;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,61 +17,53 @@ class AllDashboardController extends Controller
     /**
      * Dashboard pour les Vendeurs
      */
-    public function dashboardSeller() 
+    public function dashboardSeller()
     {
         $user = auth()->user();
-        
+
         if (!$user->isSeller()) {
             abort(403, 'Accès réservé aux vendeurs');
         }
-        
+
         $siegeIds = $user->getSiegeIdsAccessibles();
-        
-        // Statistiques générales
+
         $totalSieges = EntrepriseSiege::whereIn('ID', $siegeIds)->count();
         $totalEntreprises = Entreprise::whereIn('SiegeID', $siegeIds)->count();
         $totalEmployes = Employe::whereIn('SiegeID', $siegeIds)->count();
-        
-        // Employés actifs vs inactifs
+
         $employesActifs = Employe::whereIn('SiegeID', $siegeIds)->where('Actived', 1)->count();
         $employesInactifs = Employe::whereIn('SiegeID', $siegeIds)->where('Actived', 0)->count();
-        
-        // Entreprises actives vs inactives
+
         $entreprisesActives = Entreprise::whereIn('SiegeID', $siegeIds)->where('Actived', 1)->count();
         $entreprisesInactives = Entreprise::whereIn('SiegeID', $siegeIds)->where('Actived', 0)->count();
-        
-        // Employés ajoutés ce mois
+
         $startOfMonth = Carbon::now()->startOfMonth();
         $employesCeMois = Employe::whereIn('SiegeID', $siegeIds)
             ->where('CreatedAt', '>=', $startOfMonth)
             ->count();
-        
-        // Entreprises ajoutées ce mois
+
         $entreprisesCeMois = Entreprise::whereIn('SiegeID', $siegeIds)
             ->where('CreatedAt', '>=', $startOfMonth)
             ->count();
-        
-        // Employés ajoutés cette semaine
+
         $startOfWeek = Carbon::now()->startOfWeek();
         $employesCetteSemaine = Employe::whereIn('SiegeID', $siegeIds)
             ->where('CreatedAt', '>=', $startOfWeek)
             ->count();
-        
-        // Tous les sièges
+
         $topSieges = EntrepriseSiege::whereIn('ID', $siegeIds)
             ->withCount('employes', 'entreprises')
             ->orderBy('employes_count', 'desc')
             ->get();
-        
-        // Évolution des employés sur 12 mois
+
         $employesEvolution = [];
         for ($i = 11; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
             $count = Employe::whereIn('SiegeID', $siegeIds)
                 ->whereYear('CreatedAt', '<=', $date->year)
-                ->where(function($query) use ($date) {
+                ->where(function ($query) use ($date) {
                     $query->whereYear('CreatedAt', '<', $date->year)
-                          ->orWhere(function($q) use ($date) {
+                          ->orWhere(function ($q) use ($date) {
                               $q->whereYear('CreatedAt', '=', $date->year)
                                 ->whereMonth('CreatedAt', '<=', $date->month);
                           });
@@ -81,16 +74,15 @@ class AllDashboardController extends Controller
                 'count' => $count
             ];
         }
-        
-        // Évolution des entreprises sur 12 mois
+
         $entreprisesEvolution = [];
         for ($i = 11; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
             $count = Entreprise::whereIn('SiegeID', $siegeIds)
                 ->whereYear('CreatedAt', '<=', $date->year)
-                ->where(function($query) use ($date) {
+                ->where(function ($query) use ($date) {
                     $query->whereYear('CreatedAt', '<', $date->year)
-                          ->orWhere(function($q) use ($date) {
+                          ->orWhere(function ($q) use ($date) {
                               $q->whereYear('CreatedAt', '=', $date->year)
                                 ->whereMonth('CreatedAt', '<=', $date->month);
                           });
@@ -101,34 +93,31 @@ class AllDashboardController extends Controller
                 'count' => $count
             ];
         }
-        
-        // Répartition des employés par siège
+
         $employesBySiege = Employe::whereIn('SiegeID', $siegeIds)
             ->select('SiegeID', DB::raw('count(*) as total'))
             ->groupBy('SiegeID')
             ->get()
-            ->map(function($item) {
+            ->map(function ($item) {
                 $siege = EntrepriseSiege::find($item->SiegeID);
                 return [
                     'siege' => $siege ? $siege->Nom : 'Inconnu',
                     'total' => $item->total
                 ];
             });
-        
-        // Répartition des entreprises par siège
+
         $entreprisesBySiege = Entreprise::whereIn('SiegeID', $siegeIds)
             ->select('SiegeID', DB::raw('count(*) as total'))
             ->groupBy('SiegeID')
             ->get()
-            ->map(function($item) {
+            ->map(function ($item) {
                 $siege = EntrepriseSiege::find($item->SiegeID);
                 return [
                     'siege' => $siege ? $siege->Nom : 'Inconnu',
                     'total' => $item->total
                 ];
             });
-        
-        // Employés ajoutés par mois (6 derniers mois)
+
         $employesParMois = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
@@ -141,8 +130,7 @@ class AllDashboardController extends Controller
                 'count' => $count
             ];
         }
-        
-        // Entreprises ajoutées par mois (6 derniers mois)
+
         $entreprisesParMois = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
@@ -155,12 +143,11 @@ class AllDashboardController extends Controller
                 'count' => $count
             ];
         }
-        
-        // Statistiques détaillées par siège
+
         $sieges = EntrepriseSiege::whereIn('ID', $siegeIds)
             ->withCount(['entreprises', 'employes'])
             ->get();
-        
+
         return view('dashboards.seller', compact(
             'totalSieges',
             'totalEntreprises',
@@ -184,98 +171,151 @@ class AllDashboardController extends Controller
     }
 
     /**
-     * Dashboard pour les Simple Admin
+     * Dashboard pour les Simple Admin ET Supervisor
+     * — Supervisor : mêmes données mais filtrées à ses services
      */
-    public function dashboardSimpleAdmin() 
+    public function dashboardSimpleAdmin()
     {
         $user = auth()->user();
-        
+
         if (!$user->isSimpleAdmin() && !$user->isSupervisor()) {
             abort(403, 'Accès réservé aux administrateurs');
         }
 
-        if ($user->isSupervisor()) {
-            return $this->dashboardSupervisor($user);
-        }
-        
         if (!$user->SiegeID) {
             abort(403, 'Aucun siège assigné');
         }
-        
+
         $siege = EntrepriseSiege::find($user->SiegeID);
-        
-        // Dates pour les statistiques
+
+        // ✅ Détermination du périmètre
+        $isSupervisor = $user->isSupervisor();
+        $serviceIds = $isSupervisor ? $user->getSupervisorServiceIds() : null;
+
+        // Liste des IDs employés accessibles
+        if ($isSupervisor) {
+            $accessibleEmployeeIds = empty($serviceIds)
+                ? [-1]
+                : Employe::whereIn('department_id', $serviceIds)
+                    ->where('SiegeID', $user->SiegeID)
+                    ->pluck('ID')
+                    ->toArray();
+        } else {
+            // Simple Admin : tous les employés du siège
+            $accessibleEmployeeIds = null; // pas de filtre spécifique
+        }
+
+        // Dates
         $today = Carbon::today();
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
-        
-        // Statistiques générales
+
+        // ============================================================
+        // STATISTIQUES GÉNÉRALES
+        // ============================================================
+
+        // Entreprises : pas filtré pour Supervisor (le Supervisor n'a pas accès aux entreprises)
+        // → on garde les entreprises du siège pour que la vue ne casse pas
         $totalEntreprises = Entreprise::where('SiegeID', $user->SiegeID)->count();
-        $totalEmployes = Employe::where('SiegeID', $user->SiegeID)->count();
-        
-        // Pointages
-        $pointagesToday = Pointage::where('SiegeID', $user->SiegeID)->whereDate('timestamp_', $today)->count();
-        $pointagesWeek = Pointage::where('SiegeID', $user->SiegeID)->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])->count();
-        $pointagesMonth = Pointage::where('SiegeID', $user->SiegeID)->whereBetween('timestamp_', [$startOfMonth, $endOfMonth])->count();
-        
-        // Employés et entreprises actifs
-        $employesActifs = Employe::where('SiegeID', $user->SiegeID)->where('Actived', 1)->count();
-        $employesInactifs = Employe::where('SiegeID', $user->SiegeID)->where('Actived', 0)->count();
         $entreprisesActives = Entreprise::where('SiegeID', $user->SiegeID)->where('Actived', 1)->count();
         $entreprisesInactives = Entreprise::where('SiegeID', $user->SiegeID)->where('Actived', 0)->count();
-        
+        $entreprisesCeMois = Entreprise::where('SiegeID', $user->SiegeID)
+            ->where('CreatedAt', '>=', $startOfMonth)
+            ->count();
+
+        // Employés : filtrés pour Supervisor
+        $employesQuery = Employe::where('SiegeID', $user->SiegeID);
+        if ($isSupervisor) {
+            $employesQuery->whereIn('ID', $accessibleEmployeeIds);
+        }
+
+        $totalEmployes = (clone $employesQuery)->count();
+        $employesActifs = (clone $employesQuery)->where('Actived', 1)->count();
+        $employesInactifs = (clone $employesQuery)->where('Actived', 0)->count();
+        $employesCeMois = (clone $employesQuery)->where('CreatedAt', '>=', $startOfMonth)->count();
+
+        // Pointages : filtrés pour Supervisor
+        $pointagesBase = Pointage::where('SiegeID', $user->SiegeID);
+        if ($isSupervisor) {
+            $pointagesBase->whereIn('employee_id', $accessibleEmployeeIds);
+        }
+
+        $pointagesToday = (clone $pointagesBase)->whereDate('timestamp_', $today)->count();
+        $pointagesWeek = (clone $pointagesBase)->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])->count();
+        $pointagesMonth = (clone $pointagesBase)->whereBetween('timestamp_', [$startOfMonth, $endOfMonth])->count();
+
         // Taux de présence
-        $employesPresentsToday = Pointage::where('SiegeID', $user->SiegeID)
+        $employesPresentsToday = (clone $pointagesBase)
             ->where('type_', 'entry')
             ->whereDate('timestamp_', $today)
             ->distinct('employee_id')
             ->count('employee_id');
         $tauxPresence = $totalEmployes > 0 ? round(($employesPresentsToday / $totalEmployes) * 100, 1) : 0;
-        
-        // Moyenne pointages par jour
+
+        // Moyenne pointages / jour
         $avgPointagesPerDay = $pointagesMonth > 0 ? round($pointagesMonth / Carbon::now()->day, 1) : 0;
-        
-        // Pointages des 7 derniers jours
+
+        // ============================================================
+        // GRAPHIQUES
+        // ============================================================
+
+        // Pointages 7 derniers jours
         $last7Days = [];
         $pointagesLast7Days = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i);
             $last7Days[] = $date->format('d/m');
-            $pointagesLast7Days[] = Pointage::where('SiegeID', $user->SiegeID)
-                ->whereDate('timestamp_', $date)
-                ->count();
+            $q = Pointage::where('SiegeID', $user->SiegeID)->whereDate('timestamp_', $date);
+            if ($isSupervisor) {
+                $q->whereIn('employee_id', $accessibleEmployeeIds);
+            }
+            $pointagesLast7Days[] = $q->count();
         }
-        
+
         // Pointages par type
         $pointagesEntree = Pointage::where('SiegeID', $user->SiegeID)
             ->where('type_', 'entry')
-            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])
-            ->count();
-            
+            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek]);
+        if ($isSupervisor) {
+            $pointagesEntree->whereIn('employee_id', $accessibleEmployeeIds);
+        }
+        $pointagesEntree = $pointagesEntree->count();
+
         $pointagesSortie = Pointage::where('SiegeID', $user->SiegeID)
             ->where('type_', 'exit')
-            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])
-            ->count();
-        
+            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek]);
+        if ($isSupervisor) {
+            $pointagesSortie->whereIn('employee_id', $accessibleEmployeeIds);
+        }
+        $pointagesSortie = $pointagesSortie->count();
+
         // Pointages par méthode
-        $pointagesByMethod = Pointage::where('SiegeID', $user->SiegeID)
-            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek])
+        $qMethod = Pointage::where('SiegeID', $user->SiegeID)
+            ->whereBetween('timestamp_', [$startOfWeek, $endOfWeek]);
+        if ($isSupervisor) {
+            $qMethod->whereIn('employee_id', $accessibleEmployeeIds);
+        }
+        $pointagesByMethod = $qMethod
             ->select('auth_method', DB::raw('COUNT(*) as count'))
             ->groupBy('auth_method')
             ->get();
-        
+
         // Pointages par heure (aujourd'hui)
-        $pointagesByHour = Pointage::where('SiegeID', $user->SiegeID)
-            ->whereDate('timestamp_', $today)
+        $qHour = Pointage::where('SiegeID', $user->SiegeID)
+            ->whereDate('timestamp_', $today);
+        if ($isSupervisor) {
+            $qHour->whereIn('employee_id', $accessibleEmployeeIds);
+        }
+        $pointagesByHour = $qHour
             ->select(DB::raw('HOUR(timestamp_) as hour'), DB::raw('COUNT(*) as count'))
             ->groupBy('hour')
             ->orderBy('hour')
             ->get()
             ->pluck('count', 'hour')
             ->toArray();
-        
+
         $pointagesParHeure = [];
         for ($h = 6; $h <= 20; $h++) {
             $pointagesParHeure[] = [
@@ -283,16 +323,20 @@ class AllDashboardController extends Controller
                 'count' => $pointagesByHour[$h] ?? 0
             ];
         }
-        
+
         // Top 10 employés ce mois
-        $topEmployes = Pointage::where('SiegeID', $user->SiegeID)
-            ->whereBetween('timestamp_', [$startOfMonth, $endOfMonth])
+        $qTop = Pointage::where('SiegeID', $user->SiegeID)
+            ->whereBetween('timestamp_', [$startOfMonth, $endOfMonth]);
+        if ($isSupervisor) {
+            $qTop->whereIn('employee_id', $accessibleEmployeeIds);
+        }
+        $topEmployes = $qTop
             ->select('employee_id', DB::raw('COUNT(*) as total_pointages'))
             ->groupBy('employee_id')
             ->orderBy('total_pointages', 'desc')
             ->take(10)
             ->get()
-            ->map(function($item) {
+            ->map(function ($item) {
                 $employe = Employe::find($item->employee_id);
                 return [
                     'name' => $employe->Nom ?? 'Inconnu',
@@ -300,29 +344,21 @@ class AllDashboardController extends Controller
                     'total' => $item->total_pointages
                 ];
             });
-        
-        // Évolution des pointages sur 30 jours
+
+        // Pointages 30 derniers jours
         $pointagesLast30Days = [];
         $datesLast30Days = [];
         for ($i = 29; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i);
             $datesLast30Days[] = $date->format('d/m');
-            $pointagesLast30Days[] = Pointage::where('SiegeID', $user->SiegeID)
-                ->whereDate('timestamp_', $date)
-                ->count();
+            $q = Pointage::where('SiegeID', $user->SiegeID)->whereDate('timestamp_', $date);
+            if ($isSupervisor) {
+                $q->whereIn('employee_id', $accessibleEmployeeIds);
+            }
+            $pointagesLast30Days[] = $q->count();
         }
-        
-        // Employés ajoutés ce mois
-        $employesCeMois = Employe::where('SiegeID', $user->SiegeID)
-            ->where('CreatedAt', '>=', $startOfMonth)
-            ->count();
-        
-        // Entreprises ajoutées ce mois
-        $entreprisesCeMois = Entreprise::where('SiegeID', $user->SiegeID)
-            ->where('CreatedAt', '>=', $startOfMonth)
-            ->count();
 
-        
+        // ✅ Utilisation de la MÊME vue que le Simple Admin
         return view('dashboards.simple-admin', compact(
             'siege',
             'totalEntreprises',
@@ -348,49 +384,6 @@ class AllDashboardController extends Controller
             'datesLast30Days',
             'employesCeMois',
             'entreprisesCeMois'
-        ));
-    }
-
-    private function dashboardSupervisor($user)
-    {
-        $serviceIds = $user->getSupervisorServiceIds();
-        $employeeIds = empty($serviceIds) ? [-1] : \App\Models\Employe::whereIn('department_id', $serviceIds)
-            ->where('SiegeID', $user->SiegeID)
-            ->pluck('ID')
-            ->toArray();
-
-        $today = \Carbon\Carbon::today();
-        $startOfMonth = \Carbon\Carbon::now()->startOfMonth();
-        $endOfMonth = \Carbon\Carbon::now()->endOfMonth();
-
-        $totalEmployes = \App\Models\Employe::whereIn('ID', $employeeIds)->count();
-        $employesActifs = \App\Models\Employe::whereIn('ID', $employeeIds)->where('Actived', 1)->count();
-
-        $pointagesToday = \App\Models\Pointage::whereIn('employee_id', $employeeIds)
-            ->whereDate('timestamp_', $today)
-            ->count();
-
-        $employesPresentsToday = \App\Models\Pointage::whereIn('employee_id', $employeeIds)
-            ->where('type_', 'entry')
-            ->whereDate('timestamp_', $today)
-            ->distinct('employee_id')
-            ->count('employee_id');
-
-        $tauxPresence = $totalEmployes > 0 ? round(($employesPresentsToday / $totalEmployes) * 100, 1) : 0;
-
-        // Réutiliser les variables attendues par la vue dashboards.simple-admin
-        $siege = \App\Models\EntrepriseSiege::find($user->SiegeID);
-
-        $services = \App\Models\Department::whereIn('id', $serviceIds)->get();
-
-        return view('dashboards.supervisor', compact(
-            'user',
-            'services',
-            'totalEmployes',
-            'employesActifs',
-            'pointagesToday',
-            'employesPresentsToday',
-            'tauxPresence'
         ));
     }
 }
