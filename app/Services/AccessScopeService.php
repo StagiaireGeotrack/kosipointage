@@ -67,4 +67,30 @@ class AccessScopeService
 
         return true;
     }
+
+        /**
+     * Vérifie que TOUS les services appartiennent bien au siège donné
+     */
+    public static function allServicesBelongToSiege(array $serviceIds, int $siegeId): bool
+    {
+        if (empty($serviceIds)) {
+            return false;
+        }
+
+        $count = Department::whereIn('id', $serviceIds)
+            ->where('site_id', $siegeId)
+            ->count();
+
+        return $count === count($serviceIds);
+    }
+
+    /**
+     * Vérifie qu'UN service appartient bien au siège donné
+     */
+    public static function serviceBelongsToSiege(int $serviceId, int $siegeId): bool
+    {
+        return Department::where('id', $serviceId)
+            ->where('site_id', $siegeId)
+            ->exists();
+    }
 }

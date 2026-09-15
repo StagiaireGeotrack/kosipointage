@@ -30,9 +30,9 @@ class AuthenticatedSessionController extends Controller
             'Identifiant_email' => $request->input('email'),
             'password' => $request->input('password')
         ];
-        
+
         $admin = Administration::where('Identifiant_email', $credentials['Identifiant_email'])->first();
-        
+
         if (!$admin) {
             ActivityLogService::log(
                 action: 'login_failed',
@@ -69,18 +69,24 @@ class AuthenticatedSessionController extends Controller
         Auth::login($admin, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        if ($admin->isTrueSuperAdmin() ) 
-        {
+                // ✅ Ordre des tests IMPORTANT : du plus spécifique au plus général
+        if ($admin->isTrueSuperAdmin()) {
             return redirect()->intended(route('dashboard'));
-        } 
-        elseif($admin->isSimpleAdmin() ) 
-        {        
-            return redirect()->intended(route('dashboard.simple-admin'));
         }
-        else
-        {
+        elseif ($admin->isSeller()) {
             return redirect()->intended(route('dashboard.seller'));
         }
+        elseif ($admin->isSimpleAdmin()) {
+            // Simple Admin PUR ou Master
+            return redirect()->intended(route('dashboard.simple-admin'));
+        }
+        elseif ($admin->isSupervisor()) {
+            // ✅ Supervisor utilise le MÊME dashboard que le Simple Admin
+            return redirect()->intended(route('dashboard.simple-admin'));
+        }
+
+        // Fallback (ne devrait jamais arriver)
+        return redirect()->intended(route('sieges.index'));
     }
 
 

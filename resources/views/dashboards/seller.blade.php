@@ -10,26 +10,26 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
-        
+
         .stats-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
-        
+
         .stats-card.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
         .stats-card.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .stats-card.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         .stats-card.purple { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
         .stats-card.red { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
         .stats-card.teal { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
-        
+
         .chart-card {
             background: white;
             border-radius: 12px;
             padding: 1rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
-        
+
         .badge-new {
             background: rgba(16, 185, 129, 0.15);
             color: #10b981;
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-2 col-md-4">
                 <div class="stats-card green">
                     <div class="d-flex justify-content-between align-items-start">
@@ -79,8 +79,8 @@
                         <i class="bi bi-shop fs-2 opacity-50"></i>
                     </div>
                 </div>
-            </div>            
-            
+            </div>
+
             <div class="col-lg-2 col-md-4">
                 <div class="stats-card red">
                     <div class="d-flex justify-content-between align-items-start">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-2 col-md-4">
                 <div class="stats-card purple">
                     <div class="d-flex justify-content-between align-items-start">
@@ -119,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-2 col-md-4">
                 <div class="stats-card teal">
                     <div class="d-flex justify-content-between align-items-start">
@@ -149,7 +149,7 @@
                                     <th class="text-dark">{{ __('Siège') }}</th>
                                     <th class="text-dark">{{ __('Localisation') }}</th>
                                     <th class="text-center text-dark">{{ __('Employés') }}</th>
-                                    <th class="text-center text-dark">{{ __('Entreprises') }}</th>
+                                    <th class="text-center text-dark">{{ __('Site ou établissement') }}</th>
                                     <th class="text-center text-dark">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -192,11 +192,11 @@
                     <canvas id="employesEvolutionChart" height="140"></canvas>
                 </div>
             </div>
-            
+
             <div class="col-lg-3">
                 <div class="chart-card">
                     <h6 class="fw-bold mb-2 small">
-                        <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution Entreprises') }}
+                        <i class="bi bi-graph-up text-primary"></i> {{ __('Évolution Sites ou Établissements') }}
                     </h6>
                     <canvas id="entreprisesEvolutionChart" height="140"></canvas>
                 </div>
@@ -210,11 +210,11 @@
                     <canvas id="employesBySiegeChart" height="140"></canvas>
                 </div>
             </div>
-            
+
             <div class="col-lg-3">
                 <div class="chart-card">
                     <h6 class="fw-bold mb-2 small">
-                        <i class="bi bi-pie-chart text-warning"></i> {{ __('Entreprises par Siège') }}
+                        <i class="bi bi-pie-chart text-warning"></i> {{ __('Sites ou Établissements par Siège') }}
                     </h6>
                     <canvas id="entreprisesBySiegeChart" height="140"></canvas>
                 </div>
@@ -230,11 +230,11 @@
                     <canvas id="employesParMoisChart" height="120"></canvas>
                 </div>
             </div>
-            
+
             <div class="col-lg-6">
                 <div class="chart-card">
                     <h6 class="fw-bold mb-2 small">
-                        <i class="bi bi-bar-chart text-warning"></i> {{ __('Entreprises Ajoutées (6 mois)') }}
+                        <i class="bi bi-bar-chart text-warning"></i> {{ __('Sites ou Établissements Ajoutés (6 mois)') }}
                     </h6>
                     <canvas id="entreprisesParMoisChart" height="120"></canvas>
                 </div>
@@ -247,14 +247,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
             Chart.defaults.font.size = 10;
-            
+
             const colors = {
                 primary: 'rgba(59, 130, 246, 0.8)',
                 success: 'rgba(16, 185, 129, 0.8)',
                 warning: 'rgba(245, 158, 11, 0.8)',
                 info: 'rgba(99, 102, 241, 0.8)',
             };
-            
+
             new Chart(document.getElementById('employesEvolutionChart'), {
                 type: 'line',
                 data: {
@@ -276,7 +276,7 @@
                     scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
                 }
             });
-            
+
             new Chart(document.getElementById('entreprisesEvolutionChart'), {
                 type: 'line',
                 data: {
@@ -298,7 +298,7 @@
                     scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
                 }
             });
-            
+
             new Chart(document.getElementById('employesParMoisChart'), {
                 type: 'bar',
                 data: {
@@ -317,7 +317,7 @@
                     scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
                 }
             });
-            
+
             new Chart(document.getElementById('entreprisesParMoisChart'), {
                 type: 'bar',
                 data: {
@@ -336,7 +336,7 @@
                     scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
                 }
             });
-            
+
             new Chart(document.getElementById('employesBySiegeChart'), {
                 type: 'doughnut',
                 data: {
@@ -352,7 +352,7 @@
                     plugins: { legend: { position: 'bottom', labels: { font: { size: 8 }, boxWidth: 10, padding: 8 } } }
                 }
             });
-            
+
             new Chart(document.getElementById('entreprisesBySiegeChart'), {
                 type: 'doughnut',
                 data: {

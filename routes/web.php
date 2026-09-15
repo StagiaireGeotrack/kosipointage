@@ -73,6 +73,7 @@ Route::middleware('auth:employe')->group(function () {
     Route::prefix('employe/planning')->name('employe.planning.')->group(function () {
         Route::get('/', [EmployePlanningController::class, 'index'])->name('index');
         Route::get('/events', [EmployePlanningController::class, 'getEvents'])->name('events');
+        Route::get('/event-detail/{id}/{type}', [EmployePlanningController::class, 'getEventDetail'])->name('event-detail');
     });
 });
 
